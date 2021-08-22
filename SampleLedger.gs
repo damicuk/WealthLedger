@@ -2,7 +2,7 @@
  * Creates a sample ledger sheet.
  * Renames any existing ledger sheet so as not to overwrite it.
  */
-CryptoTracker.prototype.sampleLedger = function () {
+AssetTracker.prototype.sampleLedger = function () {
 
   const sheetName = this.ledgerSheetName;
 

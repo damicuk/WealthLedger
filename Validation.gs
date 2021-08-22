@@ -3,7 +3,7 @@
  * Uses the error handler to handle any ValidatioError.
  * Displays toast on success.
  */
-CryptoTracker.prototype.validateLedger = function () {
+AssetTracker.prototype.validateLedger = function () {
 
   try {
     let ledgerRecords = this.getLedgerRecords();
@@ -27,7 +27,7 @@ CryptoTracker.prototype.validateLedger = function () {
  * Stops reading if it encounters the stop action.
  * @param {LedgerRecord[]} ledgerRecords - The colection of ledger records to validate.
  */
-CryptoTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
+AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
 
   if (LedgerRecord.inReverseOrder(ledgerRecords)) {
 
@@ -62,7 +62,7 @@ CryptoTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
  * @param {LedgerRecord} previousRecord - The previous ledger record validated.
  * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
-CryptoTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRecord, rowIndex) {
+AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRecord, rowIndex) {
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
@@ -114,8 +114,8 @@ CryptoTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousR
   else if (isNaN(creditFee)) {
     throw new ValidationError(`${action} row ${rowIndex}: Credit fee is not valid (number or blank).`, rowIndex, 'creditFee');
   }
-  else if (lotMatching && !CryptoTracker.lotMatchings.includes(lotMatching)) {
-    throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${CryptoTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');
+  else if (lotMatching && !AssetTracker.lotMatchings.includes(lotMatching)) {
+    throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${AssetTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');
   }
   else if (action === 'Transfer') { //Transfer
     if (!debitCurrency) {

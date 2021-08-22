@@ -46,7 +46,7 @@ class ExRateRecord {
  * @param {number} minuteMargin - The number of minutes in the past that price data is still considered current.
  * @return {boolean} Whether the prices for all the cryptocurrencies are current.
  */
-CryptoTracker.prototype.exRatesCurrent = function (sheet, minuteMargin) {
+AssetTracker.prototype.exRatesCurrent = function (sheet, minuteMargin) {
 
   let exRateRecords = this.getExRateRecords(sheet);
 
@@ -71,7 +71,7 @@ CryptoTracker.prototype.exRatesCurrent = function (sheet, minuteMargin) {
  * @return {number} The cryptocurrency to accounting currency exchange rate closest to the requested date.
  * returns 0 if no match is found within the minute margin.
  */
-CryptoTracker.prototype.lookupExRate = function (exRateRecords, date, crypto, minuteMargin) {
+AssetTracker.prototype.lookupExRate = function (exRateRecords, date, crypto, minuteMargin) {
 
   let bestRecord;
   let bestDiff = -(new Date(0, 0, 0)).valueOf();
@@ -100,7 +100,7 @@ CryptoTracker.prototype.lookupExRate = function (exRateRecords, date, crypto, mi
  * @param {Sheet} sheet - The exrates sheet.
  * @return {ExRateRecord[]} The collection of exrate records.
  */
-CryptoTracker.prototype.getExRateRecords = function (sheet) {
+AssetTracker.prototype.getExRateRecords = function (sheet) {
 
   let range = sheet.getRange(this.exRatesSheetHeaderRows + 1, 1, sheet.getMaxRows() - this.exRatesSheetHeaderRows, this.exRatesSheetDataColumns);
   let data = range.getValues();

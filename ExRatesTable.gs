@@ -3,7 +3,7 @@
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  */
-CryptoTracker.prototype.exRatesTable = function () {
+AssetTracker.prototype.exRatesTable = function () {
 
   const sheetName = this.exRatesTableSheetName;
 

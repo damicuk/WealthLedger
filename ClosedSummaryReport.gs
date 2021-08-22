@@ -3,7 +3,7 @@
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  */
-CryptoTracker.prototype.closedSummaryReport = function () {
+AssetTracker.prototype.closedSummaryReport = function () {
 
   const sheetName = this.closedSummaryReportName;
 

@@ -3,7 +3,7 @@
  * Updates the sheet with the current open positions data.
  * Trims the sheet to fit the data.
  */
-CryptoTracker.prototype.openPositionsReport = function () {
+AssetTracker.prototype.openPositionsReport = function () {
 
   const sheetName = this.openPositionsReportName;
   const exRatesRangeName = this.exRatesRangeName;
@@ -103,7 +103,7 @@ CryptoTracker.prototype.openPositionsReport = function () {
  * The open positions data is collected when the ledger is processed.
  * @return {Array<Array>} The current open positions data.
  */
-CryptoTracker.prototype.getOpenPositionsTable = function () {
+AssetTracker.prototype.getOpenPositionsTable = function () {
 
   let table = [];
 

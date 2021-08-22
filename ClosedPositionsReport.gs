@@ -3,7 +3,7 @@
  * Updates the sheet with the current closed positions data.
  * Trims the sheet to fit the data.
  */
-CryptoTracker.prototype.closedPositionsReport = function () {
+AssetTracker.prototype.closedPositionsReport = function () {
 
   const sheetName = this.closedPositionsReportName;
 
@@ -113,7 +113,7 @@ CryptoTracker.prototype.closedPositionsReport = function () {
  * The closed positions data is collected when the ledger is processed.
  * @return {Array<Array>} The current closed positions data.
  */
-CryptoTracker.prototype.getClosedPositionsTable = function () {
+AssetTracker.prototype.getClosedPositionsTable = function () {
 
   let table = [];
 

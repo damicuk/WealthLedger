@@ -4,7 +4,7 @@
  * Stops reading if it encounters the stop action.
  * @param {LedgerRecord[]} ledgerRecords - The collection of ledger records.
  */
-CryptoTracker.prototype.processLedger = function (ledgerRecords) {
+AssetTracker.prototype.processLedger = function (ledgerRecords) {
 
   if (LedgerRecord.inReverseOrder(ledgerRecords)) {
 
@@ -34,7 +34,7 @@ CryptoTracker.prototype.processLedger = function (ledgerRecords) {
  * @param {LedgerRecord} ledgerRecord - The ledger record to process.
  * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
-CryptoTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
+AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;

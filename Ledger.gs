@@ -4,7 +4,7 @@
  * Throws a ValidationError if the ledger sheet contains insufficient columns or no data rows
  * @return {Range} The range in the ledger sheet that contains the data excluding header rows.
  */
-CryptoTracker.prototype.getLedgerRange = function () {
+AssetTracker.prototype.getLedgerRange = function () {
 
   let ss = SpreadsheetApp.getActive();
   let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
@@ -35,7 +35,7 @@ CryptoTracker.prototype.getLedgerRange = function () {
  * Both fiat and cryptocurrencies are sorted alphabetically.
  * The fiat currencies are listed before the cryptocurrencies.
  */
-CryptoTracker.prototype.updateLedgerCurrencies = function () {
+AssetTracker.prototype.updateLedgerCurrencies = function () {
 
   const sheetName = this.ledgerSheetName;
 
@@ -46,8 +46,8 @@ CryptoTracker.prototype.updateLedgerCurrencies = function () {
     return;
   }
 
-  let fiats = Array.from(this.fiats).sort(CryptoTracker.abcComparator);
-  let cryptos = Array.from(this.cryptos).sort(CryptoTracker.abcComparator);
+  let fiats = Array.from(this.fiats).sort(AssetTracker.abcComparator);
+  let cryptos = Array.from(this.cryptos).sort(AssetTracker.abcComparator);
   let currencies = fiats.concat(cryptos);
 
   this.addCurrencyValidation(sheet, 'C3:C', currencies);
@@ -60,7 +60,7 @@ CryptoTracker.prototype.updateLedgerCurrencies = function () {
  * The list of wallet names is collected when the ledger is processed to write the reports.
  * The wallet names are sorted alphabetically.
  */
-CryptoTracker.prototype.updateLedgerWallets = function () {
+AssetTracker.prototype.updateLedgerWallets = function () {
 
   const sheetName = this.ledgerSheetName;
 
@@ -75,7 +75,7 @@ CryptoTracker.prototype.updateLedgerWallets = function () {
   for (let wallet of this.wallets) {
     walletNames.push(wallet.name);
   }
-  walletNames.sort(CryptoTracker.abcComparator);
+  walletNames.sort(AssetTracker.abcComparator);
 
   this.addWalletValidation(sheet, 'G3:G', walletNames);
   this.addWalletValidation(sheet, 'L3:L', walletNames);

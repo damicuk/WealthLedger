@@ -7,7 +7,7 @@
  * Access the prices through data[coin][accountingCurrency] e.g.data['BTC']['USD'].
  * Test for errors with data.Response === 'Error' and the error message data.Message.
  */
-CryptoTracker.prototype.getCryptoPriceData = function (cryptos, accountingCurrency, apiKey) {
+AssetTracker.prototype.getCryptoPriceData = function (cryptos, accountingCurrency, apiKey) {
 
   let url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${cryptos}&tsyms=${accountingCurrency}&api_key=${apiKey}`;
 
@@ -21,7 +21,7 @@ CryptoTracker.prototype.getCryptoPriceData = function (cryptos, accountingCurren
  * @param {string} apiKey - The free API key from CryptoCompare.
  * @return {boolean} Whether the test request was successful.
  */
-CryptoTracker.prototype.validateApiKey = function (apiKey) {
+AssetTracker.prototype.validateApiKey = function (apiKey) {
 
   let data = this.getCryptoPriceData('BTC', 'USD', apiKey);
 

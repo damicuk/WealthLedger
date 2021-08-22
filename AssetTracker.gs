@@ -1,7 +1,7 @@
 /**
  * The main class that processes the Ledger sheet fetches the current crypto prices and writes the reports.
  */
-var CryptoTracker = class CryptoTracker {
+var AssetTracker = class AssetTracker {
 
   /**
    * Initializes class with empty arrays of wallets, income, closed, and donated lots, user properties, and input and output sheet names.
@@ -316,8 +316,8 @@ var CryptoTracker = class CryptoTracker {
     for (let lot of lots) {
       lotSubunits.push(lot.subunits);
     }
-    let apportionedCreditAmountSubunits = CryptoTracker.apportionInteger(creditAmountSubunits, lotSubunits);
-    let apportionedCreditFeeSubunits = CryptoTracker.apportionInteger(creditFeeSubunits, lotSubunits);
+    let apportionedCreditAmountSubunits = AssetTracker.apportionInteger(creditAmountSubunits, lotSubunits);
+    let apportionedCreditFeeSubunits = AssetTracker.apportionInteger(creditFeeSubunits, lotSubunits);
     let index = 0;
     for (let lot of lots) {
 

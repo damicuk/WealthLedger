@@ -7,7 +7,7 @@
  * Throws an ApiError if any crypto prices are missing.
  * Trims the sheet to fit the data.
  */
-CryptoTracker.prototype.exRatesSheet = function () {
+AssetTracker.prototype.exRatesSheet = function () {
 
   const sheetName = this.exRatesSheetName;
 
@@ -66,7 +66,7 @@ CryptoTracker.prototype.exRatesSheet = function () {
  * Throws an ApiError if the call to the CryptoCompare API returns an error response.
  * @return {Array<Array<string>>} The table of price data for the current set of cryptocurrencies in the accounting currency.
  */
-CryptoTracker.prototype.getCryptoPriceTable = function () {
+AssetTracker.prototype.getCryptoPriceTable = function () {
 
   let table = [];
   let cryptos = Array.from(this.currentCryptos).toString();

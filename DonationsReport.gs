@@ -3,7 +3,7 @@
  * Updates the sheet with the current donations data.
  * Trims the sheet to fit the data.
  */
-CryptoTracker.prototype.donationsReport = function () {
+AssetTracker.prototype.donationsReport = function () {
 
   const sheetName = this.donationsReportName;
 
@@ -107,7 +107,7 @@ CryptoTracker.prototype.donationsReport = function () {
  * The donations data is collected when the ledger is processed.
  * @return {Array<Array>} The current donations data.
  */
-CryptoTracker.prototype.getDonationsTable = function () {
+AssetTracker.prototype.getDonationsTable = function () {
 
   let table = [];
 

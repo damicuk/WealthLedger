@@ -3,7 +3,7 @@
  * Updates the sheet with the current fiat accounts data.
  * Trims the sheet to fit the data.
  */
-CryptoTracker.prototype.fiatAccountsSheet = function () {
+AssetTracker.prototype.fiatAccountsSheet = function () {
 
   const sheetName = this.fiatAccountsSheetName;
 
@@ -41,7 +41,7 @@ CryptoTracker.prototype.fiatAccountsSheet = function () {
  * The fiat accounts data is collected when the ledger is processed.
  * @return {Array<Array>} The current fiat accounts data.
  */
-CryptoTracker.prototype.getFiatTable = function () {
+AssetTracker.prototype.getFiatTable = function () {
 
   let table = [];
 

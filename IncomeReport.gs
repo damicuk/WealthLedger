@@ -3,7 +3,7 @@
  * Updates the sheet with the current income data.
  * Trims the sheet to fit the data.
  */
-CryptoTracker.prototype.incomeReport = function () {
+AssetTracker.prototype.incomeReport = function () {
 
   const sheetName = this.incomeReportName;
 
@@ -58,7 +58,7 @@ CryptoTracker.prototype.incomeReport = function () {
  * The income data is collected when the ledger is processed.
  * @return {Array<Array>} The current income data.
  */
-CryptoTracker.prototype.getIncomeTable = function () {
+AssetTracker.prototype.getIncomeTable = function () {
 
   let table = [];
 

@@ -160,7 +160,7 @@ class LedgerRecord {
  * Retrieves the ledger records from the ledger sheet.
  * @return {LedgerRecord[]} The collection of ledger records.
  */
-CryptoTracker.prototype.getLedgerRecords = function () {
+AssetTracker.prototype.getLedgerRecords = function () {
 
   let ledgerRange = this.getLedgerRange();
   let ledgerData = ledgerRange.getValues();

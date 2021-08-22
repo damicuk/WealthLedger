@@ -4,7 +4,7 @@
  * Updates the data validation on the ledger currency and wallet columns.
  * Displays toast on success.
  */
-CryptoTracker.prototype.writeReports = function () {
+AssetTracker.prototype.writeReports = function () {
 
   let ledgerRecords;
   try {
@@ -77,7 +77,7 @@ CryptoTracker.prototype.writeReports = function () {
  * Not intended for use by the end user.
  * Useful in development and testing.
  */
-CryptoTracker.prototype.deleteReports = function () {
+AssetTracker.prototype.deleteReports = function () {
 
   let sheetNames = [
     this.openPositionsReportName,

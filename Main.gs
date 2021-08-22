@@ -24,7 +24,7 @@ function onInstall(e) {
  */
 function onOpen(e) {
   SpreadsheetApp.getUi()
-    .createMenu('CryptoTracker')
+    .createMenu('PortfolioTracker')
     .addItem('Step 1: Create sample ledger', 'createSampleLedger')
     .addSeparator()
     .addItem('Step 2: Validate ledger', 'validateLedger')
@@ -36,28 +36,28 @@ function onOpen(e) {
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
  */
 function createSampleLedger() {
 
-  new CryptoTracker().sampleLedger();
+  new AssetTracker().sampleLedger();
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
  */
 function validateLedger() {
 
-  new CryptoTracker().validateLedger();
+  new AssetTracker().validateLedger();
 
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
  */
 function writeReports() {
 
-  new CryptoTracker().writeReports();
+  new AssetTracker().writeReports();
 }
 
 /**
@@ -72,22 +72,22 @@ function showSettingsDialog() {
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
  */
 function saveSettings(settings) {
 
-  new CryptoTracker().saveSettings(settings);
+  new AssetTracker().saveSettings(settings);
   
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
  * Not intended for use by the end user
  * Useful in development and testing
  */
 function deleteReports() {
 
-  new CryptoTracker().deleteReports();
+  new AssetTracker().deleteReports();
 
 }
 

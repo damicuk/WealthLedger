@@ -8,7 +8,7 @@
  * Used to get the index from LedgerRecord.getColumnIndex(columnName).
  * Avoids hard coding column numbers.
  */
-CryptoTracker.prototype.handleError = function (error, message, rowIndex, columnName) {
+AssetTracker.prototype.handleError = function (error, message, rowIndex, columnName) {
 
   if (error === 'validation') {
 
@@ -46,7 +46,7 @@ CryptoTracker.prototype.handleError = function (error, message, rowIndex, column
  * Used to get the index from LedgerRecord.getColumnIndex(columnName).
  * Avoids hard coding column numbers.
  */
-CryptoTracker.prototype.setCurrentCell = function (rowIndex, columnName) {
+AssetTracker.prototype.setCurrentCell = function (rowIndex, columnName) {
 
   let ss = SpreadsheetApp.getActive();
   let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);

@@ -46,7 +46,7 @@
 let userProperties = PropertiesService.getUserProperties();
 let accountingCurrency = userProperties.getProperty('accountingCurrency');
 let defaultLotMatching = userProperties.getProperty('defaultLotMatching');
-let lotMatchings = CryptoTracker.lotMatchings;
+let lotMatchings = AssetTracker.lotMatchings;
 let validFiats = Currency.validFiats;
 let apiKey = userProperties.getProperty('apiKey');
 

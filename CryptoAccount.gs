@@ -151,7 +151,7 @@ var CryptoAccount = class CryptoAccount {
     for (let lot of lots) {
       lotSubunits.push(lot.subunits);
     }
-    let apportionedFeeSubunits = CryptoTracker.apportionInteger(feeSubunits, lotSubunits);
+    let apportionedFeeSubunits = AssetTracker.apportionInteger(feeSubunits, lotSubunits);
     let index = 0;
     for (let lot of lots) {
       lot.creditFeeSubunits += apportionedFeeSubunits[index++];
