@@ -24,12 +24,12 @@ AssetTracker.prototype.openPositionsReport = function () {
       ],
       [
         'Date Time',
-        'Currency',
+        'Asset',
         'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
-        'Currency',
+        'Asset',
         'Amount',
         'Fee',
         'Wallet',
@@ -108,18 +108,18 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
   let table = [];
 
   for (let wallet of this.wallets) {
-    for (let cryptoAccount of wallet.cryptoAccounts) {
+    for (let assetAccount of wallet.assetAccounts) {
 
-      for (let lot of cryptoAccount.lots) {
+      for (let lot of assetAccount.lots) {
 
         let date = lot.date;
-        let debitCurrency = lot.debitCurrency;
+        let debitAsset = lot.debitAsset;
         let debitExRate = lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;
 
-        let creditCurrency = lot.creditCurrency;
+        let creditAsset = lot.creditAsset;
         let creditAmount = lot.creditAmount;
         let creditFee = lot.creditFee;
 
@@ -128,13 +128,13 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
         table.push([
 
           date,
-          debitCurrency,
+          debitAsset,
           debitExRate,
           debitAmount,
           debitFee,
           buyWallet,
 
-          creditCurrency,
+          creditAsset,
           creditAmount,
           creditFee,
 

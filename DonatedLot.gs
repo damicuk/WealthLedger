@@ -5,15 +5,15 @@ var DonatedLot = class DonatedLot {
 
   /**
    * Initializes the class with the properties set to the parameters.
-   * @param {Lot} lot - An amount of cryptocurrency purchased together.
+   * @param {Lot} lot - An amount of asset purchased together.
    * @param {date} date - the date of the donation.
-   * @param {number} exRate - The lot currency to accounting currency exchange rate.
+   * @param {number} exRate - The lot asset to accounting currency exchange rate.
    * @param {string} walletName - The name of the wallet (or exchange) from which the donation was debited.
    */
   constructor(lot, date, exRate, walletName) {
 
     /**
-     * An amount of cryptocurrency purchased together.
+     * An amount of asset purchased together.
      * @type {Lot}
      */
     this.lot = lot;
@@ -25,7 +25,7 @@ var DonatedLot = class DonatedLot {
     this.date = date;
 
     /**
-     * The lot currency to accounting currency exchange rate.
+     * The lot asset to accounting currency exchange rate.
      * @type {number}
      */
     this.exRate = exRate;

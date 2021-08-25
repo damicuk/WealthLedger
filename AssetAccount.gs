@@ -1,23 +1,23 @@
 /**
- * Cryptocurrency account.
+ * Asset account.
  * Calculation are done in integer amounts of subunits to avoid computational rounding errors.
  */
-var CryptoAccount = class CryptoAccount {
+var AssetAccount = class AssetAccount {
 
   /**
-   * Sets the cryptocurrency currency and initializes an empty array to contain the crytocurrency lots.
+   * Sets the asset ticker and initializes an empty array to contain the asset lots.
    * @param {string} ticker - the cryptocurrency currency ticker.
    */
   constructor(ticker) {
 
     /**
-     * The cryptocurrency currency ticker.
+     * The asset ticker.
      * @type {string}
      */
     this.ticker = ticker;
 
     /**
-     * The crytocurrency lots.
+     * The asset lots.
      * @type {Array<Lot>}
      */
     this.lots = [];
@@ -32,7 +32,7 @@ var CryptoAccount = class CryptoAccount {
   set ticker(ticker) {
 
     this._ticker = ticker;
-    this._currencySubunits = Currency.subunits(ticker);
+    this._assetSubunits = Currency.subunits(ticker);
   }
 
   /**
@@ -56,11 +56,11 @@ var CryptoAccount = class CryptoAccount {
    */
   get balance() {
 
-    return this.subunits / this._currencySubunits;
+    return this.subunits / this._assetSubunits;
   }
 
   /**
-   * Deposits a single or multiple lots of cryptocurrency into the account.
+   * Deposits a single or multiple asset lots into the account.
    * @param {(Lot|Lot[])} lots - The single lot or array of lots to deposit into the account.
    */
   deposit(lots) {
@@ -78,11 +78,11 @@ var CryptoAccount = class CryptoAccount {
   }
 
   /**
-   * Withdraws an amount of cryptocurrency from the account.
+   * Withdraws an amount of asset from the account.
    * If necessary the last lot to be withdrawn is split.
    * The fee is assigned to the withdrawn lots in proportion to their size.
    * Throws an error if the amount requested is greater than the balance in the account.
-   * @param {number} amount - The amount of cryptocurrency to withdraw.
+   * @param {number} amount - The amount of asset to withdraw.
    * @param {number} fee - The fee which is also withdrawn from the account.
    * @param {string} lotMatching - The lot matching method used to determine the order in which lots are withdrawn.
    * FIFO First in first out.
@@ -94,8 +94,8 @@ var CryptoAccount = class CryptoAccount {
    */
   withdraw(amount, fee, lotMatching, rowIndex) {
 
-    let amountSubunits = Math.round(amount * this._currencySubunits);
-    let feeSubunits = Math.round(fee * this._currencySubunits);
+    let amountSubunits = Math.round(amount * this._assetSubunits);
+    let feeSubunits = Math.round(fee * this._assetSubunits);
     let neededSubunits = amountSubunits + feeSubunits;
 
     if (neededSubunits > this.subunits) {
@@ -167,7 +167,7 @@ var CryptoAccount = class CryptoAccount {
    */
   apportionFee(fee, rowIndex) {
 
-    let feeSubunits = Math.round(fee * this._currencySubunits);
+    let feeSubunits = Math.round(fee * this._assetSubunits);
 
     if (feeSubunits > this.subunits) {
 

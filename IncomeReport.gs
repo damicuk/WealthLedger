@@ -17,7 +17,7 @@ AssetTracker.prototype.incomeReport = function () {
     let headers = [
       [
         'Date Time',
-        'Currency',
+        'Asset',
         'Ex Rate',
         'Amount',
         'Wallet',
@@ -65,7 +65,7 @@ AssetTracker.prototype.getIncomeTable = function () {
   for (let lot of this.incomeLots) {
 
     let date = lot.date;
-    let currency = lot.debitCurrency;
+    let asset = lot.debitAsset;
     let exRate = lot.debitExRate;
     let amount = lot.debitAmount;
     let wallet = lot.walletName;
@@ -73,7 +73,7 @@ AssetTracker.prototype.getIncomeTable = function () {
     table.push([
 
       date,
-      currency,
+      asset,
       exRate,
       amount,
       wallet

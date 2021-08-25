@@ -250,8 +250,8 @@ var AssetTracker = class AssetTracker {
 
     let cryptos = new Set();
     for (let wallet of this.wallets) {
-      for (let cryptoAccount of wallet.cryptoAccounts) {
-        cryptos.add(cryptoAccount.ticker);
+      for (let assetAccount of wallet.assetAccounts) {
+        cryptos.add(assetAccount.ticker);
       }
     }
     return cryptos;
@@ -266,9 +266,9 @@ var AssetTracker = class AssetTracker {
 
     let cryptos = new Set();
     for (let wallet of this.wallets) {
-      for (let cryptoAccount of wallet.cryptoAccounts) {
-        if (cryptoAccount.balance > 0) {
-          cryptos.add(cryptoAccount.ticker);
+      for (let assetAccount of wallet.assetAccounts) {
+        if (assetAccount.balance > 0) {
+          cryptos.add(assetAccount.ticker);
         }
       }
     }

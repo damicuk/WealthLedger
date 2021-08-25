@@ -1,7 +1,7 @@
 /**
  * Validates and processes the ledger, retrieves the currenct crypto prices, and writes the reports.
  * Uses the error handler to handle any ValidatioError, CryptoAccountError, or ApiError .
- * Updates the data validation on the ledger currency and wallet columns.
+ * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
 AssetTracker.prototype.writeReports = function () {

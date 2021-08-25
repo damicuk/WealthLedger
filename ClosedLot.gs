@@ -1,23 +1,23 @@
 /**
- * Represents an amount of cryptocurrency that has been sold or exchanged.
+ * Represents an amount of asset that has been sold or exchanged.
  * Calculations are done in integer amounts of subunits to avoid computational rounding errors.
  */
 var ClosedLot = class ClosedLot {
 
   /**
    * Initializes the class with the properties set to the parameters.
-   * @param {Lot} lot - An amount of cryptocurrency purchased together.
+   * @param {Lot} lot - An amount of asset purchased together.
    * @param {Date} date - the date of the sale or exchange.
-   * @param {string} creditCurrency - The ticker of the fiat or cryptocurrency credited.
-   * @param {number} creditExRate - The credit currency to accounting currency exchange rate, 0 if the credit currency is the accounting currency.
-   * @param {number} creditAmount - The amount of fiat or cryptocurrency credited.
-   * @param {number} creditFee - The fee in the fiat or cryptocurrency credited.
+   * @param {string} creditAsset - The ticker of the asset credited.
+   * @param {number} creditExRate - The credit asset to accounting currency exchange rate, 0 if the credit asset is the accounting currency.
+   * @param {number} creditAmount - The amount of asset credited.
+   * @param {number} creditFee - The fee in asset units credited.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
    */
-  constructor(lot, date, creditCurrency, creditExRate, creditAmount, creditFee, walletName) {
+  constructor(lot, date, creditAsset, creditExRate, creditAmount, creditFee, walletName) {
 
     /**
-     * An amount of cryptocurrency purchased together.
+     * An amount of asset purchased together.
      * @type {Lot}
      */
     this.lot = lot;
@@ -29,28 +29,28 @@ var ClosedLot = class ClosedLot {
     this.date = date;
 
     /**
-     * The ticker of the fiat or cryptocurrency credited.
+     * The ticker of the asset credited.
      * @type {string}
      */
-    this.creditCurrency = creditCurrency;
+    this.creditAsset = creditAsset;
 
     /**
-     * The credit currency to accounting currency exchange rate, 0 if the credit currency is the accounting currency.
+     * The credit asset to accounting currency exchange rate, 0 if the credit asset is the accounting currency.
      * @type {number}
      */
     this.creditExRate = creditExRate;
 
     /**
-     * The amount of fiat or cryptocurrency credited in subunits.
+     * The amount of asset subunits credited.
      * @type {number}
      */
-    this.creditAmountSubunits = Math.round(creditAmount * this._creditCurrencySubunits);
+    this.creditAmountSubunits = Math.round(creditAmount * this._creditAssetSubunits);
 
     /**
-     * The fee in the fiat or cryptocurrency credited in subunits.
+     * The fee in asset subunits credited.
      * @type {number}
      */
-    this.creditFeeSubunits = Math.round(creditFee * this._creditCurrencySubunits);
+    this.creditFeeSubunits = Math.round(creditFee * this._creditAssetSubunits);
 
     /**
      * The name of the wallet (or exchange) in which the transaction took place.
@@ -60,32 +60,32 @@ var ClosedLot = class ClosedLot {
 
   }
 
-  get creditCurrency() {
+  get creditAsset() {
 
-    return this._creditCurrency;
+    return this._creditAsset;
   }
 
-  set creditCurrency(ticker) {
+  set creditAsset(ticker) {
 
-    this._creditCurrency = ticker;
-    this._creditCurrencySubunits = Currency.subunits(ticker);
+    this._creditAsset = ticker;
+    this._creditAssetSubunits = Currency.subunits(ticker);
   }
 
   /**
-   * The amount of fiat or cryptocurrency credited.
+   * The amount of asset credited.
    * @type {number}
    */
   get creditAmount() {
 
-    return this.creditAmountSubunits / this._creditCurrencySubunits;
+    return this.creditAmountSubunits / this._creditAssetSubunits;
   }
 
   /**
-   * The fee in the fiat or cryptocurrency credited.
+   * The fee in asset units credited.
    * @type {number}
    */
   get creditFee() {
 
-    return this.creditFeeSubunits / this._creditCurrencySubunits;
+    return this.creditFeeSubunits / this._creditAssetSubunits;
   }
 };

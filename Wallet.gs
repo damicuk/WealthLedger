@@ -1,16 +1,16 @@
 /**
- * Wallet (or exchange) with fiat and/or cryptocurrency accounts.
+ * Wallet (or exchange) with fiat and/or asset accounts.
  */
 class Wallet {
 
   /**
-   * Sets the name of the wallet (or exchange) and initializes empty arrays to contain the fiat and cryptocurrency accounts.
+   * Sets the name of the wallet (or exchange) and initializes empty arrays to contain the fiat and asset accounts.
    * @param {string} name - The name of the wallet (or exchange).
    */
   constructor(name) {
 
     /**
-     * The name of the wallet (or exchange) and initializes empty arrays to contain the fiat and cryptocurrency accounts.
+     * The name of the wallet (or exchange) and initializes empty arrays to contain the fiat and asset accounts.
      * @type {string}
      */
     this.name = name;
@@ -22,10 +22,10 @@ class Wallet {
     this.fiatAccounts = [];
 
     /**
-     * The cryptocurrency accounts.
-     * @type {Array<CryptoAccount>}
+     * The asset accounts.
+     * @type {Array<AssetAccount>}
      */
-    this.cryptoAccounts = [];
+    this.assetAccounts = [];
   }
 
   /**
@@ -51,24 +51,24 @@ class Wallet {
   }
 
   /**
-   * Returns the cryptocurrency account with the given ticker or creates adds and returns a new cryptocurrency account with that ticker.
-   * @param {string} ticker - The ticker of the cryptocurrency account to search for.
-   * @return {CryptoAccount} The cryptocurrency account found or created.
+   * Returns the asset account with the given ticker or creates adds and returns a new asset account with that ticker.
+   * @param {string} ticker - The ticker of the asset account to search for.
+   * @return {AssetAccount} The asset account found or created.
    */
-  getCryptoAccount(ticker) {
+  getAssetAccount(ticker) {
 
-    for (let cryptoAccount of this.cryptoAccounts) {
+    for (let assetAccount of this.assetAccounts) {
 
-      if (cryptoAccount.ticker === ticker) {
+      if (assetAccount.ticker === ticker) {
 
-        return cryptoAccount;
+        return assetAccount;
       }
     }
 
-    let cryptoAccount = new CryptoAccount(ticker);
+    let assetAccount = new AssetAccount(ticker);
 
-    this.cryptoAccounts.push(cryptoAccount);
+    this.assetAccounts.push(assetAccount);
 
-    return cryptoAccount;
+    return assetAccount;
   }
 }

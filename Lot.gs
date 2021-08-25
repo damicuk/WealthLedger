@@ -1,5 +1,5 @@
 /**
- * Represents an amount of cryptocurrency purchased together.
+ * Represents an amount of asset purchased together.
  * Calculations are done in integer amounts of subunits to avoid computational rounding errors.
  */
 var Lot = class Lot {
@@ -7,16 +7,16 @@ var Lot = class Lot {
   /**
    * Initializes the class with the properties set to the parameters.
    * @param {Date} date - the date of the transaction.
-   * @param {string} debitCurrency - The ticker of the fiat or cryptocurrency debited.
-   * @param {number} debitExRate - The debit currency to accounting currency exchange rate, 0 if the debit currency is the accounting currency.
-   * @param {number} debitAmount - The amount of fiat or cryptocurrency debited.
-   * @param {number} debitFee - The fee in the fiat or cryptocurrency debited.
-   * @param {string} creditCurrency - The ticker of the cryptocurrency credited.
-   * @param {number} creditAmount - The amount of fiat or cryptocurrency credited.
-   * @param {number} creditFee - The fee in the fiat or cryptocurrency credited.
+   * @param {string} debitAsset - The ticker of the asset debited.
+   * @param {number} debitExRate - The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
+   * @param {number} debitAmount - The amount of asset debited.
+   * @param {number} debitFee - The fee in asset units debited.
+   * @param {string} creditAsset - The ticker of the asset credited.
+   * @param {number} creditAmount - The amount of asset credited.
+   * @param {number} creditFee - The fee in asset units credited.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
    */
-  constructor(date, debitCurrency, debitExRate, debitAmount, debitFee, creditCurrency, creditAmount, creditFee, walletName) {
+  constructor(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, walletName) {
 
     /**
      * The date of the transaction.
@@ -25,46 +25,46 @@ var Lot = class Lot {
     this.date = date;
 
     /**
-     * The ticker of the fiat or cryptocurrency debited.
+     * The ticker of the asset debited.
      * @type {string}
      */
-    this.debitCurrency = debitCurrency;
+    this.debitAsset = debitAsset;
 
     /**
-     * The debit currency to accounting currency exchange rate, 0 if the debit currency is the accounting currency.
+     * The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
      * @type {number}
      */
     this.debitExRate = debitExRate;
 
     /**
-     * The amount of fiat or cryptocurrency debited in subunits.
+     * The amount of asset debited in subunits.
      * @type {number}
      */
-    this.debitAmountSubunits = Math.round(debitAmount * this._debitCurrencySubunits);
+    this.debitAmountSubunits = Math.round(debitAmount * this._debitAssetSubunits);
 
     /**
-     * The fee in the fiat or cryptocurrency debited in subunits.
+     * The fee in asset subunits debited.
      * @type {number}
      */
-    this.debitFeeSubunits = Math.round(debitFee * this._debitCurrencySubunits);
+    this.debitFeeSubunits = Math.round(debitFee * this._debitAssetSubunits);
 
     /**
-     * The ticker of the cryptocurrency credited.
+     * The ticker of the asset credited.
      * @type {string}
      */
-    this.creditCurrency = creditCurrency;
+    this.creditAsset = creditAsset;
 
     /**
-     * The amount of fiat or cryptocurrency credited in subunits.
+     * The amount of asset credited in subunits.
      * @type {number}
      */
-    this.creditAmountSubunits = Math.round(creditAmount * this._creditCurrencySubunits);
+    this.creditAmountSubunits = Math.round(creditAmount * this._creditAssetSubunits);
 
     /**
-     * The fee in the fiat or cryptocurrency credited in subunits.
+     * The fee in asseet subunits credited.
      * @type {number}
      */
-    this.creditFeeSubunits = Math.round(creditFee * this._creditCurrencySubunits);
+    this.creditFeeSubunits = Math.round(creditFee * this._creditAssetSubunits);
 
     /**
      * The name of the wallet (or exchange) in which the transaction took place.
@@ -74,63 +74,63 @@ var Lot = class Lot {
 
   }
 
-  get debitCurrency() {
+  get debitAsset() {
 
-    return this._debitCurrency;
+    return this._debitAsset;
   }
 
-  set debitCurrency(ticker) {
+  set debitAsset(ticker) {
 
-    this._debitCurrency = ticker;
-    this._debitCurrencySubunits = Currency.subunits(ticker);
+    this._debitAsset = ticker;
+    this._debitAssetSubunits = Currency.subunits(ticker);
 
   }
 
-  get creditCurrency() {
+  get creditAsset() {
 
-    return this._creditCurrency;
+    return this._creditAsset;
   }
 
-  set creditCurrency(ticker) {
+  set creditAsset(ticker) {
 
-    this._creditCurrency = ticker;
-    this._creditCurrencySubunits = Currency.subunits(ticker);
+    this._creditAsset = ticker;
+    this._creditAssetSubunits = Currency.subunits(ticker);
   }
 
   /**
-   * The amount of fiat or cryptocurrency debited.
+   * The amount of asset debited.
    * @type {number}
    */
   get debitAmount() {
 
-    return this.debitAmountSubunits / this._debitCurrencySubunits;
+    return this.debitAmountSubunits / this._debitAssetSubunits;
   }
 
   /**
-   * The fee in the fiat or cryptocurrency debited.
+   * The fee in asset units debited.
    * @type {number}
    */
   get debitFee() {
 
-    return this.debitFeeSubunits / this._debitCurrencySubunits;
+    return this.debitFeeSubunits / this._debitAssetSubunits;
   }
 
   /**
-   * The amount of fiat or cryptocurrency credited.
+   * The amount of asset credited.
    * @type {number}
    */
   get creditAmount() {
 
-    return this.creditAmountSubunits / this._creditCurrencySubunits;
+    return this.creditAmountSubunits / this._creditAssetSubunits;
   }
 
   /**
-   * The fee in the fiat or cryptocurrency credited.
+   * The fee in asset units credited.
    * @type {number}
    */
   get creditFee() {
 
-    return this.creditFeeSubunits / this._creditCurrencySubunits;
+    return this.creditFeeSubunits / this._creditAssetSubunits;
   }
 
   /**
@@ -160,7 +160,7 @@ var Lot = class Lot {
 
   /**
    * Splits a lot into two lots.
-   * Used when withdrawing an amount from a cryptocurrency account.
+   * Used when withdrawing an amount from a asset account.
    * The costs are assigned in proportion to the balances of the returned lots.
    * @param {number} subunits - The balance in subunits required in the first lot of the returned lots.
    * @return {Lots[]} Array of two lots, the first having the requested balance, the second with the remainder.
@@ -177,26 +177,26 @@ var Lot = class Lot {
 
     let lot1 = new Lot(
       this.date,
-      this.debitCurrency,
+      this.debitAsset,
       this.debitExRate,
-      debitAmountSubunits / this._debitCurrencySubunits,
-      debitFeeSubunits / this._debitCurrencySubunits,
-      this.creditCurrency,
-      creditAmountSubunits / this._creditCurrencySubunits,
-      creditFeeSubunits / this._creditCurrencySubunits,
+      debitAmountSubunits / this._debitAssetSubunits,
+      debitFeeSubunits / this._debitAssetSubunits,
+      this.creditAsset,
+      creditAmountSubunits / this._creditAssetSubunits,
+      creditFeeSubunits / this._creditAssetSubunits,
       this.walletName);
 
     splitLots.push(lot1);
 
     let lot2 = new Lot(
       this.date,
-      this.debitCurrency,
+      this.debitAsset,
       this.debitExRate,
-      (this.debitAmountSubunits - lot1.debitAmountSubunits) / this._debitCurrencySubunits,
-      (this.debitFeeSubunits - lot1.debitFeeSubunits) / this._debitCurrencySubunits,
-      this.creditCurrency,
-      (this.creditAmountSubunits - lot1.creditAmountSubunits) / this._creditCurrencySubunits,
-      (this.creditFeeSubunits - lot1.creditFeeSubunits) / this._creditCurrencySubunits,
+      (this.debitAmountSubunits - lot1.debitAmountSubunits) / this._debitAssetSubunits,
+      (this.debitFeeSubunits - lot1.debitFeeSubunits) / this._debitAssetSubunits,
+      this.creditAsset,
+      (this.creditAmountSubunits - lot1.creditAmountSubunits) / this._creditAssetSubunits,
+      (this.creditFeeSubunits - lot1.creditFeeSubunits) / this._creditAssetSubunits,
       this.walletName);
 
     splitLots.push(lot2);
@@ -214,13 +214,13 @@ var Lot = class Lot {
 
     return new Lot(
       this.date,
-      this.debitCurrency,
+      this.debitAsset,
       this.debitExRate,
-      this.debitAmountSubunits / this._debitCurrencySubunits,
-      this.debitFeeSubunits / this._debitCurrencySubunits,
-      this.creditCurrency,
-      this.creditAmountSubunits / this._creditCurrencySubunits,
-      this.creditFeeSubunits / this._creditCurrencySubunits,
+      this.debitAmountSubunits / this._debitAssetSubunits,
+      this.debitFeeSubunits / this._debitAssetSubunits,
+      this.creditAsset,
+      this.creditAmountSubunits / this._creditAssetSubunits,
+      this.creditFeeSubunits / this._creditAssetSubunits,
       this.walletName);
   }
 };

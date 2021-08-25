@@ -23,12 +23,12 @@ AssetTracker.prototype.donationsReport = function () {
       ],
       [
         'Date Time',
-        'Currency',
+        'Asset',
         'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
-        'Currency',
+        'Asset',
         'Amount',
         'Fee',
         'Date Time',
@@ -116,13 +116,13 @@ AssetTracker.prototype.getDonationsTable = function () {
     let lot = donatedLot.lot;
 
     let dateBuy = lot.date;
-    let debitCurrencyBuy = lot.debitCurrency;
+    let debitAssetBuy = lot.debitAsset;
     let debitExRateBuy = lot.debitExRate;
     let debitAmountBuy = lot.debitAmount;
     let debitFeeBuy = lot.debitFee;
     let walletBuy = lot.walletName;
 
-    let creditCurrencyBuy = lot.creditCurrency;
+    let creditAssetBuy = lot.creditAsset;
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
 
@@ -133,13 +133,13 @@ AssetTracker.prototype.getDonationsTable = function () {
     table.push([
 
       dateBuy,
-      debitCurrencyBuy,
+      debitAssetBuy,
       debitExRateBuy,
       debitAmountBuy,
       debitFeeBuy,
       walletBuy,
 
-      creditCurrencyBuy,
+      creditAssetBuy,
       creditAmountBuy,
       creditFeeBuy,
 

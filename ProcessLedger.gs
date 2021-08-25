@@ -38,12 +38,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
-  let debitCurrency = ledgerRecord.debitCurrency;
+  let debitAsset = ledgerRecord.debitAsset;
   let debitExRate = ledgerRecord.debitExRate;
   let debitAmount = ledgerRecord.debitAmount;
   let debitFee = ledgerRecord.debitFee;
   let debitWalletName = ledgerRecord.debitWalletName;
-  let creditCurrency = ledgerRecord.creditCurrency;
+  let creditAsset = ledgerRecord.creditAsset;
   let creditExRate = ledgerRecord.creditExRate;
   let creditAmount = ledgerRecord.creditAmount;
   let creditFee = ledgerRecord.creditFee;
@@ -56,65 +56,65 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   if (action === 'Transfer') {  //Transfer
 
-    if (Currency.isFiat(debitCurrency)) { //Fiat transfer
+    if (Currency.isFiat(debitAsset)) { //Fiat transfer
 
       if (debitWalletName) { //Fiat withdrawal
 
-        this.getWallet(debitWalletName).getFiatAccount(debitCurrency).transfer(-debitAmount).transfer(-debitFee);
+        this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
       }
       else if (creditWalletName) { //Fiat deposit
 
-        this.getWallet(creditWalletName).getFiatAccount(debitCurrency).transfer(debitAmount).transfer(-debitFee);
+        this.getWallet(creditWalletName).getFiatAccount(debitAsset).transfer(debitAmount).transfer(-debitFee);
 
       }
     }
-    else if (Currency.isCrypto(debitCurrency)) {  //Crypto transfer
+    else if (Currency.isCrypto(debitAsset)) {  //Crypto transfer
 
-      let lots = this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.getWallet(creditWalletName).getCryptoAccount(debitCurrency).deposit(lots);
+      this.getWallet(creditWalletName).getAssetAccount(debitAsset).deposit(lots);
 
     }
   }
   else if (action === 'Trade') { //Trade
 
-    if (Currency.isFiat(debitCurrency) && Currency.isCrypto(creditCurrency)) {  //Buy crypto
+    if (Currency.isFiat(debitAsset) && Currency.isCrypto(creditAsset)) {  //Buy crypto
 
-      this.getWallet(debitWalletName).getFiatAccount(debitCurrency).transfer(-debitAmount).transfer(-debitFee);
+      this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
-      let lot = new Lot(date, debitCurrency, debitExRate, debitAmount, debitFee, creditCurrency, creditAmount, creditFee, debitWalletName);
+      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
-      this.getWallet(debitWalletName).getCryptoAccount(creditCurrency).deposit(lot);
-
-    }
-    else if (Currency.isCrypto(debitCurrency) && Currency.isFiat(creditCurrency)) { //Sell crypto
-
-      let lots = this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
-
-      this.closeLots(lots, date, creditCurrency, creditExRate, creditAmount, creditFee, debitWalletName);
-
-      this.getWallet(debitWalletName).getFiatAccount(creditCurrency).transfer(creditAmount).transfer(-creditFee);
+      this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
-    else if (Currency.isCrypto(debitCurrency) && Currency.isCrypto(creditCurrency)) { //Exchange cyrptos
+    else if (Currency.isCrypto(debitAsset) && Currency.isFiat(creditAsset)) { //Sell crypto
 
-      let lots = this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.closeLots(lots, date, creditCurrency, creditExRate, creditAmount, creditFee, debitWalletName);
+      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName);
 
-      let lot = new Lot(date, debitCurrency, debitExRate, debitAmount, debitFee, creditCurrency, creditAmount, creditFee, debitWalletName);
+      this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
-      this.getWallet(debitWalletName).getCryptoAccount(creditCurrency).deposit(lot);
+    }
+    else if (Currency.isCrypto(debitAsset) && Currency.isCrypto(creditAsset)) { //Exchange cyrptos
+
+      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+
+      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName);
+
+      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
+
+      this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
   }
   else if (action === 'Income') { //Income
 
     //the cost base is the value of (credit exchange rate x credit amount)
-    let lot = new Lot(date, creditCurrency, creditExRate, creditAmount, 0, creditCurrency, creditAmount, 0, creditWalletName);
+    let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
 
-    this.getWallet(creditWalletName).getCryptoAccount(creditCurrency).deposit(lot);
+    this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     //keep track of income separately
     this.incomeLots.push(lot.duplicate());
@@ -122,21 +122,21 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Donation') { //Donation
 
-    let lots = this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+    let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
     this.donateLots(lots, date, debitExRate, debitWalletName);
 
   }
   else if (action === 'Gift') { //Gift
 
-    this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+    this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
   }
   else if (action === 'Fee') { //Fee
 
-    this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).apportionFee(debitFee, rowIndex);
+    this.getWallet(debitWalletName).getAssetAccount(debitAsset).apportionFee(debitFee, rowIndex);
 
-    let lots = this.getWallet(debitWalletName).getCryptoAccount(debitCurrency).removeZeroSubunitLots();
+    let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).removeZeroSubunitLots();
 
     this.closeLots(lots, date, this.accountingCurrency, 0, 0, 0, debitWalletName);
 
