@@ -20,12 +20,12 @@ AssetTracker.prototype.sampleLedger = function () {
     [
       'Date Time',
       'Action',
-      'Currency',
+      'Asset',
       'Ex Rate',
       'Amount',
       'Fee',
       'Wallet',
-      'Currency',
+      'Asset',
       'Ex Rate',
       'Amount',
       'Fee',
@@ -58,7 +58,7 @@ AssetTracker.prototype.sampleLedger = function () {
   sheet.clearConditionalFormatRules();
   this.addActionCondtion(sheet, 'B3:B');
 
-  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Stop', 'Trade', 'Transfer'];
+  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'];
 
   let actionRule = SpreadsheetApp.newDataValidation().requireValueInList(actions).setAllowInvalid(false).build();
   sheet.getRange('B3:B').setDataValidation(actionRule);

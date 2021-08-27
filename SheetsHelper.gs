@@ -215,6 +215,7 @@ AssetTracker.prototype.addActionCondtion = function (sheet, a1Notation) {
     ['Fee', '#9900ff', null],
     ['Gift', '#ff9900', null],
     ['Income', '#6aa84f', null],
+    ['Split', '#ff00ff', null],
     ['Stop', '#ff0000', '#ffbb00'],
     ['Trade', '#1155cc', null],
     ['Transfer', '#ff0000', null],
