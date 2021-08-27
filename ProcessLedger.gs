@@ -56,7 +56,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   if (action === 'Transfer') {  //Transfer
 
-    if (Currency.isFiat(debitAsset)) { //Fiat transfer
+    if (Ticker.isBaseCurrency(debitAsset)) { //Base currency transfer
 
       if (debitWalletName) { //Fiat withdrawal
 
@@ -69,7 +69,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       }
     }
-    else if (Currency.isCrypto(debitAsset)) {  //Crypto transfer
+    else if (Ticker.isAsset(debitAsset)) {  //Asset transfer
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
@@ -79,7 +79,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Trade') { //Trade
 
-    if (Currency.isFiat(debitAsset) && Currency.isCrypto(creditAsset)) {  //Buy crypto
+    if (Ticker.isBaseCurrency(debitAsset) && Ticker.isAsset(creditAsset)) {  //Buy asset
 
       this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
@@ -88,7 +88,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
-    else if (Currency.isCrypto(debitAsset) && Currency.isFiat(creditAsset)) { //Sell crypto
+    else if (Ticker.isAsset(debitAsset) && Ticker.isBaseCurrency(creditAsset)) { //Sell asset
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
@@ -97,7 +97,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
     }
-    else if (Currency.isCrypto(debitAsset) && Currency.isCrypto(creditAsset)) { //Exchange cyrptos
+    else if (Ticker.isAsset(debitAsset) && Ticker.isAsset(creditAsset)) { //Exchange assets
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
