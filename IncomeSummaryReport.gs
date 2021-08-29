@@ -37,9 +37,9 @@ AssetTracker.prototype.incomeSummaryReport = function () {
   sheet.getRange('D2:D').setNumberFormat('#,##0.00;(#,##0.00)');
 
   const formulas = [[
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{QUERY(${referenceRangeName}, "SELECT YEAR(A), B, SUM(D), SUM(F) GROUP BY B, YEAR(A) ORDER BY YEAR(A), B LABEL YEAR(A) '', SUM(D) '', SUM(F) ''");
-{QUERY(${referenceRangeName}, "SELECT YEAR(A), 'SUBTOTAL', ' ', SUM(F) GROUP BY YEAR(A) ORDER BY YEAR(A) LABEL YEAR(A) '', 'SUBTOTAL' '', ' ' '', SUM(F) ''")};
-{"","TOTAL","",QUERY(${referenceRangeName}, "SELECT SUM(F) LABEL SUM(F) ''")}})`, , , ,
+    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{QUERY(${referenceRangeName}, "SELECT YEAR(A), D, SUM(G), SUM(I) GROUP BY D, YEAR(A) ORDER BY YEAR(A), D LABEL YEAR(A) '', SUM(G) '', SUM(I) ''");
+{QUERY(${referenceRangeName}, "SELECT YEAR(A), 'SUBTOTAL', ' ', SUM(I) GROUP BY YEAR(A) ORDER BY YEAR(A) LABEL YEAR(A) '', 'SUBTOTAL' '', ' ' '', SUM(I) ''")};
+{"","TOTAL","",QUERY(${referenceRangeName}, "SELECT SUM(I) LABEL SUM(I) ''")}})`, , , ,
   ]];
 
   sheet.getRange('A2:D2').setFormulas(formulas);

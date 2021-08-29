@@ -17,7 +17,10 @@ AssetTracker.prototype.incomeReport = function () {
     let headers = [
       [
         'Date Time',
-        'Asset',
+        'Source Asset',
+        'Source Type',
+        'Income Asset',
+        'Income Type',
         'Ex Rate',
         'Amount',
         'Wallet',
@@ -25,21 +28,21 @@ AssetTracker.prototype.incomeReport = function () {
       ]
     ];
 
-    sheet.getRange('A1:F1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:I1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(1);
 
     sheet.getRange('A2:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('B2:B').setNumberFormat('@');
-    sheet.getRange('C2:C').setNumberFormat('#,##0.00000;(#,##0.00000);');
-    sheet.getRange('D2:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('E2:E').setNumberFormat('@');
-    sheet.getRange('F2:F').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('B2:E').setNumberFormat('@');
+    sheet.getRange('F2:F').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('G2:G').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('H2:H').setNumberFormat('@');
+    sheet.getRange('I2:I').setNumberFormat('#,##0.00;(#,##0.00)');
 
     const formulas = [[
-      `IF(ISBLANK(A2),,ArrayFormula(FILTER(D2:D*C2:C, LEN(A2:A))))`
+      `IF(ISBLANK(A2),,ArrayFormula(FILTER(G2:G*F2:F, LEN(A2:A))))`
     ]];
 
-    sheet.getRange('F2:F2').setFormulas(formulas);
+    sheet.getRange('I2:I2').setFormulas(formulas);
 
     let protection = sheet.protect().setDescription('Essential Data Sheet');
     protection.setWarningOnly(true);
@@ -48,7 +51,7 @@ AssetTracker.prototype.incomeReport = function () {
 
   let dataTable = this.getIncomeTable();
 
-  this.writeTable(ss, sheet, dataTable, this.incomeRangeName, 1, 5, 1);
+  this.writeTable(ss, sheet, dataTable, this.incomeRangeName, 1, 8, 1);
 
 };
 
@@ -65,7 +68,10 @@ AssetTracker.prototype.getIncomeTable = function () {
   for (let lot of this.incomeLots) {
 
     let date = lot.date;
-    let asset = lot.debitAsset;
+    let sourceAsset = null;
+    let sourceType = null;
+    let incomeAsset = lot.debitAsset;
+    let incomeType = null;
     let exRate = lot.debitExRate;
     let amount = lot.debitAmount;
     let wallet = lot.walletName;
@@ -73,7 +79,10 @@ AssetTracker.prototype.getIncomeTable = function () {
     table.push([
 
       date,
-      asset,
+      sourceAsset,
+      sourceType,
+      incomeAsset,
+      incomeType,
       exRate,
       amount,
       wallet

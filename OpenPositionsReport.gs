@@ -17,19 +17,21 @@ AssetTracker.prototype.openPositionsReport = function () {
 
     let headers = [
       [
-        'Buy Debit', , , , , ,
-        'Buy Credit', , ,
+        'Buy Debit', , , , , , ,
+        'Buy Credit', , , ,
         'Current',
         'Calculations', , , , , , , ,
       ],
       [
         'Date Time',
         'Asset',
+        'Type',
         'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
         'Asset',
+        'Type',
         'Amount',
         'Fee',
         'Wallet',
@@ -44,48 +46,48 @@ AssetTracker.prototype.openPositionsReport = function () {
       ]
     ];
 
-    sheet.getRange('A1:R2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:T2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(2);
 
-    sheet.getRange('A1:F2').setBackgroundColor('#ead1dc');
-    sheet.getRange('G1:I2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('J1:J2').setBackgroundColor('#d9d2e9');
-    sheet.getRange('K1:R2').setBackgroundColor('#c9daf8');
+    sheet.getRange('A1:G2').setBackgroundColor('#ead1dc');
+    sheet.getRange('H1:K2').setBackgroundColor('#d0e0e3');
+    sheet.getRange('L1:L2').setBackgroundColor('#d9d2e9');
+    sheet.getRange('M1:T2').setBackgroundColor('#c9daf8');
 
-    sheet.getRange('A1:F1').mergeAcross();
-    sheet.getRange('G1:I1').mergeAcross();
-    sheet.getRange('K1:R1').mergeAcross();
+    sheet.getRange('A1:G1').mergeAcross();
+    sheet.getRange('H1:K1').mergeAcross();
+    sheet.getRange('M1:T1').mergeAcross();
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('B3:B').setNumberFormat('@');
-    sheet.getRange('C3:C').setNumberFormat('#,##0.00000;(#,##0.00000);');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('F3:G').setNumberFormat('@');
-    sheet.getRange('H3:H').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('I3:I').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('J3:J').setNumberFormat('@');
-    sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('L3:O').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('P3:P').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('Q3:Q').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange('R3:R').setNumberFormat('@');
+    sheet.getRange('B3:C').setNumberFormat('@');
+    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('G3:I').setNumberFormat('@');
+    sheet.getRange('J3:J').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('L3:L').setNumberFormat('@');
+    sheet.getRange('M3:M').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('N3:Q').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('R3:R').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange('S3:S').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange('T3:T').setNumberFormat('@');
 
     sheet.clearConditionalFormatRules();
-    this.addLongShortCondition(sheet, 'R3:R');
+    this.addLongShortCondition(sheet, 'T3:T');
 
     const formulas = [[
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(H3:H-I3:I, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(K3:K=0,,N3:N/K3:K), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(G3:G, QUERY(${exRatesRangeName}, "SELECT B, D"), 2, FALSE),), LEN(A3:A))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(C3:C, (D3:D+E3:E)*C3:C, D3:D+E3:E), LEN(A3:A)))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(K3:K*M3:M, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(O3:O-N3:N, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(IF(N3:N=0,,P3:P/N3:N), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(M3:M=0,,P3:P/M3:M), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(H3:H, QUERY(${exRatesRangeName}, "SELECT B, D"), 2, FALSE),), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, (E3:E+F3:F)*D3:D, E3:E+F3:F), LEN(A3:A)))))`,
+      `ArrayFormula(IF(ISBLANK(O3:O),,FILTER(M3:M*O3:O, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(O3:O),,FILTER(Q3:Q-P3:P, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(O3:O),,FILTER(IF(P3:P=0,,R3:R/P3:P), LEN(A3:A))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, NOW(), "Y") > 1)+(((DATEDIF(A3:A, NOW(), "Y") = 1)*(DATEDIF(A3:A, NOW(), "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('K3:R3').setFormulas(formulas);
+    sheet.getRange('M3:T3').setFormulas(formulas);
 
     let protection = sheet.protect().setDescription('Essential Data Sheet');
     protection.setWarningOnly(true);
@@ -94,7 +96,7 @@ AssetTracker.prototype.openPositionsReport = function () {
 
   let dataTable = this.getOpenPositionsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 10, 8);
+  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 12, 8);
 
 };
 
@@ -114,12 +116,14 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
 
         let date = lot.date;
         let debitAsset = lot.debitAsset;
+        let debitType = null;
         let debitExRate = lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;
 
         let creditAsset = lot.creditAsset;
+        let creditType = null;
         let creditAmount = lot.creditAmount;
         let creditFee = lot.creditFee;
 
@@ -129,12 +133,14 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
 
           date,
           debitAsset,
+          debitType,
           debitExRate,
           debitAmount,
           debitFee,
           buyWallet,
 
           creditAsset,
+          creditType,
           creditAmount,
           creditFee,
 
