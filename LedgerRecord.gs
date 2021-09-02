@@ -65,9 +65,9 @@ class LedgerRecord {
     this.debitAmount = debitAmount;
 
     /**
-    * The fee in asset units debited from the account.
-    * @type {number}
-    */
+     * The fee in asset units debited from the account.
+     * @type {number}
+     */
     this.debitFee = debitFee;
 
     /**

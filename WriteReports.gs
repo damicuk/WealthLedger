@@ -6,6 +6,21 @@
  */
 AssetTracker.prototype.writeReports = function () {
 
+  let assetRecords;
+  try {
+    assetRecords = this.getAssetRecords();
+    this.validateAssetRecords(assetRecords);
+  }
+  catch (error) {
+    if (error instanceof ValidationError) {
+      this.handleError('validation', error.message, this.assetSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
+      return;
+    }
+    else {
+      throw error;
+    }
+  }
+
   let ledgerRecords;
   try {
     ledgerRecords = this.getLedgerRecords();
@@ -13,7 +28,7 @@ AssetTracker.prototype.writeReports = function () {
   }
   catch (error) {
     if (error instanceof ValidationError) {
-      this.handleError('validation', error.message, error.rowIndex, error.columnName);
+      this.handleError('validation', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex(error.columnName));
       return;
     }
     else {
@@ -26,7 +41,7 @@ AssetTracker.prototype.writeReports = function () {
   }
   catch (error) {
     if (error instanceof CryptoAccountError) {
-      this.handleError('cryptoAccount', error.message, error.rowIndex, 'debitAmount');
+      this.handleError('cryptoAccount', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex('debitAmount'));
       return;
     }
     else {

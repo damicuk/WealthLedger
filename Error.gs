@@ -3,25 +3,24 @@
  * Central error handling displays alert and sets the currenct cell when appropriate.
  * @param {string} error - The type of error.
  * @param {string} message - The message to display to the user.
- * @param {number} [rowIndex] - The row index of the cell in the ledger sheet.
- * @param {string} [columnName] - the name assigned to the column in the ledger sheet.
- * Used to get the index from LedgerRecord.getColumnIndex(columnName).
- * Avoids hard coding column numbers.
+ * @param {string} [sheetName] - The name of the sheet where the error was found.
+ * @param {number} [rowIndex] - The row index of the cell in the named sheet.
+ * @param {number} columnIndex - The column index of the cell in the named sheet.
  */
-AssetTracker.prototype.handleError = function (error, message, rowIndex, columnName) {
+AssetTracker.prototype.handleError = function (error, message, sheetName, rowIndex, columnIndex) {
 
   if (error === 'validation') {
 
-    if (rowIndex && columnName) {
-      this.setCurrentCell(rowIndex, columnName);
+    if (rowIndex && columnIndex) {
+      this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
     SpreadsheetApp.getUi().alert(`Ledger validation failed`, message, SpreadsheetApp.getUi().ButtonSet.OK);
   }
   else if (error === 'cryptoAccount') {
 
-     if (rowIndex && columnName) {
-      this.setCurrentCell(rowIndex, columnName);
+     if (sheetName && rowIndex && columnIndex) {
+      this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
     SpreadsheetApp.getUi().alert(`Insufficient funds`, message, SpreadsheetApp.getUi().ButtonSet.OK);
@@ -40,21 +39,19 @@ AssetTracker.prototype.handleError = function (error, message, rowIndex, columnN
 };
 
 /**
- * Sets the currenct cell in the ledger sheet.
- * @param {number} rowIndex - The row index of the cell in the ledger sheet.
- * @param {string} columnName - the name assigned to the column in the ledger sheet.
- * Used to get the index from LedgerRecord.getColumnIndex(columnName).
- * Avoids hard coding column numbers.
+ * Sets the currenct cell in named sheet.
+ * @param {string} sheetName - The name. of the sheet.
+ * @param {number} rowIndex - The row index of the cell in the named sheet.
+ * @param {number} columnIndex - The column index of the cell in the named sheet.
  */
-AssetTracker.prototype.setCurrentCell = function (rowIndex, columnName) {
+AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnIndex) {
 
   let ss = SpreadsheetApp.getActive();
-  let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
+  let sheet = ss.getSheetByName(sheetName);
 
-  if (ledgerSheet) {
+  if (sheet) {
 
-    let columnIndex = LedgerRecord.getColumnIndex(columnName);
-    let range = ledgerSheet.getRange(rowIndex, columnIndex, 1, 1);
+    let range = sheet.getRange(rowIndex, columnIndex, 1, 1);
     ss.setCurrentCell(range);
     SpreadsheetApp.flush();
 

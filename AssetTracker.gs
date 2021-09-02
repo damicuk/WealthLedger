@@ -79,6 +79,18 @@ var AssetTracker = class AssetTracker {
     this.ledgerDataColumns = 13;
 
     /**
+     * The number of header rows in the asset sheet.
+     * @type {number}
+     */
+    this.assetHeaderRows = 1;
+
+    /**
+     * The number of data columns in the asset sheet.
+     * @type {number}
+     */
+    this.assetDataColumns = 3;
+
+    /**
      * The number of header rows in the ex rates sheet
      * @type {number}
      */
@@ -91,6 +103,7 @@ var AssetTracker = class AssetTracker {
     this.exRatesSheetDataColumns = 4;
 
     this.ledgerSheetName = 'Ledger';
+    this.assetSheetName = 'Assets';
     this.exRatesSheetName = 'Ex Rates Data';
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.openPositionsReportName = 'Open Positions Report';

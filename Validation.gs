@@ -6,12 +6,26 @@
 AssetTracker.prototype.validateLedger = function () {
 
   try {
+    let assetRecords = this.getAssetRecords();
+    this.validateAssetRecords(assetRecords);
+  }
+  catch (error) {
+    if (error instanceof ValidationError) {
+      this.handleError('validation', error.message, this.assetSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
+      return;
+    }
+    else {
+      throw error;
+    }
+  }
+
+  try {
     let ledgerRecords = this.getLedgerRecords();
     this.validateLedgerRecords(ledgerRecords);
   }
   catch (error) {
     if (error instanceof ValidationError) {
-      this.handleError('validation', error.message, error.rowIndex, error.columnName);
+      this.handleError('validation', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex(error.columnName));
       return;
     }
     else {
@@ -20,6 +34,35 @@ AssetTracker.prototype.validateLedger = function () {
   }
 
   SpreadsheetApp.getActive().toast('All looks good', 'Ledger Valid', 10);
+};
+
+
+/**
+ * Validates a set of asset records and throws a ValidationError on failure.
+ * @param {AssetRecord[]} assetRecords - The colection of asset records to validate.
+ */
+AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
+
+  let rowIndex = this.assetHeaderRows + 1;
+  for(let assetRecord of assetRecords) {
+    this.validateAssetRecord(assetRecord, rowIndex++);
+  }
+};
+
+/**
+ * Validates an asset record and throws a ValidationError on failure.
+ * @param {AssetRecord} assetRecord - The asset record to validate.
+ * @param {number} rowIndex - The index of the row in the asset sheet used to set the current cell in case of an error.
+ */
+AssetTracker.prototype.validateAssetRecord = function (assetRecord, rowIndex) {
+
+  let ticker = assetRecord.ticker;
+  let type = assetRecord.type;
+  let decimalPlaces = assetRecord.decimalPlaces;
+
+  if(isNaN(decimalPlaces)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (number or blank).`, rowIndex, 'decimalPlaces');
+  }
 };
 
 /**
