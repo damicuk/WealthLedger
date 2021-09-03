@@ -57,7 +57,7 @@ AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 AssetTracker.prototype.validateAssetRecord = function (assetRecord, rowIndex) {
 
   let ticker = assetRecord.ticker;
-  let type = assetRecord.type;
+  let assetType = assetRecord.assetType;
   let decimalPlaces = assetRecord.decimalPlaces;
 
   if(isNaN(decimalPlaces)) {

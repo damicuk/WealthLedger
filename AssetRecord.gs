@@ -6,12 +6,12 @@ class AssetRecord {
   /**
    * Assigns each column value to a property.
    * @param {string} ticker - The ticker of the asset.
-   * @param {string} type - The type of the asset.
+   * @param {string} assetType - The type of the asset.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
    */
   constructor(
     ticker,
-    type,
+    assetType,
     decimalPlaces) {
 
     /**
@@ -22,9 +22,9 @@ class AssetRecord {
 
     /**
      * The type of the asset.
-     * @type {string}
+     * @assetType {string}
      */
-    this.type = type;
+    this.assetType = assetType;
 
     /**
      * The number of decimal places of the asset.
