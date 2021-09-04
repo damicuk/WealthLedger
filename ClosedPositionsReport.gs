@@ -126,20 +126,20 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
 
     let dateBuy = lot.date;
     let debitAssetBuy = lot.debitAsset;
-    let debitTypeBuy = null;
+    let debitTypeBuy = this.getAssetType(debitAssetBuy);
     let debitExRateBuy = lot.debitExRate;
     let debitAmountBuy = lot.debitAmount;
     let debitFeeBuy = lot.debitFee;
     let walletBuy = lot.walletName;
 
     let creditAssetBuy = lot.creditAsset;
-    let creditTypeBuy = null;
+    let creditTypeBuy = this.getAssetType(creditAssetBuy);
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
 
     let dateSell = closedLot.date;
     let creditAssetSell = closedLot.creditAsset;
-    let creditTypeSell = null;
+    let creditTypeSell = this.getAssetType(creditAssetSell);
     let creditExRateSell = closedLot.creditExRate;
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;

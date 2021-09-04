@@ -116,14 +116,14 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
 
         let date = lot.date;
         let debitAsset = lot.debitAsset;
-        let debitType = null;
+        let debitType = this.getAssetType(debitAsset);
         let debitExRate = lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;
 
         let creditAsset = lot.creditAsset;
-        let creditType = null;
+        let creditType = this.getAssetType(creditAsset);
         let creditAmount = lot.creditAmount;
         let creditFee = lot.creditFee;
 

@@ -21,6 +21,8 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
+  this.processAssets(assetRecords);
+
   let ledgerRecords;
   try {
     ledgerRecords = this.getLedgerRecords();

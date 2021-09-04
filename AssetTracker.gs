@@ -8,6 +8,8 @@ var AssetTracker = class AssetTracker {
    */
   constructor() {
 
+    this.assets = new Map();
+
     /**
      * Collection of Wallets.
      * @type {Array<Obeject>}
@@ -148,6 +150,11 @@ var AssetTracker = class AssetTracker {
       return defaultValue;
 
     }
+  }
+
+  getAssetType(ticker) {
+    let asset = this.assets.get(ticker);
+    return asset ? asset.assetType : null;
   }
 
   /**
@@ -343,23 +350,6 @@ var AssetTracker = class AssetTracker {
         creditWalletName);
 
       this.closedLots.push(closedLot);
-    }
-  }
-
-  /**
-   * Wraps the donated lots in a DonatedLot object and adds it to the donatedLots collection.
-   * @param {lots} lots - The lots being donated.
-   * @param {Date} date - The date of the donation.
-   * @param {number} exRate - The exchange rate of the currency of the lots to the accounting currency at the time of the donation.
-   * @param {string} walletName - The name of the wallet from which the lots have been donated.
-   */
-  donateLots(lots, date, exRate, walletName) {
-
-    for (let lot of lots) {
-
-      let donatedLot = new DonatedLot(lot, date, exRate, walletName);
-      this.donatedLots.push(donatedLot);
-
     }
   }
 

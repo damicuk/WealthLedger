@@ -1,3 +1,12 @@
+AssetTracker.prototype.processAssets = function (assetRecords) {
+
+  for (let assetRecord of assetRecords) {
+    let assetType = assetRecord.assetType === 'Base Currency' ? '' : assetRecord.assetType;
+    let decimalPlaces = assetRecord.decimalPlaces;
+    this.assets.set(assetRecord.ticker, { assetType: assetType, decimalPlaces: decimalPlaces });
+  }
+}
+
 /**
  * Processes the ledger records.
  * It treats the ledger as a set of instuctions and simulates the actions specified.
@@ -117,15 +126,16 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     //keep track of income separately
-    this.incomeLots.push(lot.duplicate());
+    this.incomeLots.push({ date: date, sourceAsset: debitAsset, incomeAsset: creditAsset, exRate: creditExRate, amount: creditAmount, walletName: creditWalletName });
 
   }
   else if (action === 'Donation') { //Donation
 
     let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-    this.donateLots(lots, date, debitExRate, debitWalletName);
-
+    for (let lot of lots) {
+      this.donatedLots.push({ lot: lot, date: date, exRate: debitExRate, walletName: debitWalletName });
+    }
   }
   else if (action === 'Gift') { //Gift
 

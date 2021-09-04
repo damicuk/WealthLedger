@@ -5,8 +5,9 @@
  */
 AssetTracker.prototype.validateLedger = function () {
 
+  let assetRecords;
   try {
-    let assetRecords = this.getAssetRecords();
+    assetRecords = this.getAssetRecords();
     this.validateAssetRecords(assetRecords);
   }
   catch (error) {
@@ -18,6 +19,8 @@ AssetTracker.prototype.validateLedger = function () {
       throw error;
     }
   }
+
+  this.processAssets(assetRecords);
 
   try {
     let ledgerRecords = this.getLedgerRecords();
@@ -44,7 +47,7 @@ AssetTracker.prototype.validateLedger = function () {
 AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
   let rowIndex = this.assetHeaderRows + 1;
-  for(let assetRecord of assetRecords) {
+  for (let assetRecord of assetRecords) {
     this.validateAssetRecord(assetRecord, rowIndex++);
   }
 };
@@ -60,7 +63,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, rowIndex) {
   let assetType = assetRecord.assetType;
   let decimalPlaces = assetRecord.decimalPlaces;
 
-  if(isNaN(decimalPlaces)) {
+  if (isNaN(decimalPlaces)) {
     throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (number or blank).`, rowIndex, 'decimalPlaces');
   }
 };

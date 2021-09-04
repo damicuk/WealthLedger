@@ -65,16 +65,16 @@ AssetTracker.prototype.getIncomeTable = function () {
 
   let table = [];
 
-  for (let lot of this.incomeLots) {
+  for (let incomeLot of this.incomeLots) {
 
-    let date = lot.date;
-    let sourceAsset = null;
-    let sourceType = null;
-    let incomeAsset = lot.debitAsset;
-    let incomeType = null;
-    let exRate = lot.debitExRate;
-    let amount = lot.debitAmount;
-    let wallet = lot.walletName;
+    let date = incomeLot.date;
+    let sourceAsset = incomeLot.sourceAsset;
+    let sourceType = this.getAssetType(sourceAsset);
+    let incomeAsset = incomeLot.incomeAsset;
+    let incomeType = this.getAssetType(incomeAsset);
+    let exRate = incomeLot.exRate;
+    let amount = incomeLot.amount;
+    let wallet = incomeLot.walletName;
 
     table.push([
 
