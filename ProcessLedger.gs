@@ -67,12 +67,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
     if (Ticker.isBaseCurrency(debitAsset)) { //Base currency transfer
 
-      if (debitWalletName) { //Fiat withdrawal
+      if (debitWalletName) { //Base currency withdrawal
 
         this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
       }
-      else if (creditWalletName) { //Fiat deposit
+      else if (creditWalletName) { //Base currency deposit
 
         this.getWallet(creditWalletName).getFiatAccount(debitAsset).transfer(debitAmount).transfer(-debitFee);
 
@@ -120,10 +120,19 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Income') { //Income
 
-    //the cost base is the value of (credit exchange rate x credit amount)
-    let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
+    if (Ticker.isBaseCurrency(creditAsset)) { //Base currency income
 
-    this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
+      this.getWallet(creditWalletName).getFiatAccount(creditAsset).transfer(creditAmount);
+
+    }
+    else { // Asset income
+
+      //the cost base is the value of (credit exchange rate x credit amount)
+      let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
+
+      this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
+
+    }
 
     //keep track of income separately
     this.incomeLots.push({ date: date, sourceAsset: debitAsset, incomeAsset: creditAsset, exRate: creditExRate, amount: creditAmount, walletName: creditWalletName });
