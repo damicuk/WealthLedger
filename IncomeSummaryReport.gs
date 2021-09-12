@@ -23,28 +23,46 @@ AssetTracker.prototype.incomeSummaryReport = function () {
   let headers = [
     [
       'Year',
-      'Crypto',
+      'Source Asset',
+      'Source Type',
+      'Income Asset',
+      'Income Type',
       'Amount',
       'Income Value'
     ]
   ];
 
-  sheet.getRange('A1:D1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('B2:B').setNumberFormat('@');
-  sheet.getRange('C2:C').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('D2:D').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('B2:E').setNumberFormat('@');
+  sheet.getRange('F2:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('G2:G').setNumberFormat('#,##0.00;(#,##0.00)');
 
   const formulas = [[
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{QUERY(${referenceRangeName}, "SELECT YEAR(A), D, SUM(G), SUM(I) GROUP BY D, YEAR(A) ORDER BY YEAR(A), D LABEL YEAR(A) '', SUM(G) '', SUM(I) ''");
-{QUERY(${referenceRangeName}, "SELECT YEAR(A), 'SUBTOTAL', ' ', SUM(I) GROUP BY YEAR(A) ORDER BY YEAR(A) LABEL YEAR(A) '', 'SUBTOTAL' '', ' ' '', SUM(I) ''")};
-{"","TOTAL","",QUERY(${referenceRangeName}, "SELECT SUM(I) LABEL SUM(I) ''")}})`, , , ,
+    `=IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", ""};
+{"BY TYPE", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col3, '   ', Col5, SUM(Col6), SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", ""};
+{"BY ASSET", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col2, Col3, Col4, Col5 ORDER BY Col3, Col2, Col5, Col4 LABEL ' ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", ""};
+{"BY YEAR", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", ""};
+{"BT YEAR AND TYPE", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', Col3, '  ', Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", ""};
+{"BT YEAR AND ASSET", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col2, Col3, Col4, Col5 ORDER BY Col1, Col3, Col2, Col5, Col4 LABEL Col1 '', SUM(Col6) '', SUM(Col7) ''")
+})`, , , , , , ,
   ]];
 
-  sheet.getRange('A2:D2').setFormulas(formulas);
+  sheet.getRange('A2:G2').setFormulas(formulas);
 
-  this.trimColumns(sheet, 4);
+  this.trimColumns(sheet, 7);
 
   sheet.autoResizeColumns(1, sheet.getMaxColumns());
 };

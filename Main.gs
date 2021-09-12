@@ -24,7 +24,7 @@ function onInstall(e) {
  */
 function onOpen(e) {
   SpreadsheetApp.getUi()
-    .createMenu('PortfolioTracker')
+    .createMenu('WealthLedger')
     .addItem('Step 1: Create sample ledger', 'createSampleLedger')
     .addSeparator()
     .addItem('Step 2: Validate ledger', 'validateLedger')
