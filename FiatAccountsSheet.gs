@@ -49,7 +49,7 @@ AssetTracker.prototype.getFiatTable = function () {
 
     for (let fiatAccount of wallet.fiatAccounts) {
 
-      if (fiatAccount.balance > 0) {
+      if (fiatAccount.balance !== 0) {
 
         table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
 
