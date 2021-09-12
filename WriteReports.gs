@@ -74,8 +74,7 @@ AssetTracker.prototype.writeReports = function () {
   this.closedSummaryReport();
   this.incomeSummaryReport();
   this.donationsSummaryReport();
-  this.cryptoWalletsReport();
-  this.fiatWalletsReport();
+  this.walletsReport();
   this.exRatesTable();
 
   this.updateLedgerCurrencies();

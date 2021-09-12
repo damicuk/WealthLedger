@@ -49,17 +49,20 @@ AssetTracker.prototype.getFiatTable = function () {
 
     for (let fiatAccount of wallet.fiatAccounts) {
 
-      table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
+      if (fiatAccount.balance > 0) {
 
+        table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
+
+      }
     }
   }
 
   table.sort(function (a, b) {
-    return a[0] > b[0] ? 1 : 
-          b[0] > a[0] ? -1 : 
-          a[1] > b[1] ? 1 : 
-          b[1] > a[1] ? -1 : 
-          0;
+    return a[0] > b[0] ? 1 :
+      b[0] > a[0] ? -1 :
+        a[1] > b[1] ? 1 :
+          b[1] > a[1] ? -1 :
+            0;
   });
 
   return table;
