@@ -55,13 +55,13 @@ AssetTracker.prototype.openSummaryReport = function () {
   this.addLongShortCondition(sheet, 'D3:D');
 
   const formulas = [[
-    `=IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
+    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 IF(COUNT(QUERY(${referenceRangeName}, "SELECT O"))=0,
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), '       ', '        ', '         ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', '       ' '', '        ' '', '         ' ''"),
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''"));
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY TYPE", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', '  ', Col2, '   ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2 ORDER BY Col2 LABEL ' ' '', '  ' '', '   ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', '  ', Col2, '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2 ORDER BY Col2 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', Col1, Col2, '  ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2 ORDER BY Col2, Col1 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
@@ -76,7 +76,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT C
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', '  ', '   ', Col8, '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col8 ORDER BY Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', '  ', Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col8 ORDER BY Col2, Col8 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', '  ', Col2, Col8, '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col8 ORDER BY Col2, Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT ' ', Col1, Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2, Col8 ORDER BY Col2, Col1, Col8 LABEL ' ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
@@ -85,7 +85,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT '
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT Col3, ' ', '  ', Col8, '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col8 ORDER BY Col3, Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT Col3, ' ', Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col3, Col8 ORDER BY Col3, Col2, Col8 LABEL ' ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT Col3, ' ', Col2, Col8, '  ', '   ', '    ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col3, Col8 ORDER BY Col3, Col2, Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT Col3, Col1, Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2, Col3, Col8 ORDER BY Col3, Col2, Col1, Col8 LABEL SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")

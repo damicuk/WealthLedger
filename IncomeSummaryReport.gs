@@ -40,11 +40,11 @@ AssetTracker.prototype.incomeSummaryReport = function () {
   sheet.getRange('G2:G').setNumberFormat('#,##0.00;(#,##0.00)');
 
   const formulas = [[
-    `=IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
+    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
 {"BY TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col3, '   ', Col5, SUM(Col6), SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', SUM(Col6) '', SUM(Col7) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col3, '   ', Col5, '    ', SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col2, Col3, Col4, Col5 ORDER BY Col3, Col2, Col5, Col4 LABEL ' ' '', SUM(Col6) '', SUM(Col7) ''");
@@ -53,7 +53,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELEC
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
 {"BT YEAR AND TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', Col3, '  ', Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', SUM(Col6) '', SUM(Col7) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', Col3, '  ', Col5, '   ', SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', '   ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
 {"BT YEAR AND ASSET", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col2, Col3, Col4, Col5 ORDER BY Col1, Col3, Col2, Col5, Col4 LABEL Col1 '', SUM(Col6) '', SUM(Col7) ''")
