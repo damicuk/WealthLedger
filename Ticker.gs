@@ -10,9 +10,23 @@ var Ticker = class Ticker {
     return false;
   }
 
-  static isAsset(ticker) {
+  static isFiat(ticker) {
 
-    if (Ticker.isForex(ticker)
+    if (Ticker.isBaseCurrency(ticker)) {
+      return true;
+    }
+    if (ticker === 'AUD'
+      || ticker === 'CAD'
+      || ticker === 'USD') {
+
+      return true;
+    }
+  }
+
+  static isValid(ticker) {
+
+    if (Ticker.isFiat(ticker)
+      || Ticker.isForex(ticker)
       || Ticker.isCrypto(ticker)
       || Ticker.isStablecoin(ticker)
       || Ticker.isStock(ticker)) {
@@ -24,7 +38,7 @@ var Ticker = class Ticker {
 
   static isForex(ticker) {
 
-    if (ticker === 'USD') {
+    if (ticker === 'GBP') {
       return true;
     }
     return false;
@@ -33,9 +47,11 @@ var Ticker = class Ticker {
   static isCrypto(ticker) {
 
     if (ticker === 'ADA'
+      || ticker === 'ALGO'
       || ticker === 'BTC'
       || ticker === 'ETH'
-      || ticker === 'NEXO') {
+      || ticker === 'NEXO'
+      || ticker === 'SOL') {
 
       return true;
     }
@@ -45,6 +61,7 @@ var Ticker = class Ticker {
   static isStablecoin(ticker) {
 
     if (ticker === 'EURX'
+      || ticker === 'GUSD'
       || ticker === 'USDC'
       || ticker === 'USDT') {
 

@@ -65,20 +65,20 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   if (action === 'Transfer') {  //Transfer
 
-    if (Ticker.isBaseCurrency(debitAsset)) { //Base currency transfer
+    if (Ticker.isFiat(debitAsset)) { //Fiat transfer
 
-      if (debitWalletName) { //Base currency withdrawal
+      if (debitWalletName) { //Fiat withdrawal
 
         this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
       }
-      else if (creditWalletName) { //Base currency deposit
+      else if (creditWalletName) { //Fiat deposit
 
         this.getWallet(creditWalletName).getFiatAccount(debitAsset).transfer(debitAmount).transfer(-debitFee);
 
       }
     }
-    else if (Ticker.isAsset(debitAsset)) {  //Asset transfer
+    else {  //Asset transfer
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
@@ -88,7 +88,31 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Trade') { //Trade
 
-    if (Ticker.isBaseCurrency(debitAsset) && Ticker.isAsset(creditAsset)) {  //Buy asset
+    // Infer missing ex rates
+    if(!Ticker.isBaseCurrency(debitAsset) && !Ticker.isBaseCurrency(creditAsset) && !(Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset))) {
+
+      const decimalPlaces = 7;
+      
+      if(!debitExRate) {
+        
+        debitExRate = Math.round(10 ** decimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** decimalPlaces;
+      
+      }
+      if(!creditExRate) {
+
+        creditExRate = Math.round(10 ** decimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** decimalPlaces;
+
+      }
+    }
+
+    if (Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset)) {  //Exchange fiat
+
+      this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
+
+      this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
+
+    }
+    else if (Ticker.isFiat(debitAsset) && !Ticker.isFiat(creditAsset)) {  //Buy asset
 
       this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
@@ -97,7 +121,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
-    else if (Ticker.isAsset(debitAsset) && Ticker.isBaseCurrency(creditAsset)) { //Sell asset
+    else if (!Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset)) { //Sell asset
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
@@ -106,7 +130,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
     }
-    else if (Ticker.isAsset(debitAsset) && Ticker.isAsset(creditAsset)) { //Exchange assets
+    else { //Exchange assets
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
@@ -120,7 +144,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Income') { //Income
 
-    if (Ticker.isBaseCurrency(creditAsset)) { //Base currency income
+    if (Ticker.isFiat(creditAsset)) { //Fiat income
 
       this.getWallet(creditWalletName).getFiatAccount(creditAsset).transfer(creditAmount);
 
@@ -148,16 +172,31 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Gift') { //Gift
 
-    this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+    if (Ticker.isFiat(debitAsset)) {
 
+      this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
+
+    }
+    else {
+
+      this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+
+    }
   }
   else if (action === 'Fee') { //Fee
 
-    this.getWallet(debitWalletName).getAssetAccount(debitAsset).apportionFee(debitFee, rowIndex);
+    if (Ticker.isFiat(debitAsset)) {
 
-    let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).removeZeroSubunitLots();
+      this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitFee);
 
-    this.closeLots(lots, date, this.accountingCurrency, 0, 0, 0, debitWalletName);
+    }
+    else {
 
+      this.getWallet(debitWalletName).getAssetAccount(debitAsset).apportionFee(debitFee, rowIndex);
+
+      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).removeZeroSubunitLots();
+
+      this.closeLots(lots, date, this.accountingCurrency, 0, 0, 0, debitWalletName);
+    }
   }
 };
