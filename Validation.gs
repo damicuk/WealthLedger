@@ -251,17 +251,25 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditWalletName) {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank. It is inferred from the debit wallet (${debitWalletName}).`, rowIndex, 'creditWalletName');
     }
-    else if(Ticker.isBaseCurrency(debitAsset) || Ticker.isBaseCurrency(creditAsset) || (Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset))) {
+    else if (Ticker.isBaseCurrency(debitAsset) || Ticker.isBaseCurrency(creditAsset)) { //Base currency trade
       if (creditExRate !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: Trade with base currency or fiat exchange. Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+        throw new ValidationError(`${action} row ${rowIndex}: Trade with base currency (${this.accountingCurrency}). Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
       }
       else if (debitExRate !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: Trade with base currency or fiat exchange. Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+        throw new ValidationError(`${action} row ${rowIndex}: Trade with base currency (${this.accountingCurrency}). Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
       }
     }
-    else { //Trade with no base currency
-      if(debitExRate === '' && creditExRate === '') {
-        throw new ValidationError(`${action} row ${rowIndex}: Missing debit asset (${debitAsset}) and/or credit asset (${creditAsset}) to base currency (${this.accountingCurrency}) exchange rate.`, rowIndex, 'debitExRate');
+    else if (Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset)) { //Fiat-Fiat trade
+      if (creditExRate !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Fiat exchange: (${debitAsset}/${creditAsset}). Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+      }
+      else if (debitExRate !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Fiat exchange: (${debitAsset}/${creditAsset}). Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+      }
+    }
+    else { //Non base currency trade, Not Fiat-Fiat 
+      if (debitExRate === '' && creditExRate === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Non base currency trade: Requires debit asset (${debitAsset}) and/or credit asset (${creditAsset}) to base currency (${this.accountingCurrency}) exchange rate.`, rowIndex, 'debitExRate');
       }
       else if (debitExRate && debitExRate <= 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
