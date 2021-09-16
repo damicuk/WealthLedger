@@ -277,7 +277,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     }
     else { //Non base currency, non fiat-fiat trade
       if (debitExRate === '' && creditExRate === '') {
-        throw new ValidationError(`${action} row ${rowIndex}: Non base currency trade: Requires debit asset (${debitAsset}) and/or credit asset (${creditAsset}) to base currency (${this.accountingCurrency}) exchange rate.`, rowIndex, 'debitExRate');
+        throw new ValidationError(`${action} row ${rowIndex}: Non base currency trade requires debit asset (${debitAsset}) and/or credit asset (${creditAsset}) to base currency (${this.accountingCurrency}) exchange rate.`, rowIndex, 'debitExRate');
       }
       else if (debitExRate && debitExRate <= 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
