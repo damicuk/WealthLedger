@@ -40,7 +40,7 @@ AssetTracker.prototype.deleteSheets = function (sheetNames) {
  * @param {Sheet} sheet - The sheet to which to add version metadata.
  * @param {string} version - The version to write to the sheet.
  */
-CryptoTracker.prototype.setSheetVersion = function (sheet, version) {
+AssetTracker.prototype.setSheetVersion = function (sheet, version) {
 
   let metadataArray = sheet.createDeveloperMetadataFinder().withKey('version').find();
   if (metadataArray.length > 0) {
