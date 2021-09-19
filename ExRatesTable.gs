@@ -5,17 +5,25 @@
  */
 AssetTracker.prototype.exRatesTable = function () {
 
+  const version = '1';
   const sheetName = this.exRatesTableSheetName;
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (sheet) {
-
-    return;
+    if (this.getSheetVersion(sheet) === version) {
+      return;
+    }
+    else {
+      sheet.clear();
+    }
+  }
+  else {
+    sheet = ss.insertSheet(sheetName);
   }
 
-  sheet = ss.insertSheet(sheetName);
+  this.setSheetVersion(sheet, version);
 
   const referenceRangeName = this.exRatesRangeName;
 
