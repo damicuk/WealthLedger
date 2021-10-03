@@ -194,7 +194,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (!debitWalletName && !creditWalletName) {
       throw new ValidationError(`${action} row ${rowIndex}: No debit or credit wallet specified.`, rowIndex, 'debitWalletName');
     }
-    else if (Ticker.isFiat(debitAsset)) { //Fiat transfer
+    else if (this.isFiat(debitAsset)) { //Fiat transfer
       if (debitWalletName && creditWalletName) {
         throw new ValidationError(`${action} row ${rowIndex}: For base currency transfers, leave debit wallet (${debitWalletName}) blank for deposits or credit wallet (${creditWalletName}) blank for withdrawals.`, rowIndex, 'debitWalletName');
       }
@@ -242,7 +242,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
     }
-    else if (!Ticker.isFiat(creditAsset) && creditFee >= creditAmount) {
+    else if (!this.isFiat(creditAsset) && creditFee >= creditAmount) {
       throw new ValidationError(`${action} row ${rowIndex}: Asset credit fee must be less than the credit amount (or blank).`, rowIndex, 'creditFee');
     }
     else if (creditFee > creditAmount) {
@@ -267,7 +267,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
         throw new ValidationError(`${action} row ${rowIndex}: Credit asset is the base currency (${this.baseCurrency}). Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
       }
     }
-    else if (Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset)) { //Fiat-fiat trade
+    else if (this.isFiat(debitAsset) && this.isFiat(creditAsset)) { //Fiat-fiat trade
       if (creditExRate !== '') {
         throw new ValidationError(`${action} row ${rowIndex}: Fiat exchange: (${debitAsset}/${creditAsset}). Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
       }
@@ -329,7 +329,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     if (!debitAsset) {
       throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
     }
-    else if (Ticker.isFiat(debitAsset)) {
+    else if (this.isFiat(debitAsset)) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAsset}) is fiat, not supported.`, rowIndex, 'debitAsset');
     }
     else if (debitExRate === '') {

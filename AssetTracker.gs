@@ -154,9 +154,23 @@ var AssetTracker = class AssetTracker {
     }
   }
 
+  /**
+   * Gets the type of the asset specified by the ticker.
+   * @param {string} ticker - The asset ticker.
+   * @return {string} The type of the asset specified by the ticker.
+   */
   getAssetType(ticker) {
     let asset = this.assets.get(ticker);
     return asset ? asset.assetType : null;
+  }
+
+  /**
+   * Determines whether the type of the asset specified by the ticker is fiat.
+   * @param {string} ticker - The asset ticker.
+   * @return {boolean} Whether the type of the asset specified by the ticker is fiat.
+   */
+  isFiat(ticker) {
+    return this.getAssetType(ticker) === 'Fiat';
   }
 
   /**
