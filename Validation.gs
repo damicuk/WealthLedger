@@ -136,8 +136,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   else if (action === '') {
     throw new ValidationError(`Ledger row ${rowIndex}: No action specified.`, rowIndex, 'action');
   }
-  else if (debitAsset && !Ticker.isValid(debitAsset)) {
-    throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAsset}) is not recognized`, rowIndex, 'debitAsset');
+  else if (debitAsset && !this.isValid(debitAsset)) {
+    throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAsset}) is not found in the Assets sheet.`, rowIndex, 'debitAsset');
   }
   else if (isNaN(debitExRate)) {
     throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate is not valid (number or blank).`, rowIndex, 'debitExRate');
@@ -148,8 +148,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   else if (isNaN(debitFee)) {
     throw new ValidationError(`${action} row ${rowIndex}: Debit fee is not valid (number or blank).`, rowIndex, 'debitFee');
   }
-  else if (creditAsset && !Ticker.isValid(creditAsset)) {
-    throw new ValidationError(`${action} row ${rowIndex}: Credit asset (${creditAsset}) is not recognized.`, rowIndex, 'creditAsset');
+  else if (creditAsset && !this.isValid(creditAsset)) {
+    throw new ValidationError(`${action} row ${rowIndex}: Credit asset (${creditAsset}) is not found in the Assets sheet.`, rowIndex, 'creditAsset');
   }
   else if (isNaN(creditExRate)) {
     throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate is not valid (number or blank).`, rowIndex, 'creditExRate');

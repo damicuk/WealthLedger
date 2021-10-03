@@ -174,6 +174,15 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
+   * Determines whether the ticker is a key in the assets map.
+   * @param {string} ticker - The asset ticker.
+   * @return {boolean} Whether the ticker is a key in the assets map.
+   */
+  isValid(ticker) {
+    return this.assets.has(ticker);
+  }
+
+  /**
    * Array of lot matching options used to determine the order in which lots are withdrawn.
    * FIFO First in first out.
    * LIFO Last in first out.
