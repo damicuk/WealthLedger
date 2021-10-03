@@ -1,9 +1,19 @@
 AssetTracker.prototype.processAssets = function (assetRecords) {
 
   for (let assetRecord of assetRecords) {
-    let assetType = assetRecord.assetType === 'Base Currency' ? '' : assetRecord.assetType;
+
+    let assetType;
+    if(assetRecord.assetType === 'Fiat Base') {
+      assetType = 'Fiat';
+      this.baseCurrency = assetRecord.ticker;
+    }
+    else {
+      assetType = assetRecord.assetType;
+    }
+
     let decimalPlaces = assetRecord.decimalPlaces;
-    this.assets.set(assetRecord.ticker, { assetType: assetType, decimalPlaces: decimalPlaces });
+    let price = assetRecord.price;
+    this.assets.set(assetRecord.ticker, { assetType: assetType, decimalPlaces: decimalPlaces, price:price });
   }
 }
 

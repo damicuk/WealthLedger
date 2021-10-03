@@ -8,6 +8,16 @@ var AssetTracker = class AssetTracker {
    */
   constructor() {
 
+    /**
+     * The ticker of the base currency.
+     * * @type {string}
+     */
+    this.baseCurrency;
+
+    /**
+     * Maps asset ticker to object containing asset properties: type, decimalPlaces, price.
+     * @type {Array<Obeject>}
+     */
     this.assets = new Map();
 
     /**
