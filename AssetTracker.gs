@@ -48,13 +48,6 @@ var AssetTracker = class AssetTracker {
     let userProperties = PropertiesService.getUserProperties();
 
     /**
-     * Currency ticker for the fiat currency used for accounting.
-     * Initialized from any saved value in user properties or defaults to 'USD'.
-     * @type {string}
-     */
-    this.accountingCurrency = this.getUserProperty(userProperties, 'accountingCurrency', 'USD');
-
-    /**
      * The default lot matching method.
      * Options are FIFO, LIFO, HIFO, LOFO.
      * Initialized from any saved value in user properties or defaults to 'FIFO'.

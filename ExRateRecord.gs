@@ -79,7 +79,7 @@ AssetTracker.prototype.lookupExRate = function (exRateRecords, date, crypto, min
   let marginMs = minuteMargin * 60000;
 
   for (let record of exRateRecords) {
-    if (record.crypto == crypto && record.fiat == this.accountingCurrency) {
+    if (record.crypto == crypto && record.fiat == this.baseCurrency) {
       currDiff = Math.abs(record.date - date);
       if (currDiff < bestDiff && currDiff <= marginMs) {
         bestRecord = record;

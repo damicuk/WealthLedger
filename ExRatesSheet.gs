@@ -82,10 +82,10 @@ AssetTracker.prototype.getCryptoPriceTable = function () {
 
     }
 
-    let accountingCurrency = this.accountingCurrency;
+    let baseCurrency = this.baseCurrency;
 
     let timestamp = new Date().toISOString();
-    let data = this.getCryptoPriceData(cryptos, accountingCurrency, apiKey);
+    let data = this.getCryptoPriceData(cryptos, baseCurrency, apiKey);
 
     if (data.Response === "Error") {
 
@@ -96,14 +96,14 @@ AssetTracker.prototype.getCryptoPriceTable = function () {
 
       for (let coin in data) {
 
-        let exRate = data[coin][accountingCurrency];
+        let exRate = data[coin][baseCurrency];
 
         //hack to fix bug in API returning the wrong exchange rate for EURX/EUR
-        if (coin === 'EURX' && accountingCurrency === 'EUR') {
+        if (coin === 'EURX' && baseCurrency === 'EUR') {
           exRate = 1;
         }
 
-        table.push([timestamp, coin, accountingCurrency, exRate]);
+        table.push([timestamp, coin, baseCurrency, exRate]);
 
       }
     }

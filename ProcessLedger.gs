@@ -206,7 +206,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).removeZeroSubunitLots();
 
-      this.closeLots(lots, date, this.accountingCurrency, 0, 0, 0, debitWalletName);
+      this.closeLots(lots, date, this.baseCurrency, 0, 0, 0, debitWalletName);
     }
   }
 };
