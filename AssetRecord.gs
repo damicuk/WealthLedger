@@ -8,11 +8,13 @@ class AssetRecord {
    * @param {string} ticker - The ticker of the asset.
    * @param {string} assetType - The type of the asset.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
+   * @param {number} price - The current price of the asset.
    */
   constructor(
     ticker,
     assetType,
-    decimalPlaces) {
+    decimalPlaces,
+    price) {
 
     /**
      * The ticker of the asset.
@@ -31,6 +33,12 @@ class AssetRecord {
      * @type {number}
      */
     this.decimalPlaces = decimalPlaces;
+
+    /**
+     * The current price of the asset.
+     * @type {number}
+     */
+    this.price = price;
   }
 
   /**
@@ -45,7 +53,8 @@ class AssetRecord {
     let columns = [
       'ticker',
       'type',
-      'decimalPlaces'
+      'decimalPlaces',
+      'price'
     ];
 
     let index = columns.indexOf(columnName);
@@ -70,7 +79,8 @@ AssetTracker.prototype.getAssetRecords = function () {
     let assetRecord = new AssetRecord(
       row[0],
       row[1],
-      row[2]
+      row[2],
+      row[3]
     );
 
     assetRecords.push(assetRecord);

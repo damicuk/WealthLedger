@@ -90,7 +90,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the asset sheet.
      * @type {number}
      */
-    this.assetDataColumns = 3;
+    this.assetDataColumns = 4;
 
     /**
      * The number of header rows in the ex rates sheet
