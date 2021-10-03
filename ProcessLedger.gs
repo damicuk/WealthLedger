@@ -99,7 +99,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   else if (action === 'Trade') { //Trade
 
     // Infer missing ex rates
-    if(!Ticker.isBaseCurrency(debitAsset) && !Ticker.isBaseCurrency(creditAsset) && !(Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset))) {
+    if(debitAsset !== this.baseCurrency && creditAsset !== this.baseCurrency && !(Ticker.isFiat(debitAsset) && Ticker.isFiat(creditAsset))) {
 
       const decimalPlaces = 7;
       
