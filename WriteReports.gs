@@ -104,8 +104,7 @@ AssetTracker.prototype.deleteReports = function () {
     this.closedSummaryReportName,
     this.incomeSummaryReportName,
     this.donationsSummaryReportName,
-    this.cryptoWalletsReportName,
-    this.fiatWalletsReportName,
+    this.walletsReportName,
     this.exRatesTableSheetName,
     this.exRatesSheetName,
     this.fiatAccountsSheetName
