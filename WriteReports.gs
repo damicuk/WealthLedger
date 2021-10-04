@@ -77,7 +77,7 @@ AssetTracker.prototype.writeReports = function () {
   this.walletsReport();
   this.exRatesTable();
 
-  this.updateLedgerCurrencies();
+  this.updateLedgerAssets();
   this.updateLedgerWallets();
 
   if (apiError) {

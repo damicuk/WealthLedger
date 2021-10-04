@@ -266,52 +266,52 @@ var AssetTracker = class AssetTracker {
    * Only filled once processLedger has completed.
    * @type {Set}
    */
-  get fiats() {
+  get fiatTickers() {
 
-    let fiats = new Set();
+    let fiatTickers = new Set();
     for (let wallet of this.wallets) {
       let walletFiatAccounts = Array.from(wallet.fiatAccounts.values());
       for (let fiatAccount of walletFiatAccounts) {
-        fiats.add(fiatAccount.ticker);
+        fiatTickers.add(fiatAccount.ticker);
       }
     }
-    return fiats;
+    return fiatTickers;
   }
 
   /**
-   * Set of cryptocurrency tickers used by this instance.
+   * Set of asset tickers used by this instance.
    * Only filled once processLedger has completed.
    * @type {Set}
    */
-  get cryptos() {
+  get assetTickers() {
 
-    let cryptos = new Set();
+    let assetTickers = new Set();
     for (let wallet of this.wallets) {
       let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
       for (let assetAccount of walletAssetAccounts) {
-        cryptos.add(assetAccount.ticker);
+        assetTickers.add(assetAccount.ticker);
       }
     }
-    return cryptos;
+    return assetTickers;
   }
 
   /**
-   * Set of cryptocurrency tickers with positive balances used by this instance.
+   * Set of asset tickers with positive balances used by this instance.
    * Only filled once processLedger has completed.
    * @type {Set}
    */
-  get currentCryptos() {
+  get currentAssetTickers() {
 
-    let cryptos = new Set();
+    let assetTickers = new Set();
     for (let wallet of this.wallets) {
       let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
       for (let assetAccount of walletAssetAccounts) {
         if (assetAccount.balance > 0) {
-          cryptos.add(assetAccount.ticker);
+          assetTickers.add(assetAccount.ticker);
         }
       }
     }
-    return cryptos;
+    return assetTickers;
   }
 
   /**

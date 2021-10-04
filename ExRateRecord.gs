@@ -52,7 +52,7 @@ AssetTracker.prototype.exRatesCurrent = function (sheet, minuteMargin) {
 
   let date = new Date();
 
-  for (let crypto of this.currentCryptos) {
+  for (let crypto of this.currentAssetTickers) {
 
     if (!this.lookupExRate(exRateRecords, date, crypto, minuteMargin)) {
 

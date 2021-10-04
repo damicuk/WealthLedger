@@ -97,7 +97,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT C
 {"BY WALLET ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, P, Q, R, T")}, "SELECT Col3, Col1, Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2, Col3, Col8 ORDER BY Col3, Col2, Col1, Col8 LABEL SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
 })`, , , , , , , , , , ,
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT O"))=0,,QUERY(${referenceRangeName}, "SELECT H, SUM(Q) GROUP BY H ORDER BY H LABEL SUM(Q) ''"))`
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT M"))=0,,QUERY(${referenceRangeName}, "SELECT H, SUM(Q) GROUP BY H ORDER BY H LABEL SUM(Q) ''"))`
   ]];
 
   sheet.getRange('A2:L2').setFormulas(formulas);

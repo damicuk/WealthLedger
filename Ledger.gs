@@ -10,32 +10,32 @@ AssetTracker.prototype.getLedgerRange = function () {
   let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
 
   if (!ledgerSheet) {
-    
+
     ledgerSheet = this.sampleLedger();
   }
 
-  if(ledgerSheet.getMaxColumns() < this.ledgerDataColumns) {
+  if (ledgerSheet.getMaxColumns() < this.ledgerDataColumns) {
     throw new ValidationError('Ledger has insufficient columns.');
   }
 
   let ledgerRange = ledgerSheet.getDataRange();
 
-  if(ledgerRange.getHeight() < this.ledgerHeaderRows + 1) {
+  if (ledgerRange.getHeight() < this.ledgerHeaderRows + 1) {
     throw new ValidationError('Ledger contains no data rows.');
   }
-  
+
   ledgerRange = ledgerRange.offset(this.ledgerHeaderRows, 0, ledgerRange.getHeight() - this.ledgerHeaderRows, this.ledgerDataColumns);
 
   return ledgerRange;
 };
 
 /**
- * Sets data validation on the currency columns in the ledger sheet.
- * The list of fiat and cryptocurrency tickers is collected when the ledger is processed to write the reports.
- * Both fiat and cryptocurrencies are sorted alphabetically.
- * The fiat currencies are listed before the cryptocurrencies.
+ * Sets data validation on the asset columns in the ledger sheet.
+ * The list of fiat and asset tickers is collected when the ledger is processed to write the reports.
+ * Both fiats and assets are sorted alphabetically.
+ * The fiats are listed before the assets.
  */
-AssetTracker.prototype.updateLedgerCurrencies = function () {
+AssetTracker.prototype.updateLedgerAssets = function () {
 
   const sheetName = this.ledgerSheetName;
 
@@ -46,12 +46,12 @@ AssetTracker.prototype.updateLedgerCurrencies = function () {
     return;
   }
 
-  let fiats = Array.from(this.fiats).sort(AssetTracker.abcComparator);
-  let cryptos = Array.from(this.cryptos).sort(AssetTracker.abcComparator);
-  let currencies = fiats.concat(cryptos);
+  let fiatTickers = Array.from(this.fiatTickers).sort(AssetTracker.abcComparator);
+  let assetTickers = Array.from(this.assetTickers).sort(AssetTracker.abcComparator);
+  let tickers = fiatTickers.concat(assetTickers);
 
-  this.addCurrencyValidation(sheet, 'C3:C', currencies);
-  this.addCurrencyValidation(sheet, 'H3:H', currencies);
+  this.addAssetValidation(sheet, 'C3:C', tickers);
+  this.addAssetValidation(sheet, 'H3:H', tickers);
 
 };
 

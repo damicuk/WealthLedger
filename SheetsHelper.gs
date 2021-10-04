@@ -300,14 +300,14 @@ AssetTracker.prototype.addLongShortCondition = function (sheet, a1Notation) {
 /**
  * Sets data validation from a list on a range of cells in a sheet.
  * Sets the help text that appears when the user hovers over a cell on which data validation is set.
- * Used specifically to set the data validation on the currency columns in the ledger sheet.
+ * Used specifically to set the data validation on the asset columns in the ledger sheet.
  * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
  * @param {string[]} values - The list of valid values
  */
-AssetTracker.prototype.addCurrencyValidation = function (sheet, a1Notation, values) {
+AssetTracker.prototype.addAssetValidation = function (sheet, a1Notation, values) {
 
-  this.addValidation(sheet, a1Notation, values, 'New currencies will be added to the data validation dropdown when write reports is run.');
+  this.addValidation(sheet, a1Notation, values, 'New assets will be added to the data validation dropdown when write reports is run.');
 
 };
 

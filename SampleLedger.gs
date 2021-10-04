@@ -63,10 +63,10 @@ AssetTracker.prototype.sampleLedger = function () {
   let actionRule = SpreadsheetApp.newDataValidation().requireValueInList(actions).setAllowInvalid(false).build();
   sheet.getRange('B3:B').setDataValidation(actionRule);
 
-  let currencies = ['USD', 'ADA', 'BTC'];
+  let assets = ['USD', 'ADA', 'BTC'];
 
-  this.addCurrencyValidation(sheet, 'C3:C', currencies);
-  this.addCurrencyValidation(sheet, 'H3:H', currencies);
+  this.addAssetValidation(sheet, 'C3:C', assets);
+  this.addAssetValidation(sheet, 'H3:H', assets);
 
   let wallets = ['Binance', 'Deposit', 'Kraken', 'Ledger', 'Rewards', 'Yoroi'];
 
