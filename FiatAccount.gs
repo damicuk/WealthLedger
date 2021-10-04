@@ -5,16 +5,16 @@
 var FiatAccount = class FiatAccount {
 
   /**
-   * Sets the fiat currency and initializes the balance to 0.
-   * @param {string} ticker - the fiat currency ticker.
+   * Sets the fiat asset and initializes the balance to 0.
+   * @param {Asset} asset - The fiat asset.
    */
-  constructor(ticker) {
+  constructor(asset) {
 
     /**
-     * The fiat currency ticker.
-     * @type {string}
+     * The fiat asset.
+     * @type {<Asset>}
      */
-    this.ticker = ticker;
+    this.asset = asset;
 
     /**
      * The balance in the account in subunits.
@@ -24,15 +24,14 @@ var FiatAccount = class FiatAccount {
 
   }
 
+  /**
+   * The fiat currency ticker.
+   * @type {string}
+   */
   get ticker() {
 
-    return this._ticker;
-  }
+    return this.asset.ticker;
 
-  set ticker(ticker) {
-
-    this._ticker = ticker;
-    this._currencySubunits = Currency.subunits(ticker);
   }
 
   /**
@@ -41,7 +40,7 @@ var FiatAccount = class FiatAccount {
    */
   get balance() {
 
-    return this.subunits / this._currencySubunits;
+    return this.subunits / this.asset.subunits;
 
   }
 
@@ -52,7 +51,7 @@ var FiatAccount = class FiatAccount {
    */
   transfer(amount) {
 
-    this.subunits += Math.round(amount * this._currencySubunits); //round because multiplying
+    this.subunits += Math.round(amount * this.asset.subunits); //round because multiplying
 
     return this;
 

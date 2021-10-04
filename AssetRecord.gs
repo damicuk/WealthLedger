@@ -8,13 +8,13 @@ class AssetRecord {
    * @param {string} ticker - The ticker of the asset.
    * @param {string} assetType - The type of the asset.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
-   * @param {number} price - The current price of the asset.
+   * @param {number} currentPrice - The current price of the asset.
    */
   constructor(
     ticker,
     assetType,
     decimalPlaces,
-    price) {
+    currentPrice) {
 
     /**
      * The ticker of the asset.
@@ -38,7 +38,7 @@ class AssetRecord {
      * The current price of the asset.
      * @type {number}
      */
-    this.price = price;
+    this.currentPrice = currentPrice;
   }
 
   /**
@@ -54,7 +54,7 @@ class AssetRecord {
       'ticker',
       'type',
       'decimalPlaces',
-      'price'
+      'currentPrice'
     ];
 
     let index = columns.indexOf(columnName);
@@ -100,20 +100,20 @@ AssetTracker.prototype.getAssetRange = function () {
   let assetSheet = ss.getSheetByName(this.assetSheetName);
 
   if (!assetSheet) {
-    
+
     // assetSheet = this.sampleAssetSheet();
   }
 
-  if(assetSheet.getMaxColumns() < this.assetDataColumns) {
+  if (assetSheet.getMaxColumns() < this.assetDataColumns) {
     throw new ValidationError('Asset sheet has insufficient columns.');
   }
 
   let assetRange = assetSheet.getDataRange();
 
-  if(assetRange.getHeight() < this.assetHeaderRows + 1) {
+  if (assetRange.getHeight() < this.assetHeaderRows + 1) {
     throw new ValidationError('Asset shhet contains no data rows.');
   }
-  
+
   assetRange = assetRange.offset(this.assetHeaderRows, 0, assetRange.getHeight() - this.assetHeaderRows, this.assetDataColumns);
 
   return assetRange;

@@ -6,12 +6,12 @@ var Lot = class Lot {
 
   /**
    * Initializes the class with the properties set to the parameters.
-   * @param {Date} date - the date of the transaction.
-   * @param {string} debitAsset - The ticker of the asset debited.
+   * @param {Date} date - The date of the transaction.
+   * @param {Asset} debitAsset - The asset debited.
    * @param {number} debitExRate - The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
    * @param {number} debitAmount - The amount of asset debited.
    * @param {number} debitFee - The fee in asset units debited.
-   * @param {string} creditAsset - The ticker of the asset credited.
+   * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in asset units credited.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
@@ -25,8 +25,8 @@ var Lot = class Lot {
     this.date = date;
 
     /**
-     * The ticker of the asset debited.
-     * @type {string}
+     * The asset debited.
+     * @type {Asset}
      */
     this.debitAsset = debitAsset;
 
@@ -40,17 +40,17 @@ var Lot = class Lot {
      * The amount of asset debited in subunits.
      * @type {number}
      */
-    this.debitAmountSubunits = Math.round(debitAmount * this._debitAssetSubunits);
+    this.debitAmountSubunits = Math.round(debitAmount * this.debitAsset.subunits);
 
     /**
      * The fee in asset subunits debited.
      * @type {number}
      */
-    this.debitFeeSubunits = Math.round(debitFee * this._debitAssetSubunits);
+    this.debitFeeSubunits = Math.round(debitFee * this.debitAsset.subunits);
 
     /**
-     * The ticker of the asset credited.
-     * @type {string}
+     * The asset credited.
+     * @type {Asset}
      */
     this.creditAsset = creditAsset;
 
@@ -58,13 +58,13 @@ var Lot = class Lot {
      * The amount of asset credited in subunits.
      * @type {number}
      */
-    this.creditAmountSubunits = Math.round(creditAmount * this._creditAssetSubunits);
+    this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
 
     /**
      * The fee in asseet subunits credited.
      * @type {number}
      */
-    this.creditFeeSubunits = Math.round(creditFee * this._creditAssetSubunits);
+    this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
 
     /**
      * The name of the wallet (or exchange) in which the transaction took place.
@@ -74,36 +74,13 @@ var Lot = class Lot {
 
   }
 
-  get debitAsset() {
-
-    return this._debitAsset;
-  }
-
-  set debitAsset(ticker) {
-
-    this._debitAsset = ticker;
-    this._debitAssetSubunits = Currency.subunits(ticker);
-
-  }
-
-  get creditAsset() {
-
-    return this._creditAsset;
-  }
-
-  set creditAsset(ticker) {
-
-    this._creditAsset = ticker;
-    this._creditAssetSubunits = Currency.subunits(ticker);
-  }
-
   /**
    * The amount of asset debited.
    * @type {number}
    */
   get debitAmount() {
 
-    return this.debitAmountSubunits / this._debitAssetSubunits;
+    return this.debitAmountSubunits / this.debitAsset.subunits;
   }
 
   /**
@@ -112,7 +89,7 @@ var Lot = class Lot {
    */
   get debitFee() {
 
-    return this.debitFeeSubunits / this._debitAssetSubunits;
+    return this.debitFeeSubunits / this.debitAsset.subunits;
   }
 
   /**
@@ -121,7 +98,7 @@ var Lot = class Lot {
    */
   get creditAmount() {
 
-    return this.creditAmountSubunits / this._creditAssetSubunits;
+    return this.creditAmountSubunits / this.creditAsset.subunits;
   }
 
   /**
@@ -130,7 +107,7 @@ var Lot = class Lot {
    */
   get creditFee() {
 
-    return this.creditFeeSubunits / this._creditAssetSubunits;
+    return this.creditFeeSubunits / this.creditAsset.subunits;
   }
 
   /**
@@ -179,11 +156,11 @@ var Lot = class Lot {
       this.date,
       this.debitAsset,
       this.debitExRate,
-      debitAmountSubunits / this._debitAssetSubunits,
-      debitFeeSubunits / this._debitAssetSubunits,
+      debitAmountSubunits / this.debitAsset.subunits,
+      debitFeeSubunits / this.debitAsset.subunits,
       this.creditAsset,
-      creditAmountSubunits / this._creditAssetSubunits,
-      creditFeeSubunits / this._creditAssetSubunits,
+      creditAmountSubunits / this.creditAsset.subunits,
+      creditFeeSubunits / this.creditAsset.subunits,
       this.walletName);
 
     splitLots.push(lot1);
@@ -192,11 +169,11 @@ var Lot = class Lot {
       this.date,
       this.debitAsset,
       this.debitExRate,
-      (this.debitAmountSubunits - lot1.debitAmountSubunits) / this._debitAssetSubunits,
-      (this.debitFeeSubunits - lot1.debitFeeSubunits) / this._debitAssetSubunits,
+      (this.debitAmountSubunits - lot1.debitAmountSubunits) / this.debitAsset.subunits,
+      (this.debitFeeSubunits - lot1.debitFeeSubunits) / this.debitAsset.subunits,
       this.creditAsset,
-      (this.creditAmountSubunits - lot1.creditAmountSubunits) / this._creditAssetSubunits,
-      (this.creditFeeSubunits - lot1.creditFeeSubunits) / this._creditAssetSubunits,
+      (this.creditAmountSubunits - lot1.creditAmountSubunits) / this.creditAsset.subunits,
+      (this.creditFeeSubunits - lot1.creditFeeSubunits) / this.creditAsset.subunits,
       this.walletName);
 
     splitLots.push(lot2);
@@ -216,11 +193,11 @@ var Lot = class Lot {
       this.date,
       this.debitAsset,
       this.debitExRate,
-      this.debitAmountSubunits / this._debitAssetSubunits,
-      this.debitFeeSubunits / this._debitAssetSubunits,
+      this.debitAmountSubunits / this.debitAsset.subunits,
+      this.debitFeeSubunits / this.debitAsset.subunits,
       this.creditAsset,
-      this.creditAmountSubunits / this._creditAssetSubunits,
-      this.creditFeeSubunits / this._creditAssetSubunits,
+      this.creditAmountSubunits / this.creditAsset.subunits,
+      this.creditFeeSubunits / this.creditAsset.subunits,
       this.walletName);
   }
 };

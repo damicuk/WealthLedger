@@ -7,8 +7,8 @@ var ClosedLot = class ClosedLot {
   /**
    * Initializes the class with the properties set to the parameters.
    * @param {Lot} lot - An amount of asset purchased together.
-   * @param {Date} date - the date of the sale or exchange.
-   * @param {string} creditAsset - The ticker of the asset credited.
+   * @param {Date} date - The date of the sale or exchange.
+   * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditExRate - The credit asset to accounting currency exchange rate, 0 if the credit asset is the accounting currency.
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in asset units credited.
@@ -29,8 +29,8 @@ var ClosedLot = class ClosedLot {
     this.date = date;
 
     /**
-     * The ticker of the asset credited.
-     * @type {string}
+     * The asset credited.
+     * @type {Asset}
      */
     this.creditAsset = creditAsset;
 
@@ -44,13 +44,13 @@ var ClosedLot = class ClosedLot {
      * The amount of asset subunits credited.
      * @type {number}
      */
-    this.creditAmountSubunits = Math.round(creditAmount * this._creditAssetSubunits);
+    this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
 
     /**
      * The fee in asset subunits credited.
      * @type {number}
      */
-    this.creditFeeSubunits = Math.round(creditFee * this._creditAssetSubunits);
+    this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
 
     /**
      * The name of the wallet (or exchange) in which the transaction took place.
@@ -60,24 +60,13 @@ var ClosedLot = class ClosedLot {
 
   }
 
-  get creditAsset() {
-
-    return this._creditAsset;
-  }
-
-  set creditAsset(ticker) {
-
-    this._creditAsset = ticker;
-    this._creditAssetSubunits = Currency.subunits(ticker);
-  }
-
   /**
    * The amount of asset credited.
    * @type {number}
    */
   get creditAmount() {
 
-    return this.creditAmountSubunits / this._creditAssetSubunits;
+    return this.creditAmountSubunits / this.creditAsset.subunits;
   }
 
   /**
@@ -86,6 +75,6 @@ var ClosedLot = class ClosedLot {
    */
   get creditFee() {
 
-    return this.creditFeeSubunits / this._creditAssetSubunits;
+    return this.creditFeeSubunits / this.creditAsset.subunits;
   }
 };

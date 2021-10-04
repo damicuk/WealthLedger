@@ -1,19 +1,31 @@
+/**
+ * Processes the asset records.
+ * Adds to the Map of assets.
+ * Sets the base currency.
+ * @param {AssetRecord[]} assetRecords - The collection of asset records.
+ */
 AssetTracker.prototype.processAssets = function (assetRecords) {
 
   for (let assetRecord of assetRecords) {
 
     let assetType;
-    if(assetRecord.assetType === 'Fiat Base') {
-      this.baseCurrency = assetRecord.ticker;
+    let isBaseCurrency = false;
+
+    if (assetRecord.assetType === 'Fiat Base') {
       assetType = 'Fiat';
+      isBaseCurrency = true;
     }
     else {
       assetType = assetRecord.assetType;
     }
 
-    let decimalPlaces = assetRecord.decimalPlaces;
-    let price = assetRecord.price;
-    this.assets.set(assetRecord.ticker, { assetType: assetType, decimalPlaces: decimalPlaces, price:price });
+    let asset = new Asset(assetRecord.ticker, assetType, isBaseCurrency, assetRecord.decimalPlaces, assetRecord.currentPrice);
+
+    if (isBaseCurrency) {
+      this.baseCurrency = asset;
+    }
+
+    this.assets.set(assetRecord.ticker, asset);
   }
 }
 
@@ -57,12 +69,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
-  let debitAsset = ledgerRecord.debitAsset;
+  let debitAsset = this.assets.get(ledgerRecord.debitAsset);
   let debitExRate = ledgerRecord.debitExRate;
   let debitAmount = ledgerRecord.debitAmount;
   let debitFee = ledgerRecord.debitFee;
   let debitWalletName = ledgerRecord.debitWalletName;
-  let creditAsset = ledgerRecord.creditAsset;
+  let creditAsset = this.assets.get(ledgerRecord.creditAsset);
   let creditExRate = ledgerRecord.creditExRate;
   let creditAmount = ledgerRecord.creditAmount;
   let creditFee = ledgerRecord.creditFee;
@@ -75,7 +87,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   if (action === 'Transfer') {  //Transfer
 
-    if (this.isFiat(debitAsset)) { //Fiat transfer
+    if (debitAsset.isFiat) { //Fiat transfer
 
       if (debitWalletName) { //Fiat withdrawal
 
@@ -99,30 +111,30 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   else if (action === 'Trade') { //Trade
 
     // Infer missing ex rates
-    if(debitAsset !== this.baseCurrency && creditAsset !== this.baseCurrency && !(this.isFiat(debitAsset) && this.isFiat(creditAsset))) {
+    if (!debitAsset.isBaseCurrency && !creditAsset.isBaseCurrency && !(debitAsset.isFiat && creditAsset.isFiat)) {
 
       const decimalPlaces = 7;
-      
-      if(!debitExRate) {
-        
+
+      if (!debitExRate) {
+
         debitExRate = Math.round(10 ** decimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** decimalPlaces;
-      
+
       }
-      if(!creditExRate) {
+      if (!creditExRate) {
 
         creditExRate = Math.round(10 ** decimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** decimalPlaces;
 
       }
     }
 
-    if (this.isFiat(debitAsset) && this.isFiat(creditAsset)) {  //Exchange fiat
+    if (debitAsset.isFiat && creditAsset.isFiat) {  //Exchange fiat
 
       this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
       this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
     }
-    else if (this.isFiat(debitAsset) && !this.isFiat(creditAsset)) {  //Buy asset
+    else if (debitAsset.isFiat && !creditAsset.isFiat) {  //Buy asset
 
       this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
@@ -131,7 +143,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
-    else if (!this.isFiat(debitAsset) && this.isFiat(creditAsset)) { //Sell asset
+    else if (!debitAsset.isFiat && creditAsset.isFiat) { //Sell asset
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
@@ -154,7 +166,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Income') { //Income
 
-    if (this.isFiat(creditAsset)) { //Fiat income
+    if (creditAsset.isFiat) { //Fiat income
 
       this.getWallet(creditWalletName).getFiatAccount(creditAsset).transfer(creditAmount);
 
@@ -182,7 +194,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Gift') { //Gift
 
-    if (this.isFiat(debitAsset)) {
+    if (debitAsset.isFiat) {
 
       this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
@@ -195,7 +207,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Fee') { //Fee
 
-    if (this.isFiat(debitAsset)) {
+    if (debitAsset.isFiat) {
 
       this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitFee);
 

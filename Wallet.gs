@@ -16,58 +16,50 @@ class Wallet {
     this.name = name;
 
     /**
-     * The fiat accounts.
-     * @type {Array<FiatAccount>}
+     * A map of tickers to fiat accounts.
+     * @type {Map}
      */
-    this.fiatAccounts = [];
+    this.fiatAccounts = new Map();
 
     /**
-     * The asset accounts.
-     * @type {Array<AssetAccount>}
+     * The map of tickers to asset accounts.
+     * @type {Map}
      */
-    this.assetAccounts = [];
+    this.assetAccounts = new Map();
   }
 
   /**
-   * Returns the fiat account with the given ticker or creates adds and returns a new fiat account with that ticker.
-   * @param {string} ticker - The ticker of the fiat account to search for.
+   * Returns the fiat account of the given asset or creates adds and returns a new fiat account of that asset.
+   * @param {Asset} asset - The asset to search for.
    * @return {FiatAccount} The fiat account found or created.
    */
-  getFiatAccount(ticker) {
+  getFiatAccount(asset) {
 
-    for (let fiatAccount of this.fiatAccounts) {
+    let fiatAccount = this.fiatAccounts.get(asset.ticker);
 
-      if (fiatAccount.ticker === ticker) {
+    if (!fiatAccount) {
 
-        return fiatAccount;
-      }
+      fiatAccount = new FiatAccount(asset);
+      this.fiatAccounts.set(asset.ticker, fiatAccount);
     }
-
-    let fiatAccount = new FiatAccount(ticker);
-
-    this.fiatAccounts.push(fiatAccount);
 
     return fiatAccount;
   }
 
   /**
-   * Returns the asset account with the given ticker or creates adds and returns a new asset account with that ticker.
-   * @param {string} ticker - The ticker of the asset account to search for.
+   * Returns the asset account of the given asset or creates adds and returns a new asset account with that asset.
+   * @param {Asset} asset - The asset to search for.
    * @return {AssetAccount} The asset account found or created.
    */
-  getAssetAccount(ticker) {
+  getAssetAccount(asset) {
 
-    for (let assetAccount of this.assetAccounts) {
+    let assetAccount = this.assetAccounts.get(asset.ticker);
 
-      if (assetAccount.ticker === ticker) {
+    if (!assetAccount) {
 
-        return assetAccount;
-      }
+      assetAccount = new AssetAccount(asset);
+      this.assetAccounts.set(asset.ticker, assetAccount);
     }
-
-    let assetAccount = new AssetAccount(ticker);
-
-    this.assetAccounts.push(assetAccount);
 
     return assetAccount;
   }

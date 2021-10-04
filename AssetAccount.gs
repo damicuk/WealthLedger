@@ -5,16 +5,16 @@
 var AssetAccount = class AssetAccount {
 
   /**
-   * Sets the asset ticker and initializes an empty array to contain the asset lots.
-   * @param {string} ticker - the cryptocurrency currency ticker.
+   * Sets the asset and initializes an empty array to contain the asset lots.
+   * @param {Asset} asset - The asset.
    */
-  constructor(ticker) {
-
+  constructor(asset) {
+    
     /**
-     * The asset ticker.
-     * @type {string}
+     * The asset.
+     * @type {Asset}
      */
-    this.ticker = ticker;
+    this.asset = asset;
 
     /**
      * The asset lots.
@@ -24,15 +24,14 @@ var AssetAccount = class AssetAccount {
 
   }
 
+  /**
+   * The asset ticker.
+   * @type {string}
+   */
   get ticker() {
 
-    return this._ticker;
-  }
+    return this.asset.ticker;
 
-  set ticker(ticker) {
-
-    this._ticker = ticker;
-    this._assetSubunits = Currency.subunits(ticker);
   }
 
   /**
@@ -56,7 +55,7 @@ var AssetAccount = class AssetAccount {
    */
   get balance() {
 
-    return this.subunits / this._assetSubunits;
+    return this.subunits / this.asset.subunits;
   }
 
   /**
@@ -64,7 +63,7 @@ var AssetAccount = class AssetAccount {
    * @param {(Lot|Lot[])} lots - The single lot or array of lots to deposit into the account.
    */
   deposit(lots) {
-
+    
     if (Array.isArray(lots)) {
 
       this.lots = this.lots.concat(lots);
@@ -94,8 +93,8 @@ var AssetAccount = class AssetAccount {
    */
   withdraw(amount, fee, lotMatching, rowIndex) {
 
-    let amountSubunits = Math.round(amount * this._assetSubunits);
-    let feeSubunits = Math.round(fee * this._assetSubunits);
+    let amountSubunits = Math.round(amount * this.asset.subunits);
+    let feeSubunits = Math.round(fee * this.asset.subunits);
     let neededSubunits = amountSubunits + feeSubunits;
 
     if (neededSubunits > this.subunits) {
@@ -167,7 +166,7 @@ var AssetAccount = class AssetAccount {
    */
   apportionFee(fee, rowIndex) {
 
-    let feeSubunits = Math.round(fee * this._assetSubunits);
+    let feeSubunits = Math.round(fee * this.asset.subunits);
 
     if (feeSubunits > this.subunits) {
 

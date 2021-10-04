@@ -165,15 +165,6 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Determines whether the type of the asset specified by the ticker is fiat.
-   * @param {string} ticker - The asset ticker.
-   * @return {boolean} Whether the type of the asset specified by the ticker is fiat.
-   */
-  isFiat(ticker) {
-    return this.getAssetType(ticker) === 'Fiat';
-  }
-
-  /**
    * Determines whether the ticker is a key in the assets map.
    * @param {string} ticker - The asset ticker.
    * @return {boolean} Whether the ticker is a key in the assets map.
@@ -279,7 +270,8 @@ var AssetTracker = class AssetTracker {
 
     let fiats = new Set();
     for (let wallet of this.wallets) {
-      for (let fiatAccount of wallet.fiatAccounts) {
+      let walletFiatAccounts = Array.from(wallet.fiatAccounts.values());
+      for (let fiatAccount of walletFiatAccounts) {
         fiats.add(fiatAccount.ticker);
       }
     }
@@ -295,7 +287,8 @@ var AssetTracker = class AssetTracker {
 
     let cryptos = new Set();
     for (let wallet of this.wallets) {
-      for (let assetAccount of wallet.assetAccounts) {
+      let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
+      for (let assetAccount of walletAssetAccounts) {
         cryptos.add(assetAccount.ticker);
       }
     }
@@ -311,7 +304,8 @@ var AssetTracker = class AssetTracker {
 
     let cryptos = new Set();
     for (let wallet of this.wallets) {
-      for (let assetAccount of wallet.assetAccounts) {
+      let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
+      for (let assetAccount of walletAssetAccounts) {
         if (assetAccount.balance > 0) {
           cryptos.add(assetAccount.ticker);
         }
@@ -352,9 +346,8 @@ var AssetTracker = class AssetTracker {
    */
   closeLots(lots, date, creditCurrency, creditExRate, creditAmount, creditFee, creditWalletName) {
 
-    let currencySubunits = Currency.subunits(creditCurrency);
-    let creditAmountSubunits = Math.round(creditAmount * currencySubunits);
-    let creditFeeSubunits = Math.round(creditFee * currencySubunits);
+    let creditAmountSubunits = Math.round(creditAmount * creditCurrency.subunits);
+    let creditFeeSubunits = Math.round(creditFee * creditCurrency.subunits);
 
     //apportion the fee to withdrawal lots
     let lotSubunits = [];
@@ -370,8 +363,8 @@ var AssetTracker = class AssetTracker {
         date,
         creditCurrency,
         creditExRate,
-        (apportionedCreditAmountSubunits[index] / currencySubunits),
-        (apportionedCreditFeeSubunits[index++] / currencySubunits),
+        (apportionedCreditAmountSubunits[index] / creditCurrency.subunits),
+        (apportionedCreditFeeSubunits[index++] / creditCurrency.subunits),
         creditWalletName);
 
       this.closedLots.push(closedLot);

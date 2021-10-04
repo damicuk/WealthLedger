@@ -110,20 +110,22 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
   let table = [];
 
   for (let wallet of this.wallets) {
-    for (let assetAccount of wallet.assetAccounts) {
+
+    let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
+    for (let assetAccount of walletAssetAccounts) {
 
       for (let lot of assetAccount.lots) {
 
         let date = lot.date;
-        let debitAsset = lot.debitAsset;
-        let debitType = this.getAssetType(debitAsset);
+        let debitAsset = lot.debitAsset.ticker;
+        let debitType = lot.debitAsset.assetType;
         let debitExRate = lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;
 
-        let creditAsset = lot.creditAsset;
-        let creditType = this.getAssetType(creditAsset);
+        let creditAsset = lot.creditAsset.ticker;
+        let creditType = lot.creditAsset.assetType;
         let creditAmount = lot.creditAmount;
         let creditFee = lot.creditFee;
 
