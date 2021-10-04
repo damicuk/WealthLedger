@@ -51,19 +51,19 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
-  let apiError;
-  try {
-    this.exRatesSheet();
-  }
-  catch (error) {
-    if (error instanceof ApiError) {
-      //handle the error later
-      apiError = error;
-    }
-    else {
-      throw error;
-    }
-  }
+  // let apiError;
+  // try {
+  //   this.exRatesSheet();
+  // }
+  // catch (error) {
+  //   if (error instanceof ApiError) {
+  //     //handle the error later
+  //     apiError = error;
+  //   }
+  //   else {
+  //     throw error;
+  //   }
+  // }
 
   this.fiatAccountsSheet();
   this.openPositionsReport();
@@ -80,12 +80,12 @@ AssetTracker.prototype.writeReports = function () {
   this.updateLedgerAssets();
   this.updateLedgerWallets();
 
-  if (apiError) {
-    this.handleError('api', apiError.message);
-  }
-  else {
+  // if (apiError) {
+  //   this.handleError('api', apiError.message);
+  // }
+  // else {
     SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
-  }
+  // }
 };
 
 /**
