@@ -9,9 +9,8 @@ var Asset = class Asset {
    * @param {string} assetType - The asset type of the asset.
    * @param {boolean} isBaseCurrency - Whether the asset is the base currency.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
-   * @param {number} currentPrice - The current price of the asset.
    */
-  constructor(ticker, assetType, isBaseCurrency, decimalPlaces, currentPrice) {
+  constructor(ticker, assetType, isBaseCurrency, decimalPlaces) {
 
     /**
      * The ticker of the asset.
@@ -37,12 +36,6 @@ var Asset = class Asset {
      */
     this.decimalPlaces = decimalPlaces;
 
-    /**
-     * The current price of the asset.
-     * @type {number}
-     */
-    this.currentPrice = currentPrice;
-
   }
 
   /**
@@ -60,7 +53,7 @@ var Asset = class Asset {
    * @type {number}
    */
   get subunits() {
-    
+
     return 10 ** this.decimalPlaces;
 
   }

@@ -39,11 +39,11 @@ AssetTracker.prototype.walletsReport = function () {
     `IF(AND(ISBLANK(INDEX(${referenceRangeName1}, 1, 1)), COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0),,
 TRANSPOSE(QUERY(
 IF(COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0,
-QUERY(${referenceRangeName1}, "SELECT H, I, L, SUM(N) GROUP BY H, I, L ORDER BY I, H, L LABEL SUM(N) ''"),
+QUERY(${referenceRangeName1}, "SELECT H, I, L, SUM(M) GROUP BY H, I, L ORDER BY I, H, L LABEL SUM(M) ''"),
 IF(ISBLANK(INDEX(${referenceRangeName1}, 1, 1)),
 QUERY(QUERY(${referenceRangeName2}, "SELECT B, 'Fiat', A, SUM(C) GROUP BY B, A ORDER BY B, A LABEL 'Fiat' '', SUM(C) ''"), "SELECT * WHERE Col4 <> 0"),
 {
-QUERY(${referenceRangeName1}, "SELECT H, I, L, SUM(N) GROUP BY H, I, L ORDER BY I, H, L LABEL SUM(N) ''");
+QUERY(${referenceRangeName1}, "SELECT H, I, L, SUM(M) GROUP BY H, I, L ORDER BY I, H, L LABEL SUM(M) ''");
 QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A ORDER BY B, A LABEL ' Fiat ' '', SUM(C) ''"), "SELECT * WHERE Col4 <> 0")
 })), "SELECT Col1, Col2, SUM(Col4) GROUP BY Col1, Col2 PIVOT Col3 ORDER BY Col2, Col1 LABEL Col1 'Wallet'")))`
   );

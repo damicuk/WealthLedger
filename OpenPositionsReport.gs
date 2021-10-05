@@ -19,8 +19,8 @@ AssetTracker.prototype.openPositionsReport = function () {
       [
         'Buy Debit', , , , , , ,
         'Buy Credit', , , ,
-        'Current', ,
-        'Calculations', , , , , , ,
+        'Current',
+        'Calculations', , , , , , , ,
       ],
       [
         'Date Time',
@@ -35,10 +35,10 @@ AssetTracker.prototype.openPositionsReport = function () {
         'Amount',
         'Fee',
         'Wallet',
-        'Price',
         'Balance',
         'Cost Price',
         'Cost Basis',
+        'Current Price',
         'Current Value',
         'Unrealized P/L',
         'Unrealized P/L %',
@@ -51,13 +51,12 @@ AssetTracker.prototype.openPositionsReport = function () {
 
     sheet.getRange('A1:G2').setBackgroundColor('#ead1dc');
     sheet.getRange('H1:K2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('L1:M2').setBackgroundColor('#d9d2e9');
-    sheet.getRange('N1:T2').setBackgroundColor('#c9daf8');
+    sheet.getRange('L1:L2').setBackgroundColor('#d9d2e9');
+    sheet.getRange('M1:T2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:G1').mergeAcross();
     sheet.getRange('H1:K1').mergeAcross();
-    sheet.getRange('L1:M1').mergeAcross();
-    sheet.getRange('N1:T1').mergeAcross();
+    sheet.getRange('M1:T1').mergeAcross();
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('B3:C').setNumberFormat('@');
@@ -68,9 +67,8 @@ AssetTracker.prototype.openPositionsReport = function () {
     sheet.getRange('J3:J').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('L3:L').setNumberFormat('@');
-    sheet.getRange('M3:M').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('N3:N').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('O3:Q').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('M3:M').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('N3:Q').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('R3:R').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
     sheet.getRange('S3:S').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
     sheet.getRange('T3:T').setNumberFormat('@');
@@ -80,15 +78,16 @@ AssetTracker.prototype.openPositionsReport = function () {
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(N3:N=0,,P3:P/N3:N), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(M3:M=0,,O3:O/M3:M), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, (E3:E+F3:F)*D3:D, E3:E+F3:F), LEN(A3:A)))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(N3:N*M3:M, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(Q3:Q-P3:P, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(IF(P3:P=0,,R3:R/P3:P), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(H3:H, QUERY(ExRates, "SELECT B, D"), 2, FALSE),), LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(M3:M*P3:P, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(Q3:Q-O3:O, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(IF(O3:O=0,,R3:R/O3:O), LEN(A3:A))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, NOW(), "Y") > 1)+(((DATEDIF(A3:A, NOW(), "Y") = 1)*(DATEDIF(A3:A, NOW(), "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('N3:T3').setFormulas(formulas);
+    sheet.getRange('M3:T3').setFormulas(formulas);
 
     let protection = sheet.protect().setDescription('Essential Data Sheet');
     protection.setWarningOnly(true);
@@ -97,7 +96,7 @@ AssetTracker.prototype.openPositionsReport = function () {
 
   let dataTable = this.getOpenPositionsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 13, 7);
+  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 12, 8);
 
 };
 
@@ -131,7 +130,6 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
         let creditFee = lot.creditFee;
 
         let currentWallet = wallet.name;
-        let currentPrice = lot.creditAsset.currentPrice;
 
         table.push([
 
@@ -148,8 +146,7 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
           creditAmount,
           creditFee,
 
-          currentWallet,
-          currentPrice
+          currentWallet
         ]);
       }
     }

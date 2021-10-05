@@ -120,7 +120,6 @@ var AssetTracker = class AssetTracker {
     this.incomeSummaryReportName = 'Income Summary Report';
     this.donationsSummaryReportName = 'Donations Summary Report';
     this.walletsReportName = 'Wallets Report';
-    this.exRatesTableSheetName = 'Ex Rates Table';
 
     this.exRatesRangeName = 'ExRates';
     this.fiatAccountsRangeName = 'FiatAccounts';

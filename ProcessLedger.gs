@@ -19,7 +19,7 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
       assetType = assetRecord.assetType;
     }
 
-    let asset = new Asset(assetRecord.ticker, assetType, isBaseCurrency, assetRecord.decimalPlaces, assetRecord.currentPrice);
+    let asset = new Asset(assetRecord.ticker, assetType, isBaseCurrency, assetRecord.decimalPlaces);
 
     if (isBaseCurrency) {
       this.baseCurrency = asset;
