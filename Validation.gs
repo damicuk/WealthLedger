@@ -474,6 +474,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     if (!debitAsset) {
       throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
     }
+    else if (debitAsset.isFiat) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAsset}) is fiat, not supported.`, rowIndex, 'debitAsset');
+    }
     else if (debitExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
     }
