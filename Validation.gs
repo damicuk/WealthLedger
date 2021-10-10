@@ -194,7 +194,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   else if (isNaN(creditFee)) {
     throw new ValidationError(`${action} row ${rowIndex}: Credit fee is not valid (number or blank).`, rowIndex, 'creditFee');
   }
-  else if (lotMatching && !AssetTracker.lotMatchings.includes(lotMatching)) {
+  else if (lotMatching !== '' && !AssetTracker.lotMatchings.includes(lotMatching)) {
     throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${AssetTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');
   }
   else if (action === 'Transfer') { //Transfer
@@ -225,11 +225,11 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
-    else if (!debitWalletName && !creditWalletName) {
+    else if (debitWalletName === '' && creditWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit or credit wallet specified.`, rowIndex, 'debitWalletName');
     }
     else if (debitAsset.isFiat) { //Fiat transfer
-      if (debitWalletName && creditWalletName) {
+      if (debitWalletName !== '' && creditWalletName !== '') {
         throw new ValidationError(`${action} row ${rowIndex}: For base currency transfers, leave debit wallet (${debitWalletName}) blank for deposits or credit wallet (${creditWalletName}) blank for withdrawals.`, rowIndex, 'debitWalletName');
       }
     }
@@ -245,7 +245,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
     }
   }
-  else if (action === 'Trade') { //Trade
+  else if (action === 'Trade') {
     if (!debitAsset) {
       throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
     }
@@ -313,15 +313,15 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       if (debitExRate === '' && creditExRate === '') {
         throw new ValidationError(`${action} row ${rowIndex}: Non base currency trade requires debit asset (${debitAsset}) and/or credit asset (${creditAsset}) to base currency (${this.baseCurrency}) exchange rate.`, rowIndex, 'debitExRate');
       }
-      else if (debitExRate && debitExRate <= 0) {
+      else if (debitExRate !== '' && debitExRate <= 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
       }
-      else if (creditExRate && creditExRate <= 0) {
+      else if (creditExRate !== '' && creditExRate <= 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate must be greater than 0.`, rowIndex, 'creditExRate');
       }
     }
   }
-  else if (action === 'Income') { //Income
+  else if (action === 'Income') {
     if (debitExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
     }
@@ -338,7 +338,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: No credit asset specified.`, rowIndex, 'creditAsset');
     }
     else if (creditAsset.isBaseCurrency && creditExRate !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blanc when credit asset is base currency (${this.baseCurrency}) exchange rate.`, rowIndex, 'creditExRate');
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank when credit asset is base currency (${this.baseCurrency}) exchange rate.`, rowIndex, 'creditExRate');
     }
     else if (!creditAsset.isBaseCurrency && creditExRate === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Missing credit asset (${creditAsset}) to base currency (${this.baseCurrency}) exchange rate.`, rowIndex, 'creditExRate');
@@ -359,7 +359,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: No credit wallet specified.`, rowIndex, 'creditWalletName');
     }
   }
-  else if (action === 'Donation') { //Donation
+  else if (action === 'Donation') {
     if (!debitAsset) {
       throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
     }
@@ -435,7 +435,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
-  else if (action === 'Fee') { //Fee
+  else if (action === 'Fee') {
     if (!debitAsset) {
       throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
     }
@@ -462,6 +462,44 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     }
     else if (creditAmount !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit amount blank.`, rowIndex, 'creditAmount');
+    }
+    else if (creditFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
+    }
+    else if (creditWalletName) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
+    }
+  }
+  else if (action === 'Split') {
+    if (!debitAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
+    }
+    else if (debitExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+    }
+    else if (debitAmount !== '' && creditAmount !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave either debit amount blank for normal splits or credit amount blank for reverse splits.`, rowIndex, 'debitAmount');
+    }
+    else if (debitAmount !== '' && (debitAmount <= 1 || !Number.isInteger(debitAmount))) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be an integer greater than 1.`, rowIndex, 'debitAmount');
+    }
+    else if (debitFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
+    }
+    else if (debitWalletName) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
+    }
+    else if (creditAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit asset (${creditAsset}) blank.`, rowIndex, 'creditAsset');
+    }
+    else if (creditExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+    }
+    else if (debitAmount === '' && creditAmount === '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Fill either credit amount for normal splits or debit amount for reverse splits.`, rowIndex, 'creditAmount');
+    }
+    else if (creditAmount !== '' && (creditAmount <= 1 || !Number.isInteger(creditAmount))) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be an integer greater than 1.`, rowIndex, 'creditAmount');
     }
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');

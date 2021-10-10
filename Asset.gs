@@ -55,7 +55,7 @@ var Asset = class Asset {
   */
   static get decimalPlacesRegExp() {
 
-    return /^[012345678]$/;
+    return /^[0-8]$/;
   }
 
   /**
