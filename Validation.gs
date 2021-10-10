@@ -234,10 +234,10 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
     }
     else { //Asset transfer
-      if (!debitWalletName) {
+      if (debitWalletName === '') {
         throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
       }
-      else if (!creditWalletName) {
+      else if (creditWalletName === '') {
         throw new ValidationError(`${action} row ${rowIndex}: No credit wallet specified.`, rowIndex, 'creditWalletName');
       }
       else if (debitWalletName === creditWalletName) {
@@ -264,7 +264,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
-    else if (!debitWalletName) {
+    else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
     }
     else if (creditAmount === '') {
@@ -282,7 +282,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee > creditAmount) {
       throw new ValidationError(`${action} row ${rowIndex}: Fiat credit fee must be less than or equal to credit amount (or blank).`, rowIndex, 'creditFee');
     }
-    else if (creditWalletName) {
+    else if (creditWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank. It is inferred from the debit wallet (${debitWalletName}).`, rowIndex, 'creditWalletName');
     }
     else if (debitAsset.isBaseCurrency) { //Base currency buy trade
@@ -331,7 +331,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
     }
-    else if (debitWalletName) {
+    else if (debitWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
     }
     else if (!creditAsset) {
@@ -355,7 +355,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
-    else if (!creditWalletName) {
+    else if (creditWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No credit wallet specified.`, rowIndex, 'creditWalletName');
     }
   }
@@ -381,7 +381,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
-    else if (!debitWalletName) {
+    else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
     }
     else if (creditAsset) {
@@ -396,7 +396,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
-    else if (creditWalletName) {
+    else if (creditWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
@@ -416,7 +416,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
-    else if (!debitWalletName) {
+    else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
     }
     else if (creditAsset) {
@@ -431,7 +431,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
-    else if (creditWalletName) {
+    else if (creditWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
@@ -451,7 +451,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitFee <= 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater than 0.`, rowIndex, 'debitFee');
     }
-    else if (!debitWalletName) {
+    else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
     }
     else if (creditAsset) {
@@ -466,7 +466,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
-    else if (creditWalletName) {
+    else if (creditWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
