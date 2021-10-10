@@ -47,24 +47,48 @@ AssetTracker.prototype.validateLedger = function () {
 AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
   let rowIndex = this.assetHeaderRows + 1;
+  let tickers = new Set();
+  let fiatBase;
   for (let assetRecord of assetRecords) {
-    this.validateAssetRecord(assetRecord, rowIndex++);
+    let ticker = assetRecord.ticker;
+    let assetType = assetRecord.assetType;
+    let decimalPlaces = assetRecord.decimalPlaces;
+
+    if (ticker === '') {
+      throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
+    }
+    else if (tickers.has(ticker)) {
+      throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
+    }
+    else if (!Asset.tickerRegExp.test(ticker)) {
+      throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
+    }
+    else if (assetType === '') {
+      throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
+    }
+    else if (!Asset.validAssetTypes.includes(assetType)) {
+      throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) is not recognized (${Asset.validAssetTypes.join(', ')}).`, rowIndex, 'assetType');
+    }
+    else if (assetType === 'Fiat Base' && fiatBase) {
+      throw new ValidationError(`Assets row ${rowIndex}: Fiat Base has already been declared (${fiatBase}). Only one asset can be Fiat Base.`, rowIndex, 'assetType');
+    }
+    else if (decimalPlaces === '') {
+      throw new ValidationError(`Assets row ${rowIndex}: Decimal places is missing.`, rowIndex, 'decimalPlaces');
+    }
+    else if (!Asset.decimalPlacesRegExp.test(decimalPlaces)) {
+      throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (integer between 0 and 8).`, rowIndex, 'decimalPlaces');
+    }
+    else { //Row valid
+      if (assetType === 'Fiat Base') {
+        fiatBase = ticker;
+      }
+      tickers.add(ticker);
+      rowIndex++;
+    }
+    // this.validateAssetRecord(assetRecord, assetTickers, hasFiatBase, rowIndex++);
   }
-};
-
-/**
- * Validates an asset record and throws a ValidationError on failure.
- * @param {AssetRecord} assetRecord - The asset record to validate.
- * @param {number} rowIndex - The index of the row in the asset sheet used to set the current cell in case of an error.
- */
-AssetTracker.prototype.validateAssetRecord = function (assetRecord, rowIndex) {
-
-  let ticker = assetRecord.ticker;
-  let assetType = assetRecord.assetType;
-  let decimalPlaces = assetRecord.decimalPlaces;
-
-  if (isNaN(decimalPlaces)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (number or blank).`, rowIndex, 'decimalPlaces');
+  if (!fiatBase) {
+    throw new ValidationError(`Fiat Base has not been declared in the Assets sheet. One asset must have asset type of 'Fiat Base'.`);
   }
 };
 

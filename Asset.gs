@@ -39,6 +39,36 @@ var Asset = class Asset {
   }
 
   /**
+   * Regular expression to loosly validate asset ticker format.
+   * @type {RegExp}
+   * @static
+   */
+  static get tickerRegExp() {
+
+    return /^\w{2,9}$/;
+  }
+
+  /**
+  * Regular expression to validate decimal places.
+  * @type {RegExp}
+  * @static
+  */
+  static get decimalPlacesRegExp() {
+
+    return /^[012345678]$/;
+  }
+
+  /**
+   * Array of supported asset types.
+   * @type {string[]}
+   * @static
+   */
+  static get validAssetTypes() {
+
+    return ['Crypto', 'Fiat', 'Fiat Base', 'Forex', 'Stablecoin', 'Stock'];
+  }
+
+  /**
    * Whether the asset is fiat.
    * @type {boolean}
    */

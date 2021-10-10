@@ -52,7 +52,7 @@ class AssetRecord {
 
     let columns = [
       'ticker',
-      'type',
+      'assetType',
       'decimalPlaces',
       'currentPrice'
     ];
@@ -111,7 +111,7 @@ AssetTracker.prototype.getAssetRange = function () {
   let assetRange = assetSheet.getDataRange();
 
   if (assetRange.getHeight() < this.assetHeaderRows + 1) {
-    throw new ValidationError('Asset shhet contains no data rows.');
+    throw new ValidationError('Asset sheet contains no data rows.');
   }
 
   assetRange = assetRange.offset(this.assetHeaderRows, 0, assetRange.getHeight() - this.assetHeaderRows, this.assetDataColumns);

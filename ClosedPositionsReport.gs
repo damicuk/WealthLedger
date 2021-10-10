@@ -24,18 +24,18 @@ AssetTracker.prototype.closedPositionsReport = function () {
       [
         'Date Time',
         'Asset',
-        'Type',
+        'Asset Type',
         'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
         'Asset',
-        'Type',
+        'Asset Type',
         'Amount',
         'Fee',
         'Date Time',
         'Asset',
-        'Type',
+        'Asset Type',
         'Ex Rate',
         'Amount',
         'Fee',
@@ -126,20 +126,20 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
 
     let dateBuy = lot.date;
     let debitAssetBuy = lot.debitAsset.ticker;
-    let debitTypeBuy = lot.debitAsset.assetType;
+    let debitAssetTypeBuy = lot.debitAsset.assetType;
     let debitExRateBuy = lot.debitExRate;
     let debitAmountBuy = lot.debitAmount;
     let debitFeeBuy = lot.debitFee;
     let walletBuy = lot.walletName;
 
     let creditAssetBuy = lot.creditAsset.ticker;
-    let creditTypeBuy = lot.creditAsset.assetType;
+    let creditAssetTypeBuy = lot.creditAsset.assetType;
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
 
     let dateSell = closedLot.date;
     let creditAssetSell = closedLot.creditAsset.ticker;
-    let creditTypeSell = closedLot.creditAsset.assetType;
+    let creditAssetTypeSell = closedLot.creditAsset.assetType;
     let creditExRateSell = closedLot.creditExRate;
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
@@ -149,20 +149,20 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
 
       dateBuy,
       debitAssetBuy,
-      debitTypeBuy,
+      debitAssetTypeBuy,
       debitExRateBuy,
       debitAmountBuy,
       debitFeeBuy,
       walletBuy,
 
       creditAssetBuy,
-      creditTypeBuy,
+      creditAssetTypeBuy,
       creditAmountBuy,
       creditFeeBuy,
 
       dateSell,
       creditAssetSell,
-      creditTypeSell,
+      creditAssetTypeSell,
       creditExRateSell,
       creditAmountSell,
       creditFeeSell,

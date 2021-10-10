@@ -31,7 +31,7 @@ AssetTracker.prototype.donationsSummaryReport = function () {
     [
       'Year',
       'Asset',
-      'Type',
+      'Asset Type',
       'Amount',
       'Cost Basis',
       'Donation Value'
@@ -50,7 +50,7 @@ AssetTracker.prototype.donationsSummaryReport = function () {
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT 'TOTAL', ' ', '  ', '   ', SUM(Col5), SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", ""};
-{"BY TYPE", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT ' ', '  ', Col3, '   ', SUM(Col5), SUM(Col6) GROUP BY Col3 ORDER BY Col3 LABEL ' ' '', '  ' '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", ""};
@@ -59,7 +59,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT '
 {"BY YEAR", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT Col1, ' ', '  ', '   ', SUM(Col5), SUM(Col6) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", ""};
-{"BY YEAR AND TYPE", "", "", "", "", ""};
+{"BY YEAR AND ASSET TYPE", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT Col1, ' ', Col3, '  ', SUM(Col5), SUM(Col6) GROUP BY Col1, Col3 ORDER BY Col1, Col3 LABEL Col1 '', ' ' '', Col3 '', '  ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", ""};
 {"BY YEAR AND ASSET", "", "", "", "", ""};

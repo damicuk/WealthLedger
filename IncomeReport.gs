@@ -18,9 +18,9 @@ AssetTracker.prototype.incomeReport = function () {
       [
         'Date Time',
         'Source Asset',
-        'Source Type',
+        'Source Asset Type',
         'Income Asset',
-        'Income Type',
+        'Income Asset Type',
         'Ex Rate',
         'Amount',
         'Wallet',
@@ -69,13 +69,13 @@ AssetTracker.prototype.getIncomeTable = function () {
 
     let date = incomeLot.date;
     let sourceAsset;
-    let sourceType;
-    if(incomeLot.sourceAsset) {
+    let sourceAssetType;
+    if (incomeLot.sourceAsset) {
       sourceAsset = incomeLot.sourceAsset.ticker;
-      sourceType = incomeLot.sourceAsset.assetType;
+      sourceAssetType = incomeLot.sourceAsset.assetType;
     }
     let incomeAsset = incomeLot.incomeAsset.ticker;
-    let incomeType = incomeLot.incomeAsset.assetType;
+    let incomeAssetType = incomeLot.incomeAsset.assetType;
     let exRate = incomeLot.exRate;
     let amount = incomeLot.amount;
     let wallet = incomeLot.walletName;
@@ -84,9 +84,9 @@ AssetTracker.prototype.getIncomeTable = function () {
 
       date,
       sourceAsset,
-      sourceType,
+      sourceAssetType,
       incomeAsset,
-      incomeType,
+      incomeAssetType,
       exRate,
       amount,
       wallet

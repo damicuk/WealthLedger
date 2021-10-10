@@ -31,9 +31,9 @@ AssetTracker.prototype.incomeSummaryReport = function () {
     [
       'Year',
       'Source Asset',
-      'Source Type',
+      'Source Asset Type',
       'Income Asset',
-      'Income Type',
+      'Income Asset Type',
       'Amount',
       'Income Value'
     ]
@@ -50,7 +50,7 @@ AssetTracker.prototype.incomeSummaryReport = function () {
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
-{"BY TYPE", "", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col3, '   ', Col5, '    ', SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", ""};
@@ -59,7 +59,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELEC
 {"BY YEAR", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
-{"BT YEAR AND TYPE", "", "", "", "", "", ""};
+{"BT YEAR AND ASSET TYPE", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', Col3, '  ', Col5, '   ', SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', '   ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
 {"BT YEAR AND ASSET", "", "", "", "", "", ""};
