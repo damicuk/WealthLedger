@@ -229,7 +229,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
 /**
  * Searches for all occurances of the given asset and adjusts the amount, fee and exrate according to the split numerator and denominator.
- * @param {Asset} asset - The asset to search for.
+ * @param {Asset} asset - The asset being split.
  * @param {number} numerator - The numerator of the split. 
  * @param {number} denominator - The denominator of the split.
  */
