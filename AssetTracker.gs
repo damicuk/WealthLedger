@@ -44,6 +44,12 @@ var AssetTracker = class AssetTracker {
      */
     this.donatedLots = [];
 
+    /**
+     * The number of decimal places to round exrate calculation.
+     * @type {number}
+     */
+    this.exRateDecimalPlaces = 7;
+
     //get user properties or set defaults
     let userProperties = PropertiesService.getUserProperties();
 
@@ -62,7 +68,6 @@ var AssetTracker = class AssetTracker {
      * @type {string}
      */
     this.apiKey = userProperties.getProperty('apiKey');
-
 
     /**
      * The current lot matching method.
