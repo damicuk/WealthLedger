@@ -234,43 +234,6 @@ AssetTracker.prototype.trimColumns = function (sheet, neededColumns) {
 
 /**
  * Adds specific conditional text color formatting to a range of cells in a sheet.
- * Used to format the action column of the ledger sheet.
- * @param {Sheet} sheet - The sheet containing the range of cells to format.
- * @param {string} a1Notation - The A1 notation used to specify the range of cells to be formatted.
- */
-AssetTracker.prototype.addActionCondtion = function (sheet, a1Notation) {
-
-  let textColors = [
-    ['Donation', '#ff9900', null],
-    ['Fee', '#9900ff', null],
-    ['Gift', '#ff9900', null],
-    ['Income', '#6aa84f', null],
-    ['Split', '#ff00ff', null],
-    ['Stop', '#ff0000', '#ffbb00'],
-    ['Trade', '#1155cc', null],
-    ['Transfer', '#ff0000', null],
-  ];
-
-  let range = sheet.getRange(a1Notation);
-  let rules = sheet.getConditionalFormatRules();
-
-  for (let textColor of textColors) {
-
-    let rule = SpreadsheetApp.newConditionalFormatRule()
-      .whenTextEqualTo(textColor[0])
-      .setFontColor(textColor[1])
-      .setBackground(textColor[2])
-      .setRanges([range])
-      .build();
-
-    rules.push(rule);
-  }
-
-  sheet.setConditionalFormatRules(rules);
-};
-
-/**
- * Adds specific conditional text color formatting to a range of cells in a sheet.
  * Used to format the long / short columns in the reports sheets.
  * @param {Sheet} sheet - The sheet containing the range of cells to format.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells to be formatted.
@@ -299,49 +262,25 @@ AssetTracker.prototype.addLongShortCondition = function (sheet, a1Notation) {
 
 /**
  * Sets data validation from a list on a range of cells in a sheet.
- * Sets the help text that appears when the user hovers over a cell on which data validation is set.
- * Used specifically to set the data validation on the asset columns in the ledger sheet.
- * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
- * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {string[]} values - The list of valid values
- */
-AssetTracker.prototype.addAssetValidation = function (sheet, a1Notation, values) {
-
-  this.addValidation(sheet, a1Notation, values, 'New assets will be added to the data validation dropdown when write reports is run.');
-
-};
-
-/**
- * Sets data validation from a list on a range of cells in a sheet.
- * Sets the help text that appears when the user hovers over a cell on which data validation is set.
- * Used specifically to set the data validation on the wallet columns in the ledger sheet.
- * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
- * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {string[]} values - The list of valid values
- */
-AssetTracker.prototype.addWalletValidation = function (sheet, a1Notation, values) {
-
-  this.addValidation(sheet, a1Notation, values, 'New wallets will be added to the data validation dropdown when write reports is run.');
-
-};
-
-/**
- * Sets data validation from a list on a range of cells in a sheet.
  * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
  * @param {string[]} values - The list of valid values.
+ * @param {boolean} allowInvalid - Whether to allow invalid data with a warning or reject it.
  * @param {string} helpText - Sets the help text that appears when the user hovers over a cell on which data validation is set.
  */
-AssetTracker.prototype.addValidation = function (sheet, a1Notation, values, helpText) {
+AssetTracker.prototype.setValidation = function (sheet, a1Notation, values, allowInvalid, helpText) {
 
   let range = sheet.getRange(a1Notation);
 
-  let rule = SpreadsheetApp.newDataValidation()
+  let dataValidationBuilder = SpreadsheetApp.newDataValidation()
     .requireValueInList(values)
-    .setHelpText(helpText)
-    .build();
+    .setAllowInvalid(allowInvalid);
+
+  if (helpText) {
+    dataValidationBuilder.setHelpText(helpText);
+  }
+
+  let rule = dataValidationBuilder.build();
 
   range.setDataValidation(rule);
 };
-
-

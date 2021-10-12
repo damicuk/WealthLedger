@@ -30,12 +30,13 @@ AssetTracker.prototype.getLedgerRange = function () {
 };
 
 /**
+ * Checks the version of the ledger sheet.
+ * Sets conditional text color formatting of the action column of the ledger sheet if the version is not current.
+ * Sets data validation on the action column of the ledger sheet if the version is not current.
  * Sets data validation on the asset columns in the ledger sheet.
- * The list of fiat and asset tickers is collected when the ledger is processed to write the reports.
- * Both fiats and assets are sorted alphabetically.
- * The fiats are listed before the assets.
+ * Sets data validation on the wallets columns in the ledger sheet.
  */
-AssetTracker.prototype.updateLedgerAssets = function () {
+AssetTracker.prototype.updateLedger = function () {
 
   const sheetName = this.ledgerSheetName;
 
@@ -45,31 +46,103 @@ AssetTracker.prototype.updateLedgerAssets = function () {
   if (!sheet) {
     return;
   }
+
+  // if (this.getSheetVersion(sheet) !== this.ledgerSheetVersion) {
+
+  //   this.setLedgerConditionalFormatRules(sheet);
+  //   this.setLedgerActions(sheet);
+
+  //   this.setSheetVersion(sheet, this.ledgerSheetVersion);
+  // }
+
+  this.updateLedgerAssets(sheet);
+  this.updateLedgerWallets(sheet);
+};
+
+/**
+ * Sets conditional text color formatting of the action column of the ledger sheet.
+ * @param {Sheet} sheet - The ledger sheet.
+ */
+AssetTracker.prototype.setLedgerConditionalFormatRules = function (sheet) {
+
+  sheet.clearConditionalFormatRules();
+
+  let textColors = [
+    ['Donation', '#ff9900', null],
+    ['Fee', '#9900ff', null],
+    ['Gift', '#ff9900', null],
+    ['Income', '#6aa84f', null],
+    ['Split', '#ff00ff', null],
+    ['Stop', '#ff0000', '#ffbb00'],
+    ['Trade', '#1155cc', null],
+    ['Transfer', '#ff0000', null],
+  ];
+
+  let range = sheet.getRange('B3:B');
+  let rules = sheet.getConditionalFormatRules();
+
+  for (let textColor of textColors) {
+
+    let rule = SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo(textColor[0])
+      .setFontColor(textColor[1])
+      .setBackground(textColor[2])
+      .setRanges([range])
+      .build();
+
+    rules.push(rule);
+  }
+
+  sheet.setConditionalFormatRules(rules);
+};
+
+/**
+ * Sets data validation on the action column of the ledger sheet.
+ * @param {Sheet} sheet - The ledger sheet.
+ */
+AssetTracker.prototype.setLedgerActions = function (sheet) {
+
+  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'];
+  this.setValidation(sheet, 'B3:B', actions, false);
+
+};
+
+/**
+ * Sets data validation on the lot matching column of the ledger sheet.
+ * @param {Sheet} sheet - The ledger sheet.
+ */
+AssetTracker.prototype.setLedgerLotMatchings = function (sheet) {
+
+  let lotMatchings = ['FIFO', 'LIFO', 'HIFO', 'LOFO'];
+  this.setValidation(sheet, 'M3:M', lotMatchings, false);
+
+};
+
+/**
+ * Sets data validation on the asset columns of the ledger sheet.
+ * The list of fiat and asset tickers is collected when the ledger is processed to write the reports.
+ * Both fiats and assets are sorted alphabetically.
+ * The fiats are listed before the assets.
+ * @param {Sheet} sheet - The ledger sheet.
+ */
+AssetTracker.prototype.updateLedgerAssets = function (sheet) {
 
   let fiatTickers = Array.from(this.fiatTickers).sort(AssetTracker.abcComparator);
   let assetTickers = Array.from(this.assetTickers).sort(AssetTracker.abcComparator);
   let tickers = fiatTickers.concat(assetTickers);
 
-  this.addAssetValidation(sheet, 'C3:C', tickers);
-  this.addAssetValidation(sheet, 'H3:H', tickers);
+  this.setAssetValidation(sheet, 'C3:C', tickers);
+  this.setAssetValidation(sheet, 'H3:H', tickers);
 
 };
 
 /**
- * Sets data validation on the wallets columns in the ledger sheet.
+ * Sets data validation on the wallets columns of the ledger sheet.
  * The list of wallet names is collected when the ledger is processed to write the reports.
  * The wallet names are sorted alphabetically.
+ * @param {Sheet} sheet - The ledger sheet.
  */
-AssetTracker.prototype.updateLedgerWallets = function () {
-
-  const sheetName = this.ledgerSheetName;
-
-  let ss = SpreadsheetApp.getActive();
-  let sheet = ss.getSheetByName(sheetName);
-
-  if (!sheet) {
-    return;
-  }
+AssetTracker.prototype.updateLedgerWallets = function (sheet) {
 
   let walletNames = [];
   for (let wallet of this.wallets) {
@@ -77,7 +150,35 @@ AssetTracker.prototype.updateLedgerWallets = function () {
   }
   walletNames.sort(AssetTracker.abcComparator);
 
-  this.addWalletValidation(sheet, 'G3:G', walletNames);
-  this.addWalletValidation(sheet, 'L3:L', walletNames);
+  this.setWalletValidation(sheet, 'G3:G', walletNames);
+  this.setWalletValidation(sheet, 'L3:L', walletNames);
+
+};
+
+/**
+ * Sets data validation from a list on a range of cells in a sheet.
+ * Sets the help text that appears when the user hovers over a cell on which data validation is set.
+ * Used specifically to set the data validation on the currency columns in the ledger sheet.
+ * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
+ * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
+ * @param {string[]} values - The list of valid values
+ */
+AssetTracker.prototype.setAssetValidation = function (sheet, a1Notation, values) {
+
+  this.setValidation(sheet, a1Notation, values, true, 'New assets will be added to the data validation dropdown when write reports is run.');
+
+};
+
+/**
+ * Sets data validation from a list on a range of cells in a sheet.
+ * Sets the help text that appears when the user hovers over a cell on which data validation is set.
+ * Used specifically to set the data validation on the wallet columns in the ledger sheet.
+ * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
+ * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
+ * @param {string[]} values - The list of valid values
+ */
+AssetTracker.prototype.setWalletValidation = function (sheet, a1Notation, values) {
+
+  this.setValidation(sheet, a1Notation, values, true, 'New wallets will be added to the data validation dropdown when write reports is run.');
 
 };

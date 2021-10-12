@@ -76,14 +76,13 @@ AssetTracker.prototype.writeReports = function () {
   this.donationsSummaryReport();
   this.walletsReport();
 
-  this.updateLedgerAssets();
-  this.updateLedgerWallets();
+  this.updateLedger();
 
   // if (apiError) {
   //   this.handleError('api', apiError.message);
   // }
   // else {
-    SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
+  SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
   // }
 };
 

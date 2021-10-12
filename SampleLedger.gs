@@ -55,28 +55,21 @@ AssetTracker.prototype.sampleLedger = function () {
   sheet.getRange('I3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
   sheet.getRange('L3:N').setNumberFormat('@');
 
-  sheet.clearConditionalFormatRules();
-  this.addActionCondtion(sheet, 'B3:B');
+  this.setLedgerConditionalFormatRules(sheet);
 
-  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'];
-
-  let actionRule = SpreadsheetApp.newDataValidation().requireValueInList(actions).setAllowInvalid(false).build();
-  sheet.getRange('B3:B').setDataValidation(actionRule);
+  this.setLedgerActions(sheet);
 
   let assets = ['USD', 'ADA', 'BTC'];
 
-  this.addAssetValidation(sheet, 'C3:C', assets);
-  this.addAssetValidation(sheet, 'H3:H', assets);
+  this.setAssetValidation(sheet, 'C3:C', assets);
+  this.setAssetValidation(sheet, 'H3:H', assets);
 
   let wallets = ['Binance', 'Deposit', 'Kraken', 'Ledger', 'Rewards', 'Yoroi'];
 
-  this.addWalletValidation(sheet, 'G3:G', wallets);
-  this.addWalletValidation(sheet, 'L3:L', wallets);
+  this.setWalletValidation(sheet, 'G3:G', wallets);
+  this.setWalletValidation(sheet, 'L3:L', wallets);
 
-  let lotMatchings = ['FIFO', 'LIFO', 'HIFO', 'LOFO'];
-
-  let lotMatchingRule = SpreadsheetApp.newDataValidation().requireValueInList(lotMatchings).setAllowInvalid(false).build();
-  sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
+  this.setLedgerLotMatchings(sheet);
 
   if (!sheet.getFilter()) {
     sheet.getRange('A2:N').createFilter();

@@ -78,7 +78,7 @@ AssetTracker.prototype.donationsReport = function () {
     sheet.getRange('V3:V').setNumberFormat('@');
 
     sheet.clearConditionalFormatRules();
-    this.addLongShortCondition(sheet, 'T3:T');
+    this.addLongShortCondition(sheet, 'V3:V');
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
