@@ -47,13 +47,12 @@ AssetTracker.prototype.updateLedger = function () {
     return;
   }
 
-  // if (this.getSheetVersion(sheet) !== this.ledgerSheetVersion) {
+  if (this.getSheetVersion(sheet) !== this.ledgerSheetVersion) {
 
-  //   this.setLedgerConditionalFormatRules(sheet);
-  //   this.setLedgerActions(sheet);
+    //Future updates to the ledger can be inserted here
 
-  //   this.setSheetVersion(sheet, this.ledgerSheetVersion);
-  // }
+    this.setSheetVersion(sheet, this.ledgerSheetVersion);
+  }
 
   this.updateLedgerAssets(sheet);
   this.updateLedgerWallets(sheet);

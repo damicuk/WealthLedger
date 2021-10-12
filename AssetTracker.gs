@@ -113,6 +113,7 @@ var AssetTracker = class AssetTracker {
     this.exRatesSheetDataColumns = 4;
 
     this.ledgerSheetName = 'Ledger';
+    this.ledgerSheetVersion = '1';
     this.assetSheetName = 'Assets';
     this.exRatesSheetName = 'Ex Rates Data';
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
