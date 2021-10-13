@@ -57,7 +57,8 @@ AssetTracker.prototype.sampleLedger = function () {
 
   this.setLedgerConditionalFormatRules(sheet);
 
-  this.setLedgerActions(sheet);
+  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'];
+  this.setValidation(sheet, 'B3:B', actions, false);
 
   let assets = ['USD', 'ADA', 'BTC'];
 
@@ -69,7 +70,8 @@ AssetTracker.prototype.sampleLedger = function () {
   this.setWalletValidation(sheet, 'G3:G', wallets);
   this.setWalletValidation(sheet, 'L3:L', wallets);
 
-  this.setLedgerLotMatchings(sheet);
+  let lotMatchings = ['FIFO', 'LIFO', 'HIFO', 'LOFO'];
+  this.setValidation(sheet, 'M3:M', lotMatchings, false);
 
   if (!sheet.getFilter()) {
     sheet.getRange('A2:N').createFilter();

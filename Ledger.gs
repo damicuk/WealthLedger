@@ -96,28 +96,6 @@ AssetTracker.prototype.setLedgerConditionalFormatRules = function (sheet) {
 };
 
 /**
- * Sets data validation on the action column of the ledger sheet.
- * @param {Sheet} sheet - The ledger sheet.
- */
-AssetTracker.prototype.setLedgerActions = function (sheet) {
-
-  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'];
-  this.setValidation(sheet, 'B3:B', actions, false);
-
-};
-
-/**
- * Sets data validation on the lot matching column of the ledger sheet.
- * @param {Sheet} sheet - The ledger sheet.
- */
-AssetTracker.prototype.setLedgerLotMatchings = function (sheet) {
-
-  let lotMatchings = ['FIFO', 'LIFO', 'HIFO', 'LOFO'];
-  this.setValidation(sheet, 'M3:M', lotMatchings, false);
-
-};
-
-/**
  * Sets data validation on the asset columns of the ledger sheet.
  * The list of fiat and asset tickers is collected when the ledger is processed to write the reports.
  * Both fiats and assets are sorted alphabetically.

@@ -40,7 +40,9 @@ function onOpen(e) {
  */
 function createSampleLedger() {
 
-  new AssetTracker().sampleLedger();
+  let assetTracker = new AssetTracker()
+  assetTracker.sampleAssets();
+  assetTracker.sampleLedger();
 }
 
 /**
@@ -77,7 +79,7 @@ function showSettingsDialog() {
 function saveSettings(settings) {
 
   new AssetTracker().saveSettings(settings);
-  
+
 }
 
 /**

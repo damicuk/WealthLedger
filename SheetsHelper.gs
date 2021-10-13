@@ -261,20 +261,29 @@ AssetTracker.prototype.addLongShortCondition = function (sheet, a1Notation) {
 };
 
 /**
- * Sets data validation from a list on a range of cells in a sheet.
+ * Sets data validation on a range of cells in a sheet.
  * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {string[]} values - The list of valid values.
+ * @param {string|string[]} contraints - A formula or list of valid values.
  * @param {boolean} allowInvalid - Whether to allow invalid data with a warning or reject it.
  * @param {string} helpText - Sets the help text that appears when the user hovers over a cell on which data validation is set.
  */
-AssetTracker.prototype.setValidation = function (sheet, a1Notation, values, allowInvalid, helpText) {
+AssetTracker.prototype.setValidation = function (sheet, a1Notation, contraints, allowInvalid, helpText) {
 
   let range = sheet.getRange(a1Notation);
 
-  let dataValidationBuilder = SpreadsheetApp.newDataValidation()
-    .requireValueInList(values)
-    .setAllowInvalid(allowInvalid);
+  let dataValidationBuilder = SpreadsheetApp.newDataValidation();
+
+  if (Array.isArray(contraints)) {
+    dataValidationBuilder = dataValidationBuilder
+      .requireValueInList(contraints)
+      .setAllowInvalid(allowInvalid);
+  }
+  else {
+    dataValidationBuilder = dataValidationBuilder
+      .requireFormulaSatisfied(contraints)
+      .setAllowInvalid(allowInvalid);
+  }
 
   if (helpText) {
     dataValidationBuilder.setHelpText(helpText);
