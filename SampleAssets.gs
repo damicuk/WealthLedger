@@ -41,7 +41,14 @@ AssetTracker.prototype.sampleAssets = function () {
   let assetTypes = ['Crypto', 'Fiat', 'Fiat Base', 'Forex', 'Stablecoin', 'Stock'];
   this.setValidation(sheet, 'B2:B', assetTypes, false);
 
+  let dataTable = [
+    ['USD', 'Fiat Base', '2', '1'],
+    ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))'],
+    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))'],
+    [, , , ,]
+  ];
 
+  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 4, 2);
 
   if (!sheet.getFilter()) {
     sheet.getRange('A1:F').createFilter();
@@ -49,7 +56,7 @@ AssetTracker.prototype.sampleAssets = function () {
 
   sheet.hideColumns(5, 2);
 
-  this.trimSheet(sheet, 21, 6);
+  this.trimSheet(sheet, 5, 6);
 
   sheet.autoResizeColumns(1, 6);
 }
