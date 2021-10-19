@@ -69,12 +69,12 @@ class AssetRecord {
  */
 AssetTracker.prototype.getAssetRecords = function () {
 
-  let assetRange = this.getAssetRange();
-  let assetData = assetRange.getValues();
+  let assetsRange = this.getAssetsRange();
+  let assetsData = assetsRange.getValues();
 
   //convert raw data to object array
   let assetRecords = [];
-  for (let row of assetData) {
+  for (let row of assetsData) {
 
     let assetRecord = new AssetRecord(
       row[0],
@@ -94,29 +94,29 @@ AssetTracker.prototype.getAssetRecords = function () {
  * Throws a ValidationError if the ledger sheet contains insufficient columns or no data rows.
  * @return {Range} The range in the asset sheet that contains the data excluding header rows.
  */
-AssetTracker.prototype.getAssetRange = function () {
+AssetTracker.prototype.getAssetsRange = function () {
 
   let ss = SpreadsheetApp.getActive();
-  let assetSheet = ss.getSheetByName(this.assetSheetName);
+  let assetsSheet = ss.getSheetByName(this.assetsSheetName);
 
-  if (!assetSheet) {
+  if (!assetsSheet) {
 
     // assetSheet = this.sampleAssetSheet();
   }
 
-  if (assetSheet.getMaxColumns() < this.assetDataColumns) {
+  if (assetsSheet.getMaxColumns() < this.assetsDataColumns) {
     throw new ValidationError('Asset sheet has insufficient columns.');
   }
 
-  let assetRange = assetSheet.getDataRange();
+  let assetsRange = assetsSheet.getDataRange();
 
-  if (assetRange.getHeight() < this.assetHeaderRows + 1) {
+  if (assetsRange.getHeight() < this.assetsHeaderRows + 1) {
     throw new ValidationError('Asset sheet contains no data rows.');
   }
 
-  assetRange = assetRange.offset(this.assetHeaderRows, 0, assetRange.getHeight() - this.assetHeaderRows, this.assetDataColumns);
+  assetsRange = assetsRange.offset(this.assetsHeaderRows, 0, assetsRange.getHeight() - this.assetsHeaderRows, this.assetsDataColumns);
 
-  return assetRange;
+  return assetsRange;
 };
 
 

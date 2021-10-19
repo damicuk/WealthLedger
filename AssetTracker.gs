@@ -89,33 +89,33 @@ var AssetTracker = class AssetTracker {
     this.ledgerDataColumns = 13;
 
     /**
-     * The number of header rows in the asset sheet.
+     * The number of header rows in the assets sheet.
      * @type {number}
      */
-    this.assetHeaderRows = 1;
+    this.assetsHeaderRows = 1;
 
     /**
-     * The number of data columns in the asset sheet.
+     * The number of data columns in the assets sheet.
      * @type {number}
      */
-    this.assetDataColumns = 4;
+    this.assetsDataColumns = 4;
 
     /**
-     * The number of header rows in the ex rates sheet
+     * The number of header rows in an api price sheet
      * @type {number}
      */
-    this.exRatesSheetHeaderRows = 1;
+    this.apiPriceSheetHeaderRows = 1;
 
     /**
-     * The number of data columns in the ex rates sheet
+     * The number of data columns in an api price sheet
      * @type {number}
      */
-    this.exRatesSheetDataColumns = 4;
+    this.apiPriceSheetDataColumns = 3;
 
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
-    this.assetSheetName = 'Assets';
-    this.exRatesSheetName = 'Ex Rates Data';
+    this.assetsSheetName = 'Assets';
+    this.cryptoCompareSheetName = 'CryptoCompare';
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.openPositionsReportName = 'Open Positions Report';
     this.closedPositionsReportName = 'Closed Positions Report';
@@ -128,7 +128,7 @@ var AssetTracker = class AssetTracker {
     this.walletsReportName = 'Wallets Report';
 
     this.assetsRangeName = 'Assets';
-    this.exRatesRangeName = 'ExRates';
+    this.cryptoCompareRangeName = 'CryptoCompare';
     this.fiatAccountsRangeName = 'FiatAccounts';
     this.openPositionsRangeName = 'OpenPositions';
     this.closedPositionsRangeName = 'ClosedPositions';

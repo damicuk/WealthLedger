@@ -43,6 +43,7 @@ function createSampleLedger() {
   let assetTracker = new AssetTracker()
   assetTracker.sampleAssets();
   assetTracker.sampleLedger();
+  assetTracker.apiPriceSheet(assetTracker.cryptoCompareSheetName, assetTracker.cryptoCompareRangeName);
 }
 
 /**
