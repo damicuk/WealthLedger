@@ -10,14 +10,12 @@
 <script>
 	function saveSettings() {
 
-    let accountingCurrency = document.getElementById('accounting-currency').value;
-    let defaultLotMatching = document.getElementById('default-lot-matching').value;
-    let apiKey = document.getElementById('api-key').value;
+    let ccApiKey = document.getElementById('cc-api-key').value;
+    let cmcApiKey = document.getElementById('cmc-api-key').value;
 
     let settings = {
-      accountingCurrency: accountingCurrency,
-      defaultLotMatching: defaultLotMatching,
-      apiKey: apiKey
+      ccApiKey: ccApiKey,
+      cmcApiKey : cmcApiKey
     }
 
     google.script.run
@@ -44,11 +42,8 @@
 <? 
 
 let userProperties = PropertiesService.getUserProperties();
-let accountingCurrency = userProperties.getProperty('accountingCurrency');
-let defaultLotMatching = userProperties.getProperty('defaultLotMatching');
-let lotMatchings = AssetTracker.lotMatchings;
-let validFiats = Currency.validFiats;
-let apiKey = userProperties.getProperty('apiKey');
+let ccApiKey = userProperties.getProperty('ccApiKey');
+let cmcApiKey = userProperties.getProperty('cmcApiKey');
 
 ?>
 
@@ -56,24 +51,12 @@ let apiKey = userProperties.getProperty('apiKey');
 	<div>
 		<form id="settingsForm">
 			<div class="block form-group">
-				<label for="accounting-currency">Accounting Currency</label>
-				<select id="accounting-currency">
-           <? for(let fiat of validFiats) {?>
-           <option <? if(fiat === accountingCurrency) {?>selected<?} ?>><?= fiat ?></option>
-           <?}?>
-           </select>
+				<label for="cc-api-key">CryptoCompare API key</label>
+				<input type="text" id="cc-api-key" style="width: 460px;" value="<?=ccApiKey?>" placeholder="< -- paste API key here -- >">
 			</div>
-			<div class="block form-group">
-				<label for="default-lot-matching">Default Lot Matching</label>
-				<select id="default-lot-matching">
-           <? for(let lotMatching of lotMatchings) {?>
-           <option <? if(lotMatching === defaultLotMatching) {?>selected<?} ?>><?=lotMatching?></option>
-           <?}?>
-         </select>
-			</div>
-			<div class="block form-group">
-				<label for="api-key">CryptoCompare API key</label>
-				<input type="text" id="api-key" style="width: 460px;" value="<?=apiKey?>" placeholder="< -- paste API key here -- >">
+      <div class="block form-group">
+				<label for="cmc-api-key">CoinMarketCap API key</label>
+				<input type="text" id="cmc-api-key" style="width: 460px;" value="<?=cmcApiKey?>" placeholder="< -- paste API key here -- >">
 			</div>
 				<div class="block form-group">
 					<input type="button" class="action" value="Save" onclick="saveSettings();" />

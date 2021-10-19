@@ -63,11 +63,15 @@ var AssetTracker = class AssetTracker {
 
     /**
      * The API key used to connect to CryptoCompare to retrieve crypto prices.
-     * Options are FIFO, LIFO, HIFO, LOFO.
-     * Initialized from any saved value in user properties or defaults to 'FIFO'.
      * @type {string}
      */
-    this.apiKey = userProperties.getProperty('apiKey');
+    this.ccApiKey = userProperties.getProperty('ccApiKey');
+
+    /**
+     * The API key used to connect to CoinMarketCap to retrieve crypto prices.
+     * @type {string}
+     */
+    this.cmcApiKey = userProperties.getProperty('cmcApiKey');
 
     /**
      * The current lot matching method.
@@ -115,7 +119,6 @@ var AssetTracker = class AssetTracker {
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
-    this.cryptoCompareSheetName = 'CryptoCompare';
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.openPositionsReportName = 'Open Positions Report';
     this.closedPositionsReportName = 'Closed Positions Report';
@@ -128,7 +131,6 @@ var AssetTracker = class AssetTracker {
     this.walletsReportName = 'Wallets Report';
 
     this.assetsRangeName = 'Assets';
-    this.cryptoCompareRangeName = 'CryptoCompare';
     this.fiatAccountsRangeName = 'FiatAccounts';
     this.openPositionsRangeName = 'OpenPositions';
     this.closedPositionsRangeName = 'ClosedPositions';
@@ -388,13 +390,13 @@ var AssetTracker = class AssetTracker {
 
     let userProperties = PropertiesService.getUserProperties();
 
-    if (settings.apiKey && settings.apiKey !== userProperties.apiKey) {
+    if (settings.ccApiKey && settings.ccApiKey !== userProperties.ccApiKey) {
 
-      let apiKeyValid = this.validateApiKey(settings.apiKey);
+      let apiKeyValid = this.validateApiKey('CryptoCompare', settings.ccApiKey);
 
       if (!apiKeyValid) {
 
-        this.handleError('settings', 'Invalid API key');
+        this.handleError('settings', 'Invalid CryptoCompare key');
         return;
       }
     }
