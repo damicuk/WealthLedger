@@ -110,16 +110,22 @@ AssetTracker.prototype.getAssetPriceData = function (apiName, apiKey, assets, ba
 
 /**
  * Tests the validaty of an API by attempting a simple request and checking for the error response.
- * @param {string} apiKey - The free API key from CryptoCompare.
+ * @param {string} apiName - The name of the API to query.
+ * @param {string} apiKey - The API key.
  * @return {boolean} Whether the test request was successful.
  */
 AssetTracker.prototype.validateApiKey = function (apiName, apiKey) {
 
-  let data = this.getAssetPriceData(apiName, apiKey, 'BTC', 'USD');
-
-  if (data.Response === 'Error') {
-
-    return false;
+  try {
+    this.getAssetPriceData(apiName, apiKey, 'BTC', 'USD');
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      return false;
+    }
+    else {
+      throw error;
+    }
   }
   return true;
 };

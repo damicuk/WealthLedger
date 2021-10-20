@@ -381,7 +381,7 @@ var AssetTracker = class AssetTracker {
 
   /**
    * Saves a set of key value pairs as user properties.
-   * Validates apiKey setting if attempting to change the existing value.
+   * Validates apiKeys setting if attempting to change the existing value.
    * Sends message to the error handler if the api key validation fails.
    * Displays toast on success.
    * @param {Object.<string, string>} settings - The key value pairs to save as user properties .
@@ -397,6 +397,17 @@ var AssetTracker = class AssetTracker {
       if (!apiKeyValid) {
 
         this.handleError('settings', 'Invalid CryptoCompare key');
+        return;
+      }
+    }
+
+    if (settings.cmcApiKey && settings.cmcApiKey !== userProperties.cmcApiKey) {
+
+      let apiKeyValid = this.validateApiKey('CoinMarketCap', settings.cmcApiKey);
+
+      if (!apiKeyValid) {
+
+        this.handleError('settings', 'Invalid CoinMarketCap key');
         return;
       }
     }
