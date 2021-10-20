@@ -1,9 +1,14 @@
 /**
+ * Retrieves and validates the api price records.
+ * Retrieves and validates the asset records.
  * Retrieves and validates the ledger records.
  * Uses the error handler to handle any ValidatioError.
  * Displays toast on success.
  */
 AssetTracker.prototype.validateLedger = function () {
+
+  this.validateApiPriceSheet('CryptoCompare');
+  this.validateApiPriceSheet('CoinMarketCap');
 
   let assetRecords;
   try {
@@ -12,7 +17,7 @@ AssetTracker.prototype.validateLedger = function () {
   }
   catch (error) {
     if (error instanceof ValidationError) {
-      this.handleError('validation', error.message, this.assetSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
+      this.handleError('validation', error.message, this.assetsSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
       return;
     }
     else {
@@ -39,6 +44,54 @@ AssetTracker.prototype.validateLedger = function () {
   SpreadsheetApp.getActive().toast('All looks good', 'Ledger Valid', 10);
 };
 
+/**
+ * Retrieves and validates the api price records from the named api price sheet.
+ * Uses the error handler to handle any ValidatioError.
+ * @param {string} sheetName - The name of the api price sheet to validate. 
+ */
+AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
+
+  let apiPriceRecords;
+  try {
+    apiPriceRecords = this.getApiPriceRecords(sheetName);
+    this.validateApiPriceRecords(apiPriceRecords);
+  }
+  catch (error) {
+    if (error instanceof ValidationError) {
+      let message = `${sheetName} ${error.message}`;
+      this.handleError('validation', message, sheetName, error.rowIndex, ApiPriceRecord.getColumnIndex(error.columnName));
+      return;
+    }
+    else {
+      throw error;
+    }
+  }
+}
+
+/**
+ * Validates a set of api price records and throws a ValidationError on failure.
+ * @param {ApiPriceRecord[]} apiPriceRecords - The colection of api price records to validate.
+ */
+AssetTracker.prototype.validateApiPriceRecords = function (apiPriceRecords) {
+
+  let rowIndex = this.apiPriceSheetHeaderRows + 1;
+  for (let apiPriceRecord of apiPriceRecords) {
+    this.validateApiPriceRecord(apiPriceRecord, rowIndex++);
+  }
+};
+
+/**
+ * Validates an api price record and throws a ValidationError on failure.
+ * @param {ApiPriceRecord} apiPriceRecord - The api price record to validate.
+ * @param {number} rowIndex - The index of the row in the api price sheet used to set the current cell in case of an error.
+ */
+AssetTracker.prototype.validateApiPriceRecord = function (apiPriceRecord, rowIndex) {
+
+  let ticker = apiPriceRecord.ticker;
+  if (ticker !== '' && !Asset.tickerRegExp.test(ticker)) {
+    throw new ValidationError(`row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
+  }
+}
 
 /**
  * Validates a set of asset records and throws a ValidationError on failure.
@@ -46,49 +99,61 @@ AssetTracker.prototype.validateLedger = function () {
  */
 AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
-  let rowIndex = this.assetHeaderRows + 1;
+  let rowIndex = this.assetsHeaderRows + 1;
   let tickers = new Set();
   let fiatBase;
   for (let assetRecord of assetRecords) {
     let ticker = assetRecord.ticker;
     let assetType = assetRecord.assetType;
-    let decimalPlaces = assetRecord.decimalPlaces;
 
-    if (ticker === '') {
-      throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
+    this.validateAssetRecord(assetRecord, tickers, fiatBase, rowIndex++);
+
+    if (assetType === 'Fiat Base') {
+      fiatBase = ticker;
     }
-    else if (tickers.has(ticker)) {
-      throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
-    }
-    else if (!Asset.tickerRegExp.test(ticker)) {
-      throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
-    }
-    else if (assetType === '') {
-      throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
-    }
-    else if (!Asset.validAssetTypes.includes(assetType)) {
-      throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) is not recognized (${Asset.validAssetTypes.join(', ')}).`, rowIndex, 'assetType');
-    }
-    else if (assetType === 'Fiat Base' && fiatBase) {
-      throw new ValidationError(`Assets row ${rowIndex}: Fiat Base has already been declared (${fiatBase}). Only one asset can be Fiat Base.`, rowIndex, 'assetType');
-    }
-    else if (decimalPlaces === '') {
-      throw new ValidationError(`Assets row ${rowIndex}: Decimal places is missing.`, rowIndex, 'decimalPlaces');
-    }
-    else if (!Asset.decimalPlacesRegExp.test(decimalPlaces)) {
-      throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (integer between 0 and 8).`, rowIndex, 'decimalPlaces');
-    }
-    else { //Row valid
-      if (assetType === 'Fiat Base') {
-        fiatBase = ticker;
-      }
-      tickers.add(ticker);
-      rowIndex++;
-    }
-    // this.validateAssetRecord(assetRecord, assetTickers, hasFiatBase, rowIndex++);
+    tickers.add(ticker);
   }
   if (!fiatBase) {
     throw new ValidationError(`Fiat Base has not been declared in the Assets sheet. One asset must have asset type of 'Fiat Base'.`);
+  }
+};
+
+/**
+ * Validates an asset record and throws a ValidationError on failure.
+ * @param {AssetRecord} assetRecord - The asset record to validate.
+ * @param {string[]} tickers - The collection of asset tickers already declared.
+ * @param {string} fiatBase - Fiat base if already declared. 
+ * @param {number} rowIndex - The index of the row in the sasset sheet used to set the current cell in case of an error.
+ */
+AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fiatBase, rowIndex) {
+
+  let ticker = assetRecord.ticker;
+  let assetType = assetRecord.assetType;
+  let decimalPlaces = assetRecord.decimalPlaces;
+
+  if (ticker === '') {
+    throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
+  }
+  else if (tickers.has(ticker)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
+  }
+  else if (!Asset.tickerRegExp.test(ticker)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
+  }
+  else if (assetType === '') {
+    throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
+  }
+  else if (!Asset.validAssetTypes.includes(assetType)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) is not recognized (${Asset.validAssetTypes.join(', ')}).`, rowIndex, 'assetType');
+  }
+  else if (assetType === 'Fiat Base' && fiatBase) {
+    throw new ValidationError(`Assets row ${rowIndex}: Fiat Base has already been declared (${fiatBase}). Only one asset can be Fiat Base.`, rowIndex, 'assetType');
+  }
+  else if (decimalPlaces === '') {
+    throw new ValidationError(`Assets row ${rowIndex}: Decimal places is missing.`, rowIndex, 'decimalPlaces');
+  }
+  else if (!Asset.decimalPlacesRegExp.test(decimalPlaces)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (integer between 0 and 8).`, rowIndex, 'decimalPlaces');
   }
 };
 

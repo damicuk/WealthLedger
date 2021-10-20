@@ -32,6 +32,26 @@ class ApiPriceRecord {
      */
     this.date = new Date(date);
   }
+
+  /**
+   * Returns the index of the column given its assigned name.
+   * Avoids hard coding column numbers.
+   * @param {string} columnName - the name assigned to the column in the asset sheet.
+   * @return {number} The index of the named column or -1 if column name not found.
+   * @static
+   */
+  static getColumnIndex(columnName) {
+
+    let columns = [
+      'ticker',
+      'currentPrice',
+      'date'
+    ];
+
+    let index = columns.indexOf(columnName);
+
+    return index === -1 ? index : index + 1;
+  }
 };
 
 /**
