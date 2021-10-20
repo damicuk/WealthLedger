@@ -54,14 +54,6 @@ var AssetTracker = class AssetTracker {
     let userProperties = PropertiesService.getUserProperties();
 
     /**
-     * The default lot matching method.
-     * Options are FIFO, LIFO, HIFO, LOFO.
-     * Initialized from any saved value in user properties or defaults to 'FIFO'.
-     * @type {string}
-     */
-    this.defaultLotMatching = this.getUserProperty(userProperties, 'defaultLotMatching', 'FIFO');
-
-    /**
      * The API key used to connect to CryptoCompare to retrieve crypto prices.
      * @type {string}
      */
@@ -76,9 +68,10 @@ var AssetTracker = class AssetTracker {
     /**
      * The current lot matching method.
      * Options are FIFO, LIFO, HIFO, LOFO.
+     * Initialized to default FIFO.
      * @type {string}
      */
-    this.lotMatching = this.defaultLotMatching;
+    this.lotMatching = 'FIFO';
 
     /**
      * The number of header rows in the ledger sheet.
@@ -136,30 +129,6 @@ var AssetTracker = class AssetTracker {
     this.closedPositionsRangeName = 'ClosedPositions';
     this.donationsRangeName = 'Donations';
     this.incomeRangeName = 'Income';
-  }
-
-  /**
-   * Gets the value of a user property from a Properties object or sets and returns a default.
-   * @param {Properties} userProperties - Properties object from PropertiesService.getUserProperties().
-   * @param {string} key - The key of the user property to search.
-   * @param {string} defaultValue - The default value to set the user property to if no value is set.
-   * @return {string} The value of the user property or the default if not set.
-   */
-  getUserProperty(userProperties, key, defaultValue) {
-
-    let value = userProperties.getProperty(key);
-
-    if (value) {
-
-      return value;
-
-    }
-    else {
-
-      userProperties.setProperty(key, defaultValue);
-      return defaultValue;
-
-    }
   }
 
   /**
