@@ -7,8 +7,36 @@
  */
 AssetTracker.prototype.validateLedger = function () {
 
-  this.validateApiPriceSheet('CryptoCompare');
-  this.validateApiPriceSheet('CoinMarketCap');
+  if (!this.validateApiPriceSheet('CryptoCompare')) {
+    return;
+  }
+
+  if (!this.validateApiPriceSheet('CoinMarketCap')) {
+    return;
+  }
+
+  if (!this.validateProcessAssetsSheet()) {
+    return;
+  }
+
+  let results = this.validateLedgerSheet();
+  let success = results[0];
+  if (!success) {
+    return;
+  }
+
+  SpreadsheetApp.getActive().toast('All looks good', 'Ledger Valid', 10);
+};
+
+/**
+ * Retrieves and validates the asset records from the asset sheet.
+ * Throws a ValidationError on failure.
+ * Processes the asset records.
+ * Adds to the Map of assets.
+ * Sets the base currency.
+ * @return {boolean} Whether validation completed successfully.
+ */
+AssetTracker.prototype.validateProcessAssetsSheet = function () {
 
   let assetRecords;
   try {
@@ -18,7 +46,7 @@ AssetTracker.prototype.validateLedger = function () {
   catch (error) {
     if (error instanceof ValidationError) {
       this.handleError('validation', error.message, this.assetsSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
-      return;
+      return false;
     }
     else {
       throw error;
@@ -27,27 +55,40 @@ AssetTracker.prototype.validateLedger = function () {
 
   this.processAssets(assetRecords);
 
+  return true;
+
+}
+
+/**
+ * Retrieves and validates the ledger records from the ledger sheet.
+ * Throws a ValidationError on failure.
+ * @return {[boolean, LedgerRecord[]]} Whether validation completed successfully and the ledger records.
+ */
+AssetTracker.prototype.validateLedgerSheet = function () {
+
+  let success = true;
+  let ledgerRecords;
   try {
-    let ledgerRecords = this.getLedgerRecords();
+    ledgerRecords = this.getLedgerRecords();
     this.validateLedgerRecords(ledgerRecords);
   }
   catch (error) {
     if (error instanceof ValidationError) {
       this.handleError('validation', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex(error.columnName));
-      return;
+      success = false;
     }
     else {
       throw error;
     }
   }
-
-  SpreadsheetApp.getActive().toast('All looks good', 'Ledger Valid', 10);
-};
+  return [success, ledgerRecords];
+}
 
 /**
  * Retrieves and validates the api price records from the named api price sheet.
  * Uses the error handler to handle any ValidatioError.
  * @param {string} sheetName - The name of the api price sheet to validate. 
+ * @return {boolean} Whether validation completed successfully.
  */
 AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
 
@@ -60,12 +101,13 @@ AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
     if (error instanceof ValidationError) {
       let message = `${sheetName} ${error.message}`;
       this.handleError('validation', message, sheetName, error.rowIndex, ApiPriceRecord.getColumnIndex(error.columnName));
-      return;
+      return false;
     }
     else {
       throw error;
     }
   }
+  return true;
 }
 
 /**
@@ -156,7 +198,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   else if (!Asset.decimalPlacesRegExp.test(decimalPlaces)) {
     throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (integer between 0 and 8).`, rowIndex, 'decimalPlaces');
   }
-   else if (assetType === 'Fiat Base' && currentPrice != 1) {
+  else if (assetType === 'Fiat Base' && currentPrice != 1) {
     throw new ValidationError(`Assets row ${rowIndex}: Fiat base current price must be 1.`, rowIndex, 'currentPrice');
   }
   else if (isNaN(currentPrice)) {

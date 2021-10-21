@@ -6,36 +6,23 @@
  */
 AssetTracker.prototype.writeReports = function () {
 
-  let assetRecords;
-  try {
-    assetRecords = this.getAssetRecords();
-    this.validateAssetRecords(assetRecords);
-  }
-  catch (error) {
-    if (error instanceof ValidationError) {
-      this.handleError('validation', error.message, this.assetSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
-      return;
-    }
-    else {
-      throw error;
-    }
+  if (!this.validateApiPriceSheet('CryptoCompare')) {
+    return;
   }
 
-  this.processAssets(assetRecords);
-
-  let ledgerRecords;
-  try {
-    ledgerRecords = this.getLedgerRecords();
-    this.validateLedgerRecords(ledgerRecords);
+  if (!this.validateApiPriceSheet('CoinMarketCap')) {
+    return;
   }
-  catch (error) {
-    if (error instanceof ValidationError) {
-      this.handleError('validation', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex(error.columnName));
-      return;
-    }
-    else {
-      throw error;
-    }
+
+  if (!this.validateProcessAssetsSheet()) {
+    return;
+  }
+
+  let results = this.validateLedgerSheet();
+  let success = results[0];
+  let ledgerRecords = results[1];
+  if (!success) {
+    return;
   }
 
   try {
