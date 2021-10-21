@@ -6,8 +6,8 @@
  * Throws an ApiError if the call to the API returns an error response.
  * @param {string} apiName - The name of the API to query.
  * @param {string} apiKey - The API key.
- * @param {string} assets - Comma-separated list of asset tickers.
- * @param {string} baseCurrency - The base currency.
+ * @param {string[]|string} assets - Comma-separated list of asset tickers.
+ * @param {Asset|string} baseCurrency - The base currency.
  * @return {Array[]} The table containing the price data for the assets.
  */
 AssetTracker.prototype.getAssetPriceData = function (apiName, apiKey, assets, baseCurrency) {
