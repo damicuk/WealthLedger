@@ -7,11 +7,11 @@
  */
 AssetTracker.prototype.validateLedger = function () {
 
-  if (!this.validateApiPriceSheet('CryptoCompare')) {
+  if (!this.validateApiPriceSheet(this.ccApiName)) {
     return;
   }
 
-  if (!this.validateApiPriceSheet('CoinMarketCap')) {
+  if (!this.validateApiPriceSheet(this.cmcApiName)) {
     return;
   }
 
@@ -186,8 +186,8 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   else if (assetType === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
   }
-  else if (!Asset.validAssetTypes.includes(assetType)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) is not recognized (${Asset.validAssetTypes.join(', ')}).`, rowIndex, 'assetType');
+  else if (!Asset.assetTypeRegExp.test(assetType)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) format is invalid (1-20 alphanumeric characters [A-Za-z0-9_-]). Spaces between characters allowed.`, rowIndex, 'assetType');
   }
   else if (assetType === 'Fiat Base' && fiatBase) {
     throw new ValidationError(`Assets row ${rowIndex}: Fiat Base has already been declared (${fiatBase}). Only one asset can be Fiat Base.`, rowIndex, 'assetType');

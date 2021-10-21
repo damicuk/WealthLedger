@@ -49,6 +49,16 @@ var Asset = class Asset {
   }
 
   /**
+  * Regular expression to validate asset types.
+  * @type {RegExp}
+  * @static
+  */
+  static get assetTypeRegExp() {
+
+    return /^[\w\-][\w\-\s]{0,18}[\w\-]$|^[\w\-]$/;
+  }
+
+  /**
   * Regular expression to validate decimal places.
   * @type {RegExp}
   * @static
@@ -59,11 +69,11 @@ var Asset = class Asset {
   }
 
   /**
-   * Array of supported asset types.
+   * Array of default asset types.
    * @type {string[]}
    * @static
    */
-  static get validAssetTypes() {
+  static get defaultAssetTypes() {
 
     return ['Crypto', 'Fiat', 'Fiat Base', 'Forex', 'Stablecoin', 'Stock'];
   }

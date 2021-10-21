@@ -38,8 +38,8 @@ AssetTracker.prototype.sampleAssets = function () {
   let decimalPlacesHelpText = `Input must be an integer between 0 and 8`;
   this.setValidation(sheet, 'C2:C', decimalPlacesFormula, false, decimalPlacesHelpText);
 
-  let assetTypes = ['Crypto', 'Fiat', 'Fiat Base', 'Forex', 'Stablecoin', 'Stock'];
-  this.setValidation(sheet, 'B2:B', assetTypes, false);
+  let assetTypes = Asset.defaultAssetTypes;
+  this.setValidation(sheet, 'B2:B', assetTypes, true, 'New asset types will be added to the data validation dropdown when write reports is run.');
 
   let dataTable = [
     ['USD', 'Fiat Base', '2', '1',],

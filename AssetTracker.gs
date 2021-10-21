@@ -129,6 +129,9 @@ var AssetTracker = class AssetTracker {
     this.closedPositionsRangeName = 'ClosedPositions';
     this.donationsRangeName = 'Donations';
     this.incomeRangeName = 'Income';
+
+    this.ccApiName = 'CryptoCompare';
+    this.cmcApiName = 'CoinMarketCap';
   }
 
   /**

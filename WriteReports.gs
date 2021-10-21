@@ -6,11 +6,11 @@
  */
 AssetTracker.prototype.writeReports = function () {
 
-  if (!this.validateApiPriceSheet('CryptoCompare')) {
+  if (!this.validateApiPriceSheet(this.ccApiName)) {
     return;
   }
 
-  if (!this.validateApiPriceSheet('CoinMarketCap')) {
+  if (!this.validateApiPriceSheet(this.ccApiName)) {
     return;
   }
 
