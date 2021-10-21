@@ -130,6 +130,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   let ticker = assetRecord.ticker;
   let assetType = assetRecord.assetType;
   let decimalPlaces = assetRecord.decimalPlaces;
+  let currentPrice = assetRecord.currentPrice;
 
   if (ticker === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
@@ -154,6 +155,15 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   }
   else if (!Asset.decimalPlacesRegExp.test(decimalPlaces)) {
     throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (integer between 0 and 8).`, rowIndex, 'decimalPlaces');
+  }
+   else if (assetType === 'Fiat Base' && currentPrice != 1) {
+    throw new ValidationError(`Assets row ${rowIndex}: Fiat base current price must be 1.`, rowIndex, 'currentPrice');
+  }
+  else if (isNaN(currentPrice)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Current price is not valid (number or blank).`, rowIndex, 'currentPrice');
+  }
+  else if (currentPrice < 0) {
+    throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater or equal to 0 (or blank).`, rowIndex, 'currentPrice');
   }
 };
 
