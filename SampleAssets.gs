@@ -61,4 +61,26 @@ AssetTracker.prototype.sampleAssets = function () {
   this.trimSheet(sheet, 7, 6);
 
   sheet.autoResizeColumns(1, 4);
-}
+};
+
+AssetTracker.prototype.updateAssetsSheet = function () {
+
+  const sheetName = this.assetsSheetName;
+
+  let ss = SpreadsheetApp.getActive();
+  let sheet = ss.getSheetByName(sheetName);
+
+  if (!sheet) {
+    return;
+  }
+
+  this.updateAssetsAssetTypes(sheet);
+};
+
+AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
+
+  let userDefinedAssetTypes = Array.from(this.userDefinedAssetTypes).sort(AssetTracker.abcComparator);
+  let assetTypes = Asset.defaultAssetTypes.concat(userDefinedAssetTypes);
+
+  this.setValidation(sheet, 'B2:B', assetTypes, true, 'New asset types will be added to the data validation dropdown when write reports is run.');
+};

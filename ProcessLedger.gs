@@ -17,6 +17,9 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
     }
     else {
       assetType = assetRecord.assetType;
+      if (!Asset.defaultAssetTypes.includes(assetType)) {
+        this.userDefinedAssetTypes.add(assetType);
+      }
     }
 
     let asset = new Asset(assetRecord.ticker, assetType, isBaseCurrency, assetRecord.decimalPlaces);

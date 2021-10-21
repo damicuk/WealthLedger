@@ -64,6 +64,7 @@ AssetTracker.prototype.writeReports = function () {
   this.walletsReport();
 
   this.updateLedger();
+  this.updateAssetsSheet();
 
   if (apiError) {
     this.handleError('api', apiError.message);

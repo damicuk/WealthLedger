@@ -21,6 +21,12 @@ var AssetTracker = class AssetTracker {
     this.assets = new Map();
 
     /**
+     * The set of asset types defined by the user (not the default asset types).
+     * @type {Set}
+     */
+    this.userDefinedAssetTypes = new Set();
+
+    /**
      * Collection of Wallets.
      * @type {Array<Obeject>}
      */
