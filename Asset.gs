@@ -70,7 +70,7 @@ var Asset = class Asset {
 
   /**
    * Array of default asset types.
-   * @type {string[]}
+   * @type {Array<string>}
    * @static
    */
   static get defaultAssetTypes() {

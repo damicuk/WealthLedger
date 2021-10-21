@@ -165,7 +165,7 @@ var AssetTracker = class AssetTracker {
    * LIFO Last in first out.
    * HIFO Highest cost first out.
    * LOFO Lowest cost first out.
-   * @type {string[]}
+   * @type {Array<string>}
    * @static
    */
   static get lotMatchings() {

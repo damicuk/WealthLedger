@@ -79,9 +79,9 @@ AssetTracker.prototype.apiPriceSheet = function (apiName, apiKey, refreshMins = 
  * Throws an ApiError if the call to the API returns an error response.
  * @param {string} apiName - The name of the API to query.
  * @param {string} apiKey - The API key.
- * @param {ApiPriceRecord[]} apiPriceRecords - The collection of api price records.
+ * @param {Array<ApiPriceRecord>} apiPriceRecords - The collection of api price records.
  * @param {number} refreshMins - The number of minutes after which the price data is no longer considered current.
- * @return {[Array[], Set]} An array containing the updated asset price table and the set of tickers that the api failed to return.
+ * @return {Array<Array<string, number date>>, Set]} An array containing the updated asset price table and the set of tickers that the api failed to return.
  */
 AssetTracker.prototype.getAssetPriceTable = function (apiName, apiKey, apiPriceRecords, refreshMins) {
 

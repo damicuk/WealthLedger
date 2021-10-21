@@ -2,7 +2,7 @@
  * Processes the asset records.
  * Adds to the Map of assets.
  * Sets the base currency.
- * @param {AssetRecord[]} assetRecords - The collection of asset records.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records.
  */
 AssetTracker.prototype.processAssets = function (assetRecords) {
 
@@ -36,7 +36,7 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
  * Processes the ledger records.
  * It treats the ledger as a set of instuctions and simulates the actions specified.
  * Stops reading if it encounters the stop action.
- * @param {LedgerRecord[]} ledgerRecords - The collection of ledger records.
+ * @param {Array<LedgerRecord>} ledgerRecords - The collection of ledger records.
  */
 AssetTracker.prototype.processLedger = function (ledgerRecords) {
 

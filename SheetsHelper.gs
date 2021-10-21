@@ -20,7 +20,7 @@ AssetTracker.prototype.deleteSheet = function (sheetName) {
  * Deletes any sheet that exists given an array of sheet names.
  * Not intended for use by the end user.
  * Useful in development and testing.
- * @param {string[]} sheetNames - The names of the sheets to delete.
+ * @param {Array<string>} sheetNames - The names of the sheets to delete.
  */
 AssetTracker.prototype.deleteSheets = function (sheetNames) {
 

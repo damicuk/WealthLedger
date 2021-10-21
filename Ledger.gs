@@ -138,7 +138,7 @@ AssetTracker.prototype.updateLedgerWallets = function (sheet) {
  * Used specifically to set the data validation on the currency columns in the ledger sheet.
  * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {string[]} values - The list of valid values
+ * @param {Array<string>} values - The list of valid values
  */
 AssetTracker.prototype.setAssetValidation = function (sheet, a1Notation, values) {
 
@@ -152,7 +152,7 @@ AssetTracker.prototype.setAssetValidation = function (sheet, a1Notation, values)
  * Used specifically to set the data validation on the wallet columns in the ledger sheet.
  * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {string[]} values - The list of valid values
+ * @param {Array<string>} values - The list of valid values
  */
 AssetTracker.prototype.setWalletValidation = function (sheet, a1Notation, values) {
 

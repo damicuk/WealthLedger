@@ -62,7 +62,7 @@ AssetTracker.prototype.validateProcessAssetsSheet = function () {
 /**
  * Retrieves and validates the ledger records from the ledger sheet.
  * Throws a ValidationError on failure.
- * @return {[boolean, LedgerRecord[]]} Whether validation completed successfully and the ledger records.
+ * @return {[boolean, Array<LedgerRecord>} Whether validation completed successfully and the ledger records.
  */
 AssetTracker.prototype.validateLedgerSheet = function () {
 
@@ -112,7 +112,7 @@ AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
 
 /**
  * Validates a set of api price records and throws a ValidationError on failure.
- * @param {ApiPriceRecord[]} apiPriceRecords - The colection of api price records to validate.
+ * @param {Array<ApiPriceRecord>} apiPriceRecords - The colection of api price records to validate.
  */
 AssetTracker.prototype.validateApiPriceRecords = function (apiPriceRecords) {
 
@@ -137,7 +137,7 @@ AssetTracker.prototype.validateApiPriceRecord = function (apiPriceRecord, rowInd
 
 /**
  * Validates a set of asset records and throws a ValidationError on failure.
- * @param {AssetRecord[]} assetRecords - The colection of asset records to validate.
+ * @param {Array<AssetRecord>} assetRecords - The colection of asset records to validate.
  */
 AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
@@ -163,7 +163,7 @@ AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 /**
  * Validates an asset record and throws a ValidationError on failure.
  * @param {AssetRecord} assetRecord - The asset record to validate.
- * @param {string[]} tickers - The collection of asset tickers already declared.
+ * @param {Array<string>} tickers - The collection of asset tickers already declared.
  * @param {string} fiatBase - Fiat base if already declared. 
  * @param {number} rowIndex - The index of the row in the sasset sheet used to set the current cell in case of an error.
  */
@@ -212,7 +212,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
 /**
  * Validates a set of ledger records and throws a ValidationError on failure.
  * Stops reading if it encounters the stop action.
- * @param {LedgerRecord[]} ledgerRecords - The colection of ledger records to validate.
+ * @param {Array<LedgerRecord>} ledgerRecords - The colection of ledger records to validate.
  */
 AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
 

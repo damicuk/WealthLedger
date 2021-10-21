@@ -8,7 +8,7 @@ var Currency = class Currency {
   /**
    * Array of supported fiat currency tickers.
    * Limited to those supported by CryptoCompare.
-   * @type {string[]}
+   * @type {Array<string>}
    * @static
    */
   static get validFiats() {

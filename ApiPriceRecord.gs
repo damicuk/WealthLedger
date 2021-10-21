@@ -56,7 +56,7 @@ class ApiPriceRecord {
 
 /**
  * Retrieves the asset records from the asset sheet.
- * @return {AssetRecord[]} The collection of asset records.
+ * @return {Array<AssetRecord>} The collection of asset records.
  */
 AssetTracker.prototype.getApiPriceRecords = function (sheetName) {
 

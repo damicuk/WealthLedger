@@ -9,7 +9,7 @@ var AssetAccount = class AssetAccount {
    * @param {Asset} asset - The asset.
    */
   constructor(asset) {
-    
+
     /**
      * The asset.
      * @type {Asset}
@@ -60,10 +60,10 @@ var AssetAccount = class AssetAccount {
 
   /**
    * Deposits a single or multiple asset lots into the account.
-   * @param {(Lot|Lot[])} lots - The single lot or array of lots to deposit into the account.
+   * @param {(Lot|Array<Lot>)} lots - The single lot or array of lots to deposit into the account.
    */
   deposit(lots) {
-    
+
     if (Array.isArray(lots)) {
 
       this.lots = this.lots.concat(lots);
@@ -89,7 +89,7 @@ var AssetAccount = class AssetAccount {
    * HIFO Highest cost first out.
    * LOFO Lowest cost first out.
    * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
-   * @return {Lot[]} The collection of lots withdrawn.
+   * @return {Array<Lot>} The collection of lots withdrawn.
    */
   withdraw(amount, fee, lotMatching, rowIndex) {
 
@@ -142,7 +142,7 @@ var AssetAccount = class AssetAccount {
    * The fee subunits are assigned to the lots in proportion to each lot's subunits.
    * Throws an error if the fee subunits are greater than the total lots' subunits.
    * @param {number} fee subunit - The fee subunits to assign to the lots.
-   * @param {Lot[]} lots - The collection of lots.
+   * @param {Array<Lot>} lots - The collection of lots.
    */
   apportionFeeSubunits(feeSubunits, lots) {
 
@@ -180,7 +180,7 @@ var AssetAccount = class AssetAccount {
   /**
    * Removes any lots with zero subunits.
    * Used when misc fee sets lot subunits to zero.
-   * @return {Lot[]} The collection of lots with zero subunits.
+   * @return {Array<Lot>} The collection of lots with zero subunits.
    */
   removeZeroSubunitLots() {
 
