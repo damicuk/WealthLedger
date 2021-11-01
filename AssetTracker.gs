@@ -366,10 +366,10 @@ var AssetTracker = class AssetTracker {
    * Creates the api price sheets if they don't already exist.
    * Updates the prices in the api price sheets if necessary.
    */
-  createSampleAssetsLedger() {
+  createAssetsLedger() {
 
-    this.sampleAssets();
-    this.sampleLedger();
+    this.assetsSheet();
+    this.ledgerSheet();
 
     if (!this.validateProcessAssetsSheet()) {
       return;

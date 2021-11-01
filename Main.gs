@@ -38,9 +38,9 @@ function onOpen(e) {
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function createSampleAssetsLedger() {
+function createAssetsLedger() {
 
-  new AssetTracker().createSampleAssetsLedger();
+  new AssetTracker().createAssetsLedger();
 
 }
 

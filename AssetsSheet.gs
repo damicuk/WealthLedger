@@ -2,7 +2,7 @@
  * Creates a sample assets sheet.
  * Renames any existing assets sheet so as not to overwrite it.
  */
-AssetTracker.prototype.sampleAssets = function () {
+AssetTracker.prototype.assetsSheet = function () {
 
   const sheetName = this.assetsSheetName;
 
@@ -120,7 +120,7 @@ AssetTracker.prototype.getAssetsRange = function () {
 
   if (!assetsSheet) {
 
-    assetSheet = this.sampleAssetSheet();
+    assetSheet = this.assetSheet();
   }
 
   if (assetsSheet.getMaxColumns() < this.assetsDataColumns) {

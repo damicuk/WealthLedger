@@ -2,7 +2,7 @@
  * Creates a sample ledger sheet.
  * Renames any existing ledger sheet so as not to overwrite it.
  */
-AssetTracker.prototype.sampleLedger = function () {
+AssetTracker.prototype.ledgerSheet = function () {
 
   const sheetName = this.ledgerSheetName;
 
@@ -142,7 +142,7 @@ AssetTracker.prototype.sampleLedger = function () {
   sheet.autoResizeColumns(10, 1);
   sheet.autoResizeColumns(14, 1);
 
-  return sheet;
+  this.setSheetVersion(sheet, this.ledgerSheetVersion);
 };
 
 /**
@@ -271,7 +271,7 @@ AssetTracker.prototype.getLedgerRange = function () {
 
   if (!ledgerSheet) {
 
-    ledgerSheet = this.sampleLedger();
+    ledgerSheet = this.ledgerSheet();
   }
 
   if (ledgerSheet.getMaxColumns() < this.ledgerDataColumns) {
