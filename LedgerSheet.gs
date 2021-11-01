@@ -57,22 +57,6 @@ AssetTracker.prototype.sampleLedger = function () {
 
   this.setLedgerConditionalFormatRules(sheet);
 
-  let actions = ['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'];
-  this.setValidation(sheet, 'B3:B', actions, false);
-
-  let assets = ['USD', 'ADA', 'BTC'];
-
-  this.setAssetValidation(sheet, 'C3:C', assets);
-  this.setAssetValidation(sheet, 'H3:H', assets);
-
-  let wallets = ['Binance', 'Deposit', 'Kraken', 'Ledger', 'Rewards', 'Yoroi'];
-
-  this.setWalletValidation(sheet, 'G3:G', wallets);
-  this.setWalletValidation(sheet, 'L3:L', wallets);
-
-  let lotMatchings = ['FIFO', 'LIFO', 'HIFO', 'LOFO'];
-  this.setValidation(sheet, 'M3:M', lotMatchings, false);
-
   if (!sheet.getFilter()) {
     sheet.getRange('A2:N').createFilter();
   }
@@ -97,6 +81,59 @@ AssetTracker.prototype.sampleLedger = function () {
   ];
 
   sheet.getRange('A3:N18').setValues(sampleData);
+
+  let dateRule = SpreadsheetApp.newDataValidation()
+    .requireDate()
+    .setAllowInvalid(false)
+    .setHelpText('Input must be a date.')
+    .build();
+  sheet.getRange('A3:A').setDataValidation(dateRule);
+
+  let actionRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'])
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange('B3:B').setDataValidation(actionRule);
+
+  let assetRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['USD', 'ADA', 'BTC'])
+    .setAllowInvalid(true)
+    .setHelpText(`New assets will be added to the data validation dropdown when write reports is run.`)
+    .build();
+  sheet.getRange('C3:C').setDataValidation(assetRule);
+  sheet.getRange('H3:H').setDataValidation(assetRule);
+
+  let positiveNumberRule = SpreadsheetApp.newDataValidation()
+    .requireNumberGreaterThan(0)
+    .setAllowInvalid(false)
+    .setHelpText(`Input must be a number greater than 0.`)
+    .build();
+  sheet.getRange('D3:D').setDataValidation(positiveNumberRule);
+  sheet.getRange('I3:I').setDataValidation(positiveNumberRule);
+
+  let nonNegativeNumberRule = SpreadsheetApp.newDataValidation()
+    .requireNumberGreaterThanOrEqualTo(0)
+    .setAllowInvalid(false)
+    .setHelpText(`Input must be a number greater than or equal to 0.`)
+    .build();
+  sheet.getRange('E3:E').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('F3:F').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('J3:J').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('K3:K').setDataValidation(nonNegativeNumberRule);
+
+  let walletRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Binance', 'Deposit', 'Kraken', 'Ledger', 'Rewards', 'Yoroi'])
+    .setAllowInvalid(true)
+    .setHelpText(`New wallets will be added to the data validation dropdown when write reports is run.`)
+    .build();
+  sheet.getRange('G3:G').setDataValidation(walletRule);
+  sheet.getRange('L3:L').setDataValidation(walletRule);
+
+  let lotMatchingRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['FIFO', 'LIFO', 'HIFO', 'LOFO'])
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
 
   this.trimSheet(sheet, 19, 14);
 
@@ -187,8 +224,13 @@ AssetTracker.prototype.updateLedgerAssets = function (sheet) {
   let assetTickers = Array.from(this.assetTickers).sort(AssetTracker.abcComparator);
   let tickers = fiatTickers.concat(assetTickers);
 
-  this.setAssetValidation(sheet, 'C3:C', tickers);
-  this.setAssetValidation(sheet, 'H3:H', tickers);
+  let assetRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(tickers)
+    .setAllowInvalid(true)
+    .setHelpText(`New assets will be added to the data validation dropdown when write reports is run.`)
+    .build();
+  sheet.getRange('C3:C').setDataValidation(assetRule);
+  sheet.getRange('H3:H').setDataValidation(assetRule);
 
 };
 
@@ -206,36 +248,13 @@ AssetTracker.prototype.updateLedgerWallets = function (sheet) {
   }
   walletNames.sort(AssetTracker.abcComparator);
 
-  this.setWalletValidation(sheet, 'G3:G', walletNames);
-  this.setWalletValidation(sheet, 'L3:L', walletNames);
-
-};
-
-/**
- * Sets data validation from a list on a range of cells in a sheet.
- * Sets the help text that appears when the user hovers over a cell on which data validation is set.
- * Used specifically to set the data validation on the currency columns in the ledger sheet.
- * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
- * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {Array<string>} values - The list of valid values
- */
-AssetTracker.prototype.setAssetValidation = function (sheet, a1Notation, values) {
-
-  this.setValidation(sheet, a1Notation, values, true, 'New assets will be added to the data validation dropdown when write reports is run.');
-
-};
-
-/**
- * Sets data validation from a list on a range of cells in a sheet.
- * Sets the help text that appears when the user hovers over a cell on which data validation is set.
- * Used specifically to set the data validation on the wallet columns in the ledger sheet.
- * @param {Sheet} sheet - The sheet containing the range of cells on which data validation is set.
- * @param {string} a1Notation - The A1 notation used to specify the range of cells on which data validation is set.
- * @param {Array<string>} values - The list of valid values
- */
-AssetTracker.prototype.setWalletValidation = function (sheet, a1Notation, values) {
-
-  this.setValidation(sheet, a1Notation, values, true, 'New wallets will be added to the data validation dropdown when write reports is run.');
+  let walletRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(walletNames)
+    .setAllowInvalid(true)
+    .setHelpText(`New wallets will be added to the data validation dropdown when write reports is run.`)
+    .build();
+  sheet.getRange('G3:G').setDataValidation(walletRule);
+  sheet.getRange('L3:L').setDataValidation(walletRule);
 
 };
 

@@ -30,17 +30,6 @@ AssetTracker.prototype.sampleAssets = function () {
   sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
   sheet.getRange('E2:F').setNumberFormat('@');
 
-  let assetFormula = `=REGEXMATCH(TO_TEXT(A2), "^\\w{2,9}$")`;
-  let assetHelpText = `Input must be between 2 and 9 alphanumeric characters [A-Za-z0-9_].`;
-  this.setValidation(sheet, 'A2:A', assetFormula, false, assetHelpText);
-
-  let decimalPlacesFormula = `=REGEXMATCH(TO_TEXT(C2), "^[012345678]$")`;
-  let decimalPlacesHelpText = `Input must be an integer between 0 and 8`;
-  this.setValidation(sheet, 'C2:C', decimalPlacesFormula, false, decimalPlacesHelpText);
-
-  let assetTypes = Asset.defaultAssetTypes;
-  this.setValidation(sheet, 'B2:B', assetTypes, true, 'New asset types will be added to the data validation dropdown when write reports is run.');
-
   let dataTable = [
     ['USD', 'Fiat Base', '2', '1',],
     ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))',],
@@ -51,6 +40,34 @@ AssetTracker.prototype.sampleAssets = function () {
   ];
 
   this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 4, 2);
+
+  let assetRule = SpreadsheetApp.newDataValidation()
+    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\w{2,9}$")`)
+    .setAllowInvalid(false)
+    .setHelpText(`Input must be between 2 and 9 alphanumeric characters [A-Za-z0-9_].`)
+    .build();
+  sheet.getRange('A2:A').setDataValidation(assetRule);
+
+  let assetTypeRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(Asset.defaultAssetTypes)
+    .setAllowInvalid(true)
+    .setHelpText(`New asset types will be added to the data validation dropdown when write reports is run.`)
+    .build();
+  sheet.getRange('B2:B').setDataValidation(assetTypeRule);
+
+  let decimalPlacesRule = SpreadsheetApp.newDataValidation()
+    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(C2), "^[012345678]{1}$")`)
+    .setAllowInvalid(false)
+    .setHelpText(`Input must be an integer between 0 and 8`)
+    .build();
+  sheet.getRange('C2:C').setDataValidation(decimalPlacesRule);
+
+  let positiveNumberRule = SpreadsheetApp.newDataValidation()
+    .requireNumberGreaterThan(0)
+    .setAllowInvalid(false)
+    .setHelpText(`Input must be a number greater than 0.`)
+    .build();
+  sheet.getRange('D2:D').setDataValidation(positiveNumberRule);
 
   if (!sheet.getFilter()) {
     sheet.getRange('A1:F').createFilter();
@@ -82,7 +99,12 @@ AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
   let userDefinedAssetTypes = Array.from(this.userDefinedAssetTypes).sort(AssetTracker.abcComparator);
   let assetTypes = Asset.defaultAssetTypes.concat(userDefinedAssetTypes);
 
-  this.setValidation(sheet, 'B2:B', assetTypes, true, 'New asset types will be added to the data validation dropdown when write reports is run.');
+  let assetTypeRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(assetTypes)
+    .setAllowInvalid(true)
+    .setHelpText(`New asset types will be added to the data validation dropdown when write reports is run.`)
+    .build();
+  sheet.getRange('B2:B').setDataValidation(assetTypeRule);
 };
 
 /**
