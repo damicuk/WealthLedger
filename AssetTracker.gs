@@ -358,6 +358,28 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
+   * Creates a sample assets sheet.
+   * Renames any existing assets sheet so as not to overwrite it.
+   * Creates a sample ledger sheet.
+   * Renames any existing ledger sheet so as not to overwrite it.
+   * Validates and processes the asset sheet.
+   * Creates the api price sheets if they don't already exist.
+   * Updates the prices in the api price sheets if necessary.
+   */
+  createSampleAssetsLedger() {
+
+    this.sampleAssets();
+    this.sampleLedger();
+
+    if (!this.validateProcessAssetsSheet()) {
+      return;
+    }
+
+    this.apiPriceSheets();
+
+  }
+
+  /**
    * Saves a set of key value pairs as user properties.
    * Validates apiKeys setting if attempting to change the existing value.
    * Sends message to the error handler if the api key validation fails.

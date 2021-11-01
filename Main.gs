@@ -25,9 +25,9 @@ function onInstall(e) {
 function onOpen(e) {
   SpreadsheetApp.getUi()
     .createMenu('WealthLedger')
-    .addItem('Step 1: Create sample ledger', 'createSampleLedger')
+    .addItem('Step 1: Create sample assets & ledger', 'createSampleAssetsLedger')
     .addSeparator()
-    .addItem('Step 2: Validate ledger', 'validateLedger')
+    .addItem('Step 2: Validate assets & ledger', 'validateAssetsLedger')
     .addSeparator()
     .addItem('Step 3: Write reports', 'writeReports')
     .addSeparator()
@@ -38,26 +38,18 @@ function onOpen(e) {
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function createSampleLedger() {
+function createSampleAssetsLedger() {
 
-  let assetTracker = new AssetTracker();
-  assetTracker.sampleAssets();
-  assetTracker.sampleLedger();
-
-  if (!assetTracker.validateProcessAssetsSheet()) {
-    return;
-  }
-  
-  assetTracker.apiPriceSheets();
+  new AssetTracker().createSampleAssetsLedger();
 
 }
 
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function validateLedger() {
+function validateAssetsLedger() {
 
-  new AssetTracker().validateLedger();
+  new AssetTracker().validateAssetsLedger();
 
 }
 
