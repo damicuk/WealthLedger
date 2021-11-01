@@ -118,6 +118,7 @@ var AssetTracker = class AssetTracker {
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
+    this.assetsSheetVersion = '1';
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.openPositionsReportName = 'Open Positions Report';
     this.closedPositionsReportName = 'Closed Positions Report';
@@ -138,6 +139,7 @@ var AssetTracker = class AssetTracker {
 
     this.ccApiName = 'CryptoCompare';
     this.cmcApiName = 'CoinMarketCap';
+    this.apiPriceSheetVersion = '1';
   }
 
   /**

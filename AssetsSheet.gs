@@ -78,6 +78,8 @@ AssetTracker.prototype.assetsSheet = function () {
   this.trimSheet(sheet, 7, 6);
 
   sheet.autoResizeColumns(1, 4);
+
+  this.setSheetVersion(sheet, this.assetsSheetVersion);
 };
 
 AssetTracker.prototype.updateAssetsSheet = function () {
@@ -89,6 +91,13 @@ AssetTracker.prototype.updateAssetsSheet = function () {
 
   if (!sheet) {
     return;
+  }
+
+  if (this.getSheetVersion(sheet) !== this.assetsSheetVersion) {
+
+    //Future updates to the assets sheet can be inserted here
+
+    this.setSheetVersion(sheet, this.assetsSheetVersion);
   }
 
   this.updateAssetsAssetTypes(sheet);

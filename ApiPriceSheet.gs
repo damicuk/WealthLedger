@@ -48,6 +48,8 @@ AssetTracker.prototype.apiPriceSheet = function (apiName, apiKey, refreshMins = 
 
     this.writeTable(ss, sheet, dataTable, rangeName, 1, 3);
 
+    this.setSheetVersion(sheet, this.apiPriceSheetVersion);
+
   }
   else {
 
@@ -59,6 +61,13 @@ AssetTracker.prototype.apiPriceSheet = function (apiName, apiKey, refreshMins = 
     let failedTickerSet = resultsArray[1];
 
     this.writeTable(ss, sheet, dataTable, rangeName, 1, 3);
+
+    if (this.getSheetVersion(sheet) !== this.apiPriceSheetVersion) {
+
+      //Future updates to the api price sheet can be inserted here
+
+      this.setSheetVersion(sheet, this.apiPriceSheetVersion);
+    }
 
     if (failedTickerSet.size > 0) {
       throw new ApiError(`Failed to update crypto price from ${apiName} for ${Array.from(failedTickerSet).sort(this.abcComparator).join(', ')}`);
