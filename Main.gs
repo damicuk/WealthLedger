@@ -40,7 +40,7 @@ function onOpen(e) {
  */
 function createSampleLedger() {
 
-  let assetTracker = new AssetTracker()
+  let assetTracker = new AssetTracker();
   assetTracker.sampleAssets();
   assetTracker.sampleLedger();
   assetTracker.apiPriceSheet(assetTracker.ccApiName, assetTracker.ccApiKey);

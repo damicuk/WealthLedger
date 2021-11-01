@@ -84,3 +84,34 @@ AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
 
   this.setValidation(sheet, 'B2:B', assetTypes, true, 'New asset types will be added to the data validation dropdown when write reports is run.');
 };
+
+/**
+ * Returns the range in the asset sheet that contains the data excluding header rows.
+ * If there is no asset sheet it creates a sample asset sheet and returns the range from that.
+ * Throws a ValidationError if the ledger sheet contains insufficient columns or no data rows.
+ * @return {Range} The range in the asset sheet that contains the data excluding header rows.
+ */
+AssetTracker.prototype.getAssetsRange = function () {
+
+  let ss = SpreadsheetApp.getActive();
+  let assetsSheet = ss.getSheetByName(this.assetsSheetName);
+
+  if (!assetsSheet) {
+
+    assetSheet = this.sampleAssetSheet();
+  }
+
+  if (assetsSheet.getMaxColumns() < this.assetsDataColumns) {
+    throw new ValidationError('Asset sheet has insufficient columns.');
+  }
+
+  let assetsRange = assetsSheet.getDataRange();
+
+  if (assetsRange.getHeight() < this.assetsHeaderRows + 1) {
+    throw new ValidationError('Asset sheet contains no data rows.');
+  }
+
+  assetsRange = assetsRange.offset(this.assetsHeaderRows, 0, assetsRange.getHeight() - this.assetsHeaderRows, this.assetsDataColumns);
+
+  return assetsRange;
+};
