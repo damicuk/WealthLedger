@@ -43,8 +43,12 @@ function createSampleLedger() {
   let assetTracker = new AssetTracker();
   assetTracker.sampleAssets();
   assetTracker.sampleLedger();
-  assetTracker.apiPriceSheet(assetTracker.ccApiName, assetTracker.ccApiKey);
-  assetTracker.apiPriceSheet(assetTracker.cmcApiName, assetTracker.cmcApiKey);
+
+  if (!assetTracker.validateProcessAssetsSheet()) {
+    return;
+  }
+  
+  assetTracker.apiPriceSheets();
 
 }
 
