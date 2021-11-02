@@ -17,18 +17,19 @@ AssetTracker.prototype.assetsSheet = function () {
       'Asset Type',
       'Decimal Places',
       'Current Price',
+      'Comment',
       'URL',
       'XPATH'
     ]
   ];
 
-  sheet.getRange('A1:F1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:B').setNumberFormat('@');
   sheet.getRange('C2:C').setNumberFormat('0');
   sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('E2:F').setNumberFormat('@');
+  sheet.getRange('E2:G').setNumberFormat('@');
 
   let dataTable = [
     ['USD', 'Fiat Base', '2', '1',],
@@ -39,7 +40,7 @@ AssetTracker.prototype.assetsSheet = function () {
     [, , , ,]
   ];
 
-  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 4, 2);
+  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 4, 3);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\w{2,9}$")`)
@@ -70,12 +71,12 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('D2:D').setDataValidation(positiveNumberRule);
 
   if (!sheet.getFilter()) {
-    sheet.getRange('A1:F').createFilter();
+    sheet.getRange('A1:G').createFilter();
   }
 
-  sheet.hideColumns(5, 2);
+  sheet.hideColumns(6, 2);
 
-  this.trimSheet(sheet, 7, 6);
+  this.trimSheet(sheet, 7, 7);
 
   sheet.autoResizeColumns(1, 4);
 

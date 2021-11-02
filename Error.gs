@@ -1,4 +1,3 @@
-
 /**
  * Central error handling displays alert and sets the currenct cell when appropriate.
  * @param {string} error - The type of error.
@@ -19,7 +18,7 @@ AssetTracker.prototype.handleError = function (error, message, sheetName, rowInd
   }
   else if (error === 'cryptoAccount') {
 
-     if (sheetName && rowIndex && columnIndex) {
+    if (sheetName && rowIndex && columnIndex) {
       this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 

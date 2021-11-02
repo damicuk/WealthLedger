@@ -5,7 +5,7 @@
  * Uses the error handler to handle any ValidatioError.
  * Displays toast on success.
  */
-AssetTracker.prototype.validateAssetsLedger = function () {
+AssetTracker.prototype.validate = function () {
 
   if (!this.validateApiPriceSheet(this.ccApiName)) {
     return;
