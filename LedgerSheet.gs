@@ -146,9 +146,7 @@ AssetTracker.prototype.ledgerSheet = function () {
 };
 
 /**
- * Checks the version of the ledger sheet.
- * Sets conditional text color formatting of the action column of the ledger sheet if the version is not current.
- * Sets data validation on the action column of the ledger sheet if the version is not current.
+ * Updates the sheet version to the current version if necessary.
  * Sets data validation on the asset columns in the ledger sheet.
  * Sets data validation on the wallets columns in the ledger sheet.
  */

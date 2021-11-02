@@ -82,7 +82,13 @@ AssetTracker.prototype.assetsSheet = function () {
   this.setSheetVersion(sheet, this.assetsSheetVersion);
 };
 
-AssetTracker.prototype.updateAssetsSheet = function () {
+/**
+ * Updates the sheet version to the current version if necessary.
+ * Sets data validation on the asset type column of the assets sheet.
+ * Inserts VLOOKUP formulas pointing to the api price sheets in the current price column where needed.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records previously read from the assets sheet.
+ */
+AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
 
   const sheetName = this.assetsSheetName;
 
@@ -101,8 +107,17 @@ AssetTracker.prototype.updateAssetsSheet = function () {
   }
 
   this.updateAssetsAssetTypes(sheet);
+
+  this.updateCurrentPrices(sheet, assetRecords);
 };
 
+/**
+ * Sets data validation on the asset type column of the assets sheet.
+ * The list of asset types is collected when the ledger is processed to write the reports.
+ * Both default and user defined asset types are sorted alphabetically.
+ * The default asset types are listed before the user defined asset types.
+ * @param {Sheet} sheet - The assets sheet.
+ */
 AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
 
   let userDefinedAssetTypes = Array.from(this.userDefinedAssetTypes).sort(AssetTracker.abcComparator);
@@ -115,6 +130,60 @@ AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
     .build();
   sheet.getRange('B2:B').setDataValidation(assetTypeRule);
 };
+
+/**
+ * Inserts VLOOKUP formulas pointing to the api price sheets in the current price column where needed.
+ * @param {Sheet} sheet - The assets sheet.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records previously read from the assets sheet.
+ */
+AssetTracker.prototype.updateCurrentPrices = function (sheet, assetRecords) {
+
+  let currentPriceValues = [];
+
+  let ccPriceRecords = this.getApiPriceRecords(this.ccApiName);
+  let cmcPriceRecords = this.getApiPriceRecords(this.cmcApiName);
+
+  let ccTickerSet = this.getApiPriceTickerSet(ccPriceRecords);
+  let cmcTickerSet = this.getApiPriceTickerSet(cmcPriceRecords);
+
+  let updateRequired = false;
+  let rowIndex = this.assetsHeaderRows + 1;
+  for (let assetRecord of assetRecords) {
+
+    let ticker = assetRecord.ticker;
+    let currentPrice = assetRecord.currentPrice;
+    let currentPriceFormula = assetRecord.currentPriceFormula;
+
+    if (currentPriceFormula !== '') {
+      currentPriceValues.push([currentPriceFormula]);
+    }
+    else if (currentPrice !== '') {
+      currentPriceValues.push([currentPrice]);
+    }
+    else if (ticker === '') {
+      currentPriceValues.push([null]);
+    }
+    else if (ccTickerSet.has(ticker)) {
+      currentPriceValues.push([`=VLOOKUP(A${rowIndex}, ${this.ccApiName}, 2)`]);
+      updateRequired = true;
+    }
+    else if (cmcTickerSet.has(ticker)) {
+      currentPriceValues.push([`=VLOOKUP(A${rowIndex}, ${this.cmcApiName}, 2)`]);
+      updateRequired = true;
+    }
+    else {
+      currentPriceValues.push([null]);
+    }
+
+    rowIndex++;
+  }
+
+  if (updateRequired) {
+    let assetsRange = this.getAssetsRange();
+    let currentPriceRange = assetsRange.offset(0, 3, assetsRange.getHeight(), 1);
+    currentPriceRange.setValues(currentPriceValues);
+  }
+}
 
 /**
  * Returns the range in the asset sheet that contains the data excluding header rows.

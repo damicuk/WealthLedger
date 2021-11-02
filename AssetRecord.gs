@@ -9,12 +9,14 @@ class AssetRecord {
    * @param {string} assetType - The type of the asset.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
    * @param {number} currentPrice - The current price of the asset.
+   * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
    */
   constructor(
     ticker,
     assetType,
     decimalPlaces,
-    currentPrice) {
+    currentPrice,
+    currentPriceFormula) {
 
     /**
      * The ticker of the asset.
@@ -39,6 +41,12 @@ class AssetRecord {
      * @type {number}
      */
     this.currentPrice = currentPrice;
+
+    /**
+     * The formula in current price column of the row in the assets sheet.
+     * @type {string}
+     */
+    this.currentPriceFormula = currentPriceFormula;
   }
 
   /**
@@ -71,19 +79,24 @@ AssetTracker.prototype.getAssetRecords = function () {
 
   let assetsRange = this.getAssetsRange();
   let assetsData = assetsRange.getValues();
+  let assetsFormulas = assetsRange.getFormulas();
 
   //convert raw data to object array
   let assetRecords = [];
+  let rowIndex = 0;
   for (let row of assetsData) {
 
     let assetRecord = new AssetRecord(
       row[0],
       row[1],
       row[2],
-      row[3]
+      row[3],
+      assetsFormulas[rowIndex][3]
     );
 
     assetRecords.push(assetRecord);
+
+    rowIndex++;
   }
   return assetRecords;
 };

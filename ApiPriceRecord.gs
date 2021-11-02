@@ -113,3 +113,24 @@ AssetTracker.prototype.getApiPriceRange = function (sheetName) {
 
   return range;
 };
+
+/**
+ * Returns the set of tickers that have a current price from a collection of api price records.
+ * Used to determine where to insert VLOOKUP formulas in the assets sheet.
+ * @param {Array<ApiPriceRecord>} apiPriceRecords - The collection of api price records.
+ * @return {Set} The set of tickers that have a current price.
+ */
+AssetTracker.prototype.getApiPriceTickerSet = function (apiPriceRecords) {
+
+  let tickerSet = new Set();
+
+  for (let apiPriceRecord of apiPriceRecords) {
+    let ticker = apiPriceRecord.ticker;
+    let currentPrice = apiPriceRecord.currentPrice;
+    if (ticker !== '' && currentPrice != '') {
+      tickerSet.add(ticker);
+    }
+  }
+
+  return tickerSet;
+}

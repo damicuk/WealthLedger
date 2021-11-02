@@ -15,13 +15,18 @@ AssetTracker.prototype.validateAssetsLedger = function () {
     return;
   }
 
-  if (!this.validateProcessAssetsSheet()) {
+  let assetsValidationResults = this.validateAssetsSheet();
+  let assetsValidationSuccess = assetsValidationResults[0];
+  let assetRecords = assetsValidationResults[1];
+  if (!assetsValidationSuccess) {
     return;
   }
 
-  let results = this.validateLedgerSheet();
-  let success = results[0];
-  if (!success) {
+  this.processAssets(assetRecords);
+
+  let ledgerValidationResults = this.validateLedgerSheet();
+  let ledgerValidationSuccess = ledgerValidationResults[0];
+  if (!ledgerValidationSuccess) {
     return;
   }
 
@@ -34,10 +39,11 @@ AssetTracker.prototype.validateAssetsLedger = function () {
  * Processes the asset records.
  * Adds to the Map of assets.
  * Sets the base currency.
- * @return {boolean} Whether validation completed successfully.
+ * @return {[boolean, Array<AssetRecord>} Whether validation completed successfully and the asset records.
  */
-AssetTracker.prototype.validateProcessAssetsSheet = function () {
+AssetTracker.prototype.validateAssetsSheet = function () {
 
+  let success = true;
   let assetRecords;
   try {
     assetRecords = this.getAssetRecords();
@@ -46,16 +52,14 @@ AssetTracker.prototype.validateProcessAssetsSheet = function () {
   catch (error) {
     if (error instanceof ValidationError) {
       this.handleError('validation', error.message, this.assetsSheetName, error.rowIndex, AssetRecord.getColumnIndex(error.columnName));
-      return false;
+      success = false;
     }
     else {
       throw error;
     }
   }
 
-  this.processAssets(assetRecords);
-
-  return true;
+  return [success, assetRecords];
 
 }
 

@@ -14,14 +14,19 @@ AssetTracker.prototype.writeReports = function () {
     return;
   }
 
-  if (!this.validateProcessAssetsSheet()) {
+  let assetsValidationResults = this.validateAssetsSheet();
+  let assetsValidationSuccess = assetsValidationResults[0];
+  let assetRecords = assetsValidationResults[1];
+  if (!assetsValidationSuccess) {
     return;
   }
 
-  let results = this.validateLedgerSheet();
-  let success = results[0];
-  let ledgerRecords = results[1];
-  if (!success) {
+  this.processAssets(assetRecords);
+
+  let ledgerValidationResults = this.validateLedgerSheet();
+  let ledgerValidationSuccess = ledgerValidationResults[0];
+  let ledgerRecords = ledgerValidationResults[1];
+  if (!ledgerValidationSuccess) {
     return;
   }
 
@@ -64,7 +69,7 @@ AssetTracker.prototype.writeReports = function () {
   this.walletsReport();
 
   this.updateLedger();
-  this.updateAssetsSheet();
+  this.updateAssetsSheet(assetRecords);
 
   if (apiError) {
     this.handleError('api', apiError.message);

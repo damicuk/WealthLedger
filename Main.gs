@@ -1,13 +1,7 @@
 /**
  * Runs when the add-on is installed.
- * This method is only used by the regular add-on, and is never called by
- * the mobile add-on version.
- *
- * @param {Object} e The event parameter for a simple onInstall trigger. To
- *     determine which authorization mode (ScriptApp.AuthMode) the trigger is
- *     running in, inspect e.authMode. (In practice, onInstall triggers always
- *     run in AuthMode.FULL, but onOpen triggers may be AuthMode.LIMITED or
- *     AuthMode.NONE.)
+ * This method is only used by the regular add-on, and is never called by the mobile add-on version.
+ * @param {Object} e The event parameter for a simple onInstall trigger.
  */
 function onInstall(e) {
   onOpen(e);
@@ -15,12 +9,8 @@ function onInstall(e) {
 
 /**
  * Creates a menu entry in the Google Docs UI when the document is opened.
- * This method is only used by the regular add-on, and is never called by
- * the mobile add-on version.
- *
- * @param {Object} e The event parameter for a simple onOpen trigger. To
- *     determine which authorization mode (ScriptApp.AuthMode) the trigger is
- *     running in, inspect e.authMode.
+ * This method is only used by the regular add-on, and is never called by the mobile add-on version.
+ * @param {Object} e The event parameter for a simple onOpen trigger.
  */
 function onOpen(e) {
   SpreadsheetApp.getUi()
