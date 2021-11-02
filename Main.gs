@@ -15,7 +15,7 @@ function onInstall(e) {
 function onOpen(e) {
   SpreadsheetApp.getUi()
     .createMenu('WealthLedger')
-    .addItem('Step 1: Create sample assets & ledger', 'createSampleAssetsLedger')
+    .addItem('Step 1: Create sample assets & ledger', 'createAssetsLedger')
     .addSeparator()
     .addItem('Step 2: Validate assets & ledger', 'validateAssetsLedger')
     .addSeparator()

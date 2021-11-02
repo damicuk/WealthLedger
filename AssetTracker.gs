@@ -373,9 +373,14 @@ var AssetTracker = class AssetTracker {
     this.assetsSheet();
     this.ledgerSheet();
 
-    if (!this.validateProcessAssetsSheet()) {
+    let assetsValidationResults = this.validateAssetsSheet();
+    let assetsValidationSuccess = assetsValidationResults[0];
+    let assetRecords = assetsValidationResults[1];
+    if (!assetsValidationSuccess) {
       return;
     }
+
+    this.processAssets(assetRecords);
 
     this.apiPriceSheets();
 
