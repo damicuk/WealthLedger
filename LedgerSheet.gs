@@ -143,6 +143,8 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.autoResizeColumns(14, 1);
 
   this.setSheetVersion(sheet, this.ledgerSheetVersion);
+
+  return sheet;
 };
 
 /**

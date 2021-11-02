@@ -81,6 +81,8 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.autoResizeColumns(1, 5);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
+
+  return sheet;
 };
 
 /**
@@ -199,7 +201,7 @@ AssetTracker.prototype.getAssetsRange = function () {
 
   if (!assetsSheet) {
 
-    assetSheet = this.assetSheet();
+    assetsSheet = this.assetsSheet();
   }
 
   if (assetsSheet.getMaxColumns() < this.assetsDataColumns) {
