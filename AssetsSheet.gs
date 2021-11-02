@@ -78,7 +78,7 @@ AssetTracker.prototype.assetsSheet = function () {
 
   this.trimSheet(sheet, 7, 7);
 
-  sheet.autoResizeColumns(1, 4);
+  sheet.autoResizeColumns(1, 5);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
 };
