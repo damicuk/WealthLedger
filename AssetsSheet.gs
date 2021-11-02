@@ -34,9 +34,11 @@ AssetTracker.prototype.assetsSheet = function () {
   let dataTable = [
     ['USD', 'Fiat Base', '2', '1',],
     ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))',],
-    ['ALGO', 'Crypto', '8', ,],
-    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))',],
-    ['SOL', 'Crypto', '8', ,],
+    ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A4)',],
+    ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A5)',],
+    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))',],
+    ['GE', 'Stock', '0', '=GOOGLEFINANCE(A7)',],
+    ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A8)',],
     [, , , ,]
   ];
 
@@ -76,7 +78,7 @@ AssetTracker.prototype.assetsSheet = function () {
 
   sheet.hideColumns(6, 2);
 
-  this.trimSheet(sheet, 7, 7);
+  this.trimSheet(sheet, 9, 7);
 
   sheet.autoResizeColumns(1, 5);
 

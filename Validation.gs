@@ -604,8 +604,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitAmount !== '' && creditAmount !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave either debit amount blank for normal splits or credit amount blank for reverse splits.`, rowIndex, 'debitAmount');
     }
-    else if (debitAmount !== '' && (debitAmount <= 1 || !Number.isInteger(debitAmount))) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be an integer greater than 1.`, rowIndex, 'debitAmount');
+    else if (debitAmount !== '' && debitAmount <= 1) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 1 (or blank).`, rowIndex, 'debitAmount');
     }
     else if (debitFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
@@ -622,8 +622,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitAmount === '' && creditAmount === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Fill either credit amount for normal splits or debit amount for reverse splits.`, rowIndex, 'creditAmount');
     }
-    else if (creditAmount !== '' && (creditAmount <= 1 || !Number.isInteger(creditAmount))) {
-      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be an integer greater than 1.`, rowIndex, 'creditAmount');
+    else if (creditAmount !== '' && creditAmount <= 1) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater than 1 (or blank).`, rowIndex, 'creditAmount');
     }
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');

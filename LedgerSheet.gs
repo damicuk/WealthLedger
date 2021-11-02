@@ -66,7 +66,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2019-03-02 12:00:00', 'Trade', 'USD', , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
     ['2019-03-03 12:00:00', 'Trade', 'USD', , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
     ['2019-03-04 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 6010, 10, , , ,],
-    ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 20010, 10, , 'LIFO', `Lot matching method applies to the current and following transactions (default in settings).`],
+    ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 20010, 10, , 'LIFO', `Lot matching method applies to the current and following transactions. The default is FIFO.`],
     ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', 0.2, 100000, , , , `Exchange cryptos.`],
     ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', 'USD', , 12010, 10, , , ,],
     ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Yoroi', , `Transfer amount and fee are always and only entered in the debit column.`],
@@ -77,10 +77,17 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Yoroi', , , , , , , `Donations (e.g. to registered charities) are recorded in the donations report.`],
     ['2021-03-02 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Yoroi', , , , , , , ,],
     ['2021-03-03 12:00:00', 'Gift', 'ADA', , 500, , 'Yoroi', , , , , , , `Gifts (e.g. to friends or family) are not recorded. The asset simply disappears.`],
-    ['2021-03-04 12:00:00', 'Fee', 'ADA', , , 0.17, 'Yoroi', , , , , , , `Miscellaneous fee.`]
+    ['2021-03-04 12:00:00', 'Fee', 'ADA', , , 0.17, 'Yoroi', , , , , , , `Miscellaneous fee.`],
+    ['2021-04-01 12:00:00', 'Transfer', 'USD', , 40000, , , , , , , 'IB', , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
+    ['2021-07-20 12:00:00', 'Split', 'NVDA', , , , , , , 4, , , , `Split 4 for 1`],
+    ['2021-08-02 12:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8`]
   ];
 
-  sheet.getRange('A3:N18').setValues(sampleData);
+  sheet.getRange('A3:N25').setValues(sampleData);
 
   let dateRule = SpreadsheetApp.newDataValidation()
     .requireDate()
@@ -96,7 +103,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('B3:B').setDataValidation(actionRule);
 
   let assetRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['USD', 'ADA', 'BTC'])
+    .requireValueInList(['USD', 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'])
     .setAllowInvalid(true)
     .setHelpText(`New assets will be added to the data validation dropdown when write reports is run.`)
     .build();
@@ -122,7 +129,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('K3:K').setDataValidation(nonNegativeNumberRule);
 
   let walletRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['Binance', 'Deposit', 'Kraken', 'Ledger', 'Rewards', 'Yoroi'])
+    .requireValueInList(['Binance', 'Deposit', 'IB', 'Kraken', 'Ledger', 'Rewards', 'Yoroi'])
     .setAllowInvalid(true)
     .setHelpText(`New wallets will be added to the data validation dropdown when write reports is run.`)
     .build();
@@ -135,7 +142,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     .build();
   sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
 
-  this.trimSheet(sheet, 19, 14);
+  this.trimSheet(sheet, 26, 14);
 
   sheet.autoResizeColumns(1, 1);
   sheet.autoResizeColumns(5, 1);
