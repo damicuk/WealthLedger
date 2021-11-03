@@ -10,13 +10,17 @@ class AssetRecord {
    * @param {number} decimalPlaces - The number of decimal places of the asset.
    * @param {number} currentPrice - The current price of the asset.
    * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
+   * @param {string} apiName - The api to call to fetch the current price.
+   * @param {date} date - When the current price was last updated by the selected API.
    */
   constructor(
     ticker,
     assetType,
     decimalPlaces,
     currentPrice,
-    currentPriceFormula) {
+    currentPriceFormula,
+    apiName,
+    date) {
 
     /**
      * The ticker of the asset.
@@ -47,6 +51,18 @@ class AssetRecord {
      * @type {string}
      */
     this.currentPriceFormula = currentPriceFormula;
+
+    /**
+     * The api to call to fetch the current price.
+     * @type {string}
+     */
+    this.apiName = apiName;
+
+    /**
+     * When the current price was last updated.
+     * @type {date}
+     */
+    this.date = new Date(date);
   }
 
   /**
@@ -62,7 +78,9 @@ class AssetRecord {
       'ticker',
       'assetType',
       'decimalPlaces',
-      'currentPrice'
+      'currentPrice',
+      'apiName',
+      'date'
     ];
 
     let index = columns.indexOf(columnName);
@@ -91,7 +109,9 @@ AssetTracker.prototype.getAssetRecords = function () {
       row[1],
       row[2],
       row[3],
-      assetsFormulas[rowIndex][3]
+      assetsFormulas[rowIndex][3],
+      row[4],
+      row[5]
     );
 
     assetRecords.push(assetRecord);

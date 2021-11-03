@@ -7,14 +7,6 @@
  */
 AssetTracker.prototype.validate = function () {
 
-  if (!this.validateApiPriceSheet(this.ccApiName)) {
-    return;
-  }
-
-  if (!this.validateApiPriceSheet(this.cmcApiName)) {
-    return;
-  }
-
   let assetsValidationResults = this.validateAssetsSheet();
   let assetsValidationSuccess = assetsValidationResults[0];
   let assetRecords = assetsValidationResults[1];
@@ -94,50 +86,50 @@ AssetTracker.prototype.validateLedgerSheet = function () {
  * @param {string} sheetName - The name of the api price sheet to validate. 
  * @return {boolean} Whether validation completed successfully.
  */
-AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
+// AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
 
-  let apiPriceRecords;
-  try {
-    apiPriceRecords = this.getApiPriceRecords(sheetName);
-    this.validateApiPriceRecords(apiPriceRecords);
-  }
-  catch (error) {
-    if (error instanceof ValidationError) {
-      let message = `${sheetName} ${error.message}`;
-      this.handleError('validation', message, sheetName, error.rowIndex, ApiPriceRecord.getColumnIndex(error.columnName));
-      return false;
-    }
-    else {
-      throw error;
-    }
-  }
-  return true;
-}
+//   let apiPriceRecords;
+//   try {
+//     apiPriceRecords = this.getApiPriceRecords(sheetName);
+//     this.validateApiPriceRecords(apiPriceRecords);
+//   }
+//   catch (error) {
+//     if (error instanceof ValidationError) {
+//       let message = `${sheetName} ${error.message}`;
+//       this.handleError('validation', message, sheetName, error.rowIndex, ApiPriceRecord.getColumnIndex(error.columnName));
+//       return false;
+//     }
+//     else {
+//       throw error;
+//     }
+//   }
+//   return true;
+// }
 
 /**
  * Validates a set of api price records and throws a ValidationError on failure.
  * @param {Array<ApiPriceRecord>} apiPriceRecords - The colection of api price records to validate.
  */
-AssetTracker.prototype.validateApiPriceRecords = function (apiPriceRecords) {
+// AssetTracker.prototype.validateApiPriceRecords = function (apiPriceRecords) {
 
-  let rowIndex = this.apiPriceSheetHeaderRows + 1;
-  for (let apiPriceRecord of apiPriceRecords) {
-    this.validateApiPriceRecord(apiPriceRecord, rowIndex++);
-  }
-};
+//   let rowIndex = this.apiPriceSheetHeaderRows + 1;
+//   for (let apiPriceRecord of apiPriceRecords) {
+//     this.validateApiPriceRecord(apiPriceRecord, rowIndex++);
+//   }
+// };
 
 /**
  * Validates an api price record and throws a ValidationError on failure.
  * @param {ApiPriceRecord} apiPriceRecord - The api price record to validate.
  * @param {number} rowIndex - The index of the row in the api price sheet used to set the current cell in case of an error.
  */
-AssetTracker.prototype.validateApiPriceRecord = function (apiPriceRecord, rowIndex) {
+// AssetTracker.prototype.validateApiPriceRecord = function (apiPriceRecord, rowIndex) {
 
-  let ticker = apiPriceRecord.ticker;
-  if (ticker !== '' && !Asset.tickerRegExp.test(ticker)) {
-    throw new ValidationError(`row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
-  }
-}
+//   let ticker = apiPriceRecord.ticker;
+//   if (ticker !== '' && !Asset.tickerRegExp.test(ticker)) {
+//     throw new ValidationError(`row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
+//   }
+// }
 
 /**
  * Validates a set of asset records and throws a ValidationError on failure.
@@ -177,6 +169,8 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   let assetType = assetRecord.assetType;
   let decimalPlaces = assetRecord.decimalPlaces;
   let currentPrice = assetRecord.currentPrice;
+  let apiName = assetRecord.apiName;
+  let date = assetRecord.date;
 
   if (ticker === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
@@ -210,6 +204,9 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   }
   else if (currentPrice < 0) {
     throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater or equal to 0 (or blank).`, rowIndex, 'currentPrice');
+  }
+  else if (apiName !== '' && !this.validApiNames.includes(apiName)) {
+    throw new ValidationError(`Assets row ${rowIndex}: Api (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
   }
 };
 

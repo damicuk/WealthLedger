@@ -6,14 +6,6 @@
  */
 AssetTracker.prototype.writeReports = function () {
 
-  if (!this.validateApiPriceSheet(this.ccApiName)) {
-    return;
-  }
-
-  if (!this.validateApiPriceSheet(this.ccApiName)) {
-    return;
-  }
-
   let assetsValidationResults = this.validateAssetsSheet();
   let assetsValidationSuccess = assetsValidationResults[0];
   let assetRecords = assetsValidationResults[1];
@@ -44,18 +36,18 @@ AssetTracker.prototype.writeReports = function () {
   }
 
   let apiError;
-  try {
-    this.apiPriceSheets();
-  }
-  catch (error) {
-    if (error instanceof ApiError) {
-      //handle the error later
-      apiError = error;
-    }
-    else {
-      throw error;
-    }
-  }
+  // try {
+  //   this.apiPriceSheets();
+  // }
+  // catch (error) {
+  //   if (error instanceof ApiError) {
+  //     //handle the error later
+  //     apiError = error;
+  //   }
+  //   else {
+  //     throw error;
+  //   }
+  // }
 
   this.fiatAccountsSheet();
   this.openPositionsReport();

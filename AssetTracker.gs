@@ -101,7 +101,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the assets sheet.
      * @type {number}
      */
-    this.assetsDataColumns = 4;
+    this.assetsDataColumns = 6;
 
     /**
      * The number of header rows in an api price sheet
@@ -139,6 +139,7 @@ var AssetTracker = class AssetTracker {
 
     this.ccApiName = 'CryptoCompare';
     this.cmcApiName = 'CoinMarketCap';
+    this.validApiNames = [this.ccApiName, this.cmcApiName];
     this.apiPriceSheetVersion = '1';
   }
 
@@ -372,17 +373,6 @@ var AssetTracker = class AssetTracker {
 
     this.assetsSheet();
     this.ledgerSheet();
-
-    let assetsValidationResults = this.validateAssetsSheet();
-    let assetsValidationSuccess = assetsValidationResults[0];
-    let assetRecords = assetsValidationResults[1];
-    if (!assetsValidationSuccess) {
-      return;
-    }
-
-    this.processAssets(assetRecords);
-
-    this.apiPriceSheets();
 
   }
 
