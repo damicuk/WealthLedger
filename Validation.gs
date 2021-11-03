@@ -81,57 +81,6 @@ AssetTracker.prototype.validateLedgerSheet = function () {
 }
 
 /**
- * Retrieves and validates the api price records from the named api price sheet.
- * Uses the error handler to handle any ValidatioError.
- * @param {string} sheetName - The name of the api price sheet to validate. 
- * @return {boolean} Whether validation completed successfully.
- */
-// AssetTracker.prototype.validateApiPriceSheet = function (sheetName) {
-
-//   let apiPriceRecords;
-//   try {
-//     apiPriceRecords = this.getApiPriceRecords(sheetName);
-//     this.validateApiPriceRecords(apiPriceRecords);
-//   }
-//   catch (error) {
-//     if (error instanceof ValidationError) {
-//       let message = `${sheetName} ${error.message}`;
-//       this.handleError('validation', message, sheetName, error.rowIndex, ApiPriceRecord.getColumnIndex(error.columnName));
-//       return false;
-//     }
-//     else {
-//       throw error;
-//     }
-//   }
-//   return true;
-// }
-
-/**
- * Validates a set of api price records and throws a ValidationError on failure.
- * @param {Array<ApiPriceRecord>} apiPriceRecords - The colection of api price records to validate.
- */
-// AssetTracker.prototype.validateApiPriceRecords = function (apiPriceRecords) {
-
-//   let rowIndex = this.apiPriceSheetHeaderRows + 1;
-//   for (let apiPriceRecord of apiPriceRecords) {
-//     this.validateApiPriceRecord(apiPriceRecord, rowIndex++);
-//   }
-// };
-
-/**
- * Validates an api price record and throws a ValidationError on failure.
- * @param {ApiPriceRecord} apiPriceRecord - The api price record to validate.
- * @param {number} rowIndex - The index of the row in the api price sheet used to set the current cell in case of an error.
- */
-// AssetTracker.prototype.validateApiPriceRecord = function (apiPriceRecord, rowIndex) {
-
-//   let ticker = apiPriceRecord.ticker;
-//   if (ticker !== '' && !Asset.tickerRegExp.test(ticker)) {
-//     throw new ValidationError(`row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
-//   }
-// }
-
-/**
  * Validates a set of asset records and throws a ValidationError on failure.
  * @param {Array<AssetRecord>} assetRecords - The colection of asset records to validate.
  */
