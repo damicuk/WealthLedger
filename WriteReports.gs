@@ -200,6 +200,7 @@ AssetTracker.prototype.getApiTickerSet = function (apiName, assetRecords, refres
 AssetTracker.prototype.deleteReports = function () {
 
   let sheetNames = [
+    this.fiatAccountsSheetName,
     this.openPositionsReportName,
     this.closedPositionsReportName,
     this.donationsReportName,
@@ -208,10 +209,7 @@ AssetTracker.prototype.deleteReports = function () {
     this.closedSummaryReportName,
     this.incomeSummaryReportName,
     this.donationsSummaryReportName,
-    this.walletsReportName,
-    this.exRatesTableSheetName,
-    this.exRatesSheetName,
-    this.fiatAccountsSheetName
+    this.walletsReportName
   ];
 
   this.deleteSheets(sheetNames);

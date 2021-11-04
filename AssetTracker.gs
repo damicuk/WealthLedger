@@ -56,7 +56,7 @@ var AssetTracker = class AssetTracker {
      */
     this.exRateDecimalPlaces = 7;
 
-    //get user properties or set defaults
+    //get user properties
     let userProperties = PropertiesService.getUserProperties();
 
     /**
