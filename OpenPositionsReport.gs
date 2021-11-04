@@ -80,7 +80,7 @@ AssetTracker.prototype.openPositionsReport = function () {
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(M3:M=0,,O3:O/M3:M), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, (E3:E+F3:F)*D3:D, E3:E+F3:F), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(H3:H, QUERY(${assetsRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(H3:H, QUERY(${assetsRangeName}, "SELECT A, E"), 2, FALSE),), LEN(A3:A))))`,
       `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(M3:M*P3:P, LEN(A3:A))))`,
       `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(Q3:Q-O3:O, LEN(A3:A))))`,
       `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(IF(O3:O=0,,R3:R/O3:O), LEN(A3:A))))`,
