@@ -109,16 +109,18 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   let updateRequired = false;
   for (let assetRecord of assetRecords) {
     let ticker = assetRecord.ticker;
+    let apiName = assetRecord.apiName;
     let currentPrice = assetRecord.currentPrice;
     let currentPriceFormula = assetRecord.currentPriceFormula;
-    let timestamp = isNaN(assetRecord.date) ? null : assetRecord.date.toISOString();
+    let date = assetRecord.date;
+    let timestamp = (isNaN(date) || apiName === '') ? null : assetRecord.date.toISOString();
 
-    if (assetRecord.apiName === this.ccApiName && ccAssetPriceMap.has(ticker)) {
+    if (apiName === this.ccApiName && ccAssetPriceMap.has(ticker)) {
       let mapValue = ccAssetPriceMap.get(ticker);
       dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
       updateRequired = true;
     }
-    else if (assetRecord.apiName === this.cmcApiName && cmcAssetPriceMap.has(ticker)) {
+    else if (apiName === this.cmcApiName && cmcAssetPriceMap.has(ticker)) {
       let mapValue = cmcAssetPriceMap.get(ticker);
       dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
       updateRequired = true;

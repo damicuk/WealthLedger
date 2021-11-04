@@ -16,7 +16,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
   if (assets.length > 0) {
 
-    let date = new Date();
+    let now = new Date();
 
     if (apiName === 'CryptoCompare') {
 
@@ -54,7 +54,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
         let currentPrice = data[coin][baseCurrency];
 
-        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: date.toISOString() });
+        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: now.toISOString() });
 
       }
     }
@@ -103,7 +103,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
         let currentPrice = data.data[coin].quote[baseCurrency].price;
 
-        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: date.toISOString() });
+        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: now.toISOString() });
 
       }
     }
