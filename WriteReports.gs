@@ -36,18 +36,18 @@ AssetTracker.prototype.writeReports = function () {
   }
 
   let apiError;
-  // try {
-  //   this.apiPriceSheets();
-  // }
-  // catch (error) {
-  //   if (error instanceof ApiError) {
-  //     //handle the error later
-  //     apiError = error;
-  //   }
-  //   else {
-  //     throw error;
-  //   }
-  // }
+  try {
+    this.updateAssetPrices(assetRecords);
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      //handle the error later
+      apiError = error;
+    }
+    else {
+      throw error;
+    }
+  }
 
   this.fiatAccountsSheet();
   this.openPositionsReport();
@@ -70,6 +70,127 @@ AssetTracker.prototype.writeReports = function () {
     SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
   }
 };
+
+AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
+
+  let ccTickerSet = this.getApiTickerSet(this.ccApiName, assetRecords);
+  let cmcTickerSet = this.getApiTickerSet(this.cmcApiName, assetRecords);
+
+  let ccAssetPriceMap = new Map();
+  let cmcAssetPriceMap = new Map();
+
+  let errorMessages = [];
+
+  try {
+    ccAssetPriceMap = this.getApiAssetPriceMap(this.ccApiName, this.ccApiKey, Array.from(ccTickerSet), this.baseCurrency);
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      errorMessages.push(error.message);
+    }
+    else {
+      throw error;
+    }
+  }
+
+  try {
+    cmcAssetPriceMap = this.getApiAssetPriceMap(this.cmcApiName, this.cmcApiKey, Array.from(cmcTickerSet), this.baseCurrency);
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      errorMessages.push(error.message);
+    }
+    else {
+      throw error;
+    }
+  }
+
+  let dataTable = [];
+  let updateRequired = false;
+  for (let assetRecord of assetRecords) {
+    let ticker = assetRecord.ticker;
+    let currentPrice = assetRecord.currentPrice;
+    let currentPriceFormula = assetRecord.currentPriceFormula;
+    let timestamp = isNaN(assetRecord.date) ? null : assetRecord.date.toISOString();
+
+    if (assetRecord.apiName === this.ccApiName && ccAssetPriceMap.has(ticker)) {
+      let mapValue = ccAssetPriceMap.get(ticker);
+      dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
+      updateRequired = true;
+    }
+    else if (assetRecord.apiName === this.cmcApiName && cmcAssetPriceMap.has(ticker)) {
+      let mapValue = cmcAssetPriceMap.get(ticker);
+      dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
+      updateRequired = true;
+    }
+    else if (currentPriceFormula !== '') {
+      dataTable.push([[currentPriceFormula], [timestamp]]);
+    }
+    else {
+      dataTable.push([[currentPrice], [timestamp]]);
+    }
+  }
+
+  if (updateRequired) {
+
+    let assetsRange = this.getAssetsRange();
+    let updateRange = assetsRange.offset(0, 4, assetsRange.getHeight(), 2);
+    updateRange.setValues(dataTable);
+
+  }
+
+  let ccFailedTickerSet = this.getApiFailedTickerSet(ccTickerSet, ccAssetPriceMap);
+  let cmcFailedTickerSet = this.getApiFailedTickerSet(cmcTickerSet, cmcAssetPriceMap);
+
+  if (ccFailedTickerSet.size > 0) {
+    errorMessages.push(`Failed to update price for ${Array.from(ccFailedTickerSet).sort(this.abcComparator).join(', ')} from ${this.ccApiName}.`);
+  }
+
+  if (cmcFailedTickerSet.size > 0) {
+    errorMessages.push(`Failed to update price for ${Array.from(cmcFailedTickerSet).sort(this.abcComparator).join(', ')} from ${this.cmcApiName}.`);
+  }
+
+  if (errorMessages.length > 0) {
+    throw new ApiError(errorMessages.join('\n\n'));
+  }
+};
+
+AssetTracker.prototype.getApiFailedTickerSet = function (apiTickerSet, apiAssetPriceMap) {
+
+  let apiFailedTickerSet = new Set(apiTickerSet);
+  let apiSuccessTickers = Array.from(apiAssetPriceMap.keys());
+  for (let apiSuccessTicker of apiSuccessTickers) {
+    apiFailedTickerSet.delete(apiSuccessTicker);
+  }
+  return apiFailedTickerSet;
+}
+
+
+AssetTracker.prototype.getApiTickerSet = function (apiName, assetRecords, refreshMins = 10) {
+
+  let tickerSet = new Set();
+  let now = new Date();
+  let refreshMs = refreshMins * 60000;
+  let pricesCurrent = true;
+
+  for (let assetRecord of assetRecords) {
+    let ticker = assetRecord.ticker;
+    let date = assetRecord.date;
+    if (assetRecord.apiName === apiName) {
+      if (isNaN(date) || now - date > refreshMs) {
+        pricesCurrent = false;
+      }
+      tickerSet.add(ticker);
+    }
+  }
+
+  if (pricesCurrent) {
+    return new Set();
+  }
+
+  return tickerSet;
+
+}
 
 /**
  * Deletes all the output sheets.
@@ -94,5 +215,4 @@ AssetTracker.prototype.deleteReports = function () {
   ];
 
   this.deleteSheets(sheetNames);
-
 };

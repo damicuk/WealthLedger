@@ -17,9 +17,9 @@ class AssetRecord {
     ticker,
     assetType,
     decimalPlaces,
+    apiName,
     currentPrice,
     currentPriceFormula,
-    apiName,
     date) {
 
     /**
@@ -78,8 +78,8 @@ class AssetRecord {
       'ticker',
       'assetType',
       'decimalPlaces',
-      'currentPrice',
       'apiName',
+      'currentPrice',
       'date'
     ];
 
@@ -97,7 +97,8 @@ AssetTracker.prototype.getAssetRecords = function () {
 
   let assetsRange = this.getAssetsRange();
   let assetsData = assetsRange.getValues();
-  let assetsFormulas = assetsRange.getFormulas();
+  let currentPriceRange = assetsRange.offset(0, 4, assetsRange.getHeight(), 1);
+  let currentPriceFormulas = currentPriceRange.getFormulas();
 
   //convert raw data to object array
   let assetRecords = [];
@@ -109,8 +110,8 @@ AssetTracker.prototype.getAssetRecords = function () {
       row[1],
       row[2],
       row[3],
-      assetsFormulas[rowIndex][3],
       row[4],
+      currentPriceFormulas[rowIndex][0],
       row[5]
     );
 

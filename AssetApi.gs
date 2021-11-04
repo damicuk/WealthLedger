@@ -10,102 +10,106 @@
  * @param {Asset|string} baseCurrency - The base currency.
  * @return {Array<Array<string, number, date>>} The table containing the price data for the assets.
  */
-AssetTracker.prototype.getAssetPriceData = function (apiName, apiKey, assets, baseCurrency) {
+AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, baseCurrency) {
 
-  let table = [];
-  let date = new Date();
+  let apiAssetPriceMap = new Map();
 
-  if (apiName === 'CryptoCompare') {
+  if (assets.length > 0) {
 
-    if (!apiKey) {
+    let date = new Date();
 
-      let errorMessage = `${apiName} API key missing\n\nTo get an API key, go to https://min-api.cryptocompare.com register, create a key, and save it in settings.`;
+    if (apiName === 'CryptoCompare') {
 
-      throw new ApiError(errorMessage);
+      if (!apiKey) {
 
+        let errorMessage = `${apiName} API key missing\nTo get an API key, go to https://min-api.cryptocompare.com register, create a key, and save it in settings.`;
+
+        throw new ApiError(errorMessage);
+
+      }
+
+      const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${assets}&tsyms=${baseCurrency}&api_key=${apiKey}`;
+
+      let response;
+      try {
+        response = UrlFetchApp.fetch(url);
+      }
+      catch (error) {
+
+        const message = `Failed to update crypto prices from ${apiName}.`;
+        throw new ApiError(message);
+
+      }
+
+      const txt = response.getContentText();
+      const data = JSON.parse(txt);
+
+      if (data.Response === "Error") {
+
+        throw new ApiError(data.Message);
+
+      }
+
+      for (let coin in data) {
+
+        let currentPrice = data[coin][baseCurrency];
+
+        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: date.toISOString() });
+
+      }
     }
+    else if (apiName === 'CoinMarketCap') {
 
-    const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${assets}&tsyms=${baseCurrency}&api_key=${apiKey}`;
+      if (!apiKey) {
 
-    let response;
-    try {
-      response = UrlFetchApp.fetch(url);
-    }
-    catch (error) {
+        let errorMessage = `${apiName} API key missing\nTo get an API key, go to https://coinmarketcap.com/api/ register, create a key, and save it in settings.`;
 
-      const message = `Failed to update crypto prices from ${apiName}.`;
-      throw new ApiError(message);
+        throw new ApiError(errorMessage);
 
-    }
+      }
 
-    const txt = response.getContentText();
-    const data = JSON.parse(txt);
+      const requestOptions = {
+        method: 'GET',
+        uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+        qs: {
+          'start': '1',
+          'limit': '5000',
+          'convert': baseCurrency
+        },
+        headers: {
+          'X-CMC_PRO_API_KEY': apiKey
+        },
+        json: true,
+        gzip: true
+      };
 
-    if (data.Response === "Error") {
+      const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${assets}`;
 
-      throw new ApiError(data.Message);
+      let response;
+      try {
+        response = UrlFetchApp.fetch(url, requestOptions);
+      }
+      catch (error) {
 
-    }
+        const message = `Failed to update crypto prices from ${apiName}.`;
+        throw new ApiError(message);
 
-    for (let coin in data) {
+      }
 
-      let currentPrice = data[coin][baseCurrency];
+      const txt = response.getContentText();
+      const data = JSON.parse(txt);
 
-      table.push([coin, currentPrice, date.toISOString()]);
+      for (let coin in data.data) {
 
+        let currentPrice = data.data[coin].quote[baseCurrency].price;
+
+        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: date.toISOString() });
+
+      }
     }
   }
-  else if (apiName === 'CoinMarketCap') {
 
-    if (!apiKey) {
-
-      let errorMessage = `${apiName} API key missing\n\nTo get an API key, go to https://coinmarketcap.com/api/ register, create a key, and save it in settings.`;
-
-      throw new ApiError(errorMessage);
-
-    }
-
-    const requestOptions = {
-      method: 'GET',
-      uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
-      qs: {
-        'start': '1',
-        'limit': '5000',
-        'convert': baseCurrency
-      },
-      headers: {
-        'X-CMC_PRO_API_KEY': apiKey
-      },
-      json: true,
-      gzip: true
-    };
-
-    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${assets}`;
-
-    let response;
-    try {
-      response = UrlFetchApp.fetch(url, requestOptions);
-    }
-    catch (error) {
-
-      const message = `Failed to update crypto prices from ${apiName}.`;
-      throw new ApiError(message);
-
-    }
-
-    const txt = response.getContentText();
-    const data = JSON.parse(txt);
-
-    for (let coin in data.data) {
-
-      let currentPrice = data.data[coin].quote[baseCurrency].price;
-
-      table.push([coin, currentPrice, date.toISOString()]);
-
-    }
-  }
-
-  return table;
+  return apiAssetPriceMap;
 };
 
 /**
@@ -117,7 +121,7 @@ AssetTracker.prototype.getAssetPriceData = function (apiName, apiKey, assets, ba
 AssetTracker.prototype.validateApiKey = function (apiName, apiKey) {
 
   try {
-    this.getAssetPriceData(apiName, apiKey, 'BTC', 'USD');
+    this.getApiAssetPriceMap(apiName, apiKey, 'BTC', 'USD');
   }
   catch (error) {
     if (error instanceof ApiError) {

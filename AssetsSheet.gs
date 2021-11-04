@@ -16,12 +16,12 @@ AssetTracker.prototype.assetsSheet = function () {
       'Asset',
       'Asset Type',
       'Decimal Places',
-      'Current Price',
       'API',
+      'Current Price',
       'Timestamp',
-      'Comment',
       'URL',
-      'XPATH'
+      'XPATH',
+      'Comment'
     ]
   ];
 
@@ -30,27 +30,26 @@ AssetTracker.prototype.assetsSheet = function () {
 
   sheet.getRange('A2:B').setNumberFormat('@');
   sheet.getRange('C2:C').setNumberFormat('0');
-  sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('E2:E').setNumberFormat('@');
+  sheet.getRange('D2:D').setNumberFormat('@');
+  sheet.getRange('E2:E').setNumberFormat('#,##0.0000;(#,##0.0000)');
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-  sheet.getRange('G2:G').setNumberFormat('@');
-  sheet.getRange('H2:I').setNumberFormat('@');
+  sheet.getRange('G2:I').setNumberFormat('@');
 
   let dataTable = [
-    ['USD', 'Fiat Base', '2', '1', , , ,],
-    ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , `Fiat capital gains are ignored.`],
-    ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , ,],
-    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , ,],
-    ['USDC', 'Stablecoin', '2', '1', , , ,],
-    ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , ,],
-    ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , ,],
-    ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)', , , ,],
-    ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , ,],
-    [, , , , , , ,]
+    ['USD', 'Fiat Base', '2', , '1', , , , ,],
+    ['CAD', 'Fiat', '2', , '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , , `Fiat capital gains are ignored.`],
+    ['EUR', 'Forex', '2', , '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , , `Forex is treated as any other asset.`],
+    ['ADA', 'Crypto', '6', , '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , , ,],
+    ['BTC', 'Crypto', '8', , '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , , ,],
+    ['USDC', 'Stablecoin', '2', , '1', , , , ,],
+    ['AAPL', 'Stock', '0', , '=GOOGLEFINANCE(A8)', , , , ,],
+    ['AMZN', 'Stock', '0', , '=GOOGLEFINANCE(A9)', , , , ,],
+    ['GE', 'Stock', '0', , '=GOOGLEFINANCE(A10)', , , , ,],
+    ['NVDA', 'Stock', '0', , '=GOOGLEFINANCE(A11)', , , , ,],
+    [, , , , , , , , ,]
   ];
 
-  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 7, 2);
+  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 9);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\w{2,9}$")`)
@@ -73,30 +72,30 @@ AssetTracker.prototype.assetsSheet = function () {
     .build();
   sheet.getRange('C2:C').setDataValidation(decimalPlacesRule);
 
+  let apiRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList([this.ccApiName, this.cmcApiName])
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange('D2:D').setDataValidation(apiRule);
+
   let positiveNumberRule = SpreadsheetApp.newDataValidation()
     .requireNumberGreaterThan(0)
     .setAllowInvalid(false)
     .setHelpText(`Input must be a number greater than 0.`)
     .build();
-  sheet.getRange('D2:D').setDataValidation(positiveNumberRule);
-
-  let apiRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList([this.ccApiName, this.cmcApiName])
-    .setAllowInvalid(false)
-    .build();
-  sheet.getRange('E2:E').setDataValidation(apiRule);
+  sheet.getRange('E2:E').setDataValidation(positiveNumberRule);
 
   if (!sheet.getFilter()) {
     sheet.getRange('A1:I').createFilter();
   }
 
-  sheet.hideColumns(6, 1);
-  sheet.hideColumns(8, 2);
+  sheet.hideColumns(6, 3);
 
   this.trimSheet(sheet, 12, 9);
 
-  sheet.setColumnWidths(1, 9, 140);
-  sheet.setColumnWidth(7, 250);
+  sheet.setColumnWidths(1, 8, 140);
+  sheet.setColumnWidth(6, 170);
+  sheet.setColumnWidth(9, 250);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
 
@@ -106,7 +105,6 @@ AssetTracker.prototype.assetsSheet = function () {
 /**
  * Updates the sheet version to the current version if necessary.
  * Sets data validation on the asset type column of the assets sheet.
- * Inserts VLOOKUP formulas pointing to the api price sheets in the current price column where needed.
  * @param {Array<AssetRecord>} assetRecords - The collection of asset records previously read from the assets sheet.
  */
 AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
@@ -128,8 +126,6 @@ AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
   }
 
   this.updateAssetsAssetTypes(sheet);
-
-  // this.updateCurrentPrices(sheet, assetRecords);
 };
 
 /**
@@ -151,60 +147,6 @@ AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
     .build();
   sheet.getRange('B2:B').setDataValidation(assetTypeRule);
 };
-
-/**
- * Inserts VLOOKUP formulas pointing to the api price sheets in the current price column where needed.
- * @param {Sheet} sheet - The assets sheet.
- * @param {Array<AssetRecord>} assetRecords - The collection of asset records previously read from the assets sheet.
- */
-AssetTracker.prototype.updateCurrentPrices = function (sheet, assetRecords) {
-
-  let currentPriceValues = [];
-
-  let ccPriceRecords = this.getApiPriceRecords(this.ccApiName);
-  let cmcPriceRecords = this.getApiPriceRecords(this.cmcApiName);
-
-  let ccTickerSet = this.getApiPriceTickerSet(ccPriceRecords);
-  let cmcTickerSet = this.getApiPriceTickerSet(cmcPriceRecords);
-
-  let updateRequired = false;
-  let rowIndex = this.assetsHeaderRows + 1;
-  for (let assetRecord of assetRecords) {
-
-    let ticker = assetRecord.ticker;
-    let currentPrice = assetRecord.currentPrice;
-    let currentPriceFormula = assetRecord.currentPriceFormula;
-
-    if (currentPriceFormula !== '') {
-      currentPriceValues.push([currentPriceFormula]);
-    }
-    else if (currentPrice !== '') {
-      currentPriceValues.push([currentPrice]);
-    }
-    else if (ticker === '') {
-      currentPriceValues.push([null]);
-    }
-    else if (ccTickerSet.has(ticker)) {
-      currentPriceValues.push([`=VLOOKUP(A${rowIndex}, ${this.ccApiName}, 2)`]);
-      updateRequired = true;
-    }
-    else if (cmcTickerSet.has(ticker)) {
-      currentPriceValues.push([`=VLOOKUP(A${rowIndex}, ${this.cmcApiName}, 2)`]);
-      updateRequired = true;
-    }
-    else {
-      currentPriceValues.push([null]);
-    }
-
-    rowIndex++;
-  }
-
-  if (updateRequired) {
-    let assetsRange = this.getAssetsRange();
-    let currentPriceRange = assetsRange.offset(0, 3, assetsRange.getHeight(), 1);
-    currentPriceRange.setValues(currentPriceValues);
-  }
-}
 
 /**
  * Returns the range in the asset sheet that contains the data excluding header rows.
