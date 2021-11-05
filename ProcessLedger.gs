@@ -141,6 +141,8 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
+      this.lots.push(lot);
+
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
@@ -161,6 +163,8 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
+      this.lots.push(lot);
+
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
@@ -176,6 +180,8 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       //the cost base is the value of (credit exchange rate x credit amount)
       let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
+
+      this.lots.push(lot);
 
       this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
@@ -238,8 +244,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
  */
 AssetTracker.prototype.splitAsset = function (asset, numerator, denominator) {
 
-  let lots = this.getAllLots();
-  for (let lot of lots) {
+  for (let lot of this.lots) {
     if (lot.debitAsset === asset) {
       let splitBalance = this.splitBalance(lot.debitAmountSubunits, lot.debitFeeSubunits, numerator, denominator);
       lot.debitAmountSubunits = splitBalance[0];
@@ -306,31 +311,4 @@ AssetTracker.prototype.splitBalance = function (amountSubunits, feeSubunits, num
 AssetTracker.prototype.splitExRate = function (exRate, numerator, denominator) {
 
   return Math.round(10 ** this.exRateDecimalPlaces * exRate * denominator / numerator) / 10 ** this.exRateDecimalPlaces;
-};
-
-/**
- * Gets all the lots in this instance of the asset tracker.
- * @return {Lot[]} An array of containing all lots.
- */
-AssetTracker.prototype.getAllLots = function () {
-
-  let lots = [];
-  for (let wallet of this.wallets) {
-    let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
-    for (let assetAccount of walletAssetAccounts) {
-      for (let lot of assetAccount.lots) {
-        lots.push(lot);
-      }
-    }
-  }
-
-  for (let closedLot of this.closedLots) {
-    lots.push(closedLot.lot);
-  }
-
-  for (let donatedLot of this.donatedLots) {
-    lots.push(donatedLot.lot);
-  }
-
-  return lots;
 };

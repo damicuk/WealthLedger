@@ -26,9 +26,16 @@ var AssetTracker = class AssetTracker {
      */
     this.userDefinedAssetTypes = new Set();
 
+
+    /**
+     * Collection of all Lots.
+     * @type {Array<Obeject>}
+     */
+    this.lots = [];
+
     /**
      * Collection of Wallets.
-     * @type {Array<Obeject>}
+     * @type {Array<Wallet>}
      */
     this.wallets = [];
 
@@ -40,12 +47,12 @@ var AssetTracker = class AssetTracker {
 
     /**
      * Collection of ClosedLots.
-     * @type {Array<Obeject>}
+     * @type {Array<ClosedLot>}
      */
     this.closedLots = [];
 
     /**
-     * Collection of DocatedLots.
+     * Collection of DonatedLots.
      * @type {Array<Obeject>}
      */
     this.donatedLots = [];
