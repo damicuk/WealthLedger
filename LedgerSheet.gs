@@ -55,7 +55,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('I3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
   sheet.getRange('L3:N').setNumberFormat('@');
 
-  this.setLedgerConditionalFormatRules(sheet);
+  this.addActionCondtion(sheet, 'B3:B');
 
   if (!sheet.getFilter()) {
     sheet.getRange('A2:N').createFilter();
@@ -179,43 +179,6 @@ AssetTracker.prototype.updateLedger = function () {
 
   this.updateLedgerAssets(sheet);
   this.updateLedgerWallets(sheet);
-};
-
-/**
- * Sets conditional text color formatting of the action column of the ledger sheet.
- * @param {Sheet} sheet - The ledger sheet.
- */
-AssetTracker.prototype.setLedgerConditionalFormatRules = function (sheet) {
-
-  sheet.clearConditionalFormatRules();
-
-  let textColors = [
-    ['Donation', '#ff9900', null],
-    ['Fee', '#9900ff', null],
-    ['Gift', '#ff9900', null],
-    ['Income', '#6aa84f', null],
-    ['Split', '#ff00ff', null],
-    ['Stop', '#ff0000', '#ffbb00'],
-    ['Trade', '#1155cc', null],
-    ['Transfer', '#ff0000', null],
-  ];
-
-  let range = sheet.getRange('B3:B');
-  let rules = sheet.getConditionalFormatRules();
-
-  for (let textColor of textColors) {
-
-    let rule = SpreadsheetApp.newConditionalFormatRule()
-      .whenTextEqualTo(textColor[0])
-      .setFontColor(textColor[1])
-      .setBackground(textColor[2])
-      .setRanges([range])
-      .build();
-
-    rules.push(rule);
-  }
-
-  sheet.setConditionalFormatRules(rules);
 };
 
 /**

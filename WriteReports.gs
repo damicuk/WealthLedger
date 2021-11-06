@@ -35,6 +35,8 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
+  this.processLedgerUK(ledgerRecords);
+
   let apiError;
   try {
     this.updateAssetPrices(assetRecords);

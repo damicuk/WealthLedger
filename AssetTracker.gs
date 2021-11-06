@@ -58,6 +58,12 @@ var AssetTracker = class AssetTracker {
     this.donatedLots = [];
 
     /**
+     * Collection of AssetPools.
+     * @type {Array<AssetPool>}
+     */
+    this.assetPools = [];
+
+    /**
      * The number of decimal places to round exrate calculation.
      * @type {number}
      */
@@ -148,6 +154,16 @@ var AssetTracker = class AssetTracker {
     this.cmcApiName = 'CoinMarketCap';
     this.validApiNames = [this.ccApiName, this.cmcApiName];
     this.apiPriceSheetVersion = '1';
+
+    this.ukOpenPoolsReportName = 'UK Open Pools Report';
+    this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
+    this.ukClosedPositionsReportName = 'UK Closed Positions Report';
+    this.ukOpenSummaryReportName = "UK Open Summary Report";
+    this.ukClosedSummaryReportName = "UK Closed Summary Report";
+
+    this.ukOpenPoolsRangeName = 'UKOpenPools';
+    this.ukAssetAccountsRangeName = 'UKAssetAccounts';
+    this.ukClosedPositionsRangeName = 'UKClosedPositions';
   }
 
   /**
@@ -327,6 +343,28 @@ var AssetTracker = class AssetTracker {
     this.wallets.push(wallet);
     return wallet;
 
+  }
+
+  /**
+    * Returns the asset pool with the given asset or creates adds and returns a new asset pool with that asset.
+    * @param {Asset} asset - The asset of the asset pool to search for.
+    * @return {AssetPool} The asset pool found or created.
+    */
+  getAssetPool(asset) {
+
+    for (let assetPool of this.assetPools) {
+
+      if (assetPool.asset === asset) {
+
+        return assetPool;
+      }
+    }
+
+    let assetPool = new AssetPool(asset);
+
+    this.assetPools.push(assetPool);
+
+    return assetPool;
   }
 
   /**

@@ -234,6 +234,43 @@ AssetTracker.prototype.trimColumns = function (sheet, neededColumns) {
 
 /**
  * Adds specific conditional text color formatting to a range of cells in a sheet.
+ * Used to format the action column of the ledger sheet.
+ * @param {Sheet} sheet - The sheet containing the range of cells to format.
+ * @param {string} a1Notation - The A1 notation used to specify the range of cells to be formatted.
+ */
+AssetTracker.prototype.addActionCondtion = function (sheet, a1Notation) {
+
+  let textColors = [
+    ['Donation', '#ff9900', null],
+    ['Fee', '#9900ff', null],
+    ['Gift', '#ff9900', null],
+    ['Income', '#6aa84f', null],
+    ['Split', '#ff00ff', null],
+    ['Stop', '#ff0000', '#ffbb00'],
+    ['Trade', '#1155cc', null],
+    ['Transfer', '#ff0000', null],
+  ];
+
+  let range = sheet.getRange(a1Notation);
+  let rules = sheet.getConditionalFormatRules();
+
+  for (let textColor of textColors) {
+
+    let rule = SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo(textColor[0])
+      .setFontColor(textColor[1])
+      .setBackground(textColor[2])
+      .setRanges([range])
+      .build();
+
+    rules.push(rule);
+  }
+
+  sheet.setConditionalFormatRules(rules);
+};
+
+/**
+ * Adds specific conditional text color formatting to a range of cells in a sheet.
  * Used to format the long / short columns in the reports sheets.
  * @param {Sheet} sheet - The sheet containing the range of cells to format.
  * @param {string} a1Notation - The A1 notation used to specify the range of cells to be formatted.
