@@ -76,6 +76,8 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT '
 {"BY WALLET", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT Col3, ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3 ORDER BY Col3 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET AND ASSET TYPE", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT Col3, ' ', Col2, '  ', '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col3 ORDER BY Col3, Col2 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");{"", "", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET AND ASSET", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT Col3, Col1, Col2, ' ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2, Col3 ORDER BY Col3, Col2, Col1  LABEL ' ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
