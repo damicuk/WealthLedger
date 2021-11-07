@@ -137,7 +137,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) format is invalid (1-20 alphanumeric characters [A-Za-z0-9_-]). Spaces between characters allowed.`, rowIndex, 'assetType');
   }
   else if (assetType === 'Fiat Base' && fiatBase) {
-    throw new ValidationError(`Assets row ${rowIndex}: Fiat Base has already been declared (${fiatBase}). Only one asset can be Fiat Base.`, rowIndex, 'assetType');
+    throw new ValidationError(`Assets row ${rowIndex}: Fiat base has already been declared (${fiatBase}). Only one asset can be fiat base.`, rowIndex, 'assetType');
   }
   else if (decimalPlaces === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Decimal places is missing.`, rowIndex, 'decimalPlaces');
@@ -260,6 +260,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   }
   else if (isNaN(creditFee)) {
     throw new ValidationError(`${action} row ${rowIndex}: Credit fee is not valid (number or blank).`, rowIndex, 'creditFee');
+  }
+  else if (this.baseCurrency.ticker === 'GBP' && lotMatching !== '') {
+    throw new ValidationError(`${action} row ${rowIndex}: Leave lot matching blank when fiat base is GBP.`, rowIndex, 'lotMatching');
   }
   else if (lotMatching !== '' && !AssetTracker.lotMatchings.includes(lotMatching)) {
     throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${AssetTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');

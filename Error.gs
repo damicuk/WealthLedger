@@ -14,7 +14,7 @@ AssetTracker.prototype.handleError = function (error, message, sheetName, rowInd
       this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
-    SpreadsheetApp.getUi().alert(`Ledger validation failed`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    SpreadsheetApp.getUi().alert(`Validation failed`, message, SpreadsheetApp.getUi().ButtonSet.OK);
   }
   else if (error === 'cryptoAccount') {
 

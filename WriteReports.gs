@@ -37,8 +37,8 @@ AssetTracker.prototype.writeReports = function () {
 
   this.fiatAccountsSheet();
 
-  if (this.baseCurrency === 'GBP') {
-    
+  if (this.baseCurrency.ticker === 'GBP') {
+
     this.processLedgerUK(ledgerRecords);
 
     this.deleteSheets(this.defaultReportNames);
