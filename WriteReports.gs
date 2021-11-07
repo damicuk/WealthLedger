@@ -35,42 +35,58 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
-  this.processLedgerUK(ledgerRecords);
+  this.fiatAccountsSheet();
 
-  let apiError;
+  if (this.baseCurrency === 'GBP') {
+    
+    this.processLedgerUK(ledgerRecords);
+
+    this.deleteSheets(this.defaultReportNames);
+
+    this.ukOpenPoolsReport();
+    this.ukAssetAccountsReport();
+    this.ukClosedPositionsReport();
+    this.incomeReport(this.ukIncomeReportName);
+    this.ukOpenSummaryReport();
+    this.ukClosedSummaryReport();
+    this.incomeSummaryReport(this.ukIncomeSummaryReportName);
+    this.ukDonationsSummaryReport();
+    this.ukWalletsReport();
+
+  }
+  else {
+
+    this.deleteSheets(this.ukReportNames);
+
+    this.fiatAccountsSheet();
+    this.openPositionsReport();
+    this.closedPositionsReport();
+    this.donationsReport();
+    this.incomeReport();
+    this.openSummaryReport();
+    this.closedSummaryReport();
+    this.incomeSummaryReport();
+    this.donationsSummaryReport();
+    this.walletsReport();
+  }
+
+  this.updateLedger();
+  this.updateAssetsSheet(assetRecords);
+
   try {
     this.updateAssetPrices(assetRecords);
+    return;
   }
   catch (error) {
     if (error instanceof ApiError) {
-      //handle the error later
-      apiError = error;
+      this.handleError('api', error.message);
     }
     else {
       throw error;
     }
   }
 
-  this.fiatAccountsSheet();
-  this.openPositionsReport();
-  this.closedPositionsReport();
-  this.donationsReport();
-  this.incomeReport();
-  this.openSummaryReport();
-  this.closedSummaryReport();
-  this.incomeSummaryReport();
-  this.donationsSummaryReport();
-  this.walletsReport();
-
-  this.updateLedger();
-  this.updateAssetsSheet(assetRecords);
-
-  if (apiError) {
-    this.handleError('api', apiError.message);
-  }
-  else {
-    SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
-  }
+  SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
 };
 
 AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
@@ -217,8 +233,10 @@ AssetTracker.prototype.deleteReports = function () {
     this.ukOpenPoolsReportName,
     this.ukAssetAccountsReportName,
     this.ukClosedPositionsReportName,
+    this.ukIncomeReportName,
     this.ukOpenSummaryReportName,
     this.ukClosedSummaryReportName,
+    this.ukIncomeSummaryReportName,
     this.ukDonationsSummaryReportName,
     this.ukWalletsReportName
   ];

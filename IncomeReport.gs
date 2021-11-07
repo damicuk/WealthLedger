@@ -3,10 +3,8 @@
  * Updates the sheet with the current income data.
  * Trims the sheet to fit the data.
  */
-AssetTracker.prototype.incomeReport = function () {
-
-  const sheetName = this.incomeReportName;
-
+AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportName) {
+  
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 

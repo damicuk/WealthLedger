@@ -3,10 +3,9 @@
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  */
-AssetTracker.prototype.incomeSummaryReport = function () {
+AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSummaryReportName) {
 
   const version = '1';
-  const sheetName = this.incomeSummaryReportName;
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

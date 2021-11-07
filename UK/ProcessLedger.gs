@@ -11,14 +11,6 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
   for (let assetPool of this.assetPools) {
     assetPool.match();
   }
-
-  this.ukOpenPoolsReport();
-  this.ukAssetAccountsReport();
-  this.ukClosedPositionsReport();
-  this.ukOpenSummaryReport();
-  this.ukClosedSummaryReport();
-  this.ukDonationsSummaryReport();
-  this.ukWalletsReport();
 };
 
 AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {

@@ -132,7 +132,14 @@ var AssetTracker = class AssetTracker {
     this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
     this.assetsSheetVersion = '1';
+
+    this.ccApiName = 'CryptoCompare';
+    this.cmcApiName = 'CoinMarketCap';
+    this.validApiNames = [this.ccApiName, this.cmcApiName];
+
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
+    this.fiatAccountsRangeName = 'FiatAccounts';
+
     this.openPositionsReportName = 'Open Positions Report';
     this.closedPositionsReportName = 'Closed Positions Report';
     this.donationsReportName = 'Donations Report';
@@ -143,24 +150,45 @@ var AssetTracker = class AssetTracker {
     this.donationsSummaryReportName = 'Donations Summary Report';
     this.walletsReportName = 'Wallets Report';
 
+    this.defaultReportNames = [
+      this.openPositionsReportName,
+      this.closedPositionsReportName,
+      this.donationsReportName,
+      this.incomeReportName,
+      this.openSummaryReportName,
+      this.closedSummaryReportName,
+      this.incomeSummaryReportName,
+      this.donationsSummaryReportName,
+      this.walletsReportName
+    ];
+
     this.assetsRangeName = 'Assets';
-    this.fiatAccountsRangeName = 'FiatAccounts';
     this.openPositionsRangeName = 'OpenPositions';
     this.closedPositionsRangeName = 'ClosedPositions';
     this.donationsRangeName = 'Donations';
     this.incomeRangeName = 'Income';
 
-    this.ccApiName = 'CryptoCompare';
-    this.cmcApiName = 'CoinMarketCap';
-    this.validApiNames = [this.ccApiName, this.cmcApiName];
-
     this.ukOpenPoolsReportName = 'UK Open Pools Report';
     this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
     this.ukClosedPositionsReportName = 'UK Closed Positions Report';
+    this.ukIncomeReportName = 'UK Income Report';
     this.ukOpenSummaryReportName = "UK Open Summary Report";
     this.ukClosedSummaryReportName = "UK Closed Summary Report";
+    this.ukIncomeSummaryReportName = 'UK Income Summary Report';
     this.ukDonationsSummaryReportName = 'UK Donations Summary Report';
     this.ukWalletsReportName = 'UK Wallets Report';
+
+    this.ukReportNames = [
+      this.ukOpenPoolsReportName,
+      this.ukAssetAccountsReportName,
+      this.ukClosedPositionsReportName,
+      this.ukIncomeReportName,
+      this.ukOpenSummaryReportName,
+      this.ukClosedSummaryReportName,
+      this.ukIncomeSummaryReportName,
+      this.ukDonationsSummaryReportName,
+      this.ukWalletsReportName
+    ];
 
     this.ukOpenPoolsRangeName = 'UKOpenPools';
     this.ukAssetAccountsRangeName = 'UKAssetAccounts';
