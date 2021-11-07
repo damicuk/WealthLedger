@@ -160,6 +160,7 @@ var AssetTracker = class AssetTracker {
     this.ukOpenSummaryReportName = "UK Open Summary Report";
     this.ukClosedSummaryReportName = "UK Closed Summary Report";
     this.ukDonationsSummaryReportName = 'UK Donations Summary Report';
+    this.ukWalletsReportName = 'UK Wallets Report';
 
     this.ukOpenPoolsRangeName = 'UKOpenPools';
     this.ukAssetAccountsRangeName = 'UKAssetAccounts';

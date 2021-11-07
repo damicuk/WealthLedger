@@ -219,7 +219,8 @@ AssetTracker.prototype.deleteReports = function () {
     this.ukClosedPositionsReportName,
     this.ukOpenSummaryReportName,
     this.ukClosedSummaryReportName,
-    this.ukDonationsSummaryReportName
+    this.ukDonationsSummaryReportName,
+    this.ukWalletsReportName
   ];
 
   this.deleteSheets(sheetNames);
