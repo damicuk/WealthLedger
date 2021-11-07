@@ -38,10 +38,10 @@ var PoolTransaction = class PoolTransaction {
       throw Error(`Unable to merge pool transaction with date ${this.date.toUTCString()} and pool transaction with date ${poolTransaction.date.toUTCString()}`);
     }
     else if (this.debitAsset !== poolTransaction.debitAsset) {
-      throw Error(`Unable to merge pool transaction with debit currency ${this.debitAsset} and pool transaction with debit currency ${poolTransaction.debitAsset}`);
+      throw Error(`Unable to merge pool transaction with debit asset ${this.debitAsset} and pool transaction with debit asset ${poolTransaction.debitAsset}`);
     }
     else if (this.creditAsset !== poolTransaction.creditAsset) {
-      throw Error(`Unable to merge pool transaction with credit currency ${this.creditAsset} and pool transaction with credit currency ${poolTransaction.creditAsset}`);
+      throw Error(`Unable to merge pool transaction with credit asset ${this.creditAsset} and pool transaction with credit asset ${poolTransaction.creditAsset}`);
     }
     this.debitAmountSubunits += poolTransaction.debitAmountSubunits;
     this.debitFeeSubunits += poolTransaction.debitFeeSubunits;

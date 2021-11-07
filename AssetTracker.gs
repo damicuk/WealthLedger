@@ -9,10 +9,10 @@ var AssetTracker = class AssetTracker {
   constructor() {
 
     /**
-     * The ticker of the base currency.
+     * The ticker of fiat base.
      * * @type {string}
      */
-    this.baseCurrency;
+    this.fiatBase;
 
     /**
      * Maps asset ticker to object containing asset properties: type, decimalPlaces, price.
@@ -243,7 +243,7 @@ var AssetTracker = class AssetTracker {
 
   /**
    * Apportions an integer amount to an array or integers as equitably as possible.
-   * e.g. used to apportion fees amoungst lots of cryptocurrency in proportion to the size of the lots.
+   * e.g. used to apportion fees amoungst lots of an asset in proportion to the size of the lots.
    * @param {number} integerAmount - The integer amount to divide and apportion.
    * @param {Array<number>} integerArray - The array of integers which determines the distribution of the divided amount.
    * @return {Array<number>} The array of integers that sum to the orignal integer amount, divided as equitably as possible.
@@ -303,7 +303,7 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Set of fiat currency tickers used by this instance.
+   * Set of fiat tickers used by this instance.
    * Only filled once processLedger has completed.
    * @type {Set}
    */
@@ -401,16 +401,16 @@ var AssetTracker = class AssetTracker {
    * The credited amount and fees are assigned to the closed lots in proportion to the size of the lots.
    * @param {lots} lots - The lots that have been sold or exchanged.
    * @param {Date} date - The date of the sale or exchange.
-   * @param {string} creditCurrency - The ticker of the fiat or cryptocurrency credited for the lots sold or exchanged.
-   * @param {number} creditExRate - The exchange rate of the currency of the lots to the accounting currency at the time of the sale or exchange.
-   * @param {number} creditAmount - The amount of the fiat or cryptocurrency credited for the lots sold or exchanged.
-   * @param {number} creditFee - The fee in the credited currency for transaction.
+   * @param {string} creditAsset - The ticker of the fiat or asset credited for the lots sold or exchanged.
+   * @param {number} creditExRate - The exchange rate of the asset of the lots to fiat base at the time of the sale or exchange.
+   * @param {number} creditAmount - The amount of the fiat or asset credited for the lots sold or exchanged.
+   * @param {number} creditFee - The fee in the credited asset for transaction.
    * @param {string} creditWalletName - The name of the wallet (or exchange) where transaction takes place.
    */
-  closeLots(lots, date, creditCurrency, creditExRate, creditAmount, creditFee, creditWalletName) {
+  closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName) {
 
-    let creditAmountSubunits = Math.round(creditAmount * creditCurrency.subunits);
-    let creditFeeSubunits = Math.round(creditFee * creditCurrency.subunits);
+    let creditAmountSubunits = Math.round(creditAmount * creditAsset.subunits);
+    let creditFeeSubunits = Math.round(creditFee * creditAsset.subunits);
 
     //apportion the fee to withdrawal lots
     let lotSubunits = [];
@@ -424,10 +424,10 @@ var AssetTracker = class AssetTracker {
 
       let closedLot = new ClosedLot(lot,
         date,
-        creditCurrency,
+        creditAsset,
         creditExRate,
-        (apportionedCreditAmountSubunits[index] / creditCurrency.subunits),
-        (apportionedCreditFeeSubunits[index++] / creditCurrency.subunits),
+        (apportionedCreditAmountSubunits[index] / creditAsset.subunits),
+        (apportionedCreditFeeSubunits[index++] / creditAsset.subunits),
         creditWalletName);
 
       this.closedLots.push(closedLot);

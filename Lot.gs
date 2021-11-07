@@ -8,7 +8,7 @@ var Lot = class Lot {
    * Initializes the class with the properties set to the parameters.
    * @param {Date} date - The date of the transaction.
    * @param {Asset} debitAsset - The asset debited.
-   * @param {number} debitExRate - The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
+   * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
    * @param {number} debitAmount - The amount of asset debited.
    * @param {number} debitFee - The fee in asset units debited.
    * @param {Asset} creditAsset - The asset credited.
@@ -31,7 +31,7 @@ var Lot = class Lot {
     this.debitAsset = debitAsset;
 
     /**
-     * The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
+     * The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
      * @type {number}
      */
     this.debitExRate = debitExRate;

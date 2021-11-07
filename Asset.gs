@@ -7,10 +7,10 @@ var Asset = class Asset {
    * Initializes the class with the properties set to the parameters.
    * @param {string} ticker - The ticker of the asset.
    * @param {string} assetType - The asset type of the asset.
-   * @param {boolean} isBaseCurrency - Whether the asset is the base currency.
+   * @param {boolean} isFiatBase - Whether the asset is fiat base.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
    */
-  constructor(ticker, assetType, isBaseCurrency, decimalPlaces) {
+  constructor(ticker, assetType, isFiatBase, decimalPlaces) {
 
     /**
      * The ticker of the asset.
@@ -25,10 +25,10 @@ var Asset = class Asset {
     this.assetType = assetType;
 
     /**
-     * Whether the asset is the base currency.
+     * Whether the asset is fiat base.
      * @type {boolean}
      */
-    this.isBaseCurrency = isBaseCurrency;
+    this.isFiatBase = isFiatBase;
 
     /**
      * The number of decimal places of the asset.

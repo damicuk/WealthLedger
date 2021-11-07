@@ -1,5 +1,5 @@
 /**
- * Fiat currency account.
+ * Fiat account.
  * Calculation are done in integer amounts of subunits to avoid computational rounding errors.
  */
 var FiatAccount = class FiatAccount {
@@ -25,7 +25,7 @@ var FiatAccount = class FiatAccount {
   }
 
   /**
-   * The fiat currency ticker.
+   * The fiat ticker.
    * @type {string}
    */
   get ticker() {

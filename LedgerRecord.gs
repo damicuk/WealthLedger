@@ -8,12 +8,12 @@ class LedgerRecord {
    * @param {date} date - The date the action occurred.
    * @param {string} action - Donation, Gift, Income, Stop, Trade, Transfer.
    * @param {string} debitAsset - The ticker of the asset debited from the account.
-   * @param {number} debitExRate - The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
+   * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
    * @param {number} debitAmount - The amount of asset debited from the account.
    * @param {number} debitFee - The fee in asset units debited from the account.
    * @param {string} debitWalletName - The name of the wallet (or exchange) from which the asset is debited.
    * @param {string} creditAsset - The ticker of the asset credited to the account.
-   * @param {number} creditExRate - The credit asset to accounting currency exchange rate, 0 if the credit asset is the accounting currency.
+   * @param {number} creditExRate - The credit asset to fiat base exchange rate, 0 if the credit asset is fiat base.
    * @param {number} creditAmount - The amount of asset credited to the account.
    * @param {number} creditFee - The fee in asset units credited to the account.
    * @param {string} creditWalletName - The name of the wallet (or exchange) to which the asset is credited.
@@ -53,7 +53,7 @@ class LedgerRecord {
     this.debitAsset = debitAsset;
 
     /**
-     * The debit asset to accounting currency exchange rate, 0 if the debit asset is the accounting currency.
+     * The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
      * @type {number}
      */
     this.debitExRate = debitExRate;
@@ -83,7 +83,7 @@ class LedgerRecord {
     this.creditAsset = creditAsset;
 
     /**
-     * The credit asset to accounting currency exchange rate, 0 if the credit asset is the accounting currency.
+     * The credit asset to fiat base exchange rate, 0 if the credit asset is fiat base.
      * @type {number}
      */
     this.creditExRate = creditExRate;

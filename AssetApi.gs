@@ -7,10 +7,10 @@
  * @param {string} apiName - The name of the API to query.
  * @param {string} apiKey - The API key.
  * @param {Array<string>|string} assets - Comma-separated list of asset tickers.
- * @param {Asset|string} baseCurrency - The base currency.
+ * @param {Asset|string} fiatBase - Fiat base.
  * @return {Array<Array<string, number, date>>} The table containing the price data for the assets.
  */
-AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, baseCurrency) {
+AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, fiatBase) {
 
   let apiAssetPriceMap = new Map();
 
@@ -28,7 +28,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
       }
 
-      const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${assets}&tsyms=${baseCurrency}&api_key=${apiKey}`;
+      const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${assets}&tsyms=${fiatBase}&api_key=${apiKey}`;
 
       let response;
       try {
@@ -52,7 +52,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
       for (let coin in data) {
 
-        let currentPrice = data[coin][baseCurrency];
+        let currentPrice = data[coin][fiatBase];
 
         apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: now.toISOString() });
 
@@ -74,7 +74,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
         qs: {
           'start': '1',
           'limit': '5000',
-          'convert': baseCurrency
+          'convert': fiatBase
         },
         headers: {
           'X-CMC_PRO_API_KEY': apiKey
@@ -101,7 +101,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
       for (let coin in data.data) {
 
-        let currentPrice = data.data[coin].quote[baseCurrency].price;
+        let currentPrice = data.data[coin].quote[fiatBase].price;
 
         apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: now.toISOString() });
 

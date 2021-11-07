@@ -110,7 +110,7 @@ class ValidationError extends CustomError {
 }
 
 /**
- * Error when attempting to withdraw from a cryptocurrency account.
+ * Error when attempting to withdraw from an asset account.
  * @extends CustomError
  */
 class CryptoAccountError extends CustomError {

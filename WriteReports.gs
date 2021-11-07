@@ -37,7 +37,7 @@ AssetTracker.prototype.writeReports = function () {
 
   this.fiatAccountsSheet();
 
-  if (this.baseCurrency.ticker === 'GBP') {
+  if (this.fiatBase.ticker === 'GBP') {
 
     this.processLedgerUK(ledgerRecords);
 
@@ -100,7 +100,7 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   let errorMessages = [];
 
   try {
-    ccAssetPriceMap = this.getApiAssetPriceMap(this.ccApiName, this.ccApiKey, Array.from(ccTickerSet), this.baseCurrency);
+    ccAssetPriceMap = this.getApiAssetPriceMap(this.ccApiName, this.ccApiKey, Array.from(ccTickerSet), this.fiatBase);
   }
   catch (error) {
     if (error instanceof ApiError) {
@@ -112,7 +112,7 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   }
 
   try {
-    cmcAssetPriceMap = this.getApiAssetPriceMap(this.cmcApiName, this.cmcApiKey, Array.from(cmcTickerSet), this.baseCurrency);
+    cmcAssetPriceMap = this.getApiAssetPriceMap(this.cmcApiName, this.cmcApiKey, Array.from(cmcTickerSet), this.fiatBase);
   }
   catch (error) {
     if (error instanceof ApiError) {

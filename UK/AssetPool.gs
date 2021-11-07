@@ -1,7 +1,7 @@
 var AssetPool = class AssetPool {
 
   /**
-   * Sets the asset and initializes an empty array to contain the crytocurrency deposits.
+   * Sets the asset and initializes an empty array to contain the asset deposits.
    * @param {Assey} asset - the asset.
    */
   constructor(asset) {

@@ -30,7 +30,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
 
     if (!debitAsset.isFiat) { //Asset transfer
 
-      let poolWithdrawal = new PoolWithdrawal(date, debitAsset, 0, debitFee, this.baseCurrency, 0, 0, action);
+      let poolWithdrawal = new PoolWithdrawal(date, debitAsset, 0, debitFee, this.fiatBase, 0, 0, action);
       this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
 
     }
@@ -40,7 +40,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
     if (!creditAsset.isFiat) {  //Buy or exchange asset
 
       let poolDeposit = new PoolDeposit(date,
-        this.baseCurrency,
+        this.fiatBase,
         debitExRate ? debitExRate * debitAmount : debitAmount,
         debitExRate ? debitExRate * debitFee : debitFee,
         creditAsset,
@@ -56,7 +56,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
         debitAsset,
         debitAmount,
         debitFee,
-        this.baseCurrency,
+        this.fiatBase,
         creditExRate ? creditExRate * creditAmount : creditAmount,
         creditExRate ? creditExRate * creditFee : creditFee,
         action);
@@ -67,18 +67,18 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
   }
   else if (action === 'Income') { //Income
 
-    let poolDeposit = new PoolDeposit(date, this.baseCurrency, creditExRate * creditAmount, 0, creditAsset, creditAmount, 0);
+    let poolDeposit = new PoolDeposit(date, this.fiatBase, creditExRate * creditAmount, 0, creditAsset, creditAmount, 0);
     this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
 
   }
   else if (action === 'Donation') { //Donation
 
-    let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.baseCurrency, debitExRate * debitAmount, 0, action);
+    let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, debitExRate * debitAmount, 0, action);
     this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
   }
   else if (action === 'Gift') { //Gift
 
-    let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.baseCurrency, 0, 0, action);
+    let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, 0, 0, action);
     this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
 
   }

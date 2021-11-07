@@ -1,7 +1,7 @@
 /**
  * Processes the asset records.
  * Adds to the Map of assets.
- * Sets the base currency.
+ * Sets fiat base.
  * @param {Array<AssetRecord>} assetRecords - The collection of asset records.
  */
 AssetTracker.prototype.processAssets = function (assetRecords) {
@@ -9,11 +9,11 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
   for (let assetRecord of assetRecords) {
 
     let assetType;
-    let isBaseCurrency = false;
+    let isFiatBase = false;
 
     if (assetRecord.assetType === 'Fiat Base') {
       assetType = 'Fiat';
-      isBaseCurrency = true;
+      isFiatBase = true;
     }
     else {
       assetType = assetRecord.assetType;
@@ -22,10 +22,10 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
       }
     }
 
-    let asset = new Asset(assetRecord.ticker, assetType, isBaseCurrency, assetRecord.decimalPlaces);
+    let asset = new Asset(assetRecord.ticker, assetType, isFiatBase, assetRecord.decimalPlaces);
 
-    if (isBaseCurrency) {
-      this.baseCurrency = asset;
+    if (isFiatBase) {
+      this.fiatBase = asset;
     }
 
     this.assets.set(assetRecord.ticker, asset);
@@ -114,7 +114,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   else if (action === 'Trade') {
 
     //Infer missing ex rates
-    if (!debitAsset.isBaseCurrency && !creditAsset.isBaseCurrency && !(debitAsset.isFiat && creditAsset.isFiat)) {
+    if (!debitAsset.isFiatBase && !creditAsset.isFiatBase && !(debitAsset.isFiat && creditAsset.isFiat)) {
 
       if (!debitExRate) {
 
@@ -225,7 +225,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).removeZeroSubunitLots();
 
-      this.closeLots(lots, date, this.baseCurrency, 0, 0, 0, debitWalletName);
+      this.closeLots(lots, date, this.fiatBase, 0, 0, 0, debitWalletName);
     }
   }
   else if (action === 'Split') {
