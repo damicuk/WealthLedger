@@ -407,7 +407,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: No credit asset specified.`, rowIndex, 'creditAsset');
     }
     else if (creditAsset.isFiatBase && creditExRate !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank when credit asset is fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'creditExRate');
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank when credit asset is fiat base (${this.fiatBase}).`, rowIndex, 'creditExRate');
     }
     else if (!creditAsset.isFiatBase && creditExRate === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Missing credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'creditExRate');
