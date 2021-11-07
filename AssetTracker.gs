@@ -153,13 +153,13 @@ var AssetTracker = class AssetTracker {
     this.ccApiName = 'CryptoCompare';
     this.cmcApiName = 'CoinMarketCap';
     this.validApiNames = [this.ccApiName, this.cmcApiName];
-    this.apiPriceSheetVersion = '1';
 
     this.ukOpenPoolsReportName = 'UK Open Pools Report';
     this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
     this.ukClosedPositionsReportName = 'UK Closed Positions Report';
     this.ukOpenSummaryReportName = "UK Open Summary Report";
     this.ukClosedSummaryReportName = "UK Closed Summary Report";
+    this.ukDonationsSummaryReportName = 'UK Donations Summary Report';
 
     this.ukOpenPoolsRangeName = 'UKOpenPools';
     this.ukAssetAccountsRangeName = 'UKAssetAccounts';

@@ -5,6 +5,7 @@
  */
 AssetTracker.prototype.ukClosedSummaryReport = function () {
 
+  const version = '1';
   const sheetName = this.ukClosedSummaryReportName;
 
   let ss = SpreadsheetApp.getActive();
@@ -17,6 +18,8 @@ AssetTracker.prototype.ukClosedSummaryReport = function () {
   }
 
   sheet = ss.insertSheet(sheetName);
+
+  this.setSheetVersion(sheet, version);
 
   const referenceRangeName = this.ukClosedPositionsRangeName;
 

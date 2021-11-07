@@ -17,6 +17,7 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
   this.ukClosedPositionsReport();
   this.ukOpenSummaryReport();
   this.ukClosedSummaryReport();
+  this.ukDonationsSummaryReport();
 };
 
 AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {

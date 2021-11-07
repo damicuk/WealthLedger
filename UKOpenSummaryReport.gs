@@ -5,6 +5,7 @@
  */
 AssetTracker.prototype.ukOpenSummaryReport = function () {
 
+  const version = '1';
   const sheetName = this.ukOpenSummaryReportName;
 
   let ss = SpreadsheetApp.getActive();
@@ -17,6 +18,8 @@ AssetTracker.prototype.ukOpenSummaryReport = function () {
   }
 
   sheet = ss.insertSheet(sheetName);
+
+  this.setSheetVersion(sheet, version);
 
   const referenceRangeName1 = this.ukOpenPoolsRangeName;
   const referenceRangeName2 = this.ukAssetAccountsRangeName;
