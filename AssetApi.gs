@@ -83,7 +83,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
         gzip: true
       };
 
-      const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${assets}`;
+      const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${assets}&convert=${fiatBase}`;
 
       let response;
       try {
