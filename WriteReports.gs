@@ -163,11 +163,11 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   let cmcFailedTickerSet = this.getApiFailedTickerSet(cmcTickerSet, cmcAssetPriceMap);
 
   if (ccFailedTickerSet.size > 0) {
-    errorMessages.push(`Failed to update price for ${Array.from(ccFailedTickerSet).sort(this.abcComparator).join(', ')} from ${this.ccApiName}.`);
+    errorMessages.push(`Failed to update price for ${Array.from(ccFailedTickerSet).sort(this.abcComparator).join(', ')} in fiat base (${this.fiatBase}) from ${this.ccApiName}.`);
   }
 
   if (cmcFailedTickerSet.size > 0) {
-    errorMessages.push(`Failed to update price for ${Array.from(cmcFailedTickerSet).sort(this.abcComparator).join(', ')} from ${this.cmcApiName}.`);
+    errorMessages.push(`Failed to update price for ${Array.from(cmcFailedTickerSet).sort(this.abcComparator).join(', ')} in fiat base (${this.fiatBase}) from ${this.cmcApiName}.`);
   }
 
   if (errorMessages.length > 0) {

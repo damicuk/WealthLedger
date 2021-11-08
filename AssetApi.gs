@@ -46,7 +46,8 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
       if (data.Response === "Error") {
 
-        throw new ApiError(data.Message);
+        const message = `Failed to update crypto prices from ${apiName}:\n${data.Message}`;
+        throw new ApiError(message);
 
       }
 
