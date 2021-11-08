@@ -2,11 +2,11 @@
  * Creates the open summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukOpenSummaryReport = function () {
+AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSummaryReportName) {
 
   const version = '1';
-  const sheetName = this.ukOpenSummaryReportName;
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

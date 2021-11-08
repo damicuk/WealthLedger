@@ -11,7 +11,7 @@ class AssetRecord {
    * @param {number} currentPrice - The current price of the asset.
    * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
    * @param {string} apiName - The api to call to fetch the current price.
-   * @param {date} date - When the current price was last updated by the selected API.
+   * @param {Date} date - When the current price was last updated by the selected API.
    */
   constructor(
     ticker,
@@ -60,7 +60,7 @@ class AssetRecord {
 
     /**
      * When the current price was last updated.
-     * @type {date}
+     * @type {Date}
      */
     this.date = new Date(date);
   }

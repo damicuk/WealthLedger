@@ -2,11 +2,11 @@
  * Creates the closed summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukClosedSummaryReport = function () {
+AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClosedSummaryReportName) {
 
   const version = '1';
-  const sheetName = this.ukClosedSummaryReportName;
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

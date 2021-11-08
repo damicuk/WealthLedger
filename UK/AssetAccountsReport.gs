@@ -2,10 +2,10 @@
  * Creates the asset accounts report if it doesn't already exist.
  * Updates the sheet with the current asset accounts data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukAssetAccountsReport = function () {
+AssetTracker.prototype.ukAssetAccountsReport = function (sheetName = this.ukAssetAccountsReportName) {
 
-  const sheetName = this.ukAssetAccountsReportName;
   const assetsRangeName = this.assetsRangeName;
 
   let ss = SpreadsheetApp.getActive();

@@ -1,8 +1,12 @@
+/**
+ * Asset pool.
+ * Deposits and withdrawals may be added to the pool and subsequently matched and processed.
+ */
 var AssetPool = class AssetPool {
 
   /**
    * Sets the asset and initializes an empty array to contain the asset deposits.
-   * @param {Assey} asset - the asset.
+   * @param {Asset} asset - the asset.
    */
   constructor(asset) {
 
@@ -55,6 +59,12 @@ var AssetPool = class AssetPool {
     return this.subunits / this.asset.subunits;
   }
 
+  /**
+   * Adds a pool deposit to the pool.
+   * Merges the pool deposit with the last pool deposit if they have the same date.
+   * Otherwise simply adds the pool deposit to the collection of pool deposits.
+   * @param {PoolDeposit} poolDeposit - the pool deposit to add.
+   */
   addPoolDeposit(poolDeposit) {
 
     if (this.poolDeposits.length > 0) {
@@ -71,6 +81,12 @@ var AssetPool = class AssetPool {
     this.poolDeposits.push(poolDeposit);
   }
 
+  /**
+   * Adds a pool withdrawal to the pool.
+   * Merges the pool withdrawal with the last pool withdrawal with the same date and action if one is found.
+   * Otherwise simply adds the pool withdrawal to the collection of pool withdrawals.
+   * @param {PoolWithdrawal} poolWithdrawal - the pool withdrawal to add.
+   */
   addPoolWithdrawal(poolWithdrawal) {
 
     let reversedPoolWithrawals = this.poolWithdrawals.slice().reverse();
@@ -94,6 +110,12 @@ var AssetPool = class AssetPool {
     this.poolWithdrawals.push(poolWithdrawal);
   }
 
+  /**
+   * Matches the pool withrawals with the pool deposits and processes the results.
+   * Matches first according to the same day rule.
+   * Then matches according to the 30 day rule.
+   * Then merges the remaining pool deposits and matches any remaining pool withdrawals to with the merged pool deposit.
+   */
   match() {
 
     while (this.matchSameDay());
@@ -105,6 +127,9 @@ var AssetPool = class AssetPool {
     while (this.matchPool());
   }
 
+  /**
+   * Matches the pool withrawals with the pool deposits according to the same day rule and processes the results.
+   */
   matchSameDay() {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
@@ -125,6 +150,9 @@ var AssetPool = class AssetPool {
     return false;
   }
 
+  /**
+   * Matches the pool withrawals with the pool deposits according to the 30 day rule and processes the results.
+   */
   match30Days() {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
@@ -147,6 +175,9 @@ var AssetPool = class AssetPool {
     return false;
   }
 
+  /**
+   * Matches the pool withrawals with the merged pool deposit and processes the results.
+   */
   matchPool() {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
@@ -155,7 +186,7 @@ var AssetPool = class AssetPool {
 
         let poolDeposit = this.poolDeposits[0];
 
-        if (poolWithdrawal.action === 'Transfer') {
+        if (poolWithdrawal.action === 'Transfer' || poolWithdrawal.action === 'Fee') {
 
           this.processTransferFee(poolWithdrawal, poolDeposit);
         }
@@ -176,6 +207,10 @@ var AssetPool = class AssetPool {
     return false;
   }
 
+  /**
+   * Adds the pool withdrawal debit fee to the pool deposit credit fee.
+   * Used to add transfer and miscellaneous fees to the merged pool deposit.
+   */
   processTransferFee(poolWithdrawal, poolDeposit) {
 
     let feeSubunits = Math.round(poolWithdrawal.debitFee * this.asset.subunits);
@@ -184,6 +219,9 @@ var AssetPool = class AssetPool {
     return;
   }
 
+  /**
+   * Processes a matched pool withdrawal and pool deposit by creating and adding a closed pool lot to the collection.
+   */
   matchFound(poolWithdrawal, poolDeposit) {
 
     let closedPoolLot;
@@ -218,7 +256,14 @@ var AssetPool = class AssetPool {
     }
   }
 
+  /**
+   * Merges the pool deposits and sets the date of the resulting merged pool deposit to null.
+   */
   mergePoolDeposits() {
+
+    if (this.poolDeposits.length === 0) {
+      return;
+    }
 
     let mergedPoolDeposit;
 
@@ -236,16 +281,16 @@ var AssetPool = class AssetPool {
       }
     }
 
-    if (mergedPoolDeposit) {
-
-      this.poolDeposits = [mergedPoolDeposit];
-    }
-    else {
-
-      this.poolDeposits = [];
-    }
+    this.poolDeposits = [mergedPoolDeposit];
   }
 
+  /**
+   * Gets the difference in days between two dates.
+   * @param {Date} date1 - The first date.
+   * @param {Date} date2 - The second date.
+   * @param {string} timeZone - The tz database time zone.
+   * @return {Date} The difference in days between the two dates.
+  */
   diffDays(date1, date2, timeZone) {
 
     date1 = this.convertTZDateOnly(date1, timeZone);
@@ -256,10 +301,15 @@ var AssetPool = class AssetPool {
     const diffDays = Math.round((date2 - date1) / oneDay);
 
     return diffDays;
-
   }
 
-  convertTZDateOnly(date, tzString) {
-    return new Date((typeof date === 'string' ? new Date(date) : date).toLocaleDateString('en-US', { timeZone: tzString }));
+  /**
+   * Gets the date in the a particular time zone given a date.
+   * @param {Date} date - The given date.
+   * @param {string} timeZone - The tz database time zone.
+   * @return {Date} The date in the given time zone.
+  */
+  convertTZDateOnly(date, timeZone) {
+    return new Date((typeof date === 'string' ? new Date(date) : date).toLocaleDateString('en-US', { timeZone: timeZone }));
   }
 };

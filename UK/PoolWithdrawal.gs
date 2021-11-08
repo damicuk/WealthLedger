@@ -1,5 +1,21 @@
+/**
+ * Pool withdrawal.
+ * Represents a withdrawal from the asset pool.
+ */
 var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
 
+  /**
+   * Initializes the class by calling and passing most parameters to super.
+   * The action property set to the action parameter.
+   * @param {Date} date - The date of the transaction.
+   * @param {Asset} debitAsset - The asset debited.
+   * @param {number} debitAmount - The amount of asset debited.
+   * @param {number} debitFee - The fee in asset units debited.
+   * @param {Asset} creditAsset - The asset credited.
+   * @param {number} creditAmount - The amount of asset credited.
+   * @param {number} creditFee - The fee in asset units credited.
+   * @param {string} action - The type of action of the transaction.
+   */
   constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action) {
 
     super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee);
@@ -7,11 +23,22 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
     this.action = action;
   }
 
+  /**
+   * The balance in subunits.
+   * @type {number}
+   */
   get subunits() {
 
     return this.debitAmountSubunits + this.debitFeeSubunits;
   }
 
+  /**
+   * Splits the pool withdrawal into two.
+   * Used when matching with pool deposit in an asset account.
+   * The fees are assigned in proportion to the balances of the returned pool withdrawal.
+   * @param {number} subunits - The balance in subunits required in the first pool withdrawal of the returned pool withdrawals.
+   * @return {Array<PoolDeposit>} Array of two pool withdrawals, the first having the requested balance in subunits, the second with the remainder.
+   */
   split(subunits) {
 
     let poolWithdrawals = [];

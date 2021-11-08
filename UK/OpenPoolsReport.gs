@@ -2,10 +2,10 @@
  * Creates the open pools report if it doesn't already exist.
  * Updates the sheet with the current open pools data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet
  */
-AssetTracker.prototype.ukOpenPoolsReport = function () {
+AssetTracker.prototype.ukOpenPoolsReport = function (sheetName = this.ukOpenPoolsReportName) {
 
-  const sheetName = this.ukOpenPoolsReportName;
   const assetsRangeName = this.assetsRangeName;
 
   let ss = SpreadsheetApp.getActive();

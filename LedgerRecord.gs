@@ -5,7 +5,7 @@ class LedgerRecord {
 
   /**
    * Assigns each column value to a property.
-   * @param {date} date - The date the action occurred.
+   * @param {Date} date - The date the action occurred.
    * @param {string} action - Donation, Gift, Income, Stop, Trade, Transfer.
    * @param {string} debitAsset - The ticker of the asset debited from the account.
    * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.

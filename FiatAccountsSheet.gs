@@ -2,10 +2,9 @@
  * Creates the fiat accounts sheet if it doesn't already exist.
  * Updates the sheet with the current fiat accounts data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.fiatAccountsSheet = function () {
-
-  const sheetName = this.fiatAccountsSheetName;
+AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccountsSheetName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

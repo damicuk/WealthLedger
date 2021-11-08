@@ -2,10 +2,9 @@
  * Creates the donations report if it doesn't already exist.
  * Updates the sheet with the current donations data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.donationsReport = function () {
-
-  const sheetName = this.donationsReportName;
+AssetTracker.prototype.donationsReport = function (sheetName = this.donationsReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

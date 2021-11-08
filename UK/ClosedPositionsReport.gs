@@ -2,10 +2,9 @@
  * Creates the closed positions report if it doesn't already exist.
  * Updates the sheet with the current closed positions data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukClosedPositionsReport = function () {
-
-  const sheetName = this.ukClosedPositionsReportName;
+AssetTracker.prototype.ukClosedPositionsReport = function (sheetName = this.ukClosedPositionsReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -16,9 +15,9 @@ AssetTracker.prototype.ukClosedPositionsReport = function () {
 
     let headers = [
       [
-        'Buy Debit', , , ,,
-        'Buy Credit', , ,,
-        'Sell Credit', , , , ,,
+        'Buy Debit', , , , ,
+        'Buy Credit', , , ,
+        'Sell Credit', , , , , ,
         'Calculations', , , , , , ,
       ],
       [

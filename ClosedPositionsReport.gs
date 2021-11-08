@@ -2,10 +2,9 @@
  * Creates the closed positions report if it doesn't already exist.
  * Updates the sheet with the current closed positions data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.closedPositionsReport = function () {
-
-  const sheetName = this.closedPositionsReportName;
+AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closedPositionsReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

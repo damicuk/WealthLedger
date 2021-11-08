@@ -2,11 +2,11 @@
  * Creates the wallets report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukWalletsReport = function () {
+AssetTracker.prototype.ukWalletsReport = function (sheetName = this.ukWalletsReportName) {
 
   const version = '1';
-  const sheetName = this.ukWalletsReportName;
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);

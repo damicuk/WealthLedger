@@ -138,7 +138,7 @@ var Lot = class Lot {
   /**
    * Splits a lot into two lots.
    * Used when withdrawing an amount from a asset account.
-   * The costs are assigned in proportion to the balances of the returned lots.
+   * The fees are assigned in proportion to the balances of the returned lots.
    * @param {number} subunits - The balance in subunits required in the first lot of the returned lots.
    * @return {Array<Lot>} Array of two lots, the first having the requested balance, the second with the remainder.
    */

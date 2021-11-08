@@ -2,10 +2,10 @@
  * Creates the open positions report if it doesn't already exist.
  * Updates the sheet with the current open positions data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.openPositionsReport = function () {
+AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPositionsReportName) {
 
-  const sheetName = this.openPositionsReportName;
   const assetsRangeName = this.assetsRangeName;
 
   let ss = SpreadsheetApp.getActive();

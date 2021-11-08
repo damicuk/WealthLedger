@@ -4,7 +4,7 @@
  * @param {string} message - The message to display to the user.
  * @param {string} [sheetName] - The name of the sheet where the error was found.
  * @param {number} [rowIndex] - The row index of the cell in the named sheet.
- * @param {number} columnIndex - The column index of the cell in the named sheet.
+ * @param {number} [columnIndex] - The column index of the cell in the named sheet.
  */
 AssetTracker.prototype.handleError = function (error, message, sheetName, rowIndex, columnIndex) {
 
