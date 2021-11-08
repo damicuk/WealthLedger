@@ -10,17 +10,19 @@ class AssetRecord {
    * @param {number} decimalPlaces - The number of decimal places of the asset.
    * @param {number} currentPrice - The current price of the asset.
    * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
-   * @param {string} apiName - The api to call to fetch the current price.
    * @param {Date} date - When the current price was last updated by the selected API.
+   * @param {string} apiName - The api to call to fetch the current price.
+   * @param {string} apiAssetID - The ID to pass to the api to fetch the current price.
    */
   constructor(
     ticker,
     assetType,
     decimalPlaces,
-    apiName,
     currentPrice,
     currentPriceFormula,
-    date) {
+    date,
+    apiName,
+    apiAssetID) {
 
     /**
      * The ticker of the asset.
@@ -53,16 +55,22 @@ class AssetRecord {
     this.currentPriceFormula = currentPriceFormula;
 
     /**
+     * When the current price was last updated.
+     * @type {Date}
+     */
+    this.date = new Date(date);
+
+    /**
      * The api to call to fetch the current price.
      * @type {string}
      */
     this.apiName = apiName;
 
     /**
-     * When the current price was last updated.
-     * @type {Date}
+     * The ID to pass to the api to fetch the current price.
+     * @type {string}
      */
-    this.date = new Date(date);
+    this.apiAssetID = apiAssetID;
   }
 
   /**
@@ -78,9 +86,10 @@ class AssetRecord {
       'ticker',
       'assetType',
       'decimalPlaces',
-      'apiName',
       'currentPrice',
-      'date'
+      'date',
+      'apiName',
+      'apiAssetID'
     ];
 
     let index = columns.indexOf(columnName);
@@ -97,7 +106,7 @@ AssetTracker.prototype.getAssetRecords = function () {
 
   let assetsRange = this.getAssetsRange();
   let assetsData = assetsRange.getValues();
-  let currentPriceRange = assetsRange.offset(0, 4, assetsRange.getHeight(), 1);
+  let currentPriceRange = assetsRange.offset(0, 3, assetsRange.getHeight(), 1);
   let currentPriceFormulas = currentPriceRange.getFormulas();
 
   //convert raw data to object array
@@ -110,9 +119,10 @@ AssetTracker.prototype.getAssetRecords = function () {
       row[1],
       row[2],
       row[3],
-      row[4],
       currentPriceFormulas[rowIndex][0],
-      row[5]
+      row[4],
+      row[5],
+      row[6]
     );
 
     assetRecords.push(assetRecord);

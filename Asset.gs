@@ -69,6 +69,16 @@ var Asset = class Asset {
   }
 
   /**
+  * Regular expression to validate api asset ID.
+  * @type {RegExp}
+  * @static
+  */
+  static get apiAssetIDRegExp() {
+
+    return /^[\w\-]{1,20}$/;
+  }
+
+  /**
    * Array of default asset types.
    * @type {Array<string>}
    * @static

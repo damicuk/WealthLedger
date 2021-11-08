@@ -114,7 +114,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the assets sheet.
      * @type {number}
      */
-    this.assetsDataColumns = 6;
+    this.assetsDataColumns = 7;
 
     /**
      * The number of header rows in an api price sheet
@@ -133,9 +133,11 @@ var AssetTracker = class AssetTracker {
     this.assetsSheetName = 'Assets';
     this.assetsSheetVersion = '1';
 
-    this.ccApiName = 'CryptoCompare';
+    this.cgApiName = 'CoinGecko';
     this.cmcApiName = 'CoinMarketCap';
-    this.validApiNames = [this.ccApiName, this.cmcApiName];
+    this.ccApiName = 'CryptoCompare';
+
+    this.validApiNames = [this.cgApiName, this.cmcApiName, this.ccApiName,];
 
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.fiatAccountsRangeName = 'FiatAccounts';
