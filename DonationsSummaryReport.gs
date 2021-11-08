@@ -63,7 +63,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT C
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT Col1, ' ', Col3, '  ', SUM(Col5), SUM(Col6) GROUP BY Col1, Col3 ORDER BY Col1, Col3 LABEL Col1 '', ' ' '', Col3 '', '  ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", ""};
 {"BY YEAR AND ASSET", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT Col1, Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col3, Col2 LABEL Col1 '', Col2 '', Col3 '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''")
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, O, R, S")}, "SELECT Col1, Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 LABEL Col1 '', Col2 '', Col3 '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''")
 })`, , , , , ,
   ]];
 

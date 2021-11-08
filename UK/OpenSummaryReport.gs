@@ -64,7 +64,7 @@ QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M,
 {"BY ASSET TYPE", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', '  ', Col2, '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");{"", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', Col1, Col2, SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col1, Col2 ORDER BY Col2, Col1 OFFSET 1 LABEL ' ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
+QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', Col1, Col2, SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col1, Col2 ORDER BY Col1, Col2 OFFSET 1 LABEL ' ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
 {"", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", "", 0, 0, 0};QUERY(${referenceRangeName2}, "SELECT A, B, C, D, E, F")}, "SELECT Col1, ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col6), '       ', '        ' GROUP BY Col1 ORDER BY Col1 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', '      ' '', '       ' '', '        ' ''");
@@ -72,7 +72,7 @@ QUERY({{"", "", "", 0, 0, 0};QUERY(${referenceRangeName2}, "SELECT A, B, C, D, E
 {"BY WALLET AND ASSET TYPE", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", "", 0, 0, 0};QUERY(${referenceRangeName2}, "SELECT A, B, C, D, E, F")}, "SELECT Col1, ' ', Col3, '  ', '   ', '    ', '     ', SUM(Col6), '      ', '       ' GROUP BY Col1, Col3 ORDER BY Col1, Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', '      ' '', '       ' ''");{"", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET AND ASSET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", 0, 0, 0};QUERY(${referenceRangeName2}, "SELECT A, B, C, D, E, F")}, "SELECT Col1, Col2, Col3, SUM(Col4), ' ', SUM(Col6) / SUM(Col4), '  ', SUM(Col6), '   ', '    ' GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col3, Col2 OFFSET 1 LABEL SUM(Col4) '', ' ' '', SUM(Col6) / SUM(Col4) '', '  ' '', SUM(Col6) '', '   ' '', '    ' ''")
+QUERY({{"", "", "", 0, 0, 0};QUERY(${referenceRangeName2}, "SELECT A, B, C, D, E, F")}, "SELECT Col1, Col2, Col3, SUM(Col4), ' ', SUM(Col6) / SUM(Col4), '  ', SUM(Col6), '   ', '    ' GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 OFFSET 1 LABEL SUM(Col4) '', ' ' '', SUM(Col6) / SUM(Col4) '', '  ' '', SUM(Col6) '', '   ' '', '    ' ''")
 })`, , , , , , , , , ,
     `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT I"))=0,,QUERY(${referenceRangeName1}, "SELECT E, SUM(M) GROUP BY E ORDER BY E LABEL SUM(M) ''"))`
   ]];
