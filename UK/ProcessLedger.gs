@@ -99,7 +99,36 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
     let poolWithdrawal = new PoolWithdrawal(date, debitAsset, 0, debitFee, this.fiatBase, 0, 0, action);
     this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
   }
+  else if (action === 'Split') {
+
+    let denominator = debitAmount ? debitAmount : 1;
+    let numerator = creditAmount ? creditAmount : 1;
+    this.ukSplitAsset(debitAsset, numerator, denominator);
+  }
 };
+
+/**
+* Searches for all occurances of the given asset and adjusts the amount and fee according to the split numerator and denominator.
+* @param {Asset} asset - The asset being split.
+* @param {number} numerator - The numerator of the split. 
+* @param {number} denominator - The denominator of the split.
+*/
+AssetTracker.prototype.ukSplitAsset = function (assset, numerator, denominator) {
+
+  let assetPool = this.getAssetPool(assset);
+
+  for (let poolDeposit of assetPool.poolDeposits) {
+    let splitBalance = this.splitBalance(poolDeposit.creditAmountSubunits, poolDeposit.creditFeeSubunits, numerator, denominator);
+    poolDeposit.creditAmountSubunits = splitBalance[0];
+    poolDeposit.creditFeeSubunits = splitBalance[1];
+  }
+
+  for (let poolWithdrawal of assetPool.poolWithdrawals) {
+    let splitBalance = this.splitBalance(poolWithdrawal.debitAmountSubunits, poolWithdrawal.debitFeeSubunits, numerator, denominator);
+    poolWithdrawal.debitAmountSubunits = splitBalance[0];
+    poolWithdrawal.debitFeeSubunits = splitBalance[1];
+  }
+}
 
 /**
  * Gets the date at midnight on the day of the given date.

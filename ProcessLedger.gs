@@ -249,7 +249,7 @@ AssetTracker.prototype.splitAsset = function (asset, numerator, denominator) {
       let splitBalance = this.splitBalance(lot.debitAmountSubunits, lot.debitFeeSubunits, numerator, denominator);
       lot.debitAmountSubunits = splitBalance[0];
       lot.debitFeeSubunits = splitBalance[1];
-      lot.debitExRate = this.spltExRate(lot.debitExRate, numerator, denominator);
+      lot.debitExRate = this.splitExRate(lot.debitExRate, numerator, denominator);
     }
     if (lot.creditAsset === asset) {
       let splitBalance = this.splitBalance(lot.creditAmountSubunits, lot.creditFeeSubunits, numerator, denominator);
@@ -263,13 +263,13 @@ AssetTracker.prototype.splitAsset = function (asset, numerator, denominator) {
       let splitBalance = this.splitBalance(closedLot.creditAmountSubunits, closedLot.creditFeeSubunits, numerator, denominator);
       closedLot.creditAmountSubunits = splitBalance[0];
       closedLot.creditFeeSubunits = splitBalance[1];
-      closedLot.creditExRate = this.spltExRate(closedLot.creditExRate, numerator, denominator);
+      closedLot.creditExRate = this.splitExRate(closedLot.creditExRate, numerator, denominator);
     }
   }
 
   for (let donatedLot of this.donatedLots) {
     if (donatedLot.lot.creditAsset === asset) {
-      donatedLot.exRate = this.spltExRate(donatedLot.exRate, numerator, denominator);
+      donatedLot.exRate = this.splitExRate(donatedLot.exRate, numerator, denominator);
     }
   }
 
@@ -277,7 +277,7 @@ AssetTracker.prototype.splitAsset = function (asset, numerator, denominator) {
     if (incomeLot.creditAsset === asset) {
       let splitBalance = this.splitBalance(incomeLot.creditAmount, 0, numerator, denominator);
       incomeLot.creditAmount = splitBalance[0];
-      incomeLot.exRate = this.spltExRate(incomeLot.exRate, numerator, denominator);
+      incomeLot.exRate = this.splitExRate(incomeLot.exRate, numerator, denominator);
     }
   }
 };
