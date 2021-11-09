@@ -20,36 +20,34 @@ AssetTracker.prototype.assetsSheet = function () {
       'Timestamp',
       'API',
       'API Asset ID',
-      'URL',
-      'XPATH',
       'Comment'
     ]
   ];
 
-  sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:H1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:B').setNumberFormat('@');
   sheet.getRange('C2:C').setNumberFormat('0');
   sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
   sheet.getRange('E2:E').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-  sheet.getRange('F2:I').setNumberFormat('@');
+  sheet.getRange('F2:H').setNumberFormat('@');
 
   let dataTable = [
-    ['USD', 'Fiat Base', '2', '1', , , , , , ,],
-    ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , , , , `Fiat capital gains are ignored.`],
-    ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , , , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , , , , ,],
-    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , , , , ,],
-    ['USDC', 'Stablecoin', '2', '1', , , , , , ,],
-    ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , , , , ,],
-    ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , , , , ,],
-    ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)', , , , , , ,],
-    ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , , , , ,],
-    [, , , , , , , , , ,]
+    ['USD', 'Fiat Base', '2', '1', , , , ,],
+    ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , , `Fiat capital gains are ignored.`],
+    ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , , `Forex is treated as any other asset.`],
+    ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , , ,],
+    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , , ,],
+    ['USDC', 'Stablecoin', '2', '1', , , , ,],
+    ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , , ,],
+    ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , , ,],
+    ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)', , , , ,],
+    ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , , ,],
+    [, , , , , , , ,]
   ];
 
-  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 10);
+  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 8);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?\\w{1,10}$")`)
@@ -93,14 +91,14 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('G2:G').setDataValidation(apiAssetIDRule);
 
   if (!sheet.getFilter()) {
-    sheet.getRange('A1:J').createFilter();
+    sheet.getRange('A1:H').createFilter();
   }
 
-  this.trimSheet(sheet, 12, 10);
+  this.trimSheet(sheet, 12, 8);
 
-  sheet.setColumnWidths(1, 9, 140);
+  sheet.setColumnWidths(1, 7, 140);
   sheet.setColumnWidth(5, 170);
-  sheet.setColumnWidth(10, 250);
+  sheet.setColumnWidth(8, 250);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
 
