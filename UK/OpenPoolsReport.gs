@@ -66,7 +66,7 @@ AssetTracker.prototype.ukOpenPoolsReport = function (sheetName = this.ukOpenPool
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(G3:G-H3:H, LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(I3:I=0,,L3:L/I3:I), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(E3:E, QUERY(${assetsRangeName}, "SELECT A, E"), 2, FALSE),), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(E3:E, QUERY(${assetsRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(C3:C+D3:D, LEN(A3:A)))))`,
       `ArrayFormula(IF(ISBLANK(K3:K),,FILTER(I3:I*K3:K, LEN(A3:A))))`,
       `ArrayFormula(IF(ISBLANK(K3:K),,FILTER(M3:M-L3:L, LEN(A3:A))))`,

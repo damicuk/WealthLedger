@@ -44,7 +44,7 @@ AssetTracker.prototype.ukAssetAccountsReport = function (sheetName = this.ukAsse
     sheet.getRange('E3:F').setNumberFormat('#,##0.00;(#,##0.00)');
 
     const formulas = [[
-      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(B3:B, QUERY(${assetsRangeName}, "SELECT A, E"), 2, FALSE),), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(B3:B, QUERY(${assetsRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
       `ArrayFormula(IF(ISBLANK(E3:E),,FILTER(D3:D*E3:E, LEN(A3:A))))`
     ]];
 
