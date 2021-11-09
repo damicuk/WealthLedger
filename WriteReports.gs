@@ -91,16 +91,18 @@ AssetTracker.prototype.writeReports = function () {
 
 AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
 
-  let ccTickerSet = this.getApiTickerSet(this.ccApiName, assetRecords);
+  let cgTickerSet = this.getApiTickerSet(this.cgApiName, assetRecords);
   let cmcTickerSet = this.getApiTickerSet(this.cmcApiName, assetRecords);
+  let ccTickerSet = this.getApiTickerSet(this.ccApiName, assetRecords);
 
-  let ccAssetPriceMap = new Map();
+  let cgAssetPriceMap = new Map();
   let cmcAssetPriceMap = new Map();
+  let ccAssetPriceMap = new Map();
 
   let errorMessages = [];
 
   try {
-    ccAssetPriceMap = this.getApiAssetPriceMap(this.ccApiName, this.ccApiKey, Array.from(ccTickerSet), this.fiatBase);
+    cgAssetPriceMap = this.getApiAssetPriceMap(this.cgApiName, null, Array.from(cgTickerSet), this.fiatBase.ticker);
   }
   catch (error) {
     if (error instanceof ApiError) {
@@ -112,7 +114,19 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   }
 
   try {
-    cmcAssetPriceMap = this.getApiAssetPriceMap(this.cmcApiName, this.cmcApiKey, Array.from(cmcTickerSet), this.fiatBase);
+    cmcAssetPriceMap = this.getApiAssetPriceMap(this.cmcApiName, this.cmcApiKey, Array.from(cmcTickerSet), this.fiatBase.ticker);
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      errorMessages.push(error.message);
+    }
+    else {
+      throw error;
+    }
+  }
+
+  try {
+    ccAssetPriceMap = this.getApiAssetPriceMap(this.ccApiName, this.ccApiKey, Array.from(ccTickerSet), this.fiatBase.ticker);
   }
   catch (error) {
     if (error instanceof ApiError) {
@@ -133,13 +147,18 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
     let date = assetRecord.date;
     let timestamp = (isNaN(date) || apiName === '') ? null : assetRecord.date.toISOString();
 
-    if (apiName === this.ccApiName && ccAssetPriceMap.has(ticker)) {
-      let mapValue = ccAssetPriceMap.get(ticker);
+    if (apiName === this.cgApiName && cgAssetPriceMap.has(ticker)) {
+      let mapValue = cgAssetPriceMap.get(ticker);
       dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
       updateRequired = true;
     }
     else if (apiName === this.cmcApiName && cmcAssetPriceMap.has(ticker)) {
       let mapValue = cmcAssetPriceMap.get(ticker);
+      dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
+      updateRequired = true;
+    }
+    else if (apiName === this.ccApiName && ccAssetPriceMap.has(ticker)) {
+      let mapValue = ccAssetPriceMap.get(ticker);
       dataTable.push([[mapValue.currentPrice], [mapValue.timestamp]]);
       updateRequired = true;
     }
@@ -154,20 +173,25 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   if (updateRequired) {
 
     let assetsRange = this.getAssetsRange();
-    let updateRange = assetsRange.offset(0, 4, assetsRange.getHeight(), 2);
+    let updateRange = assetsRange.offset(0, 3, assetsRange.getHeight(), 2);
     updateRange.setValues(dataTable);
 
   }
 
-  let ccFailedTickerSet = this.getApiFailedTickerSet(ccTickerSet, ccAssetPriceMap);
+  let cgFailedTickerSet = this.getApiFailedTickerSet(cgTickerSet, cgAssetPriceMap);
   let cmcFailedTickerSet = this.getApiFailedTickerSet(cmcTickerSet, cmcAssetPriceMap);
+  let ccFailedTickerSet = this.getApiFailedTickerSet(ccTickerSet, ccAssetPriceMap);
 
-  if (ccFailedTickerSet.size > 0) {
-    errorMessages.push(`Failed to update price for ${Array.from(ccFailedTickerSet).sort(this.abcComparator).join(', ')} in fiat base (${this.fiatBase}) from ${this.ccApiName}.`);
+  if (cgFailedTickerSet.size > 0) {
+    errorMessages.push(`Failed to update price for ${Array.from(cgFailedTickerSet).sort(this.abcComparator).join(', ')} in fiat base (${this.fiatBase}) from ${this.cgApiName}.`);
   }
 
   if (cmcFailedTickerSet.size > 0) {
     errorMessages.push(`Failed to update price for ${Array.from(cmcFailedTickerSet).sort(this.abcComparator).join(', ')} in fiat base (${this.fiatBase}) from ${this.cmcApiName}.`);
+  }
+
+  if (ccFailedTickerSet.size > 0) {
+    errorMessages.push(`Failed to update price for ${Array.from(ccFailedTickerSet).sort(this.abcComparator).join(', ')} in fiat base (${this.fiatBase}) from ${this.ccApiName}.`);
   }
 
   if (errorMessages.length > 0) {
