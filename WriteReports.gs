@@ -74,7 +74,7 @@ AssetTracker.prototype.writeReports = function () {
   this.updateAssetsSheet(assetRecords);
 
   try {
-    this.updateAssetPrices(assetRecords);
+    // this.updateAssetPrices(assetRecords);
     return;
   }
   catch (error) {

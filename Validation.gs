@@ -128,13 +128,13 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
   }
   else if (!Asset.tickerRegExp.test(ticker)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid (2-9 alphanumeric characters [A-Za-z0-9_]).`, rowIndex, 'ticker');
+    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-10 characters [A-Za-z0-9_].\nOptional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`, rowIndex, 'ticker');
   }
   else if (assetType === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
   }
   else if (!Asset.assetTypeRegExp.test(assetType)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) format is invalid (1-20 alphanumeric characters [A-Za-z0-9_-]). Spaces between characters allowed.`, rowIndex, 'assetType');
+    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) format is invalid.\nInput must be between 1 and 20 characters [A-Za-z0-9_-].\nSpaces between characters allowed.`, rowIndex, 'assetType');
   }
   else if (assetType === 'Fiat Base' && fiatBase) {
     throw new ValidationError(`Assets row ${rowIndex}: Fiat base has already been declared (${fiatBase}). Only one asset can be fiat base.`, rowIndex, 'assetType');
@@ -158,7 +158,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Api (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
   }
   else if (apiAssetID !== '' && !Asset.apiAssetIDRegExp.test(apiAssetID)) {
-    throw new ValidationError(`Assets row ${rowIndex}: API Asset ID (${apiAssetID}) format is invalid (1-20 alphanumeric characters [A-Za-z0-9_-]).`, rowIndex, 'apiAssetID');
+    throw new ValidationError(`Assets row ${rowIndex}: API Asset ID (${apiAssetID}) format is invalid.\nInput must be between 1 and 20 characters [A-Za-z0-9_-].`, rowIndex, 'apiAssetID');
   }
 };
 

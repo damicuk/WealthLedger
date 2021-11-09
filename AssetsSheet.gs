@@ -52,9 +52,9 @@ AssetTracker.prototype.assetsSheet = function () {
   this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 10);
 
   let assetRule = SpreadsheetApp.newDataValidation()
-    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\w{2,9}$")`)
+    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?\\w{1,10}$")`)
     .setAllowInvalid(false)
-    .setHelpText(`Input must be between 2 and 9 alphanumeric characters [A-Za-z0-9_].`)
+    .setHelpText(`Input must be 1-10 characters [A-Za-z0-9_] with optional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`)
     .build();
   sheet.getRange('A2:A').setDataValidation(assetRule);
 
@@ -68,7 +68,7 @@ AssetTracker.prototype.assetsSheet = function () {
   let decimalPlacesRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(C2), "^[012345678]{1}$")`)
     .setAllowInvalid(false)
-    .setHelpText(`Input must be an integer between 0 and 8`)
+    .setHelpText(`Input must be an integer between 0 and 8.`)
     .build();
   sheet.getRange('C2:C').setDataValidation(decimalPlacesRule);
 
@@ -88,7 +88,7 @@ AssetTracker.prototype.assetsSheet = function () {
   let apiAssetIDRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(G2), "^[\\w\\-]{1,20}$")`)
     .setAllowInvalid(false)
-    .setHelpText(`Input must be between 1 and 20 alphanumeric characters [A-Za-z0-9_-].`)
+    .setHelpText(`Input must be between 1 and 20 characters [A-Za-z0-9_-].`)
     .build();
   sheet.getRange('G2:G').setDataValidation(apiAssetIDRule);
 
