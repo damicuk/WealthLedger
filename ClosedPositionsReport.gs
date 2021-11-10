@@ -99,8 +99,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
 
     sheet.getRange('S3:Z3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

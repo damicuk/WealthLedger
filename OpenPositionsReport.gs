@@ -89,8 +89,7 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
 
     sheet.getRange('M3:T3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

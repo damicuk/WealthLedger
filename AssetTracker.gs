@@ -116,18 +116,6 @@ var AssetTracker = class AssetTracker {
      */
     this.assetsDataColumns = 7;
 
-    /**
-     * The number of header rows in an api price sheet
-     * @type {number}
-     */
-    this.apiPriceSheetHeaderRows = 1;
-
-    /**
-     * The number of data columns in an api price sheet
-     * @type {number}
-     */
-    this.apiPriceSheetDataColumns = 3;
-
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
@@ -146,6 +134,7 @@ var AssetTracker = class AssetTracker {
     this.closedPositionsReportName = 'Closed Positions Report';
     this.donationsReportName = 'Donations Report';
     this.incomeReportName = 'Income Report';
+    this.chartsDataSheetName = "Charts Data";
     this.openSummaryReportName = 'Open Summary Report';
     this.closedSummaryReportName = 'Closed Summary Report';
     this.incomeSummaryReportName = 'Income Summary Report';
@@ -157,6 +146,7 @@ var AssetTracker = class AssetTracker {
       this.closedPositionsReportName,
       this.donationsReportName,
       this.incomeReportName,
+      this.chartsDataSheetName,
       this.openSummaryReportName,
       this.closedSummaryReportName,
       this.incomeSummaryReportName,
@@ -170,10 +160,17 @@ var AssetTracker = class AssetTracker {
     this.donationsRangeName = 'Donations';
     this.incomeRangeName = 'Income';
 
+    this.chartRange1Name = 'Chart1';
+    this.chartRange2Name = 'Chart2';
+    this.chartRange3Name = 'Chart3';
+    this.chartRange4Name = 'Chart4';
+    this.chartRange5Name = 'Chart5';
+
     this.ukOpenPoolsReportName = 'UK Open Pools Report';
     this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
     this.ukClosedPositionsReportName = 'UK Closed Positions Report';
     this.ukIncomeReportName = 'UK Income Report';
+    this.ukChartsDataSheetName = "UK Charts Data";
     this.ukOpenSummaryReportName = "UK Open Summary Report";
     this.ukClosedSummaryReportName = "UK Closed Summary Report";
     this.ukIncomeSummaryReportName = 'UK Income Summary Report';
@@ -185,6 +182,7 @@ var AssetTracker = class AssetTracker {
       this.ukAssetAccountsReportName,
       this.ukClosedPositionsReportName,
       this.ukIncomeReportName,
+      this.ukChartsDataSheetName,
       this.ukOpenSummaryReportName,
       this.ukClosedSummaryReportName,
       this.ukIncomeSummaryReportName,
@@ -195,6 +193,12 @@ var AssetTracker = class AssetTracker {
     this.ukOpenPoolsRangeName = 'UKOpenPools';
     this.ukAssetAccountsRangeName = 'UKAssetAccounts';
     this.ukClosedPositionsRangeName = 'UKClosedPositions';
+
+    this.ukChartRange1Name = 'UKChart1';
+    this.ukChartRange2Name = 'UKChart2';
+    this.ukChartRange3Name = 'UKChart3';
+    this.ukChartRange4Name = 'UKChart4';
+    this.ukChartRange5Name = 'UKChart5';
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * Creates the asset accounts report if it doesn't already exist.
+ * Creates the uk asset accounts report if it doesn't already exist.
  * Updates the sheet with the current asset accounts data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet.
@@ -50,8 +50,7 @@ AssetTracker.prototype.ukAssetAccountsReport = function (sheetName = this.ukAsse
 
     sheet.getRange('E3:F3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

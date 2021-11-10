@@ -1,5 +1,5 @@
 /**
- * Creates the closed summary report if it doesn't already exist.
+ * Creates the uk closed summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  * @param {string} [sheetName] - The name of the sheet.
@@ -12,12 +12,16 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
   let sheet = ss.getSheetByName(sheetName);
 
   if (sheet) {
-
-    return;
-
+    if (this.getSheetVersion(sheet) === version) {
+      return;
+    }
+    else {
+      sheet.clear();
+    }
   }
-
-  sheet = ss.insertSheet(sheetName);
+  else {
+    sheet = ss.insertSheet(sheetName);
+  }
 
   this.setSheetVersion(sheet, version);
 
@@ -34,14 +38,11 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
       'Cost Basis',
       'Proceeds',
       'Realized P/L',
-      'Realized P/L %',
-      'Crypto (chart)',
-      'Proceeds (chart)'
-
+      'Realized P/L %'
     ]
   ];
 
-  sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
   sheet.getRange('B2:C').setNumberFormat('@');
@@ -50,10 +51,8 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
   sheet.getRange('G2:H').setNumberFormat('#,##0.00;(#,##0.00)');
   sheet.getRange('I2:I').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
   sheet.getRange('J2:J').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-  sheet.getRange('K2:K').setNumberFormat('@');
-  sheet.getRange('L2:L').setNumberFormat('#,##0.00;(#,##0.00)');
 
-  const formulas = [[
+  const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 QUERY({{"", "", "", "", 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
 {"", "", "", "", "", "", "", "", "", ""};
@@ -69,25 +68,42 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
 QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT Col3, ' ', Col2, '  ', '   ', '    ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col3, Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");{"", "", "", "", "", "", "", "", "", ""};
 {"BY YEAR AND ASSET", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT Col3, Col1, Col2, SUM(Col5), SUM(Col6) / SUM(Col5), SUM(Col7) / SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col3, Col1, Col2 OFFSET 1 LABEL SUM(Col5) '', SUM(Col6) / SUM(Col5) '', SUM(Col7) / SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''")
-})`, , , , , , , , , ,
-    `=IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,QUERY({QUERY(${referenceRangeName}, "SELECT F, O, T WHERE O='Trade'")}, "SELECT Col1, SUM(Col3) GROUP BY Col1 ORDER BY Col1 LABEL SUM(Col3) ''"))`
-  ]];
+})`;
 
-  sheet.getRange('A2:K2').setFormulas(formulas);
+  sheet.getRange('A2').setFormula(formula);
 
-  sheet.hideColumns(11, 2);
+  this.trimColumns(sheet, 17);
 
-  this.trimColumns(sheet, 19);
+  let chartRange3 = ss.getRangeByName(this.ukChartRange3Name);
+  let chartRange4 = ss.getRangeByName(this.ukChartRange4Name);
+  let chartRange5 = ss.getRangeByName(this.ukChartRange5Name);
 
-  let pieChartBuilder = sheet.newChart().asPieChart();
-  let chart = pieChartBuilder
-    .addRange(sheet.getRange('K2:L1000'))
-    .setNumHeaders(0)
-    .setTitle('Proceeds')
-    .setPosition(1, 13, 30, 30)
+  let assetTypeProceedsPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange3)
+    .setNumHeaders(1)
+    .setTitle('Asset Type')
+    .setPosition(1, 15, 30, 30)
     .build();
 
-  sheet.insertChart(chart);
+  sheet.insertChart(assetTypeProceedsPLChart);
 
-  sheet.autoResizeColumns(1, 12);
+  let assetProceedsPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange4)
+    .setNumHeaders(1)
+    .setTitle('Asset')
+    .setPosition(21, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(assetProceedsPLChart);
+
+  let yearProceedsPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange5)
+    .setNumHeaders(1)
+    .setTitle('Year')
+    .setPosition(40, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(yearProceedsPLChart);
+
+  sheet.autoResizeColumns(1, 10);
 };

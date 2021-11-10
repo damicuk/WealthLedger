@@ -92,8 +92,7 @@ AssetTracker.prototype.donationsReport = function (sheetName = this.donationsRep
 
     sheet.getRange('O3:V3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

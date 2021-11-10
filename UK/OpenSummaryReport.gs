@@ -1,5 +1,5 @@
 /**
- * Creates the open summary report if it doesn't already exist.
+ * Creates the uk open summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  * @param {string} [sheetName] - The name of the sheet.
@@ -12,12 +12,16 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
   let sheet = ss.getSheetByName(sheetName);
 
   if (sheet) {
-
-    return;
-
+    if (this.getSheetVersion(sheet) === version) {
+      return;
+    }
+    else {
+      sheet.clear();
+    }
   }
-
-  sheet = ss.insertSheet(sheetName);
+  else {
+    sheet = ss.insertSheet(sheetName);
+  }
 
   this.setSheetVersion(sheet, version);
 
@@ -35,14 +39,11 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
       'Cost Basis',
       'Current Value',
       'Unrealized P/L',
-      'Unrealized P/L %',
-      'Asset (chart)',
-      'Value (chart)'
-
+      'Unrealized P/L %'
     ]
   ];
 
-  sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:C').setNumberFormat('@');
@@ -51,10 +52,8 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
   sheet.getRange('G2:H').setNumberFormat('#,##0.00;(#,##0.00)');
   sheet.getRange('I2:I').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
   sheet.getRange('J2:J').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-  sheet.getRange('K2:K').setNumberFormat('@');
-  sheet.getRange('L2:L').setNumberFormat('#,##0.00;(#,##0.00)');
 
-  const formulas = [[
+  const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName1}, 1, 1)),,{
 IF(COUNT(QUERY(${referenceRangeName1}, "SELECT K"))=0,
 QUERY({QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col4), '      ', '       ', '        ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', '      ' '', '       ' '', '        ' ''"),
@@ -72,25 +71,52 @@ QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, ' ', '  ', '
 QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, ' ', Col3, '  ', '   ', '    ', '     ', SUM(Col6), '      ', '       ' GROUP BY Col1, Col3 ORDER BY Col1, Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', '      ' '', '       ' ''");{"", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET AND ASSET", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, Col2, Col3, SUM(Col4), ' ', SUM(Col6) / SUM(Col4), '  ', SUM(Col6), '   ', '    ' GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 OFFSET 1 LABEL SUM(Col4) '', ' ' '', SUM(Col6) / SUM(Col4) '', '  ' '', SUM(Col6) '', '   ' '', '    ' ''")
-})`, , , , , , , , , ,
-    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT I"))=0,,QUERY(${referenceRangeName1}, "SELECT E, SUM(M) GROUP BY E ORDER BY E LABEL SUM(M) ''"))`
-  ]];
+})`;
 
-  sheet.getRange('A2:K2').setFormulas(formulas);
+  sheet.getRange('A2').setFormula(formula);
 
-  sheet.hideColumns(11, 2);
+  this.trimColumns(sheet, 17);
 
-  this.trimColumns(sheet, 19);
+  let chartRange1 = ss.getRangeByName(this.ukChartRange1Name);
+  let chartRange2 = ss.getRangeByName(this.ukChartRange2Name);
 
-  let pieChartBuilder = sheet.newChart().asPieChart();
-  let chart = pieChartBuilder
-    .addRange(sheet.getRange('K2:L1000'))
-    .setNumHeaders(0)
-    .setTitle('Value')
-    .setPosition(1, 13, 30, 30)
+  let assetTypeValueChart = sheet.newChart().asPieChart()
+    .addRange(chartRange1)
+    .setNumHeaders(1)
+    .setTitle('Asset Type Value')
+    .setPosition(1, 15, 30, 30)
     .build();
 
-  sheet.insertChart(chart);
+  sheet.insertChart(assetTypeValueChart);
 
-  sheet.autoResizeColumns(1, 12);
+  let assetValueChart = sheet.newChart().asPieChart()
+    .addRange(chartRange2)
+    .setNumHeaders(1)
+    .setTitle('Asset Value')
+    .setPosition(21, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(assetValueChart);
+
+  let assetTypePLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange1.offset(0, 0, chartRange1.getHeight(), 1))
+    .addRange(chartRange1.offset(0, 2, chartRange1.getHeight(), 1))
+    .setNumHeaders(1)
+    .setTitle('Asset Type Unrealized P/L %')
+    .setPosition(40, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(assetTypePLChart);
+
+  let assetPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange2.offset(0, 0, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 2, chartRange2.getHeight(), 1))
+    .setNumHeaders(1)
+    .setTitle('Asset Unrealized P/L %')
+    .setPosition(59, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(assetPLChart);
+
+  sheet.autoResizeColumns(1, 10);
 };

@@ -1,5 +1,5 @@
 /**
- * Creates the wallets report if it doesn't already exist.
+ * Creates the uk wallets report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  * @param {string} [sheetName] - The name of the sheet.

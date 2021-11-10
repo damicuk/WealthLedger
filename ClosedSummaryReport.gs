@@ -39,14 +39,11 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
       'Cost Basis',
       'Proceeds',
       'Realized P/L',
-      'Realized P/L %',
-      'Asset (chart)',
-      'Proceeds (chart)'
-
+      'Realized P/L %'
     ]
   ];
 
-  sheet.getRange('A1:M1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
   sheet.getRange('B2:D').setNumberFormat('@');
@@ -55,13 +52,11 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
   sheet.getRange('H2:I').setNumberFormat('#,##0.00;(#,##0.00)');
   sheet.getRange('J2:J').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
   sheet.getRange('K2:K').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-  sheet.getRange('L2:L').setNumberFormat('@');
-  sheet.getRange('M2:M').setNumberFormat('#,##0.00;(#,##0.00)');
 
   sheet.clearConditionalFormatRules();
   this.addLongShortCondition(sheet, 'D3:D');
 
-  const formulas = [[
+  const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
@@ -97,25 +92,42 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SE
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY YEAR, ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, Col1, Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2, Col3, Col8 ORDER BY Col3, Col1, Col2, Col8 LABEL Col3 '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
-})`, , , , , , , , , , ,
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,QUERY(${referenceRangeName}, "SELECT H, SUM(W) GROUP BY H ORDER BY H LABEL SUM(W) ''"))`
-  ]];
+})`;
 
-  sheet.getRange('A2:L2').setFormulas(formulas);
+  sheet.getRange('A2').setFormula(formula);
 
-  sheet.hideColumns(12, 2);
+  this.trimColumns(sheet, 18);
 
-  this.trimColumns(sheet, 20);
+  let chartRange3 = ss.getRangeByName(this.chartRange3Name);
+  let chartRange4 = ss.getRangeByName(this.chartRange4Name);
+  let chartRange5 = ss.getRangeByName(this.chartRange5Name);
 
-  let pieChartBuilder = sheet.newChart().asPieChart();
-  let chart = pieChartBuilder
-    .addRange(sheet.getRange('L2:M1000'))
-    .setNumHeaders(0)
-    .setTitle('Proceeds')
-    .setPosition(1, 14, 30, 30)
+  let assetTypeProceedsPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange3)
+    .setNumHeaders(1)
+    .setTitle('Asset Type')
+    .setPosition(1, 15, 30, 30)
     .build();
 
-  sheet.insertChart(chart);
+  sheet.insertChart(assetTypeProceedsPLChart);
 
-  sheet.autoResizeColumns(1, 15);
+  let assetProceedsPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange4)
+    .setNumHeaders(1)
+    .setTitle('Asset')
+    .setPosition(21, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(assetProceedsPLChart);
+
+  let yearProceedsPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange5)
+    .setNumHeaders(1)
+    .setTitle('Year')
+    .setPosition(40, 15, 30, 30)
+    .build();
+
+  sheet.insertChart(yearProceedsPLChart);
+
+  sheet.autoResizeColumns(1, 11);
 };

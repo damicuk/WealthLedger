@@ -24,8 +24,7 @@ AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccoun
 
     sheet.hideSheet();
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

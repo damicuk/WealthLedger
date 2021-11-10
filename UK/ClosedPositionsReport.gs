@@ -1,5 +1,5 @@
 /**
- * Creates the closed positions report if it doesn't already exist.
+ * Creates the uk closed positions report if it doesn't already exist.
  * Updates the sheet with the current closed positions data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet.
@@ -98,8 +98,7 @@ AssetTracker.prototype.ukClosedPositionsReport = function (sheetName = this.ukCl
 
     sheet.getRange('P3:V3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

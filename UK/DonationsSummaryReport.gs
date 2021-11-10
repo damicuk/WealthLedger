@@ -1,5 +1,5 @@
 /**
- * Creates the donations summary report if it doesn't already exist.
+ * Creates the uk donations summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
  * @param {string} [sheetName] - The name of the sheet.
@@ -12,12 +12,16 @@ AssetTracker.prototype.ukDonationsSummaryReport = function (sheetName = this.ukD
   let sheet = ss.getSheetByName(sheetName);
 
   if (sheet) {
-
-    return;
-
+    if (this.getSheetVersion(sheet) === version) {
+      return;
+    }
+    else {
+      sheet.clear();
+    }
   }
-
-  sheet = ss.insertSheet(sheetName);
+  else {
+    sheet = ss.insertSheet(sheetName);
+  }
 
   this.setSheetVersion(sheet, version);
 

@@ -1,5 +1,5 @@
 /**
- * Creates the open pools report if it doesn't already exist.
+ * Creates the uk open pools report if it doesn't already exist.
  * Updates the sheet with the current open pools data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet
@@ -75,8 +75,7 @@ AssetTracker.prototype.ukOpenPoolsReport = function (sheetName = this.ukOpenPool
 
     sheet.getRange('I3:O3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 

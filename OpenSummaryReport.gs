@@ -39,17 +39,11 @@ AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummar
       'Cost Basis',
       'Current Value',
       'Unrealized P/L',
-      'Unrealized P/L %',
-      'Asset Type (chart)',
-      'Value (chart)',
-      'Unrealized P/L % (chart)',
-      'Asset (chart)',
-      'Value (chart)',
-      'Unrealized P/L % (chart)'
+      'Unrealized P/L %'
     ]
   ];
 
-  sheet.getRange('A1:Q1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:D').setNumberFormat('@');
@@ -58,17 +52,11 @@ AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummar
   sheet.getRange('H2:I').setNumberFormat('#,##0.00;(#,##0.00)');
   sheet.getRange('J2:J').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
   sheet.getRange('K2:K').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-  sheet.getRange('L2:L').setNumberFormat('@');
-  sheet.getRange('M2:M').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('N2:N').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-  sheet.getRange('O2:O').setNumberFormat('@');
-  sheet.getRange('P2:P').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('Q2:Q').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
   sheet.clearConditionalFormatRules();
   this.addLongShortCondition(sheet, 'D3:D');
 
-  const formulas = [[
+  const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
 IF(COUNT(QUERY(${referenceRangeName}, "SELECT P"))=0,
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), '       ', '        ', '         ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', '       ' '', '        ' '', '         ' ''"),
@@ -105,20 +93,18 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET, ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT Col3, Col1, Col2, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col1, Col2, Col3, Col8 ORDER BY Col3, Col1, Col2, Col8 OFFSET 1 LABEL SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
-})`, , , , , , , , , , ,
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT P"))=0,,QUERY(${referenceRangeName}, "SELECT I, SUM(Q), SUM(R) / SUM(O) GROUP BY I ORDER BY I LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , ,
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT P"))=0,,QUERY(${referenceRangeName}, "SELECT H, SUM(Q), SUM(R) / SUM(O) GROUP BY H ORDER BY H LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`
-  ]];
+})`;
 
-  sheet.getRange('A2:O2').setFormulas(formulas);
+  sheet.getRange('A2').setFormula(formula);
 
-  sheet.hideColumns(12, 6);
+  this.trimColumns(sheet, 18);
 
-  this.trimColumns(sheet, 24);
+  let chartRange1 = ss.getRangeByName(this.chartRange1Name);
+  let chartRange2 = ss.getRangeByName(this.chartRange2Name);
 
   let assetTypeValueChart = sheet.newChart().asPieChart()
-    .addRange(sheet.getRange('L2:M1000'))
-    .setNumHeaders(0)
+    .addRange(chartRange1)
+    .setNumHeaders(1)
     .setTitle('Asset Type Value')
     .setPosition(1, 15, 30, 30)
     .build();
@@ -126,8 +112,8 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L
   sheet.insertChart(assetTypeValueChart);
 
   let assetValueChart = sheet.newChart().asPieChart()
-    .addRange(sheet.getRange('O2:P1000'))
-    .setNumHeaders(0)
+    .addRange(chartRange2)
+    .setNumHeaders(1)
     .setTitle('Asset Value')
     .setPosition(21, 15, 30, 30)
     .build();
@@ -135,9 +121,9 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L
   sheet.insertChart(assetValueChart);
 
   let assetTypePLChart = sheet.newChart().asColumnChart()
-    .addRange(sheet.getRange('L2:L1000'))
-    .addRange(sheet.getRange('N2:N1000'))
-    .setNumHeaders(0)
+    .addRange(chartRange1.offset(0, 0, chartRange1.getHeight(), 1))
+    .addRange(chartRange1.offset(0, 2, chartRange1.getHeight(), 1))
+    .setNumHeaders(1)
     .setTitle('Asset Type Unrealized P/L %')
     .setPosition(40, 15, 30, 30)
     .build();
@@ -145,14 +131,14 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L
   sheet.insertChart(assetTypePLChart);
 
   let assetPLChart = sheet.newChart().asColumnChart()
-    .addRange(sheet.getRange('O2:O1000'))
-    .addRange(sheet.getRange('Q2:Q1000'))
-    .setNumHeaders(0)
+    .addRange(chartRange2.offset(0, 0, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 2, chartRange2.getHeight(), 1))
+    .setNumHeaders(1)
     .setTitle('Asset Unrealized P/L %')
     .setPosition(59, 15, 30, 30)
     .build();
 
   sheet.insertChart(assetPLChart);
 
-  sheet.autoResizeColumns(1, 17);
+  sheet.autoResizeColumns(1, 11);
 };

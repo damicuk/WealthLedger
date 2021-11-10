@@ -47,6 +47,7 @@ AssetTracker.prototype.writeReports = function () {
     this.ukAssetAccountsReport();
     this.ukClosedPositionsReport();
     this.incomeReport(this.ukIncomeReportName);
+    this.ukChartsDataSheet();
     this.ukOpenSummaryReport();
     this.ukClosedSummaryReport();
     this.incomeSummaryReport(this.ukIncomeSummaryReportName);
@@ -63,6 +64,7 @@ AssetTracker.prototype.writeReports = function () {
     this.closedPositionsReport();
     this.donationsReport();
     this.incomeReport();
+    this.chartsDataSheet();
     this.openSummaryReport();
     this.closedSummaryReport();
     this.incomeSummaryReport();
@@ -249,6 +251,7 @@ AssetTracker.prototype.deleteReports = function () {
     this.closedPositionsReportName,
     this.donationsReportName,
     this.incomeReportName,
+    this.chartsDataSheetName,
     this.openSummaryReportName,
     this.closedSummaryReportName,
     this.incomeSummaryReportName,
@@ -258,6 +261,7 @@ AssetTracker.prototype.deleteReports = function () {
     this.ukAssetAccountsReportName,
     this.ukClosedPositionsReportName,
     this.ukIncomeReportName,
+    this.ukChartsDataSheetName,
     this.ukOpenSummaryReportName,
     this.ukClosedSummaryReportName,
     this.ukIncomeSummaryReportName,

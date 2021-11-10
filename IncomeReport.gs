@@ -43,8 +43,7 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
 
     sheet.getRange('I2:I2').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 
