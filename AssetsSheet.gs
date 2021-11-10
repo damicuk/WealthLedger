@@ -19,7 +19,7 @@ AssetTracker.prototype.assetsSheet = function () {
       'Current Price',
       'Timestamp',
       'API',
-      'API Asset ID',
+      'Asset ID',
       'Comment'
     ]
   ];

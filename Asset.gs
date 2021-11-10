@@ -69,11 +69,11 @@ var Asset = class Asset {
   }
 
   /**
-  * Regular expression to validate api asset ID.
+  * Regular expression to validate asset ID.
   * @type {RegExp}
   * @static
   */
-  static get apiAssetIDRegExp() {
+  static get assetIDRegExp() {
 
     return /^[\w\-]{1,20}$/;
   }

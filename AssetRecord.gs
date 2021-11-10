@@ -12,7 +12,7 @@ class AssetRecord {
    * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
    * @param {Date} date - When the current price was last updated by the selected API.
    * @param {string} apiName - The api to call to fetch the current price.
-   * @param {string} apiAssetID - The ID to pass to the api to fetch the current price.
+   * @param {string} assetID - The ID to pass to the api to fetch the current price.
    */
   constructor(
     ticker,
@@ -22,7 +22,7 @@ class AssetRecord {
     currentPriceFormula,
     date,
     apiName,
-    apiAssetID) {
+    assetID) {
 
     /**
      * The ticker of the asset.
@@ -70,7 +70,7 @@ class AssetRecord {
      * The ID to pass to the api to fetch the current price.
      * @type {string}
      */
-    this.apiAssetID = apiAssetID;
+    this.assetID = assetID;
   }
 
   /**
@@ -89,7 +89,7 @@ class AssetRecord {
       'currentPrice',
       'date',
       'apiName',
-      'apiAssetID'
+      'assetID'
     ];
 
     let index = columns.indexOf(columnName);
