@@ -87,23 +87,35 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
 
     let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, debitExRate * debitAmount, 0, action);
     this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
+
   }
   else if (action === 'Gift') {
 
-    let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, 0, 0, action);
-    this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
+    if (creditAsset) { //Gift received
 
+      let poolDeposit = new PoolDeposit(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, 0);
+      this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
+
+    }
+    else { //Gift given
+
+      let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, 0, 0, action);
+      this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
+
+    }
   }
   else if (action === 'Fee' && !debitAsset.isFiat) {
 
     let poolWithdrawal = new PoolWithdrawal(date, debitAsset, 0, debitFee, this.fiatBase, 0, 0, action);
     this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
+
   }
   else if (action === 'Split') {
 
     let denominator = debitAmount ? debitAmount : 1;
     let numerator = creditAmount ? creditAmount : 1;
     this.ukSplitAsset(debitAsset, numerator, denominator);
+
   }
 };
 
