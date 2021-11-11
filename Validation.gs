@@ -473,39 +473,64 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
-  else if (action === 'Gift') { //Gift
-    if (!debitAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
+  else if (action === 'Gift') {
+    if (debitWalletName === '' && creditWalletName === '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Either debit wallet (for gifts given) or credit wallet (for gifts received) must be specified.`, rowIndex, 'debitWalletName');
+    }
+    else if (debitWalletName !== '' && creditWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Either debit wallet (for gifts given) or credit wallet (for gifts received) must be specified, but not both.`, rowIndex, 'debitWalletName');
     }
     else if (debitExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
     }
-    else if (debitAmount === '') {
-      throw new ValidationError(`${action} row ${rowIndex}: No debit amount specified.`, rowIndex, 'debitAmount');
-    }
-    else if (debitAmount <= 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 0.`, rowIndex, 'debitAmount');
-    }
     else if (debitFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
-    }
-    else if (debitWalletName === '') {
-      throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
-    }
-    else if (creditAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit asset (${creditAsset}) blank.`, rowIndex, 'creditAsset');
     }
     else if (creditExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
     }
-    else if (creditAmount !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit amount blank.`, rowIndex, 'creditAmount');
+    else if (debitWalletName !== '') { //Gift given
+      if (!debitAsset) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit asset must be specified.`, rowIndex, 'debitAsset');
+      }
+      else if (debitAmount === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit amount must be specified.`, rowIndex, 'debitAmount');
+      }
+      else if (debitAmount <= 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit amount must be greater than 0.`, rowIndex, 'debitAmount');
+      }
+      else if (creditAsset) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, leave credit asset (${creditAsset}) blank.`, rowIndex, 'creditAsset');
+      }
+      else if (creditAmount !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, leave credit amount blank.`, rowIndex, 'creditAmount');
+      }
+      else if (creditFee !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, leave credit fee blank.`, rowIndex, 'creditFee');
+      }
     }
-    else if (creditFee !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
-    }
-    else if (creditWalletName !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
+    else { //Gift received
+      if (!debitAsset || !debitAsset.isFiatBase) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit asset must be fiat base (for the inherited cost basis).`, rowIndex, 'debitAsset');
+      }
+      else if (debitAmount === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit amount must be specified (for the inherited cost basis).`, rowIndex, 'debitAmount');
+      }
+      else if (debitAmount < 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit amount must be greater or equal to 0 (for the inherited cost basis).`, rowIndex, 'debitAmount');
+      }
+      else if (!creditAsset) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit asset must be specified.`, rowIndex, 'creditAsset');
+      }
+      else if (creditAmount === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit amount must be specified.`, rowIndex, 'creditAmount');
+      }
+      else if (creditAmount <= 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit amount must be greater than 0.`, rowIndex, 'creditAmount');
+      }
+      else if (creditFee < 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
+      }
     }
   }
   else if (action === 'Fee') {
