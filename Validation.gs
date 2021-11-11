@@ -164,6 +164,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
 
 /**
  * Validates a set of ledger records and throws a ValidationError on failure.
+ * Skips ledger records with the skip action.
  * Stops reading if it encounters the stop action.
  * @param {Array<LedgerRecord>} ledgerRecords - The colection of ledger records to validate.
  */
@@ -175,7 +176,10 @@ AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
     let previousRecord;
     let rowIndex = this.ledgerHeaderRows + ledgerRecords.length;
     for (let ledgerRecord of ledgerRecords) {
-      if (ledgerRecord.action === 'Stop') {
+      if (ledgerRecord.action === 'Skip') {
+        continue;
+      }
+      else if (ledgerRecord.action === 'Stop') {
         break;
       }
       this.validateLedgerRecord(ledgerRecord, previousRecord, rowIndex--);
@@ -187,7 +191,10 @@ AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
     let previousRecord;
     let rowIndex = this.ledgerHeaderRows + 1;
     for (let ledgerRecord of ledgerRecords) {
-      if (ledgerRecord.action === 'Stop') {
+      if (ledgerRecord.action === 'Skip') {
+        continue;
+      }
+      else if (ledgerRecord.action === 'Stop') {
         break;
       }
       this.validateLedgerRecord(ledgerRecord, previousRecord, rowIndex++);

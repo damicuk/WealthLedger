@@ -1,6 +1,7 @@
 /**
  * Processes the ledger records consistent with the UK accounting model.
  * It treats the ledger as a set of instuctions and simulates the actions specified.
+ * Skips ledger records with the skip action.
  * Stops reading if it encounters the stop action.
  * @param {Array<LedgerRecord>} ledgerRecords - The collection of ledger records.
  */
@@ -11,6 +12,12 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
   }
 
   for (let ledgerRecord of ledgerRecords) {
+    if (ledgerRecord.action === 'Skip') {
+      continue;
+    }
+    else if (ledgerRecord.action === 'Stop') {
+      break;
+    }
     this.processLedgerRecordUK(ledgerRecord);
   }
 

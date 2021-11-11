@@ -74,10 +74,11 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2020-12-06 12:00:00', 'Transfer', 'USD', , 30000, , 'Kraken', , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
     ['2021-02-01 12:00:00', 'Income', , , , , , 'ADA', 1, 10, , 'Rewards', , `Staking reward.`],
     ['2021-02-05 12:00:00', 'Income', , , , , , 'ADA', 1.3, 10, , 'Rewards', , ,],
-    ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Yoroi', , , , , , , `Donations (e.g. to registered charities) are recorded in the donations report.`],
+    ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Yoroi', , , , , , , `Donation (e.g. to a registered charity). Recorded in the donations report.`],
     ['2021-03-02 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Yoroi', , , , , , , ,],
-    ['2021-03-03 12:00:00', 'Gift', 'ADA', , 500, , 'Yoroi', , , , , , , `Gifts (e.g. to friends or family) are not recorded. The asset simply disappears.`],
-    ['2021-03-04 12:00:00', 'Fee', 'ADA', , , 0.17, 'Yoroi', , , , , , , `Miscellaneous fee.`],
+    ['2021-03-03 12:00:00', 'Gift', 'ADA', , 500, , 'Yoroi', , , , , , , `Gift given (e.g. to friends or family). Not recorded, the asset simply disappears.`],
+    ['2021-03-04 12:00:00', 'Gift', 'USD', , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are not actually debited. They are the inherited cost basis.`],
+    ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Yoroi', , , , , , , `Miscellaneous fee.`],
     ['2021-04-01 12:00:00', 'Transfer', 'USD', , 40000, , , , , , , 'IB', , ,],
     ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
     ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
@@ -87,7 +88,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2021-08-02 12:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8`]
   ];
 
-  sheet.getRange('A3:N25').setValues(sampleData);
+  sheet.getRange('A3:N26').setValues(sampleData);
 
   let dateRule = SpreadsheetApp.newDataValidation()
     .requireDate()
@@ -97,7 +98,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('A3:A').setDataValidation(dateRule);
 
   let actionRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Split', 'Stop', 'Trade', 'Transfer'])
+    .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Skip', 'Split', 'Stop', 'Trade', 'Transfer'])
     .setAllowInvalid(false)
     .build();
   sheet.getRange('B3:B').setDataValidation(actionRule);
@@ -142,7 +143,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     .build();
   sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
 
-  this.trimSheet(sheet, 26, 14);
+  this.trimSheet(sheet, 27, 14);
 
   sheet.autoResizeColumns(1, 1);
   sheet.autoResizeColumns(5, 1);
