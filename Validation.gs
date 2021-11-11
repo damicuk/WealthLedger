@@ -493,6 +493,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       if (!debitAsset) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit asset must be specified.`, rowIndex, 'debitAsset');
       }
+      else if (debitAsset.isFiat) {
+        throw new ValidationError(`${action} row ${rowIndex}: Debit asset ${debitAsset} is fiat. Not supported for gifts given. Use transfer action instead.`, rowIndex, 'debitAsset');
+      }
       else if (debitAmount === '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit amount must be specified.`, rowIndex, 'debitAmount');
       }
@@ -521,6 +524,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
       else if (!creditAsset) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit asset must be specified.`, rowIndex, 'creditAsset');
+      }
+      else if (creditAsset.isFiat) {
+        throw new ValidationError(`${action} row ${rowIndex}: Credit asset ${creditAsset} is fiat. Not supported for gifts received. Use transfer action instead.`, rowIndex, 'creditAsset');
       }
       else if (creditAmount === '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit amount must be specified.`, rowIndex, 'creditAmount');

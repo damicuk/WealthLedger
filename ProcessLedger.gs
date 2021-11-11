@@ -196,19 +196,25 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
     for (let lot of lots) {
+
       this.donatedLots.push({ lot: lot, date: date, exRate: debitExRate, walletName: debitWalletName });
+
     }
   }
   else if (action === 'Gift') {
 
-    if (debitAsset.isFiat) {
-
-      this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
-
-    }
-    else {
+    if (debitWalletName) { //Gift given
 
       this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+
+    }
+    else { //Gift received
+
+      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, creditWalletName);
+
+      this.lots.push(lot);
+
+      this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
   }
