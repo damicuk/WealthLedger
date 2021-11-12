@@ -21,6 +21,8 @@ function onOpen(e) {
     .addSeparator()
     .addItem('Step 3: Write reports', 'writeReports')
     .addSeparator()
+    .addItem('Delete reports', 'deleteReports')
+    .addSeparator()
     .addItem('Settings', 'showSettingsDialog')
     .addToUi();
 }
@@ -65,20 +67,18 @@ function showSettingsDialog() {
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function saveSettings(settings) {
+function deleteReports() {
 
-  new AssetTracker().saveSettings(settings);
+  new AssetTracker().deleteReports();
 
 }
 
 /**
  * Calls the corresponding method of a new instance of AssetTracker
- * Not intended for use by the end user
- * Useful in development and testing
  */
-function deleteReports() {
+function saveSettings(settings) {
 
-  new AssetTracker().deleteReports();
+  new AssetTracker().saveSettings(settings);
 
 }
 

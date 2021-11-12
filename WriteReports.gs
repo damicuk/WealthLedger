@@ -93,8 +93,6 @@ AssetTracker.prototype.writeReports = function () {
 
 /**
  * Deletes all the output sheets.
- * Not intended for use by the end user.
- * Useful in development and testing.
  */
 AssetTracker.prototype.deleteReports = function () {
 
