@@ -70,13 +70,6 @@ AssetTracker.prototype.assetsSheet = function () {
     .build();
   sheet.getRange('C2:C').setDataValidation(decimalPlacesRule);
 
-  let positiveNumberRule = SpreadsheetApp.newDataValidation()
-    .requireNumberGreaterThan(0)
-    .setAllowInvalid(false)
-    .setHelpText(`Input must be a number greater than 0.`)
-    .build();
-  sheet.getRange('D2:D').setDataValidation(positiveNumberRule);
-
   let apiRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(this.validApiNames)
     .setAllowInvalid(false)

@@ -34,8 +34,6 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
    */
   get costBasisSubunits() {
 
-    // return Math.round(this.debitAmountSubunits + this.debitFeeSubunits);
-
     return this.debitAmountSubunits + this.debitFeeSubunits;
   }
 

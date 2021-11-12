@@ -47,7 +47,8 @@ AssetTracker.prototype.ukDonationsSummaryReport = function (sheetName = this.ukD
   sheet.getRange('F2:F').setNumberFormat('#,##0.00;(#,##0.00)');
 
   const formula =
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
+    `=IF(COUNT(QUERY(${referenceRangeName}, "SELECT O WHERE O='Donation'"))=0,,
+{
 QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', SUM(Col6), SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', SUM(Col6) '', SUM(Col7) ''");
 {"", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", ""};
