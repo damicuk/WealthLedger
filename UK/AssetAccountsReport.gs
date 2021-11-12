@@ -45,7 +45,7 @@ AssetTracker.prototype.ukAssetAccountsReport = function (sheetName = this.ukAsse
 
     const formulas = [[
       `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(B3:B, QUERY(${assetsRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(E3:E),,FILTER(D3:D*E3:E, LEN(A3:A))))`
+      `ArrayFormula(IF(ISBLANK(E3:E),,FILTER(ROUND(D3:D*E3:E, 2), LEN(A3:A))))`
     ]];
 
     sheet.getRange('E3:F3').setFormulas(formulas);

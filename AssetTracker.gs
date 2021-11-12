@@ -67,7 +67,7 @@ var AssetTracker = class AssetTracker {
      * The number of decimal places to round exrate calculation.
      * @type {number}
      */
-    this.exRateDecimalPlaces = 7;
+    this.exRateDecimalPlaces = 8;
 
     //get user properties
     let userProperties = PropertiesService.getUserProperties();

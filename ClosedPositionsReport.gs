@@ -90,8 +90,8 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(S3:S=0,,V3:V/S3:S), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(S3:S=0,,W3:W/S3:S), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, (E3:E+F3:F)*D3:D, E3:E+F3:F), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(O3:O, (P3:P-Q3:Q)*O3:O, P3:P-Q3:Q), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, ROUND((E3:E+F3:F)*D3:D, 2), E3:E+F3:F), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(O3:O, ROUND((P3:P-Q3:Q)*O3:O, 2), P3:P-Q3:Q), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(W3:W-V3:V, LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(V3:V=0,,X3:X/V3:V), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, L3:L, "Y") > 1)+(((DATEDIF(A3:A, L3:L, "Y") = 1)*(DATEDIF(A3:A, L3:L, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`

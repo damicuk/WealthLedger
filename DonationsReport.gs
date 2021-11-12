@@ -83,8 +83,8 @@ AssetTracker.prototype.donationsReport = function (sheetName = this.donationsRep
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(O3:O=0,,R3:R/O3:O), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(O3:O=0,,S3:S/O3:O), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, (E3:E+F3:F)*D3:D, E3:E+F3:F), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(M3:M*O3:O, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, ROUND((E3:E+F3:F)*D3:D, 2), E3:E+F3:F), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(ROUND(M3:M*O3:O, 2), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(S3:S-R3:R, LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(R3:R=0,,T3:T/R3:R), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, L3:L, "Y") > 1)+(((DATEDIF(A3:A, L3:L, "Y") = 1)*(DATEDIF(A3:A, L3:L, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`

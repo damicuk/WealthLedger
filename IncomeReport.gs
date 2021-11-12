@@ -38,7 +38,7 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
     sheet.getRange('I2:I').setNumberFormat('#,##0.00;(#,##0.00)');
 
     const formulas = [[
-      `IF(ISBLANK(A2),,ArrayFormula(FILTER(IF(ISBLANK(F2:F),G2:G,F2:F*G2:G), LEN(A2:A))))`
+      `IF(ISBLANK(A2),,ArrayFormula(FILTER(IF(ISBLANK(F2:F),G2:G,ROUND(F2:F*G2:G, 2)), LEN(A2:A))))`
     ]];
 
     sheet.getRange('I2:I2').setFormulas(formulas);
