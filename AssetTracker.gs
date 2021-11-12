@@ -121,11 +121,10 @@ var AssetTracker = class AssetTracker {
     this.assetsSheetName = 'Assets';
     this.assetsSheetVersion = '1';
 
-    this.cgApiName = 'CoinGecko';
     this.cmcApiName = 'CoinMarketCap';
     this.ccApiName = 'CryptoCompare';
 
-    this.validApiNames = [this.cgApiName, this.cmcApiName, this.ccApiName,];
+    this.validApiNames = [this.cmcApiName, this.ccApiName,];
 
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.fiatAccountsRangeName = 'FiatAccounts';

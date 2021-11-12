@@ -69,16 +69,6 @@ var Asset = class Asset {
   }
 
   /**
-  * Regular expression to validate asset ID.
-  * @type {RegExp}
-  * @static
-  */
-  static get assetIDRegExp() {
-
-    return /^[\w\-]{1,20}$/;
-  }
-
-  /**
    * Array of default asset types.
    * @type {Array<string>}
    * @static
@@ -117,4 +107,4 @@ var Asset = class Asset {
     return this.ticker;
 
   }
-}
+};

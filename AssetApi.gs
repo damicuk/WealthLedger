@@ -18,33 +18,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
     let now = new Date();
 
-    if (apiName === 'CoinGecko') {
-
-      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${assets}&vs_currencies=${fiatBaseTicker}`;
-
-      let response;
-      try {
-        response = UrlFetchApp.fetch(url);
-      }
-      catch (error) {
-
-        const message = `Failed to update crypto prices from ${apiName}.`;
-        throw new ApiError(message);
-
-      }
-
-      const txt = response.getContentText();
-      const data = JSON.parse(txt);
-
-      for (let coin in data) {
-
-        let currentPrice = data[coin][fiatBaseTicker.toLowerCase()];
-
-        apiAssetPriceMap.set(coin, { currentPrice: currentPrice, timestamp: now.toISOString() });
-
-      }
-    }
-    else if (apiName === 'CoinMarketCap') {
+    if (apiName === 'CoinMarketCap') {
 
       if (!apiKey) {
 

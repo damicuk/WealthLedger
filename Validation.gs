@@ -157,9 +157,6 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   else if (apiName !== '' && !this.validApiNames.includes(apiName)) {
     throw new ValidationError(`Assets row ${rowIndex}: Api (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
   }
-  else if (assetID !== '' && !Asset.assetIDRegExp.test(assetID)) {
-    throw new ValidationError(`Assets row ${rowIndex}: API Asset ID (${assetID}) format is invalid.\nInput must be between 1 and 20 characters [A-Za-z0-9_-].`, rowIndex, 'assetID');
-  }
 };
 
 /**
