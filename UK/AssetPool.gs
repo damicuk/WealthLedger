@@ -199,7 +199,7 @@ var AssetPool = class AssetPool {
       }
       else {
 
-        //the application should have thrown a crypto account error before reaching here
+        //the application should have thrown an asset account error before reaching here
         throw Error(`Attempted to withdraw ${this.asset} ${poolWithdrawal.debitAmount} + fee ${poolWithdrawal.debitFee} from balance of ${this.asset} ${this.balance}`);
 
       }

@@ -99,7 +99,7 @@ var AssetAccount = class AssetAccount {
 
     if (neededSubunits > this.subunits) {
 
-      throw new CryptoAccountError(`Attempted to withdraw ${this.ticker} ${amount} + fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex);
+      throw new AssetAccountError(`Attempted to withdraw ${this.ticker} ${amount} + fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitAmount');
 
     }
 
@@ -170,7 +170,7 @@ var AssetAccount = class AssetAccount {
 
     if (feeSubunits > this.subunits) {
 
-      throw new CryptoAccountError(`Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex);
+      throw new AssetAccountError(`Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitFee');
 
     }
 

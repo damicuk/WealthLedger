@@ -10,13 +10,13 @@ AssetTracker.prototype.handleError = function (error, message, sheetName, rowInd
 
   if (error === 'validation') {
 
-    if (rowIndex && columnIndex) {
+    if (sheetName && rowIndex && columnIndex) {
       this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
     SpreadsheetApp.getUi().alert(`Validation failed`, message, SpreadsheetApp.getUi().ButtonSet.OK);
   }
-  else if (error === 'cryptoAccount') {
+  else if (error === 'assetAccount') {
 
     if (sheetName && rowIndex && columnIndex) {
       this.setCurrentCell(sheetName, rowIndex, columnIndex);
@@ -27,7 +27,7 @@ AssetTracker.prototype.handleError = function (error, message, sheetName, rowInd
   }
   else if (error === 'api') {
 
-    SpreadsheetApp.getUi().alert(`Error updating crypto prices`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    SpreadsheetApp.getUi().alert(`Error updating current prices`, message, SpreadsheetApp.getUi().ButtonSet.OK);
 
   }
   else if (error === 'settings') {
@@ -113,14 +113,17 @@ class ValidationError extends CustomError {
  * Error when attempting to withdraw from an asset account.
  * @extends CustomError
  */
-class CryptoAccountError extends CustomError {
+class AssetAccountError extends CustomError {
 
   /**
    * Initializes class with message and rowIndex, sets name property to the name of the class.
    * @param {string} message - description of the error and suggested solution.
-   * @param {number} rowIndex - the row numer in the ledger sheet that requires atention.
+   * @param {number} [rowIndex] - the row numer in the ledger sheet that requires atention.
+   * @param {string} [columnName] - the name assigned to the column in the ledger sheet.
+   * Used to get the index from LedgerRecord.getColumnIndex(columnName).
+   * Avoids hard coding column numbers.
    */
-  constructor(message, rowIndex) {
+  constructor(message, rowIndex, columnName) {
 
     super(message);
 
@@ -129,11 +132,17 @@ class CryptoAccountError extends CustomError {
      * @type {number}
      */
     this.rowIndex = rowIndex;
+
+    /**
+     * The name assigned to the column in the ledger sheet.
+     * @type {string}
+     */
+    this.columnName = columnName;
   }
 }
 
 /**
- * Error when attempting to retrieve crypto prices from an API.
+ * Error when attempting to retrieve current prices from an API.
  * @extends CustomError
  */
 class ApiError extends CustomError {

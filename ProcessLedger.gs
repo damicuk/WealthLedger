@@ -179,6 +179,19 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Income') {
 
+    if (debitAsset) { //Check debit asset previously held
+      let assetHeld = false;
+      for (let wallet of this.wallets) {
+        if (wallet.assetAccounts.has(debitAsset.ticker)) {
+          assetHeld = true;
+          break;
+        }
+      }
+      if (!assetHeld) {
+        throw new AssetAccountError(`Income source can not be debit asset (${debitAsset}) when asset not previously held.`, rowIndex, 'debitAsset');
+      }
+    }
+
     if (creditAsset.isFiat) { //Fiat income
 
       this.getWallet(creditWalletName).getFiatAccount(creditAsset).transfer(creditAmount);

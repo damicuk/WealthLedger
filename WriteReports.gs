@@ -1,6 +1,6 @@
 /**
- * Validates and processes the ledger, retrieves the currenct crypto prices, and writes the reports.
- * Uses the error handler to handle any ValidatioError, CryptoAccountError, or ApiError .
+ * Validates and processes the ledger, retrieves the currenct prices, and writes the reports.
+ * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError .
  * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
@@ -26,8 +26,8 @@ AssetTracker.prototype.writeReports = function () {
     this.processLedger(ledgerRecords);
   }
   catch (error) {
-    if (error instanceof CryptoAccountError) {
-      this.handleError('cryptoAccount', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex('debitAmount'));
+    if (error instanceof AssetAccountError) {
+      this.handleError('assetAccount', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex(error.columnName));
       return;
     }
     else {
