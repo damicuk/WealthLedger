@@ -44,10 +44,10 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
     let poolWithdrawals = [];
 
     let debitAmountSubunits = Math.round((subunits / this.subunits) * this.debitAmountSubunits);
-    let debitFeeSubunits = Math.round((subunits / this.subunits) * this.debitFeeSubunits);
+    let debitFeeSubunits = subunits - debitAmountSubunits;
 
     let creditAmountSubunits = Math.round((subunits / this.subunits) * this.creditAmountSubunits);
-    let creditFeeSubunits = creditAmountSubunits - subunits;
+    let creditFeeSubunits = Math.round((subunits / this.subunits) * this.creditFeeSubunits);
 
     let poolWithdrawal1 = new PoolWithdrawal(
       this.date,
@@ -56,7 +56,8 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
       debitFeeSubunits / this.debitAsset.subunits,
       this.creditAsset,
       creditAmountSubunits / this.creditAsset.subunits,
-      creditFeeSubunits / this.creditAsset.subunits);
+      creditFeeSubunits / this.creditAsset.subunits,
+      this.action);
 
     poolWithdrawals.push(poolWithdrawal1);
 
@@ -67,7 +68,8 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
       (this.debitFeeSubunits - poolWithdrawal1.debitFeeSubunits) / this.debitAsset.subunits,
       this.creditAsset,
       (this.creditAmountSubunits - poolWithdrawal1.creditAmountSubunits) / this.creditAsset.subunits,
-      (this.creditFeeSubunits - poolWithdrawal1.creditFeeSubunits) / this.creditAsset.subunits);
+      (this.creditFeeSubunits - poolWithdrawal1.creditFeeSubunits) / this.creditAsset.subunits,
+      this.action);
 
     poolWithdrawals.push(poolWithdrawal2);
 

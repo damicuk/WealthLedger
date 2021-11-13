@@ -33,7 +33,7 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  let dataTable = [
+  let sampleData = [
     ['USD', 'Fiat Base', '2', '1', , , ,],
     ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , `Fiat capital gains are ignored.`],
     ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , `Forex is treated as any other asset.`],
@@ -47,7 +47,7 @@ AssetTracker.prototype.assetsSheet = function () {
     [, , , , , , ,]
   ];
 
-  this.writeTable(ss, sheet, dataTable, this.assetsRangeName, 1, 7);
+  sheet.getRange('A2:G12').setValues(sampleData);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?\\w{1,10}$")`)
@@ -140,6 +140,7 @@ AssetTracker.prototype.updateAssetsAssetTypes = function (sheet) {
 /**
  * Returns the range in the asset sheet that contains the data excluding header rows.
  * If there is no asset sheet it creates a sample asset sheet and returns the range from that.
+ * Sets the assets named range to the data range.
  * Throws a ValidationError if the ledger sheet contains insufficient columns or no data rows.
  * @return {Range} The range in the asset sheet that contains the data excluding header rows.
  */
@@ -158,6 +159,8 @@ AssetTracker.prototype.getAssetsRange = function () {
   }
 
   let assetsRange = assetsSheet.getDataRange();
+
+  ss.setNamedRange(this.assetsRangeName, assetsRange);
 
   if (assetsRange.getHeight() < this.assetsHeaderRows + 1) {
     throw new ValidationError('Asset sheet contains no data rows.');
