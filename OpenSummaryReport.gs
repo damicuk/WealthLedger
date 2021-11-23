@@ -112,7 +112,7 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L
   sheet.insertChart(assetTypeValueChart);
 
   let assetValueChart = sheet.newChart().asPieChart()
-    .addRange(chartRange2)
+    .addRange(chartRange2.offset(0, 1, chartRange1.getHeight(), 2))
     .setNumHeaders(1)
     .setTitle('Asset Value')
     .setPosition(21, 15, 30, 30)
@@ -131,8 +131,8 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L
   sheet.insertChart(assetTypePLChart);
 
   let assetPLChart = sheet.newChart().asColumnChart()
-    .addRange(chartRange2.offset(0, 0, chartRange2.getHeight(), 1))
-    .addRange(chartRange2.offset(0, 2, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 1, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 3, chartRange2.getHeight(), 1))
     .setNumHeaders(1)
     .setTitle('Asset Unrealized P/L %')
     .setPosition(59, 15, 30, 30)

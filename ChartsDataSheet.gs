@@ -30,16 +30,17 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
 
   let headers = [
     [
-      'Open Positions', , , , , ,
+      'Open Positions', , , , , , ,
       'Closed Positions', , , , , , , , ,
     ],
     [
-      'Chart A', , , 'Chart B', , , 'Chart C', , , 'Chart D', , , 'Chart E', , ,
+      'Chart A', , , 'Chart B', , , , 'Chart C', , , 'Chart D', , , 'Chart E', , ,
     ],
     [
       'Asset Type',
       'Current Value',
       'Unrealized P/L %',
+      'Asset Type',
       'Asset',
       'Current Value',
       'Unrealized P/L %',
@@ -55,58 +56,58 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
     ]
   ];
 
-  sheet.getRange('A1:O3').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:P3').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(3);
 
-  sheet.getRange('A1:F1').mergeAcross();
-  sheet.getRange('G1:O1').mergeAcross();
+  sheet.getRange('A1:G1').mergeAcross();
+  sheet.getRange('H1:P1').mergeAcross();
 
   sheet.getRange('A2:C2').mergeAcross();
-  sheet.getRange('D2:F2').mergeAcross();
-  sheet.getRange('G2:I2').mergeAcross();
-  sheet.getRange('J2:L2').mergeAcross();
-  sheet.getRange('M2:O2').mergeAcross();
+  sheet.getRange('D2:G2').mergeAcross();
+  sheet.getRange('H2:J2').mergeAcross();
+  sheet.getRange('K2:M2').mergeAcross();
+  sheet.getRange('N2:P2').mergeAcross();
 
   sheet.getRange('A4:A').setNumberFormat('@');
   sheet.getRange('B4:B').setNumberFormat('#,##0.00;(#,##0.00)');
   sheet.getRange('C4:C').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-  sheet.getRange('D4:D').setNumberFormat('@');
-  sheet.getRange('E4:E').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('F4:F').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+  sheet.getRange('D4:E').setNumberFormat('@');
+  sheet.getRange('F4:F').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('G4:G').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-  sheet.getRange('G4:G').setNumberFormat('@');
-  sheet.getRange('H4:H').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('I4:I').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+  sheet.getRange('H4:H').setNumberFormat('@');
+  sheet.getRange('I4:I').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('J4:J').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
 
-  sheet.getRange('J4:J').setNumberFormat('@');
-  sheet.getRange('K4:K').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('L4:L').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+  sheet.getRange('K4:K').setNumberFormat('@');
+  sheet.getRange('L4:L').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('M4:M').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
 
-  sheet.getRange('N4:N').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('O4:O').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+  sheet.getRange('O4:O').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('P4:P').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
 
   const formulas = [[
     `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT I, SUM(Q), SUM(R) / SUM(O) GROUP BY I ORDER BY I LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , ,
-    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT H, SUM(Q), SUM(R) / SUM(O) GROUP BY H ORDER BY H LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , ,
+    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT I, H, SUM(Q), SUM(R) / SUM(O) GROUP BY I, H ORDER BY I, H LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , , ,
     `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT I, SUM(W), SUM(X) GROUP BY I ORDER BY I LABEL SUM(W) '', SUM(X) ''"))`, , ,
     `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT H, SUM(W), SUM(X) GROUP BY H ORDER BY H LABEL SUM(W) '', SUM(X) ''"))`, , ,
     `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT YEAR(L), SUM(W), SUM(X) GROUP BY YEAR(L) ORDER BY YEAR(L) LABEL YEAR(L) '', SUM(W) '', SUM(X) ''"))`
   ]];
 
-  sheet.getRange('A4:M4').setFormulas(formulas);
+  sheet.getRange('A4:N4').setFormulas(formulas);
 
   sheet.hideSheet();
 
   sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   ss.setNamedRange(this.chartRange1Name, sheet.getRange('A3:C'));
-  ss.setNamedRange(this.chartRange2Name, sheet.getRange('D3:F'));
-  ss.setNamedRange(this.chartRange3Name, sheet.getRange('G3:I'));
-  ss.setNamedRange(this.chartRange4Name, sheet.getRange('J3:L'));
-  ss.setNamedRange(this.chartRange5Name, sheet.getRange('M3:O'));
+  ss.setNamedRange(this.chartRange2Name, sheet.getRange('D3:G'));
+  ss.setNamedRange(this.chartRange3Name, sheet.getRange('H3:J'));
+  ss.setNamedRange(this.chartRange4Name, sheet.getRange('K3:M'));
+  ss.setNamedRange(this.chartRange5Name, sheet.getRange('N3:P'));
 
-  this.trimColumns(sheet, 15);
+  this.trimColumns(sheet, 16);
 
-  sheet.autoResizeColumns(1, 15);
+  sheet.autoResizeColumns(1, 16);
 };
