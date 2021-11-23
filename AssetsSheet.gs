@@ -50,9 +50,9 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('A2:G12').setValues(sampleData);
 
   let assetRule = SpreadsheetApp.newDataValidation()
-    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?\\w{1,10}$")`)
+    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?[\\w$@]{1,10}$")`)
     .setAllowInvalid(false)
-    .setHelpText(`Input must be 1-10 characters [A-Za-z0-9_] with optional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`)
+    .setHelpText(`Input must be 1-10 characters [A-Za-z0-9_$@] with optional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`)
     .build();
   sheet.getRange('A2:A').setDataValidation(assetRule);
 
