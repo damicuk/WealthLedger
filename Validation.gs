@@ -119,7 +119,6 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   let decimalPlaces = assetRecord.decimalPlaces;
   let currentPrice = assetRecord.currentPrice;
   let apiName = assetRecord.apiName;
-  let assetID = assetRecord.assetID;
 
   if (ticker === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
@@ -128,7 +127,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
   }
   else if (!Asset.tickerRegExp.test(ticker)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-10 characters [A-Za-z0-9_].\nOptional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`, rowIndex, 'ticker');
+    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-10 characters [A-Za-z0-9_$@].\nOptional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`, rowIndex, 'ticker');
   }
   else if (assetType === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
@@ -149,7 +148,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Fiat base current price must be 1.`, rowIndex, 'currentPrice');
   }
   else if (isNaN(currentPrice)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Current price is not valid (number or blank).`, rowIndex, 'currentPrice');
+    throw new ValidationError(`Assets row ${rowIndex}: Current price (${currentPrice}) is not valid (number or blank).`, rowIndex, 'currentPrice');
   }
   else if (currentPrice < 0) {
     throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater or equal to 0 (or blank).`, rowIndex, 'currentPrice');

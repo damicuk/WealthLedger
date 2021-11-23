@@ -45,7 +45,7 @@ var Asset = class Asset {
    */
   static get tickerRegExp() {
 
-    return /^(\w{1,15}:)?\w{1,10}$/;
+    return /^(\w{1,15}:)?[\w$@]{1,10}$/;
   }
 
   /**
