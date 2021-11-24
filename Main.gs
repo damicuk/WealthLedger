@@ -76,14 +76,14 @@ function deleteReports() {
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function saveSettings(settings) {
+function saveSettings(userSettings, documentSettings) {
 
-  new AssetTracker().saveSettings(settings);
+  new AssetTracker().saveSettings(userSettings, documentSettings);
 
 }
 
 /**
- * Deletes all the user properties
+ * Deletes all the user and document properties
  * Not intended for use by the end user
  * Useful in development and testing
  */
@@ -91,5 +91,8 @@ function deleteSettings() {
 
   let userProperties = PropertiesService.getUserProperties();
   userProperties.deleteAllProperties();
+
+  let documentProperties = PropertiesService.getDocumentProperties();
+  documentProperties.deleteAllProperties();
 
 }

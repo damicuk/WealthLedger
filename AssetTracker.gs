@@ -201,22 +201,13 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Gets the type of the asset specified by the ticker.
-   * @param {string} ticker - The asset ticker.
-   * @return {string} The type of the asset specified by the ticker.
+   * Array of supported accounting models.
+   * @type {string[]}
+   * @static
    */
-  getAssetType(ticker) {
-    let asset = this.assets.get(ticker);
-    return asset ? asset.assetType : null;
-  }
+  static get accountingModels() {
 
-  /**
-   * Determines whether the ticker is a key in the assets map.
-   * @param {string} ticker - The asset ticker.
-   * @return {boolean} Whether the ticker is a key in the assets map.
-   */
-  isValid(ticker) {
-    return this.assets.has(ticker);
+    return ['US', 'UK'];
   }
 
   /**
@@ -305,6 +296,25 @@ var AssetTracker = class AssetTracker {
     }
 
     return returnArray;
+  }
+
+  /**
+   * Gets the type of the asset specified by the ticker.
+   * @param {string} ticker - The asset ticker.
+   * @return {string} The type of the asset specified by the ticker.
+   */
+  getAssetType(ticker) {
+    let asset = this.assets.get(ticker);
+    return asset ? asset.assetType : null;
+  }
+
+  /**
+   * Determines whether the ticker is a key in the assets map.
+   * @param {string} ticker - The asset ticker.
+   * @return {boolean} Whether the ticker is a key in the assets map.
+   */
+  isValid(ticker) {
+    return this.assets.has(ticker);
   }
 
   /**
@@ -457,18 +467,20 @@ var AssetTracker = class AssetTracker {
 
   /**
    * Saves a set of key value pairs as user properties.
+   * Saves a set of key value pairs as document properties.
    * Validates apiKeys setting if attempting to change the existing value.
    * Sends message to the error handler if the api key validation fails.
    * Displays toast on success.
-   * @param {Object.<string, string>} settings - The key value pairs to save as user properties .
+   * @param {Object.<string, string>} userSettings - The key value pairs to save as user properties.
+   * @param {Object.<string, string>} documentSettings - The key value pairs to save as document properties.
    */
-  saveSettings(settings) {
+  saveSettings(userSettings, documentSettings) {
 
     let userProperties = PropertiesService.getUserProperties();
 
-    if (settings.ccApiKey && settings.ccApiKey !== userProperties.ccApiKey) {
+    if (userSettings.ccApiKey && userSettings.ccApiKey !== userProperties.ccApiKey) {
 
-      let apiKeyValid = this.validateApiKey('CryptoCompare', settings.ccApiKey);
+      let apiKeyValid = this.validateApiKey('CryptoCompare', userSettings.ccApiKey);
 
       if (!apiKeyValid) {
 
@@ -477,9 +489,9 @@ var AssetTracker = class AssetTracker {
       }
     }
 
-    if (settings.cmcApiKey && settings.cmcApiKey !== userProperties.cmcApiKey) {
+    if (userSettings.cmcApiKey && userSettings.cmcApiKey !== userProperties.cmcApiKey) {
 
-      let apiKeyValid = this.validateApiKey('CoinMarketCap', settings.cmcApiKey);
+      let apiKeyValid = this.validateApiKey('CoinMarketCap', userSettings.cmcApiKey);
 
       if (!apiKeyValid) {
 
@@ -488,7 +500,10 @@ var AssetTracker = class AssetTracker {
       }
     }
 
-    userProperties.setProperties(settings);
+    let documentProperties = PropertiesService.getDocumentProperties();
+
+    userProperties.setProperties(userSettings);
+    documentProperties.setProperties(documentSettings);
     SpreadsheetApp.getActive().toast('Settings saved');
   }
 };

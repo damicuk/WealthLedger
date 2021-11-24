@@ -2,26 +2,31 @@
 <html>
 
 <head>
-	<base target="_top">
-	<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
-	<!-- The CSS package above applies Google styling to buttons and other elements. -->
+  <base target="_top">
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  <!-- The CSS package above applies Google styling to buttons and other elements. -->
 </head>
 
 <script>
-	function saveSettings() {
+  function saveSettings() {
 
+    let accountingModel = document.getElementById('accounting-model').value;
     let ccApiKey = document.getElementById('cc-api-key').value;
     let cmcApiKey = document.getElementById('cmc-api-key').value;
 
-    let settings = {
+    let userSettings = {
       ccApiKey: ccApiKey,
       cmcApiKey : cmcApiKey
+    }
+
+    let documentSettings = {
+      accountingModel: accountingModel
     }
 
     google.script.run
     .withSuccessHandler(onSuccess)
     .withFailureHandler(onFailure)
-    .saveSettings(settings);
+    .saveSettings(userSettings, documentSettings);
   
  }
 
@@ -41,30 +46,43 @@
 
 <? 
 
+let documentProperties = PropertiesService.getDocumentProperties();
+let accountingModel = documentProperties.getProperty('accountingModel');
+
 let userProperties = PropertiesService.getUserProperties();
 let ccApiKey = userProperties.getProperty('ccApiKey');
 let cmcApiKey = userProperties.getProperty('cmcApiKey');
 
+let accountingModels = AssetTracker.accountingModels;
+
 ?>
 
 <body>
-	<div>
-		<form id="settingsForm">
-			<div class="block form-group">
-				<label for="cc-api-key">CryptoCompare API key</label>
-				<input type="text" id="cc-api-key" style="width: 460px;" value="<?=ccApiKey?>" placeholder="< -- paste API key here -- >">
-			</div>
+  <div>
+    <form id="settingsForm">
       <div class="block form-group">
-				<label for="cmc-api-key">CoinMarketCap API key</label>
-				<input type="text" id="cmc-api-key" style="width: 460px;" value="<?=cmcApiKey?>" placeholder="< -- paste API key here -- >">
-			</div>
-				<div class="block form-group">
-					<input type="button" class="action" value="Save" onclick="saveSettings();" />
-					<input type="button" value="Cancel" onclick="google.script.host.close();" />
-			</div>
-		</form>
-		<div id="output"></div>
-	</div>
+        <label for="accounting-model">Accounting Model</label>
+        <select id="accounting-model">
+           <? for(let country of accountingModels) {?>
+           <option <? if(country === accountingModel) {?>selected<?} ?>><?= country ?></option>
+           <?}?>
+        </select>
+      </div>
+      <div class="block form-group">
+        <label for="cc-api-key">CryptoCompare API key</label>
+        <input type="text" id="cc-api-key" style="width: 460px;" value="<?=ccApiKey?>" placeholder="< -- paste API key here -- >">
+      </div>
+      <div class="block form-group">
+        <label for="cmc-api-key">CoinMarketCap API key</label>
+        <input type="text" id="cmc-api-key" style="width: 460px;" value="<?=cmcApiKey?>" placeholder="< -- paste API key here -- >">
+      </div>
+      <div class="block form-group">
+        <input type="button" class="action" value="Save" onclick="saveSettings();" />
+        <input type="button" value="Cancel" onclick="google.script.host.close();" />
+      </div>
+    </form>
+    <div id="output"></div>
+  </div>
 </body>
 
 </html>
