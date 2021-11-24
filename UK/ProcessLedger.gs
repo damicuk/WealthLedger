@@ -56,7 +56,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
   }
   else if (action === 'Trade') {
 
-    if (!creditAsset.isFiat) {  //Buy or exchange asset
+    if (!creditAsset.isFiat) { //Buy or exchange asset
 
       let poolDeposit = new PoolDeposit(date,
         this.fiatBase,
@@ -86,9 +86,12 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
   }
   else if (action === 'Income') {
 
-    let poolDeposit = new PoolDeposit(date, this.fiatBase, creditExRate * creditAmount, 0, creditAsset, creditAmount, 0);
-    this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
+    if (!creditAsset.isFiat) { // Asset income
 
+      let poolDeposit = new PoolDeposit(date, this.fiatBase, creditExRate * creditAmount, 0, creditAsset, creditAmount, 0);
+      this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
+
+    }
   }
   else if (action === 'Donation') {
 

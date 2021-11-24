@@ -93,7 +93,7 @@ AssetTracker.prototype.ukChartsDataSheet = function (sheetName = this.ukChartsDa
     `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT K"))=0,,QUERY(${referenceRangeName1}, "SELECT F, E, SUM(M), SUM(N) / SUM(L) GROUP BY F, E ORDER BY F, E LABEL SUM(M) '', SUM(N) / SUM(L)  ''"))`, , ,,
     `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT G, SUM(T), SUM(U) WHERE O='Trade' GROUP BY G ORDER BY G LABEL SUM(T) '', SUM(U) ''"))`, , ,
     `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT G, F, SUM(T), SUM(U) WHERE O='Trade' GROUP BY G, F ORDER BY G, F LABEL SUM(T) '', SUM(U) ''"))`, , ,,
-    `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT YEAR(J), SUM(T), SUM(U) WHERE O='Trade' GROUP BY YEAR(J) ORDER BY YEAR(J) LABEL YEAR(J) '', SUM(T) '', SUM(U) ''"))`
+    `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT YEAR(J), SUM(T), SUM(U) WHERE O='Trade' AND YEAR(J)>"&YEAR(TODAY())-5&" GROUP BY YEAR(J) ORDER BY YEAR(J) LABEL YEAR(J) '', SUM(T) '', SUM(U) ''"))`
   ]];
 
   sheet.getRange('A4:O4').setFormulas(formulas);

@@ -105,7 +105,7 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
   let yearProceedsPLChart = sheet.newChart().asColumnChart()
     .addRange(chartRange5)
     .setNumHeaders(1)
-    .setTitle('Year')
+    .setTitle('Last 5 Years')
     .setPosition(40, 16, 30, 30)
     .build();
 

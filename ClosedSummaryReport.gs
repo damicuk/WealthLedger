@@ -127,7 +127,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SE
   let yearProceedsPLChart = sheet.newChart().asColumnChart()
     .addRange(chartRange5)
     .setNumHeaders(1)
-    .setTitle('Year')
+    .setTitle('Last 5 Years')
     .setPosition(40, 16, 30, 30)
     .build();
 
