@@ -29,6 +29,7 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
 
   let headers = [
     [
+      '',
       'Year',
       'Asset Type',
       'Asset',
@@ -42,37 +43,42 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
     ]
   ];
 
-  sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('B2:C').setNumberFormat('@');
-  sheet.getRange('D2:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('E2:F').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('G2:H').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('I2:I').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-  sheet.getRange('J2:J').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+  sheet.getRange('A2:A').setNumberFormat('@');
+  sheet.getRange('C2:D').setNumberFormat('@');
+  sheet.getRange('E2:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('F2:G').setNumberFormat('#,##0.0000;(#,##0.0000)');
+  sheet.getRange('H2:I').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('J2:J').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+  sheet.getRange('K2:K').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+
+  sheet.getRange('A2:A').setFontColor('#1155cc');
 
   const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
-QUERY({{"", "", "", "", 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY ASSET TYPE", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', Col2, '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");{"", "", "", "", "", "", "", "", "", ""};
-{"BY ASSET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', Col2, Col1, SUM(Col5), SUM(Col6) / SUM(Col5), SUM(Col7) / SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2, Col1 ORDER BY Col2, Col1 OFFSET 1 LABEL ' ' '', SUM(Col5) '', SUM(Col6) / SUM(Col5) '', SUM(Col7) / SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT Col3, ' ', '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col3 ORDER BY Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR AND ASSET TYPE", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT Col3, Col2, ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col3, Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");{"", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR AND ASSET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT Col3, Col2, Col1, SUM(Col5), SUM(Col6) / SUM(Col5), SUM(Col7) / SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col3, Col2, Col1 ORDER BY Col3, Col2, Col1 OFFSET 1 LABEL SUM(Col5) '', SUM(Col6) / SUM(Col5) '', SUM(Col7) / SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''")
+QUERY({{"", "", "", "", 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
+{"", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', '  ', Col2, '   ', '    ', '     ', '      ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
+{"", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', '  ', Col2, Col1, SUM(Col5), SUM(Col6) / SUM(Col5), SUM(Col7) / SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2, Col1 ORDER BY Col2, Col1 OFFSET 1 LABEL ' ' '', '  ' '', SUM(Col5) '', SUM(Col6) / SUM(Col5) '', SUM(Col7) / SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
+{"", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', Col3, '  ', '   ', '    ', '     ', '      ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col3 ORDER BY Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
+{"", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR AND ASSET TYPE", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', Col3, Col2, '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col3, Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
+{"", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR AND ASSET", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT ' ', Col3, Col2, Col1, SUM(Col5), SUM(Col6) / SUM(Col5), SUM(Col7) / SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) GROUP BY Col3, Col2, Col1 ORDER BY Col3, Col2, Col1 OFFSET 1 LABEL ' ' '', SUM(Col5) '', SUM(Col6) / SUM(Col5) '', SUM(Col7) / SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''")
 })`;
 
   sheet.getRange('A2').setFormula(formula);
 
-  this.trimColumns(sheet, 17);
+  this.trimColumns(sheet, 18);
 
   let chartRange3 = ss.getRangeByName(this.ukChartRange3Name);
   let chartRange4 = ss.getRangeByName(this.ukChartRange4Name);
@@ -82,7 +88,7 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
     .addRange(chartRange3)
     .setNumHeaders(1)
     .setTitle('Asset Type')
-    .setPosition(1, 15, 30, 30)
+    .setPosition(1, 16, 30, 30)
     .build();
 
   sheet.insertChart(assetTypeProceedsPLChart);
@@ -91,7 +97,7 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
     .addRange(chartRange4.offset(0, 1, chartRange4.getHeight(), 3))
     .setNumHeaders(1)
     .setTitle('Asset')
-    .setPosition(21, 15, 30, 30)
+    .setPosition(21, 16, 30, 30)
     .build();
 
   sheet.insertChart(assetProceedsPLChart);
@@ -100,10 +106,10 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
     .addRange(chartRange5)
     .setNumHeaders(1)
     .setTitle('Year')
-    .setPosition(40, 15, 30, 30)
+    .setPosition(40, 16, 30, 30)
     .build();
 
   sheet.insertChart(yearProceedsPLChart);
 
-  sheet.autoResizeColumns(1, 10);
+  sheet.autoResizeColumns(2, 10);
 };

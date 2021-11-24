@@ -29,6 +29,7 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
 
   let headers = [
     [
+      '',
       'Year',
       'Asset Type',
       'Asset',
@@ -43,60 +44,63 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
     ]
   ];
 
-  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('B2:D').setNumberFormat('@');
-  sheet.getRange('E2:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('F2:G').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('H2:I').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('J2:J').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-  sheet.getRange('K2:K').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+  sheet.getRange('A2:A').setNumberFormat('@');
+  sheet.getRange('C2:E').setNumberFormat('@');
+  sheet.getRange('F2:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('G2:H').setNumberFormat('#,##0.0000;(#,##0.0000)');
+  sheet.getRange('I2:J').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('K2:K').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+  sheet.getRange('L2:L').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+
+  sheet.getRange('A2:A').setFontColor('#1155cc');
 
   sheet.clearConditionalFormatRules();
-  this.addLongShortCondition(sheet, 'D3:D');
+  this.addLongShortCondition(sheet, 'E3:E');
 
   const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col2, '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2 ORDER BY Col2 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY ASSET", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col2, Col1, '  ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col1 ORDER BY Col2, Col1 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3 ORDER BY Col3 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR AND ASSET TYPE", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, Col2, ' ', '  ', '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2 ORDER BY Col3, Col2 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR AND ASSET", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, Col2, Col1, ' ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1 ORDER BY Col3, Col2, Col1 LABEL Col3 '', ' ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', '  ', '   ', Col8, '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col8 ORDER BY Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY ASSET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col2, '  ', Col8, '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col8 ORDER BY Col2, Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col1, Col8 ORDER BY Col2, Col1, Col8 LABEL ' ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, ' ', '  ', Col8, '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col8 ORDER BY Col3, Col8 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR, ASSET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, Col2, ' ', Col8, '  ', '   ', '    ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col3, Col8 ORDER BY Col3, Col2, Col8 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
-{"", "", "", "", "", "", "", "", "", "", ""};
-{"BY YEAR, ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT Col3, Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1, Col8 ORDER BY Col3, Col2, Col1, Col8 LABEL Col3 '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', '  ', Col2, '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2 ORDER BY Col2 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', '  ', Col2, Col1, '   ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col1 ORDER BY Col2, Col1 LABEL ' ' '', '  ' '', '   ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col3, '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3 ORDER BY Col3 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR AND ASSET TYPE", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col3, Col2, '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2 ORDER BY Col3, Col2 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR AND ASSET", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col3, Col2, Col1, '  ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1 ORDER BY Col3, Col2, Col1 LABEL Col3 '', ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', '  ', '   ', '    ', Col8, '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col8 ORDER BY Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', '  ', Col2, '   ', Col8, '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col8 ORDER BY Col2, Col8 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', '  ', Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col1, Col8 ORDER BY Col2, Col1, Col8 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col3, '  ', '   ', Col8, '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col8 ORDER BY Col3, Col8 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR, ASSET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col3, Col2, '  ', Col8, '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col3, Col8 ORDER BY Col3, Col2, Col8 LABEL Col3 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY YEAR, ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SELECT ' ', Col3, Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1, Col8 ORDER BY Col3, Col2, Col1, Col8 LABEL ' ' '', Col3 '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
 })`;
 
   sheet.getRange('A2').setFormula(formula);
 
-  this.trimColumns(sheet, 18);
+  this.trimColumns(sheet, 19);
 
   let chartRange3 = ss.getRangeByName(this.chartRange3Name);
   let chartRange4 = ss.getRangeByName(this.chartRange4Name);
@@ -106,7 +110,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SE
     .addRange(chartRange3)
     .setNumHeaders(1)
     .setTitle('Asset Type')
-    .setPosition(1, 15, 30, 30)
+    .setPosition(1, 16, 30, 30)
     .build();
 
   sheet.insertChart(assetTypeProceedsPLChart);
@@ -115,7 +119,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SE
     .addRange(chartRange4.offset(0, 1, chartRange4.getHeight(), 3))
     .setNumHeaders(1)
     .setTitle('Asset')
-    .setPosition(21, 15, 30, 30)
+    .setPosition(21, 16, 30, 30)
     .build();
 
   sheet.insertChart(assetProceedsPLChart);
@@ -124,10 +128,10 @@ QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), S, V, W, X, Z")}, "SE
     .addRange(chartRange5)
     .setNumHeaders(1)
     .setTitle('Year')
-    .setPosition(40, 15, 30, 30)
+    .setPosition(40, 16, 30, 30)
     .build();
 
   sheet.insertChart(yearProceedsPLChart);
 
-  sheet.autoResizeColumns(1, 11);
+  sheet.autoResizeColumns(2, 11);
 };

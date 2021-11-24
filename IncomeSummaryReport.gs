@@ -29,6 +29,7 @@ AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSu
 
   let headers = [
     [
+      '',
       'Year',
       'Source Asset',
       'Source Asset Type',
@@ -39,37 +40,39 @@ AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSu
     ]
   ];
 
-  sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:H1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('B2:E').setNumberFormat('@');
-  sheet.getRange('F2:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('G2:G').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('A2:A').setNumberFormat('@');
+  sheet.getRange('C2:F').setNumberFormat('@');
+  sheet.getRange('G2:G').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('H2:H').setNumberFormat('#,##0.00;(#,##0.00)');
 
-  const formulas = [[
+  sheet.getRange('A2:A').setFontColor('#1155cc');
+
+  const formula =
     `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col7) ''");
-{"", "", "", "", "", "", ""};
-{"BY ASSET TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col3, '   ', Col5, '    ', SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col7) ''");
-{"", "", "", "", "", "", ""};
-{"BY ASSET", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col2, Col3, Col4, Col5 ORDER BY Col2, Col3, Col4, Col5 LABEL ' ' '', SUM(Col6) '', SUM(Col7) ''");
-{"", "", "", "", "", "", ""};
-{"BY YEAR", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) ''");
-{"", "", "", "", "", "", ""};
-{"BT YEAR AND ASSET TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, ' ', Col3, '  ', Col5, '   ', SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', '   ' '', SUM(Col7) ''");
-{"", "", "", "", "", "", ""};
-{"BT YEAR AND ASSET", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT Col1, Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col2, Col3, Col4, Col5 ORDER BY Col1, Col2, Col3, Col4, Col5 LABEL Col1 '', SUM(Col6) '', SUM(Col7) ''")
-})`, , , , , , ,
-  ]];
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', '   ', Col3, '    ', Col5, '     ', SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BY ASSET", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col2, Col3, Col4, Col5 ORDER BY Col2, Col3, Col4, Col5 LABEL ' ' '', '  ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BY YEAR", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col1, '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BT YEAR AND ASSET TYPE", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col1, '  ', Col3, '   ', Col5, '    ', SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BT YEAR AND ASSET", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col1, Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col2, Col3, Col4, Col5 ORDER BY Col1, Col2, Col3, Col4, Col5 LABEL ' ' '', Col1 '', SUM(Col6) '', SUM(Col7) ''")
+})`;
 
-  sheet.getRange('A2:G2').setFormulas(formulas);
+  sheet.getRange('A2').setFormula(formula);
 
-  this.trimColumns(sheet, 7);
+  this.trimColumns(sheet, 8);
 
-  sheet.autoResizeColumns(1, sheet.getMaxColumns());
+  sheet.autoResizeColumns(2, 7);
 };
