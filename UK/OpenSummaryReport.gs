@@ -31,8 +31,8 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
   let headers = [
     [
       'Wallet',
-      'Asset',
       'Asset Type',
+      'Asset',
       'Balance',
       'Cost Price',
       'Current Price',
@@ -60,17 +60,17 @@ QUERY({QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT 'TOTAL
 QUERY({QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''"));
 {"", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', '  ', Col2, '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");{"", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', Col2, '  ', '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");{"", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', Col1, Col2, SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col1, Col2 ORDER BY Col1, Col2 OFFSET 1 LABEL ' ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
+QUERY({{"", "", 0, 0, 0, 0};QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT ' ', Col2, Col1, SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2, Col1 ORDER BY Col2, Col1 OFFSET 1 LABEL ' ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
 {"", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET", "", "", "", "", "", "", "", "", ""};
 QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col6), '       ', '        ' GROUP BY Col1 ORDER BY Col1 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', '      ' '', '       ' '', '        ' ''");
 {"", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET AND ASSET TYPE", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, ' ', Col3, '  ', '   ', '    ', '     ', SUM(Col6), '      ', '       ' GROUP BY Col1, Col3 ORDER BY Col1, Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', '      ' '', '       ' ''");{"", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, Col3, ' ', '  ', '   ', '    ', '     ', SUM(Col6), '      ', '       ' GROUP BY Col1, Col3 ORDER BY Col1, Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', '      ' '', '       ' ''");{"", "", "", "", "", "", "", "", "", ""};
 {"BY WALLET AND ASSET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, Col2, Col3, SUM(Col4), ' ', SUM(Col6) / SUM(Col4), '  ', SUM(Col6), '   ', '    ' GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 OFFSET 1 LABEL SUM(Col4) '', ' ' '', SUM(Col6) / SUM(Col4) '', '  ' '', SUM(Col6) '', '   ' '', '    ' ''")
+QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, Col3, Col2, SUM(Col4), ' ', SUM(Col6) / SUM(Col4), '  ', SUM(Col6), '   ', '    ' GROUP BY Col1, Col3, Col2 ORDER BY Col1, Col3, Col2 OFFSET 1 LABEL SUM(Col4) '', ' ' '', SUM(Col6) / SUM(Col4) '', '  ' '', SUM(Col6) '', '   ' '', '    ' ''")
 })`;
 
   sheet.getRange('A2').setFormula(formula);
@@ -90,7 +90,7 @@ QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, Col2, Col3, 
   sheet.insertChart(assetTypeValueChart);
 
   let assetValueChart = sheet.newChart().asPieChart()
-    .addRange(chartRange2)
+    .addRange(chartRange2.offset(0, 1, chartRange2.getHeight(), 2))
     .setNumHeaders(1)
     .setTitle('Asset Value')
     .setPosition(21, 15, 30, 30)
@@ -109,8 +109,8 @@ QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT Col1, Col2, Col3, 
   sheet.insertChart(assetTypePLChart);
 
   let assetPLChart = sheet.newChart().asColumnChart()
-    .addRange(chartRange2.offset(0, 0, chartRange2.getHeight(), 1))
-    .addRange(chartRange2.offset(0, 2, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 1, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 3, chartRange2.getHeight(), 1))
     .setNumHeaders(1)
     .setTitle('Asset Unrealized P/L %')
     .setPosition(59, 15, 30, 30)
