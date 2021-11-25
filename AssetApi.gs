@@ -8,7 +8,7 @@
  * @param {string} apiKey - The API key.
  * @param {Array<string>|string} assets - Comma-separated list of asset tickers.
  * @param {string} fiatBaseTicker - Fiat base ticker.
- * @return {Array<Array<string, number, date>>} The table containing the price data for the assets.
+ * @return {Array<Array<string, number, Date>>} The table containing the price data for the assets.
  */
 AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, fiatBaseTicker) {
 

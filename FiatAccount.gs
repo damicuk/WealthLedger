@@ -12,7 +12,7 @@ var FiatAccount = class FiatAccount {
 
     /**
      * The fiat asset.
-     * @type {<Asset>}
+     * @type {Asset}
      */
     this.asset = asset;
 

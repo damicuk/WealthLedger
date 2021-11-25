@@ -31,7 +31,7 @@ AssetTracker.prototype.validate = function () {
  * Processes the asset records.
  * Adds to the Map of assets.
  * Sets fiat base.
- * @return {[boolean, Array<AssetRecord>} Whether validation completed successfully and the asset records.
+ * @return {Array<boolean, Array<AssetRecord>>} Whether validation completed successfully and the asset records.
  */
 AssetTracker.prototype.validateAssetsSheet = function () {
 
@@ -58,7 +58,7 @@ AssetTracker.prototype.validateAssetsSheet = function () {
 /**
  * Retrieves and validates the ledger records from the ledger sheet.
  * Throws a ValidationError on failure.
- * @return {[boolean, Array<LedgerRecord>} Whether validation completed successfully and the ledger records.
+ * @return {Array<boolean, Array<LedgerRecord>>} Whether validation completed successfully and the ledger records.
  */
 AssetTracker.prototype.validateLedgerSheet = function () {
 

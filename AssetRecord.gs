@@ -30,7 +30,7 @@ class AssetRecord {
 
     /**
      * The type of the asset.
-     * @assetType {string}
+     * @type {string}
      */
     this.assetType = assetType;
 

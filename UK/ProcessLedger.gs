@@ -30,7 +30,6 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
  * Processes a ledger record consistent with the UK accounting model.
  * It treats the ledger record as an instuction and simulates the action specified.
  * @param {LedgerRecord} ledgerRecord - The ledger record to process.
- * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
 AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
 
@@ -135,9 +134,9 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
 * @param {number} numerator - The numerator of the split. 
 * @param {number} denominator - The denominator of the split.
 */
-AssetTracker.prototype.ukSplitAsset = function (assset, numerator, denominator) {
+AssetTracker.prototype.ukSplitAsset = function (asset, numerator, denominator) {
 
-  let assetPool = this.getAssetPool(assset);
+  let assetPool = this.getAssetPool(asset);
 
   for (let poolDeposit of assetPool.poolDeposits) {
     let splitBalance = this.splitBalance(poolDeposit.creditAmountSubunits, poolDeposit.creditFeeSubunits, numerator, denominator);
