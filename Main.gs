@@ -14,7 +14,7 @@ function onInstall(e) {
  */
 function onOpen(e) {
   SpreadsheetApp.getUi()
-    .createMenu('Wealthledger')
+    .createMenu('WealthLedger')
     .addItem('Step 1: Create sample sheets', 'createSampleSheets')
     .addSeparator()
     .addItem('Step 2: Validate', 'validate')
