@@ -33,19 +33,42 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  let sampleData = [
-    ['USD', 'Fiat Base', '2', '1', , , ,],
-    ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , `Fiat capital gains are ignored.`],
-    ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , ,],
-    ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , ,],
-    ['USDC', 'Stablecoin', '2', '1', , , ,],
-    ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , ,],
-    ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , ,],
-    ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)', , , ,],
-    ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , ,],
-    [, , , , , , ,]
-  ];
+  let sampleData;
+
+  if (this.accountingModel === 'UK') {
+
+    sampleData = [
+      ['GBP', 'Fiat Base', '2', '1', , , ,],
+      ['USD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "GBP"))', , , `Fiat capital gains are ignored.`],
+      ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "GBP"))', , , `Forex is treated as any other asset.`],
+      ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "GBP"))', , , ,],
+      ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "GBP"))', , , ,],
+      ['USDC', 'Stablecoin', '2', '=D$3', , , ,],
+      ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)*D$3', , , ,],
+      ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)*D$3', , , ,],
+      ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)*D$3', , , ,],
+      ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)*D$3', , , ,],
+      [, , , , , , ,]
+    ];
+
+  }
+  else {
+
+    sampleData = [
+      ['USD', 'Fiat Base', '2', '1', , , ,],
+      ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , `Fiat capital gains are ignored.`],
+      ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , `Forex is treated as any other asset.`],
+      ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , ,],
+      ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , ,],
+      ['USDC', 'Stablecoin', '2', '1', , , ,],
+      ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , ,],
+      ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , ,],
+      ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)', , , ,],
+      ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , ,],
+      [, , , , , , ,]
+    ];
+
+  }
 
   sheet.getRange('A2:G12').setValues(sampleData);
 

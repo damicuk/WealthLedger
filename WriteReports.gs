@@ -15,6 +15,16 @@ AssetTracker.prototype.writeReports = function () {
 
   this.processAssets(assetRecords);
 
+  if (this.fiatBase.ticker === 'GBP' && this.accountingModel !== 'UK') {
+    let ui = SpreadsheetApp.getUi();
+    let message = `Fiat base is GBP but the accounting model is US.\nYou can change the accounting model in setting.\n\nAre you sure you want to continue?`;
+    let result = ui.alert(`Warning`, message, ui.ButtonSet.YES_NO);
+    if (result !== ui.Button.YES) {
+      SpreadsheetApp.getActive().toast('Reports canceled');
+      return;
+    }
+  }
+
   let ledgerValidationResults = this.validateLedgerSheet();
   let ledgerValidationSuccess = ledgerValidationResults[0];
   let ledgerRecords = ledgerValidationResults[1];
@@ -37,7 +47,7 @@ AssetTracker.prototype.writeReports = function () {
 
   this.fiatAccountsSheet();
 
-  if (this.fiatBase.ticker === 'GBP') {
+  if (this.accountingModel === 'UK') {
 
     this.processLedgerUK(ledgerRecords);
 
@@ -77,7 +87,6 @@ AssetTracker.prototype.writeReports = function () {
 
   try {
     this.updateAssetPrices(assetRecords);
-    return;
   }
   catch (error) {
     if (error instanceof ApiError) {

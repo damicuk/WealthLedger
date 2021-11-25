@@ -58,6 +58,8 @@ function writeReports() {
  */
 function showSettingsDialog() {
 
+  new AssetTracker(); //To set default accounting model if necessary
+
   let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
     .setWidth(480)
     .setHeight(250);

@@ -26,7 +26,6 @@ var AssetTracker = class AssetTracker {
      */
     this.userDefinedAssetTypes = new Set();
 
-
     /**
      * Collection of all Lots.
      * @type {Array<Obeject>}
@@ -83,6 +82,12 @@ var AssetTracker = class AssetTracker {
      * @type {string}
      */
     this.cmcApiKey = userProperties.getProperty('cmcApiKey');
+
+    /**
+     * The accounting model used to determine how to process transactions.
+     * @type {string}
+     */
+    this.accountingModel = this.getAccountingModel();
 
     /**
      * The current lot matching method.
@@ -296,6 +301,43 @@ var AssetTracker = class AssetTracker {
     }
 
     return returnArray;
+  }
+
+  /**
+   * Gets the accounting model from document properties or sets and returns a default.
+   * @return {string} The accounting model.
+   */
+  getAccountingModel() {
+
+    let documentProperties = PropertiesService.getDocumentProperties();
+
+    let accountingModel = documentProperties.getProperty('accountingModel');
+
+    if (!accountingModel) {
+
+      accountingModel = this.defaultAccountingModel;
+
+      documentProperties.setProperty('accountingModel', accountingModel);
+    }
+    return accountingModel;
+  }
+
+  /**
+   * The default accounting model.
+   * It's value depends on the spreadsheet locale.
+   * @return {string} The accounting model.
+   */
+  get defaultAccountingModel() {
+
+    let ss = SpreadsheetApp.getActive();
+    let locale = ss.getSpreadsheetLocale();
+
+    if (locale === 'en_GB') {
+      return 'UK';
+    }
+    else {
+      return 'US';
+    }
   }
 
   /**

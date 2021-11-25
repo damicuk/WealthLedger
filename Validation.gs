@@ -119,6 +119,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   let decimalPlaces = assetRecord.decimalPlaces;
   let currentPrice = assetRecord.currentPrice;
   let apiName = assetRecord.apiName;
+  let accountingModel = this.accountingModel;
 
   if (ticker === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
@@ -137,6 +138,9 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   }
   else if (assetType === 'Fiat Base' && fiatBase) {
     throw new ValidationError(`Assets row ${rowIndex}: Fiat base has already been declared (${fiatBase}). Only one asset can be fiat base.`, rowIndex, 'assetType');
+  }
+  else if (accountingModel === 'UK' && assetType === 'Fiat Base' && ticker !== 'GBP') {
+    throw new ValidationError(`Assets row ${rowIndex}: Fiat Base must be GBP when using the UK accounting model. Asset (${ticker}) is invalid.\nYou can change the accounting model in settings.`, rowIndex, 'assetType');
   }
   else if (decimalPlaces === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Decimal places is missing.`, rowIndex, 'decimalPlaces');
@@ -267,8 +271,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   else if (isNaN(creditFee)) {
     throw new ValidationError(`${action} row ${rowIndex}: Credit fee is not valid (number or blank).`, rowIndex, 'creditFee');
   }
-  else if (this.fiatBase.ticker === 'GBP' && lotMatching !== '') {
-    throw new ValidationError(`${action} row ${rowIndex}: Leave lot matching blank when fiat base is GBP.`, rowIndex, 'lotMatching');
+  else if (this.accountingModel === 'UK' && lotMatching !== '') {
+    throw new ValidationError(`${action} row ${rowIndex}: Leave lot matching blank when using the UK accounting model.`, rowIndex, 'lotMatching');
   }
   else if (lotMatching !== '' && !AssetTracker.lotMatchings.includes(lotMatching)) {
     throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${AssetTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');

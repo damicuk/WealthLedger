@@ -8,13 +8,16 @@
  */
 AssetTracker.prototype.handleError = function (error, message, sheetName, rowIndex, columnIndex) {
 
+  let alertTitle;
+
   if (error === 'validation') {
 
     if (sheetName && rowIndex && columnIndex) {
       this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
-    SpreadsheetApp.getUi().alert(`Validation failed`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Validation failed`;
+
   }
   else if (error === 'assetAccount') {
 
@@ -22,19 +25,23 @@ AssetTracker.prototype.handleError = function (error, message, sheetName, rowInd
       this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
-    SpreadsheetApp.getUi().alert(`Insufficient funds`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Insufficient funds`;
 
   }
   else if (error === 'api') {
 
-    SpreadsheetApp.getUi().alert(`Error updating current prices`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Error updating current prices`;
 
   }
   else if (error === 'settings') {
 
-    SpreadsheetApp.getUi().alert(`Failed to save settings`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Failed to save settings`;
 
   }
+
+  let ui = SpreadsheetApp.getUi();
+  ui.alert(alertTitle, message, ui.ButtonSet.OK);
+
 };
 
 /**
