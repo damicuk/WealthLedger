@@ -53,7 +53,7 @@ AssetTracker.prototype.validateAssetsSheet = function () {
 
   return [success, assetRecords];
 
-}
+};
 
 /**
  * Retrieves and validates the ledger records from the ledger sheet.
@@ -78,7 +78,7 @@ AssetTracker.prototype.validateLedgerSheet = function () {
     }
   }
   return [success, ledgerRecords];
-}
+};
 
 /**
  * Validates a set of asset records and throws a ValidationError on failure.

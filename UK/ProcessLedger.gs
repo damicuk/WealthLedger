@@ -150,7 +150,7 @@ AssetTracker.prototype.ukSplitAsset = function (assset, numerator, denominator) 
     poolWithdrawal.debitAmountSubunits = splitBalance[0];
     poolWithdrawal.debitFeeSubunits = splitBalance[1];
   }
-}
+};
 
 /**
  * Gets the date at midnight on the day of the given date.

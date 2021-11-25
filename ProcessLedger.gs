@@ -30,7 +30,7 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
 
     this.assets.set(assetRecord.ticker, asset);
   }
-}
+};
 
 /**
  * Processes the ledger records.

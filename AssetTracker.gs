@@ -9,10 +9,10 @@ var AssetTracker = class AssetTracker {
   constructor() {
 
     /**
-     * The ticker of fiat base.
-     * * @type {string}
+     * The fiat base asset.
+     * * @type {Asset}
      */
-    this.fiatBase;
+    this.fiatBase = null;
 
     /**
      * Maps asset ticker to object containing asset properties: type, decimalPlaces, price.
