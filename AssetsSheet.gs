@@ -38,7 +38,7 @@ AssetTracker.prototype.assetsSheet = function () {
   if (this.accountingModel === 'UK') {
 
     sampleData = [
-      ['GBP', 'Fiat Base', '2', '1', , , ,],
+      ['GBP', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
       ['USD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "GBP"))', , , `Fiat capital gains are ignored.`],
       ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "GBP"))', , , `Forex is treated as any other asset.`],
       ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "GBP"))', , , ,],
@@ -55,7 +55,7 @@ AssetTracker.prototype.assetsSheet = function () {
   else {
 
     sampleData = [
-      ['USD', 'Fiat Base', '2', '1', , , ,],
+      ['USD', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
       ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , `Fiat capital gains are ignored.`],
       ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , `Forex is treated as any other asset.`],
       ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , ,],
