@@ -46,7 +46,7 @@ AssetTracker.prototype.assetsSheet = function () {
       ['USDC', 'Stablecoin', '2', '=D$3', , , ,],
       ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)*D$3', , , ,],
       ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)*D$3', , , ,],
-      ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)*D$3', , , ,],
+      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
       ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)*D$3', , , ,],
       [, , , , , , ,]
     ];
@@ -63,7 +63,7 @@ AssetTracker.prototype.assetsSheet = function () {
       ['USDC', 'Stablecoin', '2', '1', , , ,],
       ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , ,],
       ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , ,],
-      ['GE', 'Stock', '0', '=GOOGLEFINANCE(A10)', , , ,],
+      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
       ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , ,],
       [, , , , , , ,]
     ];
@@ -105,9 +105,9 @@ AssetTracker.prototype.assetsSheet = function () {
 
   this.trimSheet(sheet, 12, 7);
 
-  sheet.setColumnWidths(1, 7, 140);
+  sheet.setColumnWidths(1, 5, 140);
   sheet.setColumnWidth(6, 170);
-  sheet.setColumnWidth(7, 250);
+  sheet.autoResizeColumns(7, 1);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
 
