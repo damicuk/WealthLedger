@@ -58,12 +58,8 @@ function writeReports() {
  */
 function showSettingsDialog() {
 
-  new AssetTracker(); //To set default accounting model if necessary
+  new AssetTracker().showSettingsDialog();
 
-  let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
-    .setWidth(480)
-    .setHeight(250);
-  SpreadsheetApp.getUi().showModalDialog(html, 'Settings');
 }
 
 /**

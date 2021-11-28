@@ -68,27 +68,6 @@ var AssetTracker = class AssetTracker {
      */
     this.exRateDecimalPlaces = 8;
 
-    //get user properties
-    let userProperties = PropertiesService.getUserProperties();
-
-    /**
-     * The API key used to connect to CryptoCompare to retrieve crypto prices.
-     * @type {string}
-     */
-    this.ccApiKey = userProperties.getProperty('ccApiKey');
-
-    /**
-     * The API key used to connect to CoinMarketCap to retrieve crypto prices.
-     * @type {string}
-     */
-    this.cmcApiKey = userProperties.getProperty('cmcApiKey');
-
-    /**
-     * The accounting model used to determine how to process transactions.
-     * @type {string}
-     */
-    this.accountingModel = this.getAccountingModel();
-
     /**
      * The current lot matching method.
      * Options are FIFO, LIFO, HIFO, LOFO.
@@ -303,11 +282,37 @@ var AssetTracker = class AssetTracker {
     return returnArray;
   }
 
+
+  /**
+   * The API key used to connect to CryptoCompare to retrieve crypto prices.
+   * @type {string}
+   */
+  get ccApiKey() {
+
+    let userProperties = PropertiesService.getUserProperties();
+    return userProperties.getProperty('ccApiKey');
+  }
+
+  /**
+   * The API key used to connect to CoinMarketCap to retrieve crypto prices.
+   * @type {string}
+   */
+  get cmcApiKey() {
+
+    let userProperties = PropertiesService.getUserProperties();
+    return userProperties.getProperty('cmcApiKey');
+  }
+
   /**
    * Gets the accounting model from document properties or sets and returns a default.
    * @return {string} The accounting model.
    */
-  getAccountingModel() {
+
+  /**
+   * The accounting model used to determine how to process transactions.
+   * @type {string}
+   */
+  get accountingModel() {
 
     let documentProperties = PropertiesService.getDocumentProperties();
 
@@ -484,10 +489,11 @@ var AssetTracker = class AssetTracker {
         creditAsset,
         creditExRate,
         (apportionedCreditAmountSubunits[index] / creditAsset.subunits),
-        (apportionedCreditFeeSubunits[index++] / creditAsset.subunits),
+        (apportionedCreditFeeSubunits[index] / creditAsset.subunits),
         creditWalletName);
 
       this.closedLots.push(closedLot);
+      index++;
     }
   }
 
@@ -505,6 +511,19 @@ var AssetTracker = class AssetTracker {
     this.assetsSheet();
     this.ledgerSheet();
 
+  }
+
+  /**
+   * Displays the settings dialog
+   */
+  showSettingsDialog() {
+
+    this.accountingModel; //Sets the default if necessary
+
+    let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
+      .setWidth(480)
+      .setHeight(250);
+    SpreadsheetApp.getUi().showModalDialog(html, 'Settings');
   }
 
   /**
