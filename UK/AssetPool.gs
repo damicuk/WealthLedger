@@ -36,30 +36,6 @@ var AssetPool = class AssetPool {
   }
 
   /**
-   * The balance in the account in subunits.
-   * @type {number}
-   */
-  get subunits() {
-
-    let subunits = 0;
-    for (let poolDeposit of this.poolDeposits) {
-
-      subunits += poolDeposit.subunits; //adding two integers - no need to round
-
-    }
-    return subunits;
-  }
-
-  /**
-   * The balance in the account.
-   * @type {number}
-   */
-  get balance() {
-
-    return this.subunits / this.asset.subunits;
-  }
-
-  /**
    * Adds a pool deposit to the pool.
    * Merges the pool deposit with the last pool deposit if they have the same date.
    * Otherwise simply adds the pool deposit to the collection of pool deposits.
