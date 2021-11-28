@@ -90,7 +90,7 @@ var AssetPool = class AssetPool {
    * Matches the pool withrawals with the pool deposits and processes the results.
    * Matches first according to the same day rule.
    * Then matches according to the 30 day rule.
-   * Then merges the remaining pool deposits and matches any remaining pool withdrawals to with the merged pool deposit.
+   * Then merges the remaining pool deposits and matches any remaining pool withdrawals with the merged pool deposit.
    */
   match() {
 
