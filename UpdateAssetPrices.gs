@@ -1,3 +1,11 @@
+/**
+ * Updates the assets sheet current price and timestamps columns as necessary.
+ * Gets the set of tickers whos current price needs to be update by each API.
+ * Gets the current price for those tickers from each API.
+ * Updates the current price and timestamp columns.
+ * Throws an ApiError if it failed to get any of the needed current prices.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records.
+ */
 AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
 
   let cmcTickerSet = this.getApiTickerSet(this.cmcApiName, assetRecords);
@@ -90,17 +98,13 @@ AssetTracker.prototype.updateAssetPrices = function (assetRecords) {
   }
 };
 
-AssetTracker.prototype.getApiFailedTickerSet = function (apiTickerSet, apiAssetPriceMap) {
-
-  let apiFailedTickerSet = new Set(apiTickerSet);
-  let apiSuccessTickers = Array.from(apiAssetPriceMap.keys());
-  for (let apiSuccessTicker of apiSuccessTickers) {
-    apiFailedTickerSet.delete(apiSuccessTicker);
-  }
-  return apiFailedTickerSet;
-};
-
-
+/**
+ * Gets the set of tickers whos current price the named API needs to update.
+ * @param {string} apiName - The name of the API.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records.
+ * @param {number} refreshMins - The number of minutes after which the current price is no longer considered current.
+ * @return {Set<string>} The set of tickers whos current price the named API needs to update.
+ */
 AssetTracker.prototype.getApiTickerSet = function (apiName, assetRecords, refreshMins = 10) {
 
   let tickerSet = new Set();
@@ -124,4 +128,20 @@ AssetTracker.prototype.getApiTickerSet = function (apiName, assetRecords, refres
   }
 
   return tickerSet;
+};
+
+/**
+ * Gets the set of tickers whos current price was not updated.
+ * @param {Set<string>} apiTickerSet - The set of tickers whos current price the named API needs to update.
+ * @param {Map} apiAssetPriceMap - The map of tickers whos current price was updated.
+ * @return {Set<string>} The set of tickers whos current price was not updated.
+ */
+AssetTracker.prototype.getApiFailedTickerSet = function (apiTickerSet, apiAssetPriceMap) {
+
+  let apiFailedTickerSet = new Set(apiTickerSet);
+  let apiSuccessTickers = Array.from(apiAssetPriceMap.keys());
+  for (let apiSuccessTicker of apiSuccessTickers) {
+    apiFailedTickerSet.delete(apiSuccessTicker);
+  }
+  return apiFailedTickerSet;
 };

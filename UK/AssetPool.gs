@@ -288,7 +288,7 @@ var AssetPool = class AssetPool {
    * Gets the difference in days between two dates.
    * @param {Date} date1 - The first date.
    * @param {Date} date2 - The second date.
-   * @param {string} timeZone - The tz database time zone.
+   * @param {string} [timeZone] - The tz database time zone.
    * @return {Date} The difference in days between the two dates.
   */
   diffDays(date1, date2, timeZone) {
