@@ -82,7 +82,6 @@ AssetTracker.prototype.ukClosedPositionsReport = function (sheetName = this.ukCl
     sheet.getRange('U3:U').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
     sheet.getRange('V3:V').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-    sheet.clearConditionalFormatRules();
     this.addPoolCondition(sheet, 'A3:A');
     this.addActionCondtion(sheet, 'O3:O');
 

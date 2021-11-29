@@ -76,7 +76,6 @@ AssetTracker.prototype.donationsReport = function (sheetName = this.donationsRep
     sheet.getRange('U3:U').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
     sheet.getRange('V3:V').setNumberFormat('@');
 
-    sheet.clearConditionalFormatRules();
     this.addLongShortCondition(sheet, 'V3:V');
 
     const formulas = [[

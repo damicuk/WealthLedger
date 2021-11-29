@@ -57,7 +57,6 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
 
   sheet.getRange('A2:A').setFontColor('#1155cc');
 
-  sheet.clearConditionalFormatRules();
   this.addLongShortCondition(sheet, 'E3:E');
 
   const formula =

@@ -73,7 +73,6 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
     sheet.getRange('S3:S').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
     sheet.getRange('T3:T').setNumberFormat('@');
 
-    sheet.clearConditionalFormatRules();
     this.addLongShortCondition(sheet, 'T3:T');
 
     const formulas = [[

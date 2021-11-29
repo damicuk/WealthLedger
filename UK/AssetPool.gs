@@ -90,7 +90,8 @@ var AssetPool = class AssetPool {
    * Matches the pool withrawals with the pool deposits and processes the results.
    * Matches first according to the same day rule.
    * Then matches according to the 30 day rule.
-   * Then merges the remaining pool deposits and matches any remaining pool withdrawals with the merged pool deposit.
+   * Then matches the remaining pool withdrawals with a merge of the pool deposits up to the date of each pool withdrawal.
+   * Then merges the remaining pool deposits.
    */
   match() {
 
@@ -98,13 +99,15 @@ var AssetPool = class AssetPool {
 
     while (this.match30Days());
 
-    this.mergePoolDeposits();
-
     while (this.matchPool());
+
+    this.mergePoolDeposits();
   }
 
   /**
    * Matches the pool withrawals with the pool deposits according to the same day rule and processes the results.
+   * Returns when the first match is found or options are exhausted.
+   * @return {boolean} Whether a match was found.
    */
   matchSameDay() {
 
@@ -128,6 +131,8 @@ var AssetPool = class AssetPool {
 
   /**
    * Matches the pool withrawals with the pool deposits according to the 30 day rule and processes the results.
+   * Returns when the first match is found or options are exhausted.
+   * @return {boolean} Whether a match was found.
    */
   match30Days() {
 
@@ -153,12 +158,16 @@ var AssetPool = class AssetPool {
 
   /**
    * Matches the pool withrawals with the merged pool deposit and processes the results.
+   * Returns when the first match is found or options are exhausted.
+   * @return {boolean} Whether a match was found.
    */
   matchPool() {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (this.poolDeposits.length > 0) {
+      this.mergePoolDeposits(poolWithdrawal.date);
+
+      if (this.poolDeposits.length > 0 && !this.poolDeposits[0].date) {
 
         let poolDeposit = this.poolDeposits[0];
 
@@ -176,7 +185,7 @@ var AssetPool = class AssetPool {
       else {
 
         //the application should have thrown an asset account error before reaching here
-        throw Error(`Attempted to withdraw ${this.asset} ${poolWithdrawal.debitAmount} + fee ${poolWithdrawal.debitFee} from balance of ${this.asset} ${this.balance}`);
+        throw Error(`Insufficient funds: attempted to withdraw ${this.asset} ${poolWithdrawal.debitAmount} + fee ${poolWithdrawal.debitFee} from balance of 0.`);
 
       }
     }
@@ -206,7 +215,7 @@ var AssetPool = class AssetPool {
 
       this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1);
       this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
-      closedPoolLot = { poolDeposit: poolDeposit, poolWithdrawal: poolWithdrawal };
+      closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
 
     }
     else if (poolWithdrawal.subunits > poolDeposit.subunits) {
@@ -214,7 +223,7 @@ var AssetPool = class AssetPool {
       let poolWithdrawals = poolWithdrawal.split(poolDeposit.subunits);
       this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1);
       this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1, poolWithdrawals[1]);
-      closedPoolLot = { poolDeposit: poolDeposit, poolWithdrawal: poolWithdrawals[0] };
+      closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawals[0]);
 
     }
     else {
@@ -222,7 +231,7 @@ var AssetPool = class AssetPool {
       let poolDeposits = poolDeposit.split(poolWithdrawal.subunits);
       this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1, poolDeposits[1]);
       this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
-      closedPoolLot = { poolDeposit: poolDeposits[0], poolWithdrawal: poolWithdrawal };
+      closedPoolLot = new ClosedPoolLot(poolDeposits[0], poolWithdrawal);
 
     }
     if (poolWithdrawal.action !== 'Gift') {
@@ -233,31 +242,35 @@ var AssetPool = class AssetPool {
   }
 
   /**
-   * Merges the pool deposits and sets the date of the resulting merged pool deposit to null.
+   * Merges the pool deposits up to the given date and sets the date of the resulting merged pool deposit to null.
+   * If no date is given merges all the pool deposits.
+   * @param {Date} [date] - The date up to which to merge pool deposits.
    */
-  mergePoolDeposits() {
+  mergePoolDeposits(date) {
 
-    if (this.poolDeposits.length === 0) {
-      return;
-    }
-
-    let mergedPoolDeposit;
+    let updatedPoolDeposits = [];
 
     for (let poolDeposit of this.poolDeposits) {
 
-      poolDeposit.date = null;
+      if (!date || poolDeposit.date <= date) {
 
-      if (mergedPoolDeposit) {
+        poolDeposit.date = null;
 
-        mergedPoolDeposit.merge(poolDeposit);
+        if (updatedPoolDeposits.length > 0) {
+
+          updatedPoolDeposits[0].merge(poolDeposit);
+        }
+        else {
+
+          updatedPoolDeposits[0] = poolDeposit;
+        }
       }
       else {
 
-        mergedPoolDeposit = poolDeposit;
+        updatedPoolDeposits.push(poolDeposit);
       }
     }
-
-    this.poolDeposits = [mergedPoolDeposit];
+    this.poolDeposits = updatedPoolDeposits;
   }
 
   /**
