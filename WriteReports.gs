@@ -102,6 +102,7 @@ AssetTracker.prototype.writeReports = function () {
 
 /**
  * Deletes all the output sheets.
+ * Displays toast on completion.
  */
 AssetTracker.prototype.deleteReports = function () {
 
@@ -130,4 +131,6 @@ AssetTracker.prototype.deleteReports = function () {
   ];
 
   this.deleteSheets(sheetNames);
+
+  SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
 };
