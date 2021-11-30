@@ -93,7 +93,7 @@ AssetTracker.prototype.ledgerSheet = function () {
       ['2021-08-02 12:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8.`],
       ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'GBP', , 9010, 10, , , ,],
       ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , 'GBP', , 11.52, , 'IB', , `Dividend.`],
-      ['2021-08-31 12:00:00', 'Income', , , , , , 'GBP', , 20, , 'IB', , `Interest.`]
+      ['2021-08-31 12:00:00', 'Income', , , , , , 'GBP', , 20, , 'IB', , `Interest not tracked.`]
     ];
 
     assetList = ['GBP', 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
@@ -128,7 +128,7 @@ AssetTracker.prototype.ledgerSheet = function () {
       ['2021-08-02 12:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8.`],
       ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , ,],
       ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , 'USD', , 11.52, , 'IB', , `Dividend.`],
-      ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Interest.`]
+      ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Interest not tracked.`]
     ];
 
     assetList = ['USD', 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];

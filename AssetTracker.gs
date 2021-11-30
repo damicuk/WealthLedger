@@ -150,7 +150,7 @@ var AssetTracker = class AssetTracker {
     this.chartRange5Name = 'Chart5';
 
     this.ukOpenPoolsReportName = 'UK Open Positions Report';
-    this.ukAssetAccountsReportName = 'UK Accounts Report';
+    this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
     this.ukClosedPositionsReportName = 'UK Closed Positions Report';
     this.ukIncomeReportName = 'UK Income Report';
     this.ukChartsDataSheetName = "UK Charts Data";
