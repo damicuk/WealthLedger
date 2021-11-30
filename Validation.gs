@@ -591,9 +591,6 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
     }
-    else if (debitAmount !== '' && creditAmount !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave either debit amount blank for normal splits or credit amount blank for reverse splits.`, rowIndex, 'debitAmount');
-    }
     else if (debitAmount !== '' && debitAmount <= 1) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 1 (or blank).`, rowIndex, 'debitAmount');
     }
@@ -610,7 +607,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
     }
     else if (debitAmount === '' && creditAmount === '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Fill either credit amount for normal splits or debit amount for reverse splits.`, rowIndex, 'creditAmount');
+      throw new ValidationError(`${action} row ${rowIndex}: Fill credit amount (numerator) or debit amount (denominator) or both.`, rowIndex, 'creditAmount');
     }
     else if (creditAmount !== '' && creditAmount <= 1) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater than 1 (or blank).`, rowIndex, 'creditAmount');
