@@ -89,8 +89,8 @@ AssetTracker.prototype.ledgerSheet = function () {
       ['2021-04-01 12:00:00', 'Trade', 'GBP', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
       ['2021-04-01 12:00:00', 'Trade', 'GBP', , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],
       ['2021-04-01 12:00:00', 'Trade', 'GBP', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
-      ['2021-07-20 12:00:00', 'Split', 'NVDA', , , , , , , 4, , , , `Split 4 for 1.`],
-      ['2021-08-02 12:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8.`],
+      ['2021-07-20 00:00:00', 'Split', 'NVDA', , , , , , , 4, , , , `Split 4 for 1.`],
+      ['2021-08-02 00:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8.`],
       ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'GBP', , 9010, 10, , , ,],
       ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , 'GBP', , 11.52, , 'IB', , `Dividend.`],
       ['2021-08-31 12:00:00', 'Income', , , , , , 'GBP', , 20, , 'IB', , `Fiat interest not tracked.`]
@@ -124,8 +124,8 @@ AssetTracker.prototype.ledgerSheet = function () {
       ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
       ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],
       ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
-      ['2021-07-20 12:00:00', 'Split', 'NVDA', , , , , , , 4, , , , `Split 4 for 1.`],
-      ['2021-08-02 12:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8.`],
+      ['2021-07-20 00:00:00', 'Split', 'NVDA', , , , , , , 4, , , , `Split 4 for 1.`],
+      ['2021-08-02 00:00:00', 'Split', 'GE', , 8, , , , , , , , , `Reverse split 1 for 8.`],
       ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , ,],
       ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , 'USD', , 11.52, , 'IB', , `Dividend.`],
       ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Fiat interest not tracked.`]
