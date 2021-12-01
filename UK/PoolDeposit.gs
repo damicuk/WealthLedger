@@ -13,10 +13,11 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
    * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in asset units credited.
+   * @param {string} action - The type of action of the transaction.
    */
-  constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee) {
+  constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action) {
 
-    super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee);
+    super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action);
   }
 
   /**
@@ -61,7 +62,8 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
       debitFeeSubunits / this.debitAsset.subunits,
       this.creditAsset,
       creditAmountSubunits / this.creditAsset.subunits,
-      creditFeeSubunits / this.creditAsset.subunits);
+      creditFeeSubunits / this.creditAsset.subunits,
+      this.action);
 
     poolDeposits.push(poolDeposit1);
 
@@ -72,7 +74,8 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
       (this.debitFeeSubunits - poolDeposit1.debitFeeSubunits) / this.debitAsset.subunits,
       this.creditAsset,
       (this.creditAmountSubunits - poolDeposit1.creditAmountSubunits) / this.creditAsset.subunits,
-      (this.creditFeeSubunits - poolDeposit1.creditFeeSubunits) / this.creditAsset.subunits);
+      (this.creditFeeSubunits - poolDeposit1.creditFeeSubunits) / this.creditAsset.subunits,
+      this.action);
 
     poolDeposits.push(poolDeposit2);
 

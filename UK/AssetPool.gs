@@ -36,22 +36,55 @@ var AssetPool = class AssetPool {
   }
 
   /**
+   * The balance in the pool in subunits.
+   * @type {number}
+   */
+  get subunits() {
+
+    let amountSubunits = 0;
+    let feeSubunits = 0;
+
+    for (let poolDeposit of this.poolDeposits) {
+      amountSubunits += poolDeposit.creditAmountSubunits;
+      feeSubunits += poolDeposit.creditFeeSubunits;
+
+    }
+
+    for (let poolWithdrawal of this.poolWithdrawals) {
+      amountSubunits -= poolWithdrawal.debitAmountSubunits;
+      feeSubunits += poolWithdrawal.creditFeeSubunits;
+    }
+
+    return amountSubunits - feeSubunits;
+  }
+
+  /**
    * Adds a pool deposit to the pool.
-   * Merges the pool deposit with the last pool deposit if they have the same date.
+   * Merges the non-split pool deposit with the last non-split pool deposit if they have the same date.
    * Otherwise simply adds the pool deposit to the collection of pool deposits.
    * @param {PoolDeposit} poolDeposit - the pool deposit to add.
    */
   addPoolDeposit(poolDeposit) {
 
-    if (this.poolDeposits.length > 0) {
+    if (poolDeposit.action !== 'Split') {
 
-      let lastPoolDeposit = this.poolDeposits[this.poolDeposits.length - 1];
+      let reversePoolDeposits = this.poolDeposits.slice().reverse();
 
-      if (poolDeposit.date.getTime() === lastPoolDeposit.date.getTime()) {
+      for (let testPoolDeposit of reversePoolDeposits) {
 
-        lastPoolDeposit.merge(poolDeposit);
+        if (poolDeposit.date.getTime() === testPoolDeposit.date.getTime()) {
 
-        return;
+          if (testPoolDeposit.action !== 'Split') {
+
+            testPoolDeposit.merge(poolDeposit);
+
+            return;
+          }
+        }
+        else {
+
+          break;
+        }
       }
     }
     this.poolDeposits.push(poolDeposit);
@@ -59,28 +92,31 @@ var AssetPool = class AssetPool {
 
   /**
    * Adds a pool withdrawal to the pool.
-   * Merges the pool withdrawal with the last pool withdrawal with the same date and action if one is found.
+   * Merges the non-split pool withdrawal with the last pool withdrawal with the same date and action if one is found.
    * Otherwise simply adds the pool withdrawal to the collection of pool withdrawals.
    * @param {PoolWithdrawal} poolWithdrawal - the pool withdrawal to add.
    */
   addPoolWithdrawal(poolWithdrawal) {
 
-    let reversedPoolWithrawals = this.poolWithdrawals.slice().reverse();
+    if (poolWithdrawal.action !== 'Split') {
 
-    for (let testPoolWithdrawal of reversedPoolWithrawals) {
+      let reversedPoolWithrawals = this.poolWithdrawals.slice().reverse();
 
-      if (poolWithdrawal.date.getTime() === testPoolWithdrawal.date.getTime()) {
+      for (let testPoolWithdrawal of reversedPoolWithrawals) {
 
-        if (poolWithdrawal.action === testPoolWithdrawal.action) {
+        if (poolWithdrawal.date.getTime() === testPoolWithdrawal.date.getTime()) {
 
-          testPoolWithdrawal.merge(poolWithdrawal);
+          if (poolWithdrawal.action === testPoolWithdrawal.action) {
 
-          return;
+            testPoolWithdrawal.merge(poolWithdrawal);
+
+            return;
+          }
         }
-      }
-      else {
+        else {
 
-        break;
+          break;
+        }
       }
     }
     this.poolWithdrawals.push(poolWithdrawal);
@@ -113,15 +149,18 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (poolWithdrawal.action !== 'Transfer') {
+      if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Split') {
 
         for (let poolDeposit of this.poolDeposits) {
 
-          if (poolWithdrawal.date.getTime() === poolDeposit.date.getTime()) {
+          if (poolDeposit.action !== 'Split') {
 
-            this.matchFound(poolWithdrawal, poolDeposit);
+            if (poolWithdrawal.date.getTime() === poolDeposit.date.getTime()) {
 
-            return true;
+              this.matchFound(poolWithdrawal, poolDeposit);
+
+              return true;
+            }
           }
         }
       }
@@ -138,17 +177,20 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (poolWithdrawal.action !== 'Transfer') {
+      if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Split') {
 
         for (let poolDeposit of this.poolDeposits) {
 
-          let diffDays = this.diffDays(poolWithdrawal.date, poolDeposit.date);
+          if (poolDeposit.action !== 'Split') {
 
-          if (diffDays > 0 && diffDays <= 30) {
+            let diffDays = this.diffDays(poolWithdrawal.date, poolDeposit.date);
 
-            this.matchFound(poolWithdrawal, poolDeposit);
+            if (diffDays > 0 && diffDays <= 30) {
 
-            return true;
+              this.matchFound(poolWithdrawal, poolDeposit);
+
+              return true;
+            }
           }
         }
       }
@@ -175,6 +217,10 @@ var AssetPool = class AssetPool {
 
           this.processTransferFee(poolWithdrawal, poolDeposit);
         }
+        else if (poolWithdrawal.action === 'Split') {
+
+          this.processSplit(poolWithdrawal, poolDeposit);
+        }
         else {
 
           this.matchFound(poolWithdrawal, poolDeposit);
@@ -198,8 +244,18 @@ var AssetPool = class AssetPool {
    */
   processTransferFee(poolWithdrawal, poolDeposit) {
 
-    let feeSubunits = Math.round(poolWithdrawal.debitFee * this.asset.subunits);
-    poolDeposit.creditFeeSubunits += feeSubunits;
+    poolDeposit.creditFeeSubunits += poolWithdrawal.debitFeeSubunits;
+    this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
+    return;
+  }
+
+  /**
+   * Subtracts the pool withdrawal debit amount to the pool deposit credit amount.
+   * Used to subtract the reverse split adjusment amount from the merged pool deposit.
+   */
+  processSplit(poolWithdrawal, poolDeposit) {
+
+    poolDeposit.creditAmountSubunits -= poolWithdrawal.debitAmountSubunits;
     this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
     return;
   }

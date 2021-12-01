@@ -47,6 +47,7 @@ AssetTracker.prototype.processLedger = function (ledgerRecords) {
     let rowIndex = this.ledgerHeaderRows + ledgerRecords.length;
     for (let ledgerRecord of ledgerRecords) {
       if (ledgerRecord.action === 'Skip') {
+        rowIndex--;
         continue;
       }
       else if (ledgerRecord.action === 'Stop') {
@@ -60,6 +61,7 @@ AssetTracker.prototype.processLedger = function (ledgerRecords) {
     let rowIndex = this.ledgerHeaderRows + 1;
     for (let ledgerRecord of ledgerRecords) {
       if (ledgerRecord.action === 'Skip') {
+        rowIndex++;
         continue;
       }
       else if (ledgerRecord.action === 'Stop') {
@@ -149,8 +151,6 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
-      this.lots.push(lot);
-
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
@@ -170,8 +170,6 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName);
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
-
-      this.lots.push(lot);
 
       this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
 
@@ -202,8 +200,6 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       //the cost base is the value of (credit exchange rate x credit amount)
       let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
 
-      this.lots.push(lot);
-
       this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
@@ -232,8 +228,6 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     else { //Gift received
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, creditWalletName);
-
-      this.lots.push(lot);
 
       this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
@@ -264,78 +258,40 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 };
 
 /**
- * Searches for all occurances of the given asset and adjusts the amount, fee and exrate according to the split numerator and denominator.
+ * Searches for all current holdings of the given asset and adjusts the amount and fee according to the split numerator and denominator.
+ * Rounds the balance subunits up in the case of fractional results.
  * @param {Asset} asset - The asset being split.
  * @param {number} numerator - The numerator of the split. 
  * @param {number} denominator - The denominator of the split.
  */
 AssetTracker.prototype.splitAsset = function (asset, numerator, denominator) {
 
-  for (let lot of this.lots) {
-    if (lot.debitAsset === asset) {
-      let splitBalance = this.splitBalance(lot.debitAmountSubunits, lot.debitFeeSubunits, numerator, denominator);
-      lot.debitAmountSubunits = splitBalance[0];
-      lot.debitFeeSubunits = splitBalance[1];
-      lot.debitExRate = this.splitExRate(lot.debitExRate, numerator, denominator);
-    }
-    if (lot.creditAsset === asset) {
-      let splitBalance = this.splitBalance(lot.creditAmountSubunits, lot.creditFeeSubunits, numerator, denominator);
-      lot.creditAmountSubunits = splitBalance[0];
-      lot.creditFeeSubunits = splitBalance[1];
-    }
-  }
+  for (let wallet of this.wallets) {
+    if (wallet.assetAccounts.has(asset.ticker)) {
+      let assetAccount = wallet.assetAccounts.get(asset.ticker);
 
-  for (let closedLot of this.closedLots) {
-    if (closedLot.creditAsset === asset) {
-      let splitBalance = this.splitBalance(closedLot.creditAmountSubunits, closedLot.creditFeeSubunits, numerator, denominator);
-      closedLot.creditAmountSubunits = splitBalance[0];
-      closedLot.creditFeeSubunits = splitBalance[1];
-      closedLot.creditExRate = this.splitExRate(closedLot.creditExRate, numerator, denominator);
-    }
-  }
+      let creditAmountSubunits = 0;
+      let lotsCreditAmountSubunits = [];
+      let lotsCreditFeeSubunits = [];
+      for (let lot of assetAccount.lots) {
+        lotsCreditAmountSubunits.push(lot.creditAmountSubunits);
+        lotsCreditFeeSubunits.push(lot.creditFeeSubunits);
+        creditAmountSubunits += lot.creditAmountSubunits;
+      }
 
-  for (let donatedLot of this.donatedLots) {
-    if (donatedLot.lot.creditAsset === asset) {
-      donatedLot.exRate = this.splitExRate(donatedLot.exRate, numerator, denominator);
-    }
-  }
+      let newBalanceSubunits = Math.ceil(assetAccount.subunits * numerator / denominator);
+      let newCreditAmountSubunits = Math.ceil(creditAmountSubunits * numerator / denominator);
+      let newCreditFeeSubunits = newCreditAmountSubunits - newBalanceSubunits;
 
-  for (let incomeLot of this.incomeLots) {
-    if (incomeLot.creditAsset === asset) {
-      let splitBalance = this.splitBalance(incomeLot.creditAmount, 0, numerator, denominator);
-      incomeLot.creditAmount = splitBalance[0];
-      incomeLot.exRate = this.splitExRate(incomeLot.exRate, numerator, denominator);
+      let apportionedCreditAmountSubunits = AssetTracker.apportionInteger(newCreditAmountSubunits, lotsCreditAmountSubunits);
+      let apportionedCreditFeeSubunits = AssetTracker.apportionInteger(newCreditFeeSubunits, lotsCreditFeeSubunits);
+
+      let index = 0;
+      for (let lot of assetAccount.lots) {
+        lot.creditAmountSubunits = apportionedCreditAmountSubunits[index];
+        lot.creditFeeSubunits = apportionedCreditFeeSubunits[index];
+        index++;
+      }
     }
   }
-};
-
-/**
- * Calculates the value of an integer amount and fee subunits after an asset split.
- * N.B. It rounds the balance subunits up in the case of a reverse split with a remainder after the division.
- * @param {number} amountSubunits - The original integer amount subunits.
- * @param {number} feeSubunits - The original integer fee subunits.
- * @param {number} numerator - The numerator of the asset split.
- * @param {number} denominator - The denominator of the asset split.
- * @return {number[]} The newly calculated integer amount and fee subunits in an array.
- */
-AssetTracker.prototype.splitBalance = function (amountSubunits, feeSubunits, numerator, denominator) {
-
-  let balanceSubunits = amountSubunits - feeSubunits;
-  let newBalanceSubunits = Math.ceil(balanceSubunits * numerator / denominator);
-  let newAmountSubunits = Math.ceil(amountSubunits * numerator / denominator);
-  let newFeeSubunits = newAmountSubunits - newBalanceSubunits;
-
-  return [newAmountSubunits, newFeeSubunits];
-};
-
-/**
- * Calculates the value of an exrate after an asset split.
- * @param {number} exRate - The original exrate.
- * @param {number} numerator - The numerator of the asset split.
- * @param {number} denominator - The denominator of the asset split. 
- * @return {number} The newly calculated exrate.
- */
-AssetTracker.prototype.splitExRate = function (exRate, numerator, denominator) {
-
-  return Math.round(10 ** this.exRateDecimalPlaces * exRate * denominator / numerator) / 10 ** this.exRateDecimalPlaces;
 };

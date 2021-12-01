@@ -63,7 +63,8 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
         debitExRate ? debitExRate * debitFee : debitFee,
         creditAsset,
         creditAmount,
-        creditFee);
+        creditFee,
+        action);
 
       this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
 
@@ -87,7 +88,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
 
     if (!creditAsset.isFiat) { // Asset income
 
-      let poolDeposit = new PoolDeposit(date, this.fiatBase, creditExRate * creditAmount, 0, creditAsset, creditAmount, 0);
+      let poolDeposit = new PoolDeposit(date, this.fiatBase, creditExRate * creditAmount, 0, creditAsset, creditAmount, 0, action);
       this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
 
     }
@@ -102,7 +103,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
 
     if (creditAsset) { //Gift received
 
-      let poolDeposit = new PoolDeposit(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, 0);
+      let poolDeposit = new PoolDeposit(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, 0, action);
       this.getAssetPool(creditAsset).addPoolDeposit(poolDeposit);
 
     }
@@ -121,33 +122,32 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
   }
   else if (action === 'Split') {
 
+    let assetPool = this.getAssetPool(debitAsset);
+
     let denominator = debitAmount ? debitAmount : 1;
     let numerator = creditAmount ? creditAmount : 1;
-    this.ukSplitAsset(debitAsset, numerator, denominator);
+    if (numerator > denominator) {
 
-  }
-};
+      let depositSubunits = Math.ceil(assetPool.subunits * (numerator / denominator - 1));
 
-/**
-* Searches for all occurances of the given asset and adjusts the amount and fee according to the split numerator and denominator.
-* @param {Asset} asset - The asset being split.
-* @param {number} numerator - The numerator of the split. 
-* @param {number} denominator - The denominator of the split.
-*/
-AssetTracker.prototype.ukSplitAsset = function (asset, numerator, denominator) {
+      if (depositSubunits > 0) {
 
-  let assetPool = this.getAssetPool(asset);
+        let poolDeposit = new PoolDeposit(date, this.fiatBase, 0, 0, debitAsset, (depositSubunits / debitAsset.subunits), 0, action);
+        assetPool.addPoolDeposit(poolDeposit);
 
-  for (let poolDeposit of assetPool.poolDeposits) {
-    let splitBalance = this.splitBalance(poolDeposit.creditAmountSubunits, poolDeposit.creditFeeSubunits, numerator, denominator);
-    poolDeposit.creditAmountSubunits = splitBalance[0];
-    poolDeposit.creditFeeSubunits = splitBalance[1];
-  }
+      }
+    }
+    else if (denominator > numerator) {
 
-  for (let poolWithdrawal of assetPool.poolWithdrawals) {
-    let splitBalance = this.splitBalance(poolWithdrawal.debitAmountSubunits, poolWithdrawal.debitFeeSubunits, numerator, denominator);
-    poolWithdrawal.debitAmountSubunits = splitBalance[0];
-    poolWithdrawal.debitFeeSubunits = splitBalance[1];
+      let withdrawSubunits = Math.floor(assetPool.subunits * (1 - numerator / denominator));
+
+      if (withdrawSubunits > 0) {
+
+        let poolWithdrawal = new PoolWithdrawal(date, debitAsset, (withdrawSubunits / debitAsset.subunits), 0, this.fiatBase, 0, 0, action);
+        assetPool.addPoolWithdrawal(poolWithdrawal);
+
+      }
+    }
   }
 };
 

@@ -18,9 +18,7 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
    */
   constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action) {
 
-    super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee);
-
-    this.action = action;
+    super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action);
   }
 
   /**

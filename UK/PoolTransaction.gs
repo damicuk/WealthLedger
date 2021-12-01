@@ -13,8 +13,9 @@ var PoolTransaction = class PoolTransaction {
    * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in asset units credited.
+   * @param {string} action - The type of action of the transaction.
    */
-  constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee) {
+  constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action) {
 
     this.date = date;
     this.debitAsset = debitAsset;
@@ -23,7 +24,7 @@ var PoolTransaction = class PoolTransaction {
     this.creditAsset = creditAsset;
     this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
     this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
-
+    this.action = action;
   }
 
   /**
@@ -81,5 +82,9 @@ var PoolTransaction = class PoolTransaction {
     this.debitFeeSubunits += poolTransaction.debitFeeSubunits;
     this.creditAmountSubunits += poolTransaction.creditAmountSubunits;
     this.creditFeeSubunits += poolTransaction.creditFeeSubunits;
+
+    if (poolTransaction.action !== this.action) {
+      this.action = null;
+    }
   }
 };

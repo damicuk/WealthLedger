@@ -146,11 +146,11 @@ var AssetAccount = class AssetAccount {
    */
   apportionFeeSubunits(feeSubunits, lots) {
 
-    let lotSubunits = [];
+    let lotsSubunits = [];
     for (let lot of lots) {
-      lotSubunits.push(lot.subunits);
+      lotsSubunits.push(lot.subunits);
     }
-    let apportionedFeeSubunits = AssetTracker.apportionInteger(feeSubunits, lotSubunits);
+    let apportionedFeeSubunits = AssetTracker.apportionInteger(feeSubunits, lotsSubunits);
     let index = 0;
     for (let lot of lots) {
       lot.creditFeeSubunits += apportionedFeeSubunits[index++];

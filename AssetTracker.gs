@@ -27,12 +27,6 @@ var AssetTracker = class AssetTracker {
     this.userDefinedAssetTypes = new Set();
 
     /**
-     * Collection of all Lots.
-     * @type {Array<Obeject>}
-     */
-    this.lots = [];
-
-    /**
      * Collection of Wallets.
      * @type {Array<Wallet>}
      */
@@ -475,12 +469,12 @@ var AssetTracker = class AssetTracker {
     let creditFeeSubunits = Math.round(creditFee * creditAsset.subunits);
 
     //apportion the fee to withdrawal lots
-    let lotSubunits = [];
+    let lotsSubunits = [];
     for (let lot of lots) {
-      lotSubunits.push(lot.subunits);
+      lotsSubunits.push(lot.subunits);
     }
-    let apportionedCreditAmountSubunits = AssetTracker.apportionInteger(creditAmountSubunits, lotSubunits);
-    let apportionedCreditFeeSubunits = AssetTracker.apportionInteger(creditFeeSubunits, lotSubunits);
+    let apportionedCreditAmountSubunits = AssetTracker.apportionInteger(creditAmountSubunits, lotsSubunits);
+    let apportionedCreditFeeSubunits = AssetTracker.apportionInteger(creditFeeSubunits, lotsSubunits);
     let index = 0;
     for (let lot of lots) {
 
