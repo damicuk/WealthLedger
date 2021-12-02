@@ -304,7 +304,7 @@ var AssetPool = class AssetPool {
    */
   mergePoolDeposits(date) {
 
-    let updatedPoolDeposits = [];
+    let mergedPoolDeposits = [];
 
     for (let poolDeposit of this.poolDeposits) {
 
@@ -312,21 +312,21 @@ var AssetPool = class AssetPool {
 
         poolDeposit.date = null;
 
-        if (updatedPoolDeposits.length > 0) {
+        if (mergedPoolDeposits.length > 0) {
 
-          updatedPoolDeposits[0].merge(poolDeposit);
+          mergedPoolDeposits[0].merge(poolDeposit);
         }
         else {
 
-          updatedPoolDeposits[0] = poolDeposit;
+          mergedPoolDeposits[0] = poolDeposit;
         }
       }
       else {
 
-        updatedPoolDeposits.push(poolDeposit);
+        mergedPoolDeposits.push(poolDeposit);
       }
     }
-    this.poolDeposits = updatedPoolDeposits;
+    this.poolDeposits = mergedPoolDeposits;
   }
 
   /**
