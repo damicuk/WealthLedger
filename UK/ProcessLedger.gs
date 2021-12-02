@@ -7,6 +7,8 @@
  */
 AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
 
+  let timeZone = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
+
   if (LedgerRecord.inReverseOrder(ledgerRecords)) {
     ledgerRecords = ledgerRecords.slice().reverse();
   }
@@ -18,7 +20,7 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
     else if (ledgerRecord.action === 'Stop') {
       break;
     }
-    this.processLedgerRecordUK(ledgerRecord);
+    this.processLedgerRecordUK(ledgerRecord, timeZone);
   }
 
   for (let assetPool of this.assetPools) {
@@ -30,10 +32,11 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
  * Processes a ledger record consistent with the UK accounting model.
  * It treats the ledger record as an instuction and simulates the action specified.
  * @param {LedgerRecord} ledgerRecord - The ledger record to process.
+ * @param {string} [timeZone] - The tz database time zone from the spreadsheet timezone.
  */
-AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
+AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone) {
 
-  let date = this.getMidnight(ledgerRecord.date);
+  let date = AssetTracker.getMidnight(ledgerRecord.date, timeZone);
   let action = ledgerRecord.action;
   let debitAsset = this.assets.get(ledgerRecord.debitAsset);
   let debitExRate = ledgerRecord.debitExRate;
@@ -149,23 +152,4 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord) {
       }
     }
   }
-};
-
-/**
- * Gets the date at midnight on the day of the given date.
- * The timezone of the spreadsheet is taken into account.
- * @param {Date} date - The given date.
- * @return {Date} The date at midnight on the day of the given date.
- */
-AssetTracker.prototype.getMidnight = function (date) {
-
-  let timeZone = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
-  let dateTZ = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
-
-  let dateTime = date.getTime();
-  dateTime -= dateTZ.getHours() * 3600000;
-  dateTime -= dateTZ.getMinutes() * 60000;
-  dateTime -= dateTZ.getMilliseconds();
-
-  return new Date(dateTime);
 };

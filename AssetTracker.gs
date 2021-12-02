@@ -216,6 +216,56 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
+   * Subtracts the amount of milliseconds to get back to the time 00:00 (midnight) on the same day in that time zone.
+   * @param {Date} date - The given date.
+   * @param {string} [timeZone] - The tz database time zone.
+   * @return {Date} The date at midnight on the day of the given date.
+   * @static
+   */
+  static getMidnight(date, timeZone) {
+
+    let dateTZ = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
+
+    let dateTime = date.getTime();
+    dateTime -= dateTZ.getHours() * 3600000;
+    dateTime -= dateTZ.getMinutes() * 60000;
+    dateTime -= dateTZ.getMilliseconds();
+
+    return new Date(dateTime);
+  };
+
+  /**
+  * Gets the difference in days between two dates.
+  * @param {Date} date1 - The first date.
+  * @param {Date} date2 - The second date.
+  * @param {string} [timeZone] - The tz database time zone.
+  * @return {Date} The difference in days between the two dates.
+  * @static
+ */
+  static diffDays(date1, date2, timeZone) {
+
+    date1 = AssetTracker.convertTZDateOnly(date1, timeZone);
+    date2 = AssetTracker.convertTZDateOnly(date2, timeZone);
+
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    const diffDays = Math.round((date2 - date1) / oneDay);
+
+    return diffDays;
+  }
+
+  /**
+   * Gets the date in the a particular time zone given a date.
+   * @param {Date} date - The given date.
+   * @param {string} timeZone - The tz database time zone.
+   * @return {Date} The date in the given time zone.
+   * @static
+  */
+  static convertTZDateOnly(date, timeZone) {
+    return new Date((typeof date === 'string' ? new Date(date) : date).toLocaleDateString('en-US', { timeZone: timeZone }));
+  }
+
+  /**
    * Apportions an integer amount to an array or integers as equitably as possible.
    * e.g. used to apportion fees amoungst lots of an asset in proportion to the size of the lots.
    * @param {number} integerAmount - The integer amount to divide and apportion.

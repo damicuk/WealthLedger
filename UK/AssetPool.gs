@@ -47,7 +47,6 @@ var AssetPool = class AssetPool {
     for (let poolDeposit of this.poolDeposits) {
       amountSubunits += poolDeposit.creditAmountSubunits;
       feeSubunits += poolDeposit.creditFeeSubunits;
-
     }
 
     for (let poolWithdrawal of this.poolWithdrawals) {
@@ -92,13 +91,15 @@ var AssetPool = class AssetPool {
 
   /**
    * Adds a pool withdrawal to the pool.
-   * Merges the non-split pool withdrawal with the last pool withdrawal with the same date and action if one is found.
+   * If the withdrawal action is not transfer, fee, and split merges the pool withdrawal with the last pool withdrawal with the same date and action if one is found.
    * Otherwise simply adds the pool withdrawal to the collection of pool withdrawals.
    * @param {PoolWithdrawal} poolWithdrawal - the pool withdrawal to add.
    */
   addPoolWithdrawal(poolWithdrawal) {
 
-    if (poolWithdrawal.action !== 'Split') {
+    if (poolWithdrawal.action !== 'Transfer'
+      && poolWithdrawal.action !== 'Fee'
+      && poolWithdrawal.action !== 'Split') {
 
       let reversedPoolWithrawals = this.poolWithdrawals.slice().reverse();
 
@@ -149,7 +150,9 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Split') {
+      if (poolWithdrawal.action !== 'Transfer'
+        && poolWithdrawal.action !== 'Fee'
+        && poolWithdrawal.action !== 'Split') {
 
         for (let poolDeposit of this.poolDeposits) {
 
@@ -177,13 +180,15 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Split') {
+      if (poolWithdrawal.action !== 'Transfer'
+        && poolWithdrawal.action !== 'Fee'
+        && poolWithdrawal.action !== 'Split') {
 
         for (let poolDeposit of this.poolDeposits) {
 
           if (poolDeposit.action !== 'Split') {
 
-            let diffDays = this.diffDays(poolWithdrawal.date, poolDeposit.date);
+            let diffDays = AssetTracker.diffDays(poolWithdrawal.date, poolDeposit.date);
 
             if (diffDays > 0 && diffDays <= 30) {
 
@@ -327,34 +332,5 @@ var AssetPool = class AssetPool {
       }
     }
     this.poolDeposits = mergedPoolDeposits;
-  }
-
-  /**
-   * Gets the difference in days between two dates.
-   * @param {Date} date1 - The first date.
-   * @param {Date} date2 - The second date.
-   * @param {string} [timeZone] - The tz database time zone.
-   * @return {Date} The difference in days between the two dates.
-  */
-  diffDays(date1, date2, timeZone) {
-
-    date1 = this.convertTZDateOnly(date1, timeZone);
-    date2 = this.convertTZDateOnly(date2, timeZone);
-
-    const oneDay = 24 * 60 * 60 * 1000;
-
-    const diffDays = Math.round((date2 - date1) / oneDay);
-
-    return diffDays;
-  }
-
-  /**
-   * Gets the date in the a particular time zone given a date.
-   * @param {Date} date - The given date.
-   * @param {string} timeZone - The tz database time zone.
-   * @return {Date} The date in the given time zone.
-  */
-  convertTZDateOnly(date, timeZone) {
-    return new Date((typeof date === 'string' ? new Date(date) : date).toLocaleDateString('en-US', { timeZone: timeZone }));
   }
 };
