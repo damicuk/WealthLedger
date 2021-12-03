@@ -99,7 +99,7 @@ var AssetAccount = class AssetAccount {
 
     if (neededSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Attempted to withdraw ${this.ticker} ${amount} + fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitAmount');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitAmount');
 
     }
 
@@ -170,7 +170,7 @@ var AssetAccount = class AssetAccount {
 
     if (feeSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitFee');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitFee');
 
     }
 
@@ -179,8 +179,7 @@ var AssetAccount = class AssetAccount {
 
   /**
    * Removes any lots with zero subunits.
-   * Used when misc fee sets lot subunits to zero.
-   * @return {Array<Lot>} The collection of lots with zero subunits.
+   * Used when misc fee or split sets lot subunits to zero.
    */
   removeZeroSubunitLots() {
 

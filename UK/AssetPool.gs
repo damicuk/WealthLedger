@@ -51,7 +51,7 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
       amountSubunits -= poolWithdrawal.debitAmountSubunits;
-      feeSubunits += poolWithdrawal.creditFeeSubunits;
+      feeSubunits += poolWithdrawal.debitFeeSubunits;
     }
 
     return amountSubunits - feeSubunits;
@@ -236,7 +236,7 @@ var AssetPool = class AssetPool {
       else {
 
         //the application should have thrown an asset account error before reaching here
-        throw Error(`Insufficient funds: attempted to withdraw ${this.asset} ${poolWithdrawal.debitAmount} + fee ${poolWithdrawal.debitFee} from balance of 0.`);
+        throw Error(`Insufficient funds: Attempted to withdraw ${this.asset} ${poolWithdrawal.debitAmount} + fee ${poolWithdrawal.debitFee} from balance of 0.`);
 
       }
     }
@@ -332,5 +332,18 @@ var AssetPool = class AssetPool {
       }
     }
     this.poolDeposits = mergedPoolDeposits;
+  }
+
+  /**
+   * Removes all transactions if balance subunits is zero.
+   * Used when misc fee or split sets balance subunits to zero.
+   */
+  removeZeroSubunitTransactions() {
+
+    if(this.subunits === 0) {
+
+      this.poolDeposits = [];
+      this.poolWithdrawals = [];
+    }
   }
 };

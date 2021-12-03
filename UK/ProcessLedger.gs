@@ -120,36 +120,48 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
   else if (action === 'Fee' && !debitAsset.isFiat) {
 
     let poolWithdrawal = new PoolWithdrawal(date, debitAsset, 0, debitFee, this.fiatBase, 0, 0, action);
-    this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
+
+    let assetPool = this.getAssetPool(debitAsset);
+    assetPool.addPoolWithdrawal(poolWithdrawal);
+    assetPool.removeZeroSubunitTransactions();
 
   }
   else if (action === 'Split') {
 
-    let assetPool = this.getAssetPool(debitAsset);
+    let asset = debitAsset;
+    let assetPool = this.getAssetPool(asset);
 
-    let denominator = debitAmount ? debitAmount : 1;
-    let numerator = creditAmount ? creditAmount : 1;
-    if (numerator > denominator) {
+    let adjustSubunits;
 
-      let depositSubunits = Math.ceil(assetPool.subunits * (numerator / denominator - 1));
+    if (debitAmount && creditAmount) {
 
-      if (depositSubunits > 0) {
+      adjustSubunits = Math.round(assetPool.subunits * (creditAmount / debitAmount - 1));
+    }
+    else if (debitAmount) {
 
-        let poolDeposit = new PoolDeposit(date, this.fiatBase, 0, 0, debitAsset, (depositSubunits / debitAsset.subunits), 0, action);
-        assetPool.addPoolDeposit(poolDeposit);
+      adjustSubunits = - Math.round(debitAmount * asset.subunits);
 
+      if (assetPool.subunits + adjustSubunits < 0) {
+
+        //the application should have thrown an asset account error before reaching here
+        throw Error(`Insufficient funds: Attempted to subtract ${asset.ticker} ${debitAmount} from balance of ${asset.ticker} ${assetPool.subunits / asset.subunits}`);
       }
     }
-    else if (denominator > numerator) {
+    else {
 
-      let withdrawSubunits = Math.floor(assetPool.subunits * (1 - numerator / denominator));
+      adjustSubunits = Math.round(creditAmount * asset.subunits);
+    }
 
-      if (withdrawSubunits > 0) {
+    if (adjustSubunits > 0) {
 
-        let poolWithdrawal = new PoolWithdrawal(date, debitAsset, (withdrawSubunits / debitAsset.subunits), 0, this.fiatBase, 0, 0, action);
-        assetPool.addPoolWithdrawal(poolWithdrawal);
+      let poolDeposit = new PoolDeposit(date, this.fiatBase, 0, 0, asset, (adjustSubunits / asset.subunits), 0, action);
+      assetPool.addPoolDeposit(poolDeposit);
+    }
+    else if (adjustSubunits < 0) {
 
-      }
+      let poolWithdrawal = new PoolWithdrawal(date, asset, (-adjustSubunits / asset.subunits), 0, this.fiatBase, 0, 0, action);
+      assetPool.addPoolWithdrawal(poolWithdrawal);
+      assetPool.removeZeroSubunitTransactions();
     }
   }
 };
