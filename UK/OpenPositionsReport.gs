@@ -1,10 +1,10 @@
 /**
- * Creates the uk open pools report if it doesn't already exist.
+ * Creates the uk open positions report if it doesn't already exist.
  * Updates the sheet with the current open pools data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet
  */
-AssetTracker.prototype.ukOpenPoolsReport = function (sheetName = this.ukOpenPoolsReportName) {
+AssetTracker.prototype.ukOpenPositionsReport = function (sheetName = this.ukOpenPositionsReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -79,9 +79,9 @@ AssetTracker.prototype.ukOpenPoolsReport = function (sheetName = this.ukOpenPool
 
   }
 
-  let dataTable = this.getUKOpenPoolsTable();
+  let dataTable = this.getUKOpenPositionsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.ukOpenPoolsRangeName, 2, 8, 7);
+  this.writeTable(ss, sheet, dataTable, this.ukOpenPositionsRangeName, 2, 8, 7);
 
 };
 
@@ -90,7 +90,7 @@ AssetTracker.prototype.ukOpenPoolsReport = function (sheetName = this.ukOpenPool
  * The open positions data is collected when the ledger is processed.
  * @return {Array<Array>} The current open positions data.
  */
-AssetTracker.prototype.getUKOpenPoolsTable = function () {
+AssetTracker.prototype.getUKOpenPositionsTable = function () {
 
   let table = [];
 

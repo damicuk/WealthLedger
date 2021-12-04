@@ -1,7 +1,7 @@
 /**
  * Represents a row in the ledger sheet.
  */
-class LedgerRecord {
+var LedgerRecord = class LedgerRecord {
 
   /**
    * Assigns each column value to a property.

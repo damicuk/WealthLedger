@@ -25,7 +25,7 @@ AssetTracker.prototype.ukChartsDataSheet = function (sheetName = this.ukChartsDa
 
   this.setSheetVersion(sheet, version);
 
-  const referenceRangeName1 = this.ukOpenPoolsRangeName;
+  const referenceRangeName1 = this.ukOpenPositionsRangeName;
   const referenceRangeName2 = this.ukClosedPositionsRangeName;
 
   let headers = [

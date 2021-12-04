@@ -250,6 +250,9 @@ var AssetPool = class AssetPool {
   processTransferFee(poolWithdrawal, poolDeposit) {
 
     poolDeposit.creditFeeSubunits += poolWithdrawal.debitFeeSubunits;
+    if (poolDeposit.subunits === 0) {
+      this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1);
+    }
     this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
     return;
   }
@@ -261,6 +264,9 @@ var AssetPool = class AssetPool {
   processSplit(poolWithdrawal, poolDeposit) {
 
     poolDeposit.creditAmountSubunits -= poolWithdrawal.debitAmountSubunits;
+    if (poolDeposit.subunits === 0) {
+      this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1);
+    }
     this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
     return;
   }
@@ -332,18 +338,5 @@ var AssetPool = class AssetPool {
       }
     }
     this.poolDeposits = mergedPoolDeposits;
-  }
-
-  /**
-   * Removes all transactions if balance subunits is zero.
-   * Used when misc fee or split sets balance subunits to zero.
-   */
-  removeZeroSubunitTransactions() {
-
-    if(this.subunits === 0) {
-
-      this.poolDeposits = [];
-      this.poolWithdrawals = [];
-    }
   }
 };

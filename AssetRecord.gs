@@ -1,7 +1,7 @@
 /**
  * Represents a row in the asset sheet.
  */
-class AssetRecord {
+var AssetRecord = class AssetRecord {
 
   /**
    * Assigns each column value to a property.

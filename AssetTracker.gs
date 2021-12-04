@@ -143,7 +143,7 @@ var AssetTracker = class AssetTracker {
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
 
-    this.ukOpenPoolsReportName = 'UK Open Positions Report';
+    this.ukOpenPositionsReportName = 'UK Open Positions Report';
     this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
     this.ukClosedPositionsReportName = 'UK Closed Positions Report';
     this.ukIncomeReportName = 'UK Income Report';
@@ -155,7 +155,7 @@ var AssetTracker = class AssetTracker {
     this.ukWalletsReportName = 'UK Wallets Report';
 
     this.ukReportNames = [
-      this.ukOpenPoolsReportName,
+      this.ukOpenPositionsReportName,
       this.ukAssetAccountsReportName,
       this.ukClosedPositionsReportName,
       this.ukIncomeReportName,
@@ -166,8 +166,8 @@ var AssetTracker = class AssetTracker {
       this.ukDonationsSummaryReportName,
       this.ukWalletsReportName
     ];
-
-    this.ukOpenPoolsRangeName = 'UKOpenPools';
+    
+    this.ukOpenPositionsRangeName = 'UKOpenPositions';
     this.ukAssetAccountsRangeName = 'UKAssetAccounts';
     this.ukClosedPositionsRangeName = 'UKClosedPositions';
 
@@ -390,25 +390,6 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Gets the type of the asset specified by the ticker.
-   * @param {string} ticker - The asset ticker.
-   * @return {string} The type of the asset specified by the ticker.
-   */
-  getAssetType(ticker) {
-    let asset = this.assets.get(ticker);
-    return asset ? asset.assetType : null;
-  }
-
-  /**
-   * Determines whether the ticker is a key in the assets map.
-   * @param {string} ticker - The asset ticker.
-   * @return {boolean} Whether the ticker is a key in the assets map.
-   */
-  isValid(ticker) {
-    return this.assets.has(ticker);
-  }
-
-  /**
    * Set of fiat tickers used by this instance.
    * Only filled once processLedger has completed.
    * @type {Set}
@@ -489,7 +470,7 @@ var AssetTracker = class AssetTracker {
 
     for (let assetPool of this.assetPools) {
 
-      if (assetPool.asset === asset) {
+      if (assetPool.asset.ticker === asset.ticker) {
 
         return assetPool;
       }

@@ -4,10 +4,9 @@
  * Skips ledger records with the skip action.
  * Stops reading if it encounters the stop action.
  * @param {Array<LedgerRecord>} ledgerRecords - The collection of ledger records.
+ * @param {string} [timeZone] - The tz database time zone passed in from the spreadsheet timezone.
  */
-AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
-
-  let timeZone = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
+AssetTracker.prototype.processLedgerUK = function (ledgerRecords, timeZone) {
 
   if (LedgerRecord.inReverseOrder(ledgerRecords)) {
     ledgerRecords = ledgerRecords.slice().reverse();
@@ -32,7 +31,7 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords) {
  * Processes a ledger record consistent with the UK accounting model.
  * It treats the ledger record as an instuction and simulates the action specified.
  * @param {LedgerRecord} ledgerRecord - The ledger record to process.
- * @param {string} [timeZone] - The tz database time zone from the spreadsheet timezone.
+ * @param {string} [timeZone] - The tz database time zone passed in from the spreadsheet timezone.
  */
 AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone) {
 
@@ -123,8 +122,6 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
 
     let assetPool = this.getAssetPool(debitAsset);
     assetPool.addPoolWithdrawal(poolWithdrawal);
-    assetPool.removeZeroSubunitTransactions();
-
   }
   else if (action === 'Split') {
 
@@ -161,7 +158,6 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
 
       let poolWithdrawal = new PoolWithdrawal(date, asset, (-adjustSubunits / asset.subunits), 0, this.fiatBase, 0, 0, action);
       assetPool.addPoolWithdrawal(poolWithdrawal);
-      assetPool.removeZeroSubunitTransactions();
     }
   }
 };

@@ -50,11 +50,13 @@ AssetTracker.prototype.writeReports = function () {
 
   if (this.accountingModel === 'UK') {
 
-    this.processLedgerUK(ledgerRecords);
+    let timeZone = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
+
+    this.processLedgerUK(ledgerRecords, timeZone);
 
     this.deleteSheets(this.defaultReportNames);
 
-    this.ukOpenPoolsReport();
+    this.ukOpenPositionsReport();
     this.ukAssetAccountsReport();
     this.ukClosedPositionsReport();
     this.incomeReport(this.ukIncomeReportName);
@@ -108,28 +110,8 @@ AssetTracker.prototype.writeReports = function () {
 AssetTracker.prototype.deleteReports = function () {
 
   let sheetNames = [
-    this.fiatAccountsSheetName,
-    this.openPositionsReportName,
-    this.closedPositionsReportName,
-    this.donationsReportName,
-    this.incomeReportName,
-    this.chartsDataSheetName,
-    this.openSummaryReportName,
-    this.closedSummaryReportName,
-    this.incomeSummaryReportName,
-    this.donationsSummaryReportName,
-    this.walletsReportName,
-    this.ukOpenPoolsReportName,
-    this.ukAssetAccountsReportName,
-    this.ukClosedPositionsReportName,
-    this.ukIncomeReportName,
-    this.ukChartsDataSheetName,
-    this.ukOpenSummaryReportName,
-    this.ukClosedSummaryReportName,
-    this.ukIncomeSummaryReportName,
-    this.ukDonationsSummaryReportName,
-    this.ukWalletsReportName
-  ];
+    this.fiatAccountsSheetName
+  ].concat(this.defaultReportNames).concat(this.ukReportNames);
 
   this.deleteSheets(sheetNames);
 
