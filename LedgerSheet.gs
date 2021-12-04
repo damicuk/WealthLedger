@@ -261,11 +261,7 @@ AssetTracker.prototype.updateLedgerAssets = function (sheet) {
  */
 AssetTracker.prototype.updateLedgerWallets = function (sheet) {
 
-  let walletNames = [];
-  for (let wallet of this.wallets) {
-    walletNames.push(wallet.name);
-  }
-  walletNames.sort(AssetTracker.abcComparator);
+  let walletNames = Array.from(this.wallets.keys()).sort(AssetTracker.abcComparator);
 
   let walletRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(walletNames)

@@ -94,7 +94,8 @@ AssetTracker.prototype.getUKOpenPositionsTable = function () {
 
   let table = [];
 
-  for (let assetPool of this.assetPools) {
+  let assetPools = Array.from(this.assetPools.values());
+  for (let assetPool of assetPools) {
 
     let poolDeposits = assetPool.poolDeposits;
 

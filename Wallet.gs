@@ -16,13 +16,13 @@ class Wallet {
     this.name = name;
 
     /**
-     * A map of tickers to fiat accounts.
+     * Map of tickers to fiat accounts.
      * @type {Map}
      */
     this.fiatAccounts = new Map();
 
     /**
-     * The map of tickers to asset accounts.
+     * Map of tickers to asset accounts.
      * @type {Map}
      */
     this.assetAccounts = new Map();

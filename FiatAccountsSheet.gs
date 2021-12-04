@@ -43,7 +43,8 @@ AssetTracker.prototype.getFiatTable = function () {
 
   let table = [];
 
-  for (let wallet of this.wallets) {
+  let wallets = Array.from(this.wallets.values());
+  for (let wallet of wallets) {
 
     let walletFiatAccounts = Array.from(wallet.fiatAccounts.values());
     for (let fiatAccount of walletFiatAccounts) {

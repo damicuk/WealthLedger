@@ -15,22 +15,28 @@ var AssetTracker = class AssetTracker {
     this.fiatBase = null;
 
     /**
-     * Maps asset ticker to object containing asset properties: type, decimalPlaces, price.
-     * @type {Array<Obeject>}
+     * Map of asset ticker to assets.
+     * @type {Map}
      */
     this.assets = new Map();
+
+    /**
+     * Map of asset ticker to asset pools.
+     * @type {Map}
+     */
+    this.assetPools = new Map();
+
+    /**
+     * Map of wallet names to wallets.
+     * @type {Map}
+     */
+    this.wallets = new Map();
 
     /**
      * The set of asset types defined by the user (not the default asset types).
      * @type {Set}
      */
     this.userDefinedAssetTypes = new Set();
-
-    /**
-     * Collection of Wallets.
-     * @type {Array<Wallet>}
-     */
-    this.wallets = [];
 
     /**
      * Collection of Lots gained as income.
@@ -49,12 +55,6 @@ var AssetTracker = class AssetTracker {
      * @type {Array<Obeject>}
      */
     this.donatedLots = [];
-
-    /**
-     * Collection of AssetPools.
-     * @type {Array<AssetPool>}
-     */
-    this.assetPools = [];
 
     /**
      * The number of decimal places to round exrate calculation.
@@ -397,7 +397,8 @@ var AssetTracker = class AssetTracker {
   get fiatTickers() {
 
     let fiatTickers = new Set();
-    for (let wallet of this.wallets) {
+    let wallets = Array.from(this.wallets.values());
+    for (let wallet of wallets) {
       let walletFiatAccounts = Array.from(wallet.fiatAccounts.values());
       for (let fiatAccount of walletFiatAccounts) {
         fiatTickers.add(fiatAccount.ticker);
@@ -414,7 +415,8 @@ var AssetTracker = class AssetTracker {
   get assetTickers() {
 
     let assetTickers = new Set();
-    for (let wallet of this.wallets) {
+    let wallets = Array.from(this.wallets.values());
+    for (let wallet of wallets) {
       let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
       for (let assetAccount of walletAssetAccounts) {
         assetTickers.add(assetAccount.ticker);
@@ -431,7 +433,8 @@ var AssetTracker = class AssetTracker {
   get currentAssetTickers() {
 
     let assetTickers = new Set();
-    for (let wallet of this.wallets) {
+    let wallets = Array.from(this.wallets.values());
+    for (let wallet of wallets) {
       let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
       for (let assetAccount of walletAssetAccounts) {
         if (assetAccount.balance > 0) {
@@ -449,14 +452,14 @@ var AssetTracker = class AssetTracker {
    */
   getWallet(name) {
 
-    for (let wallet of this.wallets) {
-      if (wallet.name === name) {
-        return wallet;
-      }
+    let wallet = this.wallets.get(name);
+
+    if (!wallet) {
+
+      wallet = new Wallet(name);
+      this.wallets.set(name, wallet);
     }
 
-    let wallet = new Wallet(name);
-    this.wallets.push(wallet);
     return wallet;
 
   }
@@ -468,17 +471,13 @@ var AssetTracker = class AssetTracker {
     */
   getAssetPool(asset) {
 
-    for (let assetPool of this.assetPools) {
+    let assetPool = this.assetPools.get(asset.ticker);
 
-      if (assetPool.asset.ticker === asset.ticker) {
+    if (!assetPool) {
 
-        return assetPool;
-      }
+      assetPool = new AssetPool(asset);
+      this.assetPools.set(asset.ticker, assetPool);
     }
-
-    let assetPool = new AssetPool(asset);
-
-    this.assetPools.push(assetPool);
 
     return assetPool;
   }
