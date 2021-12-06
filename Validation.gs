@@ -160,7 +160,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater or equal to 0 (or blank).`, rowIndex, 'currentPrice');
   }
   else if (apiName !== '' && !this.validApiNames.includes(apiName)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Api (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
+    throw new ValidationError(`Assets row ${rowIndex}: API (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
   }
 };
 
