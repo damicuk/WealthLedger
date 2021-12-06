@@ -106,7 +106,7 @@ AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
     rowIndex++;
   }
   if (!fiatBase) {
-    throw new ValidationError(`Fiat Base has not been declared in the Assets sheet. One asset must have asset type of 'Fiat Base'.`);
+    throw new ValidationError(`Fiat Base has not been declared in the Assets sheet. One asset must have asset type of 'Fiat Base'.`, this.assetsHeaderRows + 1, 'assetType');
   }
   return fiatBaseRowIndex;
 };

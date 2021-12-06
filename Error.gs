@@ -69,7 +69,7 @@ AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnInd
  * Assigns the name of the class to the name property and passes the message to super.
  * @extends Error
  */
-class CustomError extends Error {
+var CustomError = class CustomError extends Error {
 
   /**
    * Initializes class with message, sets name property to the name of the class.
@@ -87,7 +87,7 @@ class CustomError extends Error {
  * Error in the validation of the ledger.
  * @extends CustomError
  */
-class ValidationError extends CustomError {
+var ValidationError = class ValidationError extends CustomError {
 
   /**
    * Initializes class with message, rowIndex and columnName, sets name property to the name of the class.
@@ -120,7 +120,7 @@ class ValidationError extends CustomError {
  * Error when attempting to withdraw from an asset account.
  * @extends CustomError
  */
-class AssetAccountError extends CustomError {
+var AssetAccountError = class AssetAccountError extends CustomError {
 
   /**
    * Initializes class with message and rowIndex, sets name property to the name of the class.
@@ -152,7 +152,7 @@ class AssetAccountError extends CustomError {
  * Error when attempting to retrieve current prices from an API.
  * @extends CustomError
  */
-class ApiError extends CustomError {
+var ApiError = class ApiError extends CustomError {
 
   /**
    * Initializes class with message, sets name property to the name of the class.
