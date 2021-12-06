@@ -166,7 +166,7 @@ var AssetTracker = class AssetTracker {
       this.ukDonationsSummaryReportName,
       this.ukWalletsReportName
     ];
-    
+
     this.ukOpenPositionsRangeName = 'UKOpenPositions';
     this.ukAssetAccountsRangeName = 'UKAssetAccounts';
     this.ukClosedPositionsRangeName = 'UKClosedPositions';
