@@ -31,15 +31,16 @@ AssetTracker.prototype.validate = function () {
  * Processes the asset records.
  * Adds to the Map of assets.
  * Sets fiat base.
- * @return {Array<boolean, Array<AssetRecord>>} Whether validation completed successfully and the asset records.
+ * @return {Array<boolean, Array<AssetRecord>, number>} Whether validation completed successfully, the asset records and the row index of fiat base.
  */
 AssetTracker.prototype.validateAssetsSheet = function () {
 
   let success = true;
   let assetRecords;
+  let fiatBaseRowIndex;
   try {
     assetRecords = this.getAssetRecords();
-    this.validateAssetRecords(assetRecords);
+    fiatBaseRowIndex = this.validateAssetRecords(assetRecords);
   }
   catch (error) {
     if (error instanceof ValidationError) {
@@ -51,7 +52,7 @@ AssetTracker.prototype.validateAssetsSheet = function () {
     }
   }
 
-  return [success, assetRecords];
+  return [success, assetRecords, fiatBaseRowIndex];
 
 };
 
@@ -83,26 +84,31 @@ AssetTracker.prototype.validateLedgerSheet = function () {
 /**
  * Validates a set of asset records and throws a ValidationError on failure.
  * @param {Array<AssetRecord>} assetRecords - The colection of asset records to validate.
+ * @return {number} The row index of fiat base.
  */
 AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
   let rowIndex = this.assetsHeaderRows + 1;
   let tickers = new Set();
   let fiatBase;
+  let fiatBaseRowIndex;
   for (let assetRecord of assetRecords) {
     let ticker = assetRecord.ticker;
     let assetType = assetRecord.assetType;
 
-    this.validateAssetRecord(assetRecord, tickers, fiatBase, rowIndex++);
+    this.validateAssetRecord(assetRecord, tickers, fiatBase, rowIndex);
 
     if (assetType === 'Fiat Base') {
       fiatBase = ticker;
+      fiatBaseRowIndex = rowIndex;
     }
     tickers.add(ticker);
+    rowIndex++;
   }
   if (!fiatBase) {
     throw new ValidationError(`Fiat Base has not been declared in the Assets sheet. One asset must have asset type of 'Fiat Base'.`);
   }
+  return fiatBaseRowIndex;
 };
 
 /**

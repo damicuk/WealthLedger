@@ -9,6 +9,7 @@ AssetTracker.prototype.writeReports = function () {
   let assetsValidationResults = this.validateAssetsSheet();
   let assetsValidationSuccess = assetsValidationResults[0];
   let assetRecords = assetsValidationResults[1];
+  let fiatBaseRowIndex = assetsValidationResults[2];
   if (!assetsValidationSuccess) {
     return;
   }
@@ -21,6 +22,7 @@ AssetTracker.prototype.writeReports = function () {
     let message = `Fiat base is ${this.fiatBase.ticker} but the accounting model is ${this.accountingModel}.\nYou can change the accounting model in setting.\n\nAre you sure you want to continue?`;
     let result = ui.alert(`Warning`, message, ui.ButtonSet.YES_NO);
     if (result !== ui.Button.YES) {
+      this.setCurrentCell(this.assetsSheetName, fiatBaseRowIndex, AssetRecord.getColumnIndex('assetType'));
       SpreadsheetApp.getActive().toast('Reports canceled');
       return;
     }
