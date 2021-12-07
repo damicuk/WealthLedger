@@ -365,7 +365,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
     }
-    else if (!creditAsset.isFiat && creditFee >= creditAmount) {
+    else if (!creditAsset.isFiat && creditFee && creditFee >= creditAmount) {
       throw new ValidationError(`${action} row ${rowIndex}: Asset credit fee must be less than the credit amount (or blank).`, rowIndex, 'creditFee');
     }
     else if (creditFee > creditAmount) {
@@ -403,7 +403,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
         throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'debitExRate');
       }
       else if (debitExRate !== '' && creditExRate !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate, but not both. One exchange rate can be deduced from the other and the amounts of assets exchanged.\n\nRemove one of the exchange rates.\nThe exchange rate of the least volatile, most widely traded asset is likely to be more accurate.`, rowIndex, 'debitExRate');
+        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate, but not both. One exchange rate can be inferred from the other and the amounts of assets exchanged.\n\nRemove one of the exchange rates.\nThe exchange rate of the least volatile, most widely traded asset is likely to be more accurate.`, rowIndex, 'debitExRate');
       }
       else if (debitExRate !== '' && debitExRate <= 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
