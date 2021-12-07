@@ -22,8 +22,7 @@ AssetTracker.prototype.processLedgerUK = function (ledgerRecords, timeZone) {
     this.processLedgerRecordUK(ledgerRecord, timeZone);
   }
 
-  let assetPools = Array.from(this.assetPools.values());
-  for (let assetPool of assetPools) {
+  for (let assetPool of this.assetPools.values()) {
     assetPool.match();
   }
 };

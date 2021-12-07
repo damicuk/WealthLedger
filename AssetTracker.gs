@@ -397,10 +397,8 @@ var AssetTracker = class AssetTracker {
   get fiatTickers() {
 
     let fiatTickers = new Set();
-    let wallets = Array.from(this.wallets.values());
-    for (let wallet of wallets) {
-      let walletFiatAccounts = Array.from(wallet.fiatAccounts.values());
-      for (let fiatAccount of walletFiatAccounts) {
+    for (let wallet of this.wallets.values()) {
+      for (let fiatAccount of wallet.fiatAccounts.values()) {
         fiatTickers.add(fiatAccount.ticker);
       }
     }
@@ -415,10 +413,8 @@ var AssetTracker = class AssetTracker {
   get assetTickers() {
 
     let assetTickers = new Set();
-    let wallets = Array.from(this.wallets.values());
-    for (let wallet of wallets) {
-      let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
-      for (let assetAccount of walletAssetAccounts) {
+    for (let wallet of this.wallets.values()) {
+      for (let assetAccount of wallet.assetAccounts.values()) {
         assetTickers.add(assetAccount.ticker);
       }
     }
@@ -433,10 +429,8 @@ var AssetTracker = class AssetTracker {
   get currentAssetTickers() {
 
     let assetTickers = new Set();
-    let wallets = Array.from(this.wallets.values());
-    for (let wallet of wallets) {
-      let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
-      for (let assetAccount of walletAssetAccounts) {
+    for (let wallet of this.wallets.values()) {
+      for (let assetAccount of wallet.assetAccounts.values()) {
         if (assetAccount.balance > 0) {
           assetTickers.add(assetAccount.ticker);
         }

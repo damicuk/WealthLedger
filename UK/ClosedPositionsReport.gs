@@ -116,8 +116,7 @@ AssetTracker.prototype.getUKClosedPositionsTable = function () {
 
   let table = [];
 
-  let assetPools = Array.from(this.assetPools.values());
-  for (let assetPool of assetPools) {
+  for (let assetPool of this.assetPools.values()) {
 
     for (let closedPoolLot of assetPool.closedPoolLots) {
 

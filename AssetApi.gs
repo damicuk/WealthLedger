@@ -6,15 +6,15 @@
  * Throws an ApiError if the call to the API returns an error response.
  * @param {string} apiName - The name of the API to query.
  * @param {string} apiKey - The API key.
- * @param {Array<string>|string} assets - Comma-separated list of asset tickers.
+ * @param {Array<string>|string} assetTickers - Comma-separated list of asset tickers.
  * @param {string} fiatBaseTicker - Fiat base ticker.
  * @return {Array<Array<string, number, Date>>} The table containing the price data for the assets.
  */
-AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, fiatBaseTicker) {
+AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assetTickers, fiatBaseTicker) {
 
   let apiAssetPriceMap = new Map();
 
-  if (assets.length > 0) {
+  if (assetTickers.length > 0) {
 
     let now = new Date();
 
@@ -43,7 +43,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
         gzip: true
       };
 
-      const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${assets}&convert=${fiatBaseTicker}`;
+      const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${assetTickers}&convert=${fiatBaseTicker}`;
 
       let response;
       try {
@@ -77,7 +77,7 @@ AssetTracker.prototype.getApiAssetPriceMap = function (apiName, apiKey, assets, 
 
       }
 
-      const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${assets}&tsyms=${fiatBaseTicker}&api_key=${apiKey}`;
+      const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${assetTickers}&tsyms=${fiatBaseTicker}&api_key=${apiKey}`;
 
       let response;
       try {

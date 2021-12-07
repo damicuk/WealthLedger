@@ -179,8 +179,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
     if (debitAsset) { //Check debit asset previously held
       let assetHeld = false;
-      let wallets = Array.from(this.wallets.values());
-      for (let wallet of wallets) {
+      for (let wallet of this.wallets.values()) {
         if (wallet.assetAccounts.has(debitAsset.ticker)) {
           assetHeld = true;
           break;

@@ -107,11 +107,9 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
 
   let table = [];
 
-  let wallets = Array.from(this.wallets.values());
-  for (let wallet of wallets) {
+  for (let wallet of this.wallets.values()) {
 
-    let walletAssetAccounts = Array.from(wallet.assetAccounts.values());
-    for (let assetAccount of walletAssetAccounts) {
+    for (let assetAccount of wallet.assetAccounts.values()) {
 
       for (let lot of assetAccount.lots) {
 

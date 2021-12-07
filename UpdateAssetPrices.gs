@@ -139,8 +139,7 @@ AssetTracker.prototype.getApiTickerSet = function (apiName, assetRecords, refres
 AssetTracker.prototype.getApiFailedTickerSet = function (apiTickerSet, apiAssetPriceMap) {
 
   let apiFailedTickerSet = new Set(apiTickerSet);
-  let apiSuccessTickers = Array.from(apiAssetPriceMap.keys());
-  for (let apiSuccessTicker of apiSuccessTickers) {
+  for (let apiSuccessTicker of apiAssetPriceMap.keys()) {
     apiFailedTickerSet.delete(apiSuccessTicker);
   }
   return apiFailedTickerSet;
