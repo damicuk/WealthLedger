@@ -156,7 +156,9 @@ var AssetPool = class AssetPool {
 
         for (let poolDeposit of this.poolDeposits) {
 
-          if (poolDeposit.action !== 'Split') {
+          if (poolDeposit.action !== 'Split'
+            && poolDeposit.action !== 'Gift'
+            && poolDeposit.action !== 'Income') {
 
             if (poolWithdrawal.date.getTime() === poolDeposit.date.getTime()) {
 
@@ -186,7 +188,9 @@ var AssetPool = class AssetPool {
 
         for (let poolDeposit of this.poolDeposits) {
 
-          if (poolDeposit.action !== 'Split') {
+          if (poolDeposit.action !== 'Split'
+            && poolDeposit.action !== 'Gift'
+            && poolDeposit.action !== 'Income') {
 
             let diffDays = AssetTracker.diffDays(poolWithdrawal.date, poolDeposit.date);
 

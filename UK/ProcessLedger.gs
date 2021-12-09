@@ -57,6 +57,21 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
   }
   else if (action === 'Trade') {
 
+    //Infer missing ex rates
+    if (!debitAsset.isFiatBase && !creditAsset.isFiatBase && !(debitAsset.isFiat && creditAsset.isFiat)) {
+
+      if (!debitExRate) {
+
+        debitExRate = Math.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
+
+      }
+      if (!creditExRate) {
+
+        creditExRate = Math.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
+
+      }
+    }
+
     if (!creditAsset.isFiat) { //Buy or exchange asset
 
       let poolDeposit = new PoolDeposit(date,

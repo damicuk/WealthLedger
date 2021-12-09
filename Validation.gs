@@ -556,6 +556,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       else if (creditFee < 0) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
       }
+      else if (creditFee && creditFee >= creditAmount) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be less than the credit amount (or blank).`, rowIndex, 'creditFee');
+      }
     }
   }
   else if (action === 'Fee') {
@@ -594,62 +597,68 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     }
   }
   else if (action === 'Split') {
-    if (!debitAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
+
+    //14 invalid configurations - decide which column to highlight - no obvious pattern
+    let columnName;
+    if ((debitAsset && debitAmount !== '' && creditAsset && creditAmount !== '')
+      || (debitAsset && debitAmount === '' && creditAsset && creditAmount !== '')
+      || (debitAsset && debitAmount === '' && creditAsset && creditAmount === '')
+      || (debitAsset && debitAmount === '' && !creditAsset && creditAmount !== '')
+      || (!debitAsset && debitAmount !== '' && !creditAsset && creditAmount === '')
+      || (!debitAsset && debitAmount === '' && !creditAsset && creditAmount === '')
+    ) {
+      columnName = 'debitAsset';
     }
-    else if (debitAsset.isFiat) {
+    else if ((debitAsset && debitAmount === '' && !creditAsset && creditAmount === '')
+      || (!debitAsset && debitAmount !== '' && creditAsset && creditAmount !== '')
+      || (!debitAsset && debitAmount !== '' && creditAsset && creditAmount === '')
+      || (!debitAsset && debitAmount !== '' && !creditAsset && creditAmount !== '')
+    ) {
+      columnName = 'debitAmount';
+    }
+    else if ((debitAsset && debitAmount !== '' && creditAsset && creditAmount === '')
+      || (!debitAsset && debitAmount === '' && !creditAsset && creditAmount !== '')
+    ) {
+      columnName = 'creditAsset';
+    }
+    else if ((debitAsset && debitAmount !== '' && !creditAsset && creditAmount !== '')
+      || (!debitAsset && debitAmount === '' && creditAsset && creditAmount === '')
+    ) {
+      columnName = 'creditAmount';
+    }
+
+    if (columnName) {
+      throw new ValidationError(`${action} row ${rowIndex}: Either enter debit asset and debit amount for reverse splits (decrease amount) or credit asset and credit amount for foward splits (increase amount).`, rowIndex, columnName);
+    }
+    else if (debitAsset && debitAsset.isFiat) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAsset}) is fiat, not supported.`, rowIndex, 'debitAsset');
     }
     else if (debitExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
     }
+    else if (debitAmount !== '' && debitAmount <= 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 0.`, rowIndex, 'debitAmount');
+    }
     else if (debitFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
     }
-    else if (creditAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit asset (${creditAsset}) blank.`, rowIndex, 'creditAsset');
+    else if (creditAsset && debitWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: For foward splits (increase amount) leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
+    }
+    else if (creditAsset && creditAsset.isFiat) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit asset (${creditAsset}) is fiat, not supported.`, rowIndex, 'creditAsset');
     }
     else if (creditExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
     }
+    else if (creditAmount !== '' && creditAmount <= 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater than 0.`, rowIndex, 'creditAmount');
+    }
     else if (creditFee !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
-    else if (debitAmount !== '' && creditAmount !== '') { //Ratio
-      if (debitAmount < 1) {
-        throw new ValidationError(`${action} row ${rowIndex}: For split ratio debit amount (denominator) must be greater or equal to 1.`, rowIndex, 'debitAmount');
-      }
-      else if (creditAmount < 1) {
-        throw new ValidationError(`${action} row ${rowIndex}: For split ratio credit amount (numerator) must be greater or equal to 1.`, rowIndex, 'creditAmount');
-      }
-      else if (debitAmount === 1 && creditAmount === 1) {
-        throw new ValidationError(`${action} row ${rowIndex}: For split ratio either debit amount (denominator) or credit amount (numerator) must be greater than 1.`, rowIndex, 'debitAmount');
-      }
-      else if (debitWalletName !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: For split ratio leave debit wallet (${debitWalletName}) blank.\n\nFor subtraction of debit amount from the debit wallet, leave credit amount blank.`, rowIndex, 'debitWalletName');
-      }
-      else if (creditWalletName !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: For split ratio leave credit wallet (${creditWalletName}) blank.\n\nFor addition of credit amount to the credit wallet, leave debit amount blank.`, rowIndex, 'creditWalletName');
-      }
-    }
-    else if (debitAmount === '' && creditAmount !== '') { //Addition
-      if (debitWalletName) {
-        throw new ValidationError(`${action} row ${rowIndex}: For addition of credit amount leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
-      }
-      else if (creditAmount <= 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For addition credit amount must be greater than 0.`, rowIndex, 'creditAmount');
-      }
-    }
-    else if (debitAmount !== '' && creditAmount === '') { //Subtraction
-      if (debitAmount <= 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For subtraction debit amount must be greater than 0.`, rowIndex, 'debitAmount');
-      }
-      else if (creditWalletName) {
-        throw new ValidationError(`${action} row ${rowIndex}: For subtraction of debit amount leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
-      }
-    }
-    else { //No debit or credit amount
-      throw new ValidationError(`${action} row ${rowIndex}: No debit or credit amount specified.\n\nFor addition fill just the credit amount .\nFor subtraction fill just the debit amount.\nFor a split ratio fill both the credit amount (numerator) and debit amount (denominator).`, rowIndex, 'creditAmount');
+    else if (debitAsset && creditWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: For reverse splits (decrease amount) leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
   else {
