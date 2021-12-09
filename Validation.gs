@@ -493,6 +493,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     }
   }
   else if (action === 'Gift') {
+    if (!debitAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.\n\nFor gifts given debit asset is the asset given.\n\nFor gifts received debit asset must be fiat base (${this.fiatBase}) for the inherited cost basis.`, rowIndex, 'debitAsset');
+    }
     if (debitWalletName === '' && creditWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Either debit wallet (for gifts given) or credit wallet (for gifts received) must be specified.`, rowIndex, 'debitWalletName');
     }
@@ -509,10 +512,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
     }
     else if (debitWalletName !== '') { //Gift given
-      if (!debitAsset) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit asset must be specified.`, rowIndex, 'debitAsset');
-      }
-      else if (debitAsset.isFiat) {
+      if (debitAsset.isFiat) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit asset ${debitAsset} is fiat. Not supported for gifts given. Use transfer action instead.`, rowIndex, 'debitAsset');
       }
       else if (debitAmount === '') {
@@ -532,7 +532,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
     }
     else { //Gift received
-      if (!debitAsset || !debitAsset.isFiatBase) {
+      if (!debitAsset.isFiatBase) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit asset must be fiat base (for the inherited cost basis).`, rowIndex, 'debitAsset');
       }
       else if (debitAmount === '') {
@@ -628,7 +628,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     }
 
     if (columnName) {
-      throw new ValidationError(`${action} row ${rowIndex}: Either enter debit asset and debit amount for reverse splits (decrease amount) or credit asset and credit amount for foward splits (increase amount).`, rowIndex, columnName);
+      throw new ValidationError(`${action} row ${rowIndex}: Either enter debit asset and debit amount for reverse splits (decrease amount held) or credit asset and credit amount for foward splits (increase amount held).`, rowIndex, columnName);
     }
     else if (debitAsset && debitAsset.isFiat) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAsset}) is fiat, not supported.`, rowIndex, 'debitAsset');
@@ -643,7 +643,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
     }
     else if (creditAsset && debitWalletName !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: For foward splits (increase amount) leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
+      throw new ValidationError(`${action} row ${rowIndex}: For foward splits (increase amount held) leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
     }
     else if (creditAsset && creditAsset.isFiat) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit asset (${creditAsset}) is fiat, not supported.`, rowIndex, 'creditAsset');
@@ -658,7 +658,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
     }
     else if (debitAsset && creditWalletName !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: For reverse splits (decrease amount) leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
+      throw new ValidationError(`${action} row ${rowIndex}: For reverse splits (decrease amount held) leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
   else {

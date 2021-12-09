@@ -251,9 +251,14 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Split') {
 
-    let walletName = debitWalletName ? debitWalletName : creditWalletName ? creditWalletName : null;
+    if (debitAsset) {
 
-    this.splitAsset(debitAsset, walletName, debitAmount, creditAmount, rowIndex);
+      this.splitAsset(debitAsset, -debitAmount, debitWalletName, rowIndex);
+    }
+    else {
+
+      this.splitAsset(creditAsset, creditAmount, creditWalletName, rowIndex);
+    }
   }
 };
 
@@ -266,12 +271,11 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
  * Throws an AssetAccountError if the balance is zero or insufficient.
  * Removes any lots with zero subunits.
  * @param {Asset} asset - The asset whose balance is being adjusted by the split.
+ * @param {number} adjustAmount - The amount by which to adjust the amount of asset held.
  * @param {string} walletName - The name of the wallet to which to apply the split. If not given the split applied to all wallets.
- * @param {number} debitAmount - The value of the debit amount in the ledger sheet. The numerator of the split or the amount to be subtracted.
- * @param {number} creditAmount - The value of the credit amount in the ledger sheet. The denominator of the split or the amount to be added.
  * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
-AssetTracker.prototype.splitAsset = function (asset, walletName, debitAmount, creditAmount, rowIndex) {
+AssetTracker.prototype.splitAsset = function (asset, adjustAmount, walletName, rowIndex) {
 
   let wallets;
   let assetAccounts = [];
@@ -303,24 +307,11 @@ AssetTracker.prototype.splitAsset = function (asset, walletName, debitAmount, cr
     throw new AssetAccountError(`Split row ${rowIndex}: This action cannot be performed on ${asset.ticker} balance of 0.`, rowIndex, 'action');
   }
 
-  let adjustSubunits;
+  let adjustSubunits = Math.round(adjustAmount * asset.subunits);
 
-  if (debitAmount && creditAmount) {
+  if (totalSubunits + adjustSubunits < 0) {
 
-    adjustSubunits = Math.round(totalSubunits * (creditAmount / debitAmount - 1));
-  }
-  else if (debitAmount) {
-
-    adjustSubunits = - Math.round(debitAmount * asset.subunits);
-
-    if (totalSubunits + adjustSubunits < 0) {
-
-      throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${debitAmount} from balance of ${asset.ticker} ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
-    }
-  }
-  else {
-
-    adjustSubunits = Math.round(creditAmount * asset.subunits);
+    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${debitAmount} from balance of ${asset.ticker} ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
   }
 
   let assetAccountsAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountsSubunits);

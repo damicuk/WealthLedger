@@ -139,37 +139,38 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
   }
   else if (action === 'Split') {
 
-    let assetPool = this.getAssetPool(debitAsset);
+    let asset;
+    let adjustAmount;
 
-    let adjustSubunits;
+    if (debitAsset) {
 
-    if (debitAmount && creditAmount) {
-
-      adjustSubunits = Math.round(assetPool.subunits * (creditAmount / debitAmount - 1));
-    }
-    else if (debitAmount) {
-
-      adjustSubunits = - Math.round(debitAmount * debitAsset.subunits);
-
-      if (assetPool.subunits + adjustSubunits < 0) {
-
-        //the application should have thrown an asset account error before reaching here
-        throw Error(`Insufficient funds: Attempted to subtract ${debitAsset.ticker} ${debitAmount} from balance of ${debitAsset.ticker} ${assetPool.subunits / debitAsset.subunits}`);
-      }
+      asset = debitAsset;
+      adjustAmount = -debitAmount;
     }
     else {
 
-      adjustSubunits = Math.round(creditAmount * debitAsset.subunits);
+      asset = creditAsset;
+      adjustAmount = creditAmount;
+    }
+
+    let assetPool = this.getAssetPool(asset);
+
+    let adjustSubunits = Math.round(adjustAmount * asset.subunits);
+
+    if (assetPool.subunits + adjustSubunits < 0) {
+
+      //the application should have thrown an asset account error before reaching here
+      throw Error(`Insufficient funds: Attempted to subtract ${asset.ticker} ${-adjustAmount} from balance of ${asset.ticker} ${assetPool.subunits / asset.subunits}`);
     }
 
     if (adjustSubunits > 0) {
 
-      let poolDeposit = new PoolDeposit(date, this.fiatBase, 0, 0, debitAsset, (adjustSubunits / debitAsset.subunits), 0, action);
+      let poolDeposit = new PoolDeposit(date, this.fiatBase, 0, 0, asset, (adjustSubunits / asset.subunits), 0, action);
       assetPool.addPoolDeposit(poolDeposit);
     }
     else if (adjustSubunits < 0) {
 
-      let poolWithdrawal = new PoolWithdrawal(date, debitAsset, (-adjustSubunits / debitAsset.subunits), 0, this.fiatBase, 0, 0, action);
+      let poolWithdrawal = new PoolWithdrawal(date, asset, (-adjustSubunits / asset.subunits), 0, this.fiatBase, 0, 0, action);
       assetPool.addPoolWithdrawal(poolWithdrawal);
     }
   }
