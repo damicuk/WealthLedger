@@ -17,8 +17,8 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
 
     let headers = [
       [
-        'Buy Debit', , , , , , ,
-        'Buy Credit', , , ,
+        'Debit', , , , , , ,
+        'Credit', , , ,
         'Current',
         'Calculations', , , , , , , ,
       ],
@@ -50,12 +50,11 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:G2').setBackgroundColor('#ead1dc');
-    sheet.getRange('H1:K2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('L1:L2').setBackgroundColor('#d9d2e9');
+    sheet.getRange('H1:L2').setBackgroundColor('#d0e0e3');
     sheet.getRange('M1:T2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:G1').mergeAcross();
-    sheet.getRange('H1:K1').mergeAcross();
+    sheet.getRange('H1:L1').mergeAcross();
     sheet.getRange('M1:T1').mergeAcross();
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
