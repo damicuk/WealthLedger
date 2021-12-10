@@ -317,20 +317,15 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitWalletName === '' && creditWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit or credit wallet specified.`, rowIndex, 'debitWalletName');
     }
-    else if (debitAsset.isFiat) { //Fiat transfer
-      if (debitWalletName !== '' && creditWalletName !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: For fiat base transfers, leave debit wallet (${debitWalletName}) blank for deposits or credit wallet (${creditWalletName}) blank for withdrawals.`, rowIndex, 'debitWalletName');
-      }
+    else if (debitWalletName === creditWalletName) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit wallet (${debitWalletName}) and credit wallet (${creditWalletName}) must be different.`, rowIndex, 'debitWalletName');
     }
-    else { //Asset transfer
+    else if (!debitAsset.isFiat) { //Asset transfer
       if (debitWalletName === '') {
         throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
       }
       else if (creditWalletName === '') {
         throw new ValidationError(`${action} row ${rowIndex}: No credit wallet specified.`, rowIndex, 'creditWalletName');
-      }
-      else if (debitWalletName === creditWalletName) {
-        throw new ValidationError(`${action} row ${rowIndex}: Debit wallet (${debitWalletName}) and credit wallet (${creditWalletName}) must be different.`, rowIndex, 'debitWalletName');
       }
     }
   }

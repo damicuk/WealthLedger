@@ -107,7 +107,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
         this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
       }
-      else if (creditWalletName) { //Fiat deposit
+      if (creditWalletName) { //Fiat deposit
 
         this.getWallet(creditWalletName).getFiatAccount(debitAsset).transfer(debitAmount).transfer(-debitFee);
 

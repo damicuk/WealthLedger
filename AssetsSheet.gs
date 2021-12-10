@@ -33,42 +33,36 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  let sampleData;
-
+  let sampleFiatBase;
+  let sampleFiat;
+  let currencyConvert;
+  let usdcPrice;
   if (this.accountingModel === 'UK') {
-
-    sampleData = [
-      ['GBP', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
-      ['USD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "GBP"))', , , `Fiat capital gains are ignored.`],
-      ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "GBP"))', , , `Forex is treated as any other asset.`],
-      ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "GBP"))', , , ,],
-      ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "GBP"))', , , ,],
-      ['USDC', 'Stablecoin', '2', '=D$3', , , ,],
-      ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)*D$3', , , ,],
-      ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)*D$3', , , ,],
-      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
-      ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)*D$3', , , ,],
-      [, , , , , , ,]
-    ];
-
+    sampleFiatBase = 'GBP';
+    sampleFiat = 'USD';
+    currencyConvert = '*D$3';
+    usdcPrice = '=D$3';
   }
   else {
-
-    sampleData = [
-      ['USD', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
-      ['CAD', 'Fiat', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))', , , `Fiat capital gains are ignored.`],
-      ['EUR', 'Forex', '2', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))', , , `Forex is treated as any other asset.`],
-      ['ADA', 'Crypto', '6', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))', , , ,],
-      ['BTC', 'Crypto', '8', '=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))', , , ,],
-      ['USDC', 'Stablecoin', '2', '1', , , ,],
-      ['AAPL', 'Stock', '0', '=GOOGLEFINANCE(A8)', , , ,],
-      ['AMZN', 'Stock', '0', '=GOOGLEFINANCE(A9)', , , ,],
-      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
-      ['NVDA', 'Stock', '0', '=GOOGLEFINANCE(A11)', , , ,],
-      [, , , , , , ,]
-    ];
-
+    sampleFiatBase = 'USD';
+    sampleFiat = 'CAD';
+    currencyConvert = '';
+    usdcPrice = '1';
   }
+
+  let sampleData = [
+    [sampleFiatBase, 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
+    [sampleFiat, 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "${sampleFiatBase}"))`, , , `Fiat capital gains are ignored.`],
+    ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "${sampleFiatBase}"))`, , , `Forex is treated as any other asset.`],
+    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "${sampleFiatBase}"))`, , , `Google finance is used to fetch the current price. Alternatively use an API or your own method.`],
+    ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "${sampleFiatBase}"))`, , , ,],
+    ['USDC', 'Stablecoin', '2', usdcPrice, , , ,],
+    ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)${currencyConvert}`, , , ,],
+    ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)${currencyConvert}`, , , ,],
+    ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
+    ['NVDA', 'Stock', '0', `=GOOGLEFINANCE(A11)${currencyConvert}`, , , ,],
+    [, , , , , , ,]
+  ];
 
   sheet.getRange('A2:G12').setValues(sampleData);
 
