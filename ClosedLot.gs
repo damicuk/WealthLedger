@@ -11,7 +11,7 @@ var ClosedLot = class ClosedLot {
    * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditExRate - The credit asset to fiat base exchange rate, 0 if the credit asset is fiat base.
    * @param {number} creditAmount - The amount of asset credited.
-   * @param {number} creditFee - The fee in asset units credited.
+   * @param {number} creditFee - The fee in credit asset units.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
    */
   constructor(lot, date, creditAsset, creditExRate, creditAmount, creditFee, walletName) {
@@ -47,7 +47,7 @@ var ClosedLot = class ClosedLot {
     this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
 
     /**
-     * The fee in asset subunits credited.
+     * The fee in credit asset subunits.
      * @type {number}
      */
     this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
@@ -70,7 +70,7 @@ var ClosedLot = class ClosedLot {
   }
 
   /**
-   * The fee in asset units credited.
+   * The fee in credit asset units.
    * @type {number}
    */
   get creditFee() {

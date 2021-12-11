@@ -10,12 +10,12 @@ var LedgerRecord = class LedgerRecord {
    * @param {string} debitAsset - The ticker of the asset debited from the account.
    * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
    * @param {number} debitAmount - The amount of asset debited from the account.
-   * @param {number} debitFee - The fee in asset units debited from the account.
+   * @param {number} debitFee - The fee in debit asset units.
    * @param {string} debitWalletName - The name of the wallet (or exchange) from which the asset is debited.
    * @param {string} creditAsset - The ticker of the asset credited to the account.
    * @param {number} creditExRate - The credit asset to fiat base exchange rate, 0 if the credit asset is fiat base.
    * @param {number} creditAmount - The amount of asset credited to the account.
-   * @param {number} creditFee - The fee in asset units credited to the account.
+   * @param {number} creditFee - The fee in credit asset units.
    * @param {string} creditWalletName - The name of the wallet (or exchange) to which the asset is credited.
    * @param {string} lotMatching - Sets the lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
    */
@@ -65,7 +65,7 @@ var LedgerRecord = class LedgerRecord {
     this.debitAmount = debitAmount;
 
     /**
-     * The fee in asset units debited from the account.
+     * The fee in debit asset units.
      * @type {number}
      */
     this.debitFee = debitFee;
@@ -95,7 +95,7 @@ var LedgerRecord = class LedgerRecord {
     this.creditAmount = creditAmount;
 
     /**
-     * The fee in asset units credited to the account.
+     * The fee in credit asset units.
      * @type {number}
      */
     this.creditFee = creditFee;

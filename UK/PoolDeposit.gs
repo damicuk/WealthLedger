@@ -9,10 +9,10 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
    * @param {Date} date - The date of the transaction.
    * @param {Asset} debitAsset - The asset debited.
    * @param {number} debitAmount - The amount of asset debited.
-   * @param {number} debitFee - The fee in asset units debited.
+   * @param {number} debitFee - The fee in debit asset units.
    * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditAmount - The amount of asset credited.
-   * @param {number} creditFee - The fee in asset units credited.
+   * @param {number} creditFee - The fee in credit asset units.
    * @param {string} action - The type of action of the transaction.
    */
   constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action) {

@@ -10,10 +10,10 @@ var Lot = class Lot {
    * @param {Asset} debitAsset - The asset debited.
    * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
    * @param {number} debitAmount - The amount of asset debited.
-   * @param {number} debitFee - The fee in asset units debited.
+   * @param {number} debitFee - The fee in debit asset units.
    * @param {Asset} creditAsset - The asset credited.
    * @param {number} creditAmount - The amount of asset credited.
-   * @param {number} creditFee - The fee in asset units credited.
+   * @param {number} creditFee - The fee in credit asset units.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
    */
   constructor(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, walletName) {
@@ -43,7 +43,7 @@ var Lot = class Lot {
     this.debitAmountSubunits = Math.round(debitAmount * this.debitAsset.subunits);
 
     /**
-     * The fee in asset subunits debited.
+     * The fee in debit asset subunits.
      * @type {number}
      */
     this.debitFeeSubunits = Math.round(debitFee * this.debitAsset.subunits);
@@ -61,7 +61,7 @@ var Lot = class Lot {
     this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
 
     /**
-     * The fee in asseet subunits credited.
+     * The fee in credit asset subunits.
      * @type {number}
      */
     this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
@@ -84,7 +84,7 @@ var Lot = class Lot {
   }
 
   /**
-   * The fee in asset units debited.
+   * The fee in debit asset units.
    * @type {number}
    */
   get debitFee() {
@@ -102,7 +102,7 @@ var Lot = class Lot {
   }
 
   /**
-   * The fee in asset units credited.
+   * The fee in credit asset units.
    * @type {number}
    */
   get creditFee() {
