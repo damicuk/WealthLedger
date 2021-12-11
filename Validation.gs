@@ -287,11 +287,43 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${AssetTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');
   }
   else if (action === 'Transfer') { //Transfer
-    if (!debitAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: No debit asset specified.`, rowIndex, 'debitAsset');
+    if (!debitAsset && !creditAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: No debit or credit asset specified.`, rowIndex, 'debitAsset');
     }
-    else if (debitExRate !== '') {
+    else if (debitAsset && creditAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: Either debit or credit asset must be specified, but not both.`, rowIndex, 'debitAsset');
+    }
+    if (creditAsset && !creditAsset.isFiat) {
+      throw new ValidationError(`${action} row ${rowIndex}: For non-fiat transfers enter debit asset only.`, rowIndex, 'creditAsset');
+    }
+    if (debitExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+    }
+    else if (creditExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+    }
+    else if (creditFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
+    }
+    else if (creditAsset) { //Fiat deposits
+      if (debitAmount !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts leave debit amount blank.`, rowIndex, 'debitAmount');
+      }
+      else if (debitFee !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts leave debit fee blank.`, rowIndex, 'debitFee');
+      }
+      else if (debitWalletName !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts leave debit wallet blank.`, rowIndex, 'debitWalletName');
+      }
+      else if (creditAmount === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts credit amount must be specified.`, rowIndex, 'creditAmount');
+      }
+      else if (creditAmount <= 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts credit amount must be greater than 0.`, rowIndex, 'creditAmount');
+      }
+      else if (creditWalletName === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts credit wallet must be specified.`, rowIndex, 'creditWalletName');
+      }
     }
     else if (debitAmount === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit amount specified.`, rowIndex, 'debitAmount');
@@ -302,31 +334,22 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
-    else if (creditAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit asset (${creditAsset}) blank. It is inferred from the debit asset (${debitAsset}).`, rowIndex, 'creditAsset');
-    }
-    else if (creditExRate !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+    else if (debitWalletName === '') {
+      if (debitAsset.isFiat && creditWalletName !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For fiat deposits from external accounts specify asset in the credit column.`, rowIndex, 'debitAsset');
+      }
+      else {
+        throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
+      }
     }
     else if (creditAmount !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit amount blank. It is inferred from the debit amount and debit fee.`, rowIndex, 'creditAmount');
     }
-    else if (creditFee !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
-    }
-    else if (debitWalletName === '' && creditWalletName === '') {
-      throw new ValidationError(`${action} row ${rowIndex}: No debit or credit wallet specified.`, rowIndex, 'debitWalletName');
+    else if (!debitAsset.isFiat && creditWalletName === '') {
+      throw new ValidationError(`${action} row ${rowIndex}: No credit wallet specified.`, rowIndex, 'creditWalletName');
     }
     else if (debitWalletName === creditWalletName) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit wallet (${debitWalletName}) and credit wallet (${creditWalletName}) must be different.`, rowIndex, 'debitWalletName');
-    }
-    else if (!debitAsset.isFiat) { //Asset transfer
-      if (debitWalletName === '') {
-        throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
-      }
-      else if (creditWalletName === '') {
-        throw new ValidationError(`${action} row ${rowIndex}: No credit wallet specified.`, rowIndex, 'creditWalletName');
-      }
     }
   }
   else if (action === 'Trade') {

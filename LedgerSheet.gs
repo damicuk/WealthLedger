@@ -71,7 +71,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   }
 
   let sampleData = [
-    ['2019-03-01 12:00:00', 'Transfer', sampleFiatBase, , 20000, , , , , , , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
+    ['2019-03-01 12:00:00', 'Transfer', , , , , , sampleFiatBase, , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
     ['2019-03-02 12:00:00', 'Trade', sampleFiatBase, , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
     ['2019-03-03 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
     ['2019-03-04 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 6010, 10, , , ,],
@@ -88,7 +88,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2021-03-03 12:00:00', 'Gift', 'ADA', , 500, , 'Ledger', , , , , , , `Gift given (e.g. to friends or family). Not recorded, the asset simply disappears.`],
     ['2021-03-04 12:00:00', 'Gift', sampleFiatBase, , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are the inherited cost basis.`],
     ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Ledger', , , , , , , `Miscellaneous fee.`],
-    ['2021-04-01 12:00:00', 'Transfer', sampleFiatBase, , 40000, , , , , , , 'IB', , ,],
+    ['2021-04-01 12:00:00', 'Transfer', , , , , , sampleFiatBase, , 40000, , 'IB', , ,],
     ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
     ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
     ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],

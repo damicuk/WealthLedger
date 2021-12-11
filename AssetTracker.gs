@@ -249,7 +249,7 @@ var AssetTracker = class AssetTracker {
 
     const oneDay = 24 * 60 * 60 * 1000;
 
-    const diffDays = Math.round((date2 - date1) / oneDay);
+    const diffDays = AssetTracker.round((date2 - date1) / oneDay);
 
     return diffDays;
   }
@@ -288,7 +288,7 @@ var AssetTracker = class AssetTracker {
       else {
         float = integerAmount / integerArray.length;
       }
-      let rounded = Math.round(float);
+      let rounded = AssetTracker.round(float);
       let error = rounded - float;
 
       resultArray.push([rounded, error, originalIndex++]);
@@ -326,6 +326,16 @@ var AssetTracker = class AssetTracker {
     return returnArray;
   }
 
+  /**
+   * Rounds a number correctly.
+   * Javascript's Math.round() function rounds negative numbers the wrong way.
+   * @param {number} num - The number to round.
+   * @return {number} The rounded number.
+   * @static
+   */
+  static round(num) {
+    return Math.sign(num) * Math.round(Math.abs(num));
+  }
 
   /**
    * The API key used to connect to CryptoCompare to retrieve crypto prices.
@@ -489,8 +499,8 @@ var AssetTracker = class AssetTracker {
    */
   closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName) {
 
-    let creditAmountSubunits = Math.round(creditAmount * creditAsset.subunits);
-    let creditFeeSubunits = Math.round(creditFee * creditAsset.subunits);
+    let creditAmountSubunits = AssetTracker.round(creditAmount * creditAsset.subunits);
+    let creditFeeSubunits = AssetTracker.round(creditFee * creditAsset.subunits);
 
     //apportion the fee to withdrawal lots
     let lotsSubunits = [];

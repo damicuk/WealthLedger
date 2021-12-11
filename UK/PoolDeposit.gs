@@ -49,10 +49,10 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
 
     let poolDeposits = [];
 
-    let debitAmountSubunits = Math.round((subunits / this.subunits) * this.debitAmountSubunits);
-    let debitFeeSubunits = Math.round((subunits / this.subunits) * this.debitFeeSubunits);
+    let debitAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.debitAmountSubunits);
+    let debitFeeSubunits = AssetTracker.round((subunits / this.subunits) * this.debitFeeSubunits);
 
-    let creditAmountSubunits = Math.round((subunits / this.subunits) * this.creditAmountSubunits);
+    let creditAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.creditAmountSubunits);
     let creditFeeSubunits = creditAmountSubunits - subunits;
 
     let poolDeposit1 = new PoolDeposit(

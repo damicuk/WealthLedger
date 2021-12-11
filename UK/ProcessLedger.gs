@@ -62,12 +62,12 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
 
       if (!debitExRate) {
 
-        debitExRate = Math.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
+        debitExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
 
       }
       if (!creditExRate) {
 
-        creditExRate = Math.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
+        creditExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
 
       }
     }

@@ -44,13 +44,13 @@ var ClosedLot = class ClosedLot {
      * The amount of asset subunits credited.
      * @type {number}
      */
-    this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
+    this.creditAmountSubunits = AssetTracker.round(creditAmount * this.creditAsset.subunits);
 
     /**
      * The fee in credit asset subunits.
      * @type {number}
      */
-    this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
+    this.creditFeeSubunits = AssetTracker.round(creditFee * this.creditAsset.subunits);
 
     /**
      * The name of the wallet (or exchange) in which the transaction took place.

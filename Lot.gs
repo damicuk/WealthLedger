@@ -40,13 +40,13 @@ var Lot = class Lot {
      * The amount of asset debited in subunits.
      * @type {number}
      */
-    this.debitAmountSubunits = Math.round(debitAmount * this.debitAsset.subunits);
+    this.debitAmountSubunits = AssetTracker.round(debitAmount * this.debitAsset.subunits);
 
     /**
      * The fee in debit asset subunits.
      * @type {number}
      */
-    this.debitFeeSubunits = Math.round(debitFee * this.debitAsset.subunits);
+    this.debitFeeSubunits = AssetTracker.round(debitFee * this.debitAsset.subunits);
 
     /**
      * The asset credited.
@@ -58,13 +58,13 @@ var Lot = class Lot {
      * The amount of asset credited in subunits.
      * @type {number}
      */
-    this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
+    this.creditAmountSubunits = AssetTracker.round(creditAmount * this.creditAsset.subunits);
 
     /**
      * The fee in credit asset subunits.
      * @type {number}
      */
-    this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
+    this.creditFeeSubunits = AssetTracker.round(creditFee * this.creditAsset.subunits);
 
     /**
      * The name of the wallet (or exchange) in which the transaction took place.
@@ -132,7 +132,7 @@ var Lot = class Lot {
 
     }
 
-    return Math.round((this.debitAmountSubunits + this.debitFeeSubunits) * exRate);
+    return AssetTracker.round((this.debitAmountSubunits + this.debitFeeSubunits) * exRate);
   }
 
   /**
@@ -146,10 +146,10 @@ var Lot = class Lot {
 
     let splitLots = [];
 
-    let debitAmountSubunits = Math.round((subunits / this.subunits) * this.debitAmountSubunits);
-    let debitFeeSubunits = Math.round((subunits / this.subunits) * this.debitFeeSubunits);
+    let debitAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.debitAmountSubunits);
+    let debitFeeSubunits = AssetTracker.round((subunits / this.subunits) * this.debitFeeSubunits);
 
-    let creditAmountSubunits = Math.round((subunits / this.subunits) * this.creditAmountSubunits);
+    let creditAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.creditAmountSubunits);
     let creditFeeSubunits = creditAmountSubunits - subunits;
 
     let lot1 = new Lot(

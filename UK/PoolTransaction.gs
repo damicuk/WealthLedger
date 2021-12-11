@@ -19,11 +19,11 @@ var PoolTransaction = class PoolTransaction {
 
     this.date = date;
     this.debitAsset = debitAsset;
-    this.debitAmountSubunits = Math.round(debitAmount * this.debitAsset.subunits);
-    this.debitFeeSubunits = Math.round(debitFee * this.debitAsset.subunits);
+    this.debitAmountSubunits = AssetTracker.round(debitAmount * this.debitAsset.subunits);
+    this.debitFeeSubunits = AssetTracker.round(debitFee * this.debitAsset.subunits);
     this.creditAsset = creditAsset;
-    this.creditAmountSubunits = Math.round(creditAmount * this.creditAsset.subunits);
-    this.creditFeeSubunits = Math.round(creditFee * this.creditAsset.subunits);
+    this.creditAmountSubunits = AssetTracker.round(creditAmount * this.creditAsset.subunits);
+    this.creditFeeSubunits = AssetTracker.round(creditFee * this.creditAsset.subunits);
     this.action = action;
   }
 

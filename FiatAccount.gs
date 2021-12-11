@@ -51,7 +51,7 @@ var FiatAccount = class FiatAccount {
    */
   transfer(amount) {
 
-    this.subunits += Math.round(amount * this.asset.subunits); //round because multiplying
+    this.subunits += AssetTracker.round(amount * this.asset.subunits); //round because multiplying
 
     return this;
 

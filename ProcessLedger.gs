@@ -100,7 +100,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   if (action === 'Transfer') {
 
-    if (debitAsset.isFiat) { //Fiat transfer
+    if (creditAsset && creditAsset.isFiat) { //Fiat deposit
+
+      this.getWallet(creditWalletName).getFiatAccount(creditAsset).transfer(creditAmount);
+
+    }
+    else if (debitAsset && debitAsset.isFiat) { //Fiat transfer
 
       if (debitWalletName) { //Fiat withdrawal
 
@@ -109,7 +114,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       }
       if (creditWalletName) { //Fiat deposit
 
-        this.getWallet(creditWalletName).getFiatAccount(debitAsset).transfer(debitAmount).transfer(-debitFee);
+        this.getWallet(creditWalletName).getFiatAccount(debitAsset).transfer(debitAmount);
 
       }
     }
@@ -128,12 +133,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       if (!debitExRate) {
 
-        debitExRate = Math.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
+        debitExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
 
       }
       if (!creditExRate) {
 
-        creditExRate = Math.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
+        creditExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
 
       }
     }

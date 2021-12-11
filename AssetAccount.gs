@@ -93,8 +93,8 @@ var AssetAccount = class AssetAccount {
    */
   withdraw(amount, fee, lotMatching, rowIndex) {
 
-    let amountSubunits = Math.round(amount * this.asset.subunits);
-    let feeSubunits = Math.round(fee * this.asset.subunits);
+    let amountSubunits = AssetTracker.round(amount * this.asset.subunits);
+    let feeSubunits = AssetTracker.round(fee * this.asset.subunits);
     let neededSubunits = amountSubunits + feeSubunits;
 
     if (neededSubunits > this.subunits) {
@@ -166,7 +166,7 @@ var AssetAccount = class AssetAccount {
    */
   apportionFee(fee, rowIndex) {
 
-    let feeSubunits = Math.round(fee * this.asset.subunits);
+    let feeSubunits = AssetTracker.round(fee * this.asset.subunits);
 
     if (feeSubunits > this.subunits) {
 
