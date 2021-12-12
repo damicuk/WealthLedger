@@ -210,7 +210,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     }
 
     //keep track of income separately
-    this.incomeLots.push({ date: date, sourceAsset: debitAsset, incomeAsset: creditAsset, exRate: creditExRate, amount: creditAmount, walletName: creditWalletName });
+    this.incomeLots.push(new IncomeLot(date, debitAsset ? debitAsset : null, creditAsset, creditExRate, creditAmount, creditWalletName));
 
   }
   else if (action === 'Donation') {
@@ -293,7 +293,7 @@ AssetTracker.prototype.splitAsset = function (asset, adjustAmount, walletName, r
   }
   else {
 
-    wallets = Array.from(this.wallets.values());
+    wallets = this.wallets.values();
   }
 
   for (let wallet of wallets) {
@@ -307,16 +307,11 @@ AssetTracker.prototype.splitAsset = function (asset, adjustAmount, walletName, r
     }
   }
 
-  if (totalSubunits === 0) {
-
-    throw new AssetAccountError(`Split row ${rowIndex}: This action cannot be performed on ${asset.ticker} balance of 0.`, rowIndex, 'action');
-  }
-
   let adjustSubunits = Math.round(adjustAmount * asset.subunits);
 
   if (totalSubunits + adjustSubunits < 0) {
 
-    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${debitAmount} from balance of ${asset.ticker} ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
+    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from balance of ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
   }
 
   let assetAccountsAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountsSubunits);
