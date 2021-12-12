@@ -78,7 +78,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 20010, 10, , , ,],
     ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , `Exchange cryptos.`],
     ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', sampleFiatBase, , 12010, 10, , , ,],
-    ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Ledger', , `Transfer amount and fee are always and only entered in the debit column.`],
+    ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Ledger', , `Transfer from one wallet to another.`],
     ['2020-12-05 12:00:00', 'Transfer', 'BTC', , 0.9995, 0.0005, 'Kraken', , , , , 'Ledger', , ,],
     ['2020-12-06 12:00:00', 'Transfer', sampleFiatBase, , 30000, , 'Kraken', , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
     ['2021-02-01 12:00:00', 'Income', , , , , , 'ADA', 1, 10, , 'Rewards', , `Staking reward.`],
