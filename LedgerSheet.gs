@@ -97,7 +97,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2021-08-02 00:00:00', 'Split', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount.`],
     ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', sampleFiatBase, , 9010, 10, , , ,],
     ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , sampleFiatBase, , 11.52, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
-    ['2021-08-31 12:00:00', 'Income', , , , , , sampleFiatBase, , 20, , 'IB', , `Fiat interest not tracked.`]
+    ['2021-08-31 12:00:00', 'Income', , , , , , sampleFiatBase, , 20, , 'IB', , `Fiat interest.`]
   ];
 
   let assetList = [sampleFiatBase, 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
