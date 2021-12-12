@@ -219,7 +219,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
     for (let lot of lots) {
 
-      this.donatedLots.push({ lot: lot, date: date, exRate: debitExRate, walletName: debitWalletName });
+      this.donatedLots.push(new DonatedLot(lot, date, debitExRate, debitWalletName));
 
     }
   }
