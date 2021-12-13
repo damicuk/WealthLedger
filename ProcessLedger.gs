@@ -133,13 +133,25 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       if (debitExRate === '') {
 
-        debitExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
+        if (debitAmount === 0 || creditAmount === 0) {
 
+          debitExRate = 0;
+        }
+        else {
+
+          debitExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
+        }
       }
       if (creditExRate === '') {
 
-        creditExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
+        if (debitAmount === 0 || creditAmount === 0) {
 
+          creditExRate = 0;
+        }
+        else {
+
+          creditExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
+        }
       }
     }
 
@@ -156,13 +168,16 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
+      //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
+      let creditAssetAccount = this.getWallet(debitWalletName).getAssetAccount(creditAsset);
+
       if (lot.subunits === 0) {
 
         this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName);
       }
       else {
 
-        this.getWallet(debitWalletName).getAssetAccount(creditAsset).depositLot(lot);
+        creditAssetAccount.depositLot(lot);
       }
 
     }
@@ -183,13 +198,16 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
+      //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
+      let creditAssetAccount = this.getWallet(debitWalletName).getAssetAccount(creditAsset);
+
       if (lot.subunits === 0) {
 
         this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName);
       }
       else {
 
-        this.getWallet(debitWalletName).getAssetAccount(creditAsset).depositLot(lot);
+        creditAssetAccount.depositLot(lot);
       }
     }
   }

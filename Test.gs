@@ -1,14 +1,22 @@
 function testProcessLedger(locale = 'Europe/Paris') {
 
+  let assetRecords;
+  let ledgerRecords;
+
+  let ada = new Asset('ADA', 'Crypto', false, 6);
+  let algo = new Asset('ALGO', 'Crypto', false, 8);
+
   assetRecords = [
     new AssetRecord('USD', 'Fiat Base', 2, 1, '', '', ''),
-    new AssetRecord('ADA', 'Crypto', 6, '', '', '', '')
+    new AssetRecord('ADA', 'Crypto', 6, '', '', '', ''),
+    new AssetRecord('ALGO', 'Crypto', 8, '', '', '', '')
   ];
 
   ledgerRecords = [
-    new LedgerRecord(new Date(2020, 3, 1), 'Gift', 'USD', '', 1200, 10, '', 'ADA', '', 1000, 10, 'Ledger', '')
+    new LedgerRecord(new Date(2020, 3, 1), 'Trade', 'USD', '', 10, '', 'Kraken', 'ALGO', '', 10, '', '', ''),
+    new LedgerRecord(new Date(2020, 3, 1), 'Trade', 'ALGO', 1.2, 12, '', 'Kraken', 'ADA', '', 10, '', '', ''),
+    new LedgerRecord(new Date(2020, 3, 2), 'Fee', 'ADA', '', '', 10, 'Kraken', '', '', '', '', '', '')
   ];
-
   let assetTracker = new AssetTracker();
   assetTracker.validateAssetRecords(assetRecords);
   assetTracker.processAssets(assetRecords);
@@ -16,27 +24,16 @@ function testProcessLedger(locale = 'Europe/Paris') {
   assetTracker.validateLedgerRecords(ledgerRecords, 'US');
   assetTracker.processLedger(ledgerRecords);
 
-  let wallet = assetTracker.wallets.get('Ledger');
+  let wallet = assetTracker.wallets.get('Kraken');
 
-  // if (fiat) {
+  let fiatAccount = wallet.fiatAccounts.get('USD');
 
-  //   let fiatAccount = wallet.fiatAccounts.get(fiat.ticker);
+  let asssetAccount = wallet.assetAccounts.get('ADA');
 
-  //   assert.equal(fiatAccount.balance, balance, 'Fiat account balance');
 
-  // }
-
-  // if (asset) {
-
-  //   let asssetAccount = wallet.assetAccounts.get(asset.ticker);
-
-  //   assert.equal(asssetAccount.lots.length, lots.length, 'Asset account lots length');
-  //   assert.deepEqual(asssetAccount.lots, lots, 'Asset account lots');
-
-  //   assert.equal(assetTracker.closedLots.length, closedLots.length, 'Closed lots length');
-  //   assert.deepEqual(assetTracker.closedLots, closedLots, 'Closed lots');
-
-  // }
+  let lots = [
+    new Lot(new Date(2020, 3, 1), algo, 0, 0, 0, ada, 1000, 0, 'Kraken')
+  ];
 
   // if (incomeLots) {
 
