@@ -8,7 +8,7 @@ var IncomeLot = class IncomeLot {
    * @param {Date} date - The date of the income was credited.
    * @param {Asset} sourceAsset - The source of the income.
    * @param {Asset} incomeAsset - The income asset.
-   * @param {number} exRate - The income asset to fiat base exchange rate, NaN if the income asset is fiat base.
+   * @param {number} exRate - The income asset to fiat base exchange rate.
    * @param {number} amount - The amount of income in asset units.
    * @param {string} walletName - The name of the wallet (or exchange) to which the income was credited.
    */
@@ -34,7 +34,7 @@ var IncomeLot = class IncomeLot {
     this.incomeAsset = incomeAsset;
 
     /**
-     * The income asset to fiat base exchange rate, NaN if the income asset is fiat base.
+     * The income asset to fiat base exchange rate.
      * @type {number}
      */
     this.exRate = exRate;

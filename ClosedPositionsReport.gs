@@ -65,7 +65,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('B3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('G3:I').setNumberFormat('@');
@@ -73,7 +73,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
     sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('L3:L').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('M3:N').setNumberFormat('@');
-    sheet.getRange('O3:O').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('O3:O').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('P3:P').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('Q3:Q').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('R3:R').setNumberFormat('@');
@@ -124,7 +124,7 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
     let dateBuy = lot.date;
     let debitAssetBuy = lot.debitAsset.ticker;
     let debitAssetTypeBuy = lot.debitAsset.assetType;
-    let debitExRateBuy = lot.debitExRate;
+    let debitExRateBuy = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
     let debitAmountBuy = lot.debitAmount;
     let debitFeeBuy = lot.debitFee;
     let walletBuy = lot.walletName;
@@ -137,7 +137,7 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
     let dateSell = closedLot.date;
     let creditAssetSell = closedLot.creditAsset.ticker;
     let creditAssetTypeSell = closedLot.creditAsset.assetType;
-    let creditExRateSell = closedLot.creditExRate;
+    let creditExRateSell = closedLot.creditAsset === this.fiatBase ? '' : closedLot.creditExRate;
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;

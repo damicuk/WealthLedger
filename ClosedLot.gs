@@ -9,7 +9,7 @@ var ClosedLot = class ClosedLot {
    * @param {Lot} lot - An amount of asset purchased together.
    * @param {Date} date - The date of the sale or exchange.
    * @param {Asset} creditAsset - The asset credited.
-   * @param {number} creditExRate - The credit asset to fiat base exchange rate, NaN if the credit asset is fiat base.
+   * @param {number} creditExRate - The credit asset to fiat base exchange rate.
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in credit asset units.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
@@ -35,7 +35,7 @@ var ClosedLot = class ClosedLot {
     this.creditAsset = creditAsset;
 
     /**
-     * The credit asset to fiat base exchange rate, NaN if the credit asset is fiat base.
+     * The credit asset to fiat base exchange rate.
      * @type {number}
      */
     this.creditExRate = creditExRate;

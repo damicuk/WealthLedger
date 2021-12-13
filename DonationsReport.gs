@@ -61,14 +61,14 @@ AssetTracker.prototype.donationsReport = function (sheetName = this.donationsRep
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('B3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('G3:I').setNumberFormat('@');
     sheet.getRange('J3:J').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('L3:L').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('M3:M').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('M3:M').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('N3:N').setNumberFormat('@');
     sheet.getRange('O3:O').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('P3:S').setNumberFormat('#,##0.00;(#,##0.00)');
@@ -117,7 +117,7 @@ AssetTracker.prototype.getDonationsTable = function () {
     let dateBuy = lot.date;
     let debitAssetBuy = lot.debitAsset.ticker;
     let debitAssetTypeBuy = lot.debitAsset.assetType;
-    let debitExRateBuy = lot.debitExRate;
+    let debitExRateBuy = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
     let debitAmountBuy = lot.debitAmount;
     let debitFeeBuy = lot.debitFee;
     let walletBuy = lot.walletName;
@@ -128,7 +128,7 @@ AssetTracker.prototype.getDonationsTable = function () {
     let creditFeeBuy = lot.creditFee;
 
     let dateDonation = donatedLot.date;
-    let exRateDonation = donatedLot.exRate;
+    let exRateDonation = lot.creditAsset === this.fiatBase ? '' : donatedLot.exRate;
     let walletDonation = donatedLot.walletName;
 
     table.push([

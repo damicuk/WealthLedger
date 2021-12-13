@@ -1,12 +1,12 @@
 function testProcessLedger(locale = 'Europe/Paris') {
 
-  let assetRecords = [
+  assetRecords = [
     new AssetRecord('USD', 'Fiat Base', 2, 1, '', '', ''),
-    new AssetRecord('EUR', 'Fiat', 2, '', '', '', '')
+    new AssetRecord('ADA', 'Crypto', 6, '', '', '', '')
   ];
 
-  let ledgerRecords = [
-    new LedgerRecord(new Date(2020, 3, 1), 'Income', '', '', '', '', '', 'EUR', 1.2, 1000, '', 'IB', '')
+  ledgerRecords = [
+    new LedgerRecord(new Date(2020, 3, 1), 'Gift', 'USD', '', 1200, 10, '', 'ADA', '', 1000, 10, 'Ledger', '')
   ];
 
   let assetTracker = new AssetTracker();
@@ -16,7 +16,7 @@ function testProcessLedger(locale = 'Europe/Paris') {
   assetTracker.validateLedgerRecords(ledgerRecords, 'US');
   assetTracker.processLedger(ledgerRecords);
 
-  let wallet = assetTracker.wallets.get('IB');
+  let wallet = assetTracker.wallets.get('Ledger');
 
   // if (fiat) {
 

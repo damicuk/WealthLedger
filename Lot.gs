@@ -8,7 +8,7 @@ var Lot = class Lot {
    * Initializes the class with the properties set to the parameters.
    * @param {Date} date - The date of the transaction.
    * @param {Asset} debitAsset - The asset debited.
-   * @param {number} debitExRate - The debit asset to fiat base exchange rate, NaN if the debit asset is fiat base.
+   * @param {number} debitExRate - The debit asset to fiat base exchange rate.
    * @param {number} debitAmount - The amount of asset debited.
    * @param {number} debitFee - The fee in debit asset units.
    * @param {Asset} creditAsset - The asset credited.
@@ -31,7 +31,7 @@ var Lot = class Lot {
     this.debitAsset = debitAsset;
 
     /**
-     * The debit asset to fiat base exchange rate, NaN if the debit asset is fiat base.
+     * The debit asset to fiat base exchange rate.
      * @type {number}
      */
     this.debitExRate = debitExRate;
@@ -125,14 +125,7 @@ var Lot = class Lot {
    */
   get costBasisSubunits() {
 
-    let exRate = 1;
-    if (this.debitExRate) {
-
-      exRate = this.debitExRate;
-
-    }
-
-    return AssetTracker.round((this.debitAmountSubunits + this.debitFeeSubunits) * exRate);
+    return AssetTracker.round((this.debitAmountSubunits + this.debitFeeSubunits) * this.debitExRate);
   }
 
   /**

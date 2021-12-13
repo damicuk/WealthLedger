@@ -83,12 +83,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
   let debitAsset = this.assets.get(ledgerRecord.debitAsset);
-  let debitExRate = ledgerRecord.debitExRate;
+  let debitExRate = debitAsset === this.fiatBase ? 1 : ledgerRecord.debitExRate;
   let debitAmount = ledgerRecord.debitAmount;
   let debitFee = ledgerRecord.debitFee;
   let debitWalletName = ledgerRecord.debitWalletName;
   let creditAsset = this.assets.get(ledgerRecord.creditAsset);
-  let creditExRate = ledgerRecord.creditExRate;
+  let creditExRate = creditAsset === this.fiatBase? 1 : ledgerRecord.creditExRate;
   let creditAmount = ledgerRecord.creditAmount;
   let creditFee = ledgerRecord.creditFee;
   let creditWalletName = ledgerRecord.creditWalletName;
@@ -128,15 +128,15 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   }
   else if (action === 'Trade') {
 
-    //Infer missing ex rates
+    //Deduce missing ex rates
     if (!debitAsset.isFiatBase && !creditAsset.isFiatBase && !(debitAsset.isFiat && creditAsset.isFiat)) {
 
-      if (!debitExRate) {
+      if (debitExRate === '') {
 
         debitExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * creditExRate * creditAmount / debitAmount) / 10 ** this.exRateDecimalPlaces;
 
       }
-      if (!creditExRate) {
+      if (creditExRate === '') {
 
         creditExRate = AssetTracker.round(10 ** this.exRateDecimalPlaces * debitExRate * debitAmount / creditAmount) / 10 ** this.exRateDecimalPlaces;
 

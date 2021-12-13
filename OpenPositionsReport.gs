@@ -59,7 +59,7 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('B3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
     sheet.getRange('G3:I').setNumberFormat('@');
@@ -115,7 +115,7 @@ AssetTracker.prototype.getOpenPositionsTable = function () {
         let date = lot.date;
         let debitAsset = lot.debitAsset.ticker;
         let debitAssetType = lot.debitAsset.assetType;
-        let debitExRate = lot.debitExRate;
+        let debitExRate = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;

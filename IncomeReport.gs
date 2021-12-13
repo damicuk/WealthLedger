@@ -32,7 +32,7 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
 
     sheet.getRange('A2:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('B2:E').setNumberFormat('@');
-    sheet.getRange('F2:F').setNumberFormat('#,##0.00000;(#,##0.00000);');
+    sheet.getRange('F2:F').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('G2:G').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('H2:H').setNumberFormat('@');
     sheet.getRange('I2:I').setNumberFormat('#,##0.00;(#,##0.00)');
@@ -74,7 +74,7 @@ AssetTracker.prototype.getIncomeTable = function () {
     }
     let incomeAsset = incomeLot.incomeAsset.ticker;
     let incomeAssetType = incomeLot.incomeAsset.assetType;
-    let exRate = incomeLot.exRate;
+    let exRate = incomeLot.incomeAsset === this.fiatBase ? '' : incomeLot.exRate;
     let amount = incomeLot.amount;
     let wallet = incomeLot.walletName;
 
