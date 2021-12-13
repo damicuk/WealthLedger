@@ -487,45 +487,6 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Wraps the lots that have been sold or exchanged in a ClosedLot objects and adds it to the closedLots collection.
-   * The credited amount and fees are assigned to the closed lots in proportion to the size of the lots.
-   * @param {lots} lots - The lots that have been sold or exchanged.
-   * @param {Date} date - The date of the sale or exchange.
-   * @param {string} creditAsset - The ticker of the fiat or asset credited for the lots sold or exchanged.
-   * @param {number} creditExRate - The exchange rate of the asset of the lots to fiat base at the time of the sale or exchange.
-   * @param {number} creditAmount - The amount of the fiat or asset credited for the lots sold or exchanged.
-   * @param {number} creditFee - The fee in the credited asset for transaction.
-   * @param {string} creditWalletName - The name of the wallet (or exchange) where transaction takes place.
-   */
-  closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName) {
-
-    let creditAmountSubunits = AssetTracker.round(creditAmount * creditAsset.subunits);
-    let creditFeeSubunits = AssetTracker.round(creditFee * creditAsset.subunits);
-
-    //apportion the fee to withdrawal lots
-    let lotsSubunits = [];
-    for (let lot of lots) {
-      lotsSubunits.push(lot.subunits);
-    }
-    let apportionedCreditAmountSubunits = AssetTracker.apportionInteger(creditAmountSubunits, lotsSubunits);
-    let apportionedCreditFeeSubunits = AssetTracker.apportionInteger(creditFeeSubunits, lotsSubunits);
-    let index = 0;
-    for (let lot of lots) {
-
-      let closedLot = new ClosedLot(lot,
-        date,
-        creditAsset,
-        creditExRate,
-        (apportionedCreditAmountSubunits[index] / creditAsset.subunits),
-        (apportionedCreditFeeSubunits[index] / creditAsset.subunits),
-        creditWalletName);
-
-      this.closedLots.push(closedLot);
-      index++;
-    }
-  }
-
-  /**
    * Creates a sample assets sheet.
    * Renames any existing assets sheet so as not to overwrite it.
    * Creates a sample ledger sheet.

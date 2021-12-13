@@ -7,14 +7,21 @@ var FiatAccount = class FiatAccount {
   /**
    * Sets the fiat asset and initializes the balance to 0.
    * @param {Asset} asset - The fiat asset.
+   * @param {Wallet} wallet - The wallet to which the asset account belongs.
    */
-  constructor(asset) {
+  constructor(asset, wallet) {
 
     /**
      * The fiat asset.
      * @type {Asset}
      */
     this.asset = asset;
+
+    /**
+     * The wallet to which the asset account belongs.
+     * @type {Wallet}
+     */
+    this.wallet = wallet;
 
     /**
      * The balance in the account in subunits.

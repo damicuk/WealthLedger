@@ -326,16 +326,16 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
     }
     else if (debitAmount === '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be specified when credit asset is not specified.`, rowIndex, 'debitAmount');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be specified when debit asset is specified.`, rowIndex, 'debitAmount');
     }
     else if (debitAmount <= 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 0 when credit asset is not specified.`, rowIndex, 'debitAmount');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 0 when debit asset is specified.`, rowIndex, 'debitAmount');
     }
     else if (debitFee < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank) when credit asset is not specified.`, rowIndex, 'debitFee');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank) when debit asset is specified.`, rowIndex, 'debitFee');
     }
     else if (debitWalletName === '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit wallet must be specified when credit asset is not specified.`, rowIndex, 'debitWalletName');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit wallet must be specified when debit asset is specified.`, rowIndex, 'debitWalletName');
     }
     else if (creditAmount !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit amount blank when credit asset is not specified.`, rowIndex, 'creditAmount');
@@ -375,11 +375,11 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditAmount < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater or equal to 0.`, rowIndex, 'creditAmount');
     }
+    else if (debitAmount === 0 && creditAmount === 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount or credit amount must be greater than 0.`, rowIndex, 'debitAmount');
+    }
     else if (creditFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
-    }
-    else if (!creditAsset.isFiat && creditFee && creditFee >= creditAmount) {
-      throw new ValidationError(`${action} row ${rowIndex}: Asset credit fee must be less than the credit amount (or blank).`, rowIndex, 'creditFee');
     }
     else if (creditFee > creditAmount) {
       throw new ValidationError(`${action} row ${rowIndex}: Fiat credit fee must be less than or equal to credit amount (or blank).`, rowIndex, 'creditFee');
@@ -412,16 +412,28 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
     }
     else { //Non fiat base, non fiat-fiat trade
-      if (debitExRate === '' && creditExRate === '') {
+      if (debitAmount === 0 && debitExRate === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade with zero debit amount requires debit asset (${debitAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'debitExRate');
+      }
+      else if (creditAmount === 0 && debitExRate !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade with zero credit amount. Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+      }
+      else if (creditAmount === 0 && creditExRate === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade with zero credit amount requires credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'creditExRate');
+      }
+      else if (debitAmount === 0 && creditExRate !== '') {
+        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade with zero debit amount. Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+      }
+      else if (debitExRate === '' && creditExRate === '') {
         throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'debitExRate');
       }
       else if (debitExRate !== '' && creditExRate !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: Non fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate, but not both. One exchange rate can be deduced from the other and the amounts of assets exchanged. Remove one of the exchange rates. The exchange rate of the least volatile, most widely traded asset is likely to be more accurate.`, rowIndex, 'debitExRate');
+        throw new ValidationError(`${action} row ${rowIndex}: Remove one of the exchange rates.\n\nNon fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate, but not both. One exchange rate can be deduced from the other and the amounts of assets exchanged. The exchange rate of the least volatile, most widely traded asset is likely to be more accurate.`, rowIndex, 'debitExRate');
       }
-      else if (debitExRate !== '' && debitExRate <= 0) {
+      else if (debitExRate !== '' && debitExRate < 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
       }
-      else if (creditExRate !== '' && creditExRate <= 0) {
+      else if (creditExRate !== '' && creditExRate < 0) {
         throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate must be greater than 0.`, rowIndex, 'creditExRate');
       }
     }

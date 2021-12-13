@@ -39,7 +39,7 @@ class Wallet {
 
     if (!fiatAccount) {
 
-      fiatAccount = new FiatAccount(asset);
+      fiatAccount = new FiatAccount(asset, this);
       this.fiatAccounts.set(asset.ticker, fiatAccount);
     }
 
@@ -57,7 +57,7 @@ class Wallet {
 
     if (!assetAccount) {
 
-      assetAccount = new AssetAccount(asset);
+      assetAccount = new AssetAccount(asset, this);
       this.assetAccounts.set(asset.ticker, assetAccount);
     }
 

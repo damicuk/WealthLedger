@@ -7,14 +7,21 @@ var AssetAccount = class AssetAccount {
   /**
    * Sets the asset and initializes an empty array to contain the asset lots.
    * @param {Asset} asset - The asset.
+   * @param {Wallet} wallet - The wallet to which the asset account belongs.
    */
-  constructor(asset) {
+  constructor(asset, wallet) {
 
     /**
      * The asset.
      * @type {Asset}
      */
     this.asset = asset;
+
+    /**
+    * The wallet to which the asset account belongs.
+    * @type {Wallet}
+    */
+    this.wallet = wallet;
 
     /**
      * The asset lots.
@@ -59,21 +66,21 @@ var AssetAccount = class AssetAccount {
   }
 
   /**
-   * Deposits a single or multiple asset lots into the account.
-   * @param {(Lot|Array<Lot>)} lots - The single lot or array of lots to deposit into the account.
+   * Deposits multiple asset lots into the account.
+   * @param {Array<Lot>} lots - The array of lots to deposit into the account.
    */
-  deposit(lots) {
+  depositLots(lots) {
 
-    if (Array.isArray(lots)) {
+    this.lots = this.lots.concat(lots);
+  }
 
-      this.lots = this.lots.concat(lots);
+  /**
+   * Deposits a single asset lot into the account.
+   * @param {Lot} lot - The single lot to deposit into the account.
+   */
+  depositLot(lot) {
 
-    }
-    else {
-
-      this.lots.push(lots);
-
-    }
+    this.lots.push(lot);
   }
 
   /**
@@ -199,6 +206,26 @@ var AssetAccount = class AssetAccount {
     this.lots = keepLots;
     return withdrawLots;
   }
+
+  /**
+   * Adjusts the account subunits by the ajust subunits
+   * @param {number} adjustSubunits - The subunits by which to adjust the account subunits.
+   */
+  adjust(adjustSubunits) {
+
+    let lotSubunits = [];
+    for (let lot of this.lots) {
+      lotSubunits.push(lot.subunits);
+    }
+
+    let lotAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, lotSubunits);
+
+    let index = 0;
+    for (let lot of this.lots) {
+
+      lot.creditAmountSubunits += lotAdjustSubunits[index++];
+    }
+  };
 
   /**
    * Given a lot matching method string returns a comparator function used to sort lots.

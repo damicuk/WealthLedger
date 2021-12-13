@@ -88,7 +88,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   let debitFee = ledgerRecord.debitFee;
   let debitWalletName = ledgerRecord.debitWalletName;
   let creditAsset = this.assets.get(ledgerRecord.creditAsset);
-  let creditExRate = creditAsset === this.fiatBase? 1 : ledgerRecord.creditExRate;
+  let creditExRate = creditAsset === this.fiatBase ? 1 : ledgerRecord.creditExRate;
   let creditAmount = ledgerRecord.creditAmount;
   let creditFee = ledgerRecord.creditFee;
   let creditWalletName = ledgerRecord.creditWalletName;
@@ -122,7 +122,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.getWallet(creditWalletName).getAssetAccount(debitAsset).deposit(lots);
+      this.getWallet(creditWalletName).getAssetAccount(debitAsset).depositLots(lots);
 
     }
   }
@@ -156,7 +156,14 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
-      this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
+      if (lot.subunits === 0) {
+
+        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName);
+      }
+      else {
+
+        this.getWallet(debitWalletName).getAssetAccount(creditAsset).depositLot(lot);
+      }
 
     }
     else if (!debitAsset.isFiat && creditAsset.isFiat) { //Sell asset
@@ -176,8 +183,14 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
-      this.getWallet(debitWalletName).getAssetAccount(creditAsset).deposit(lot);
+      if (lot.subunits === 0) {
 
+        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName);
+      }
+      else {
+
+        this.getWallet(debitWalletName).getAssetAccount(creditAsset).depositLot(lot);
+      }
     }
   }
   else if (action === 'Income') {
@@ -205,7 +218,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       //the cost base is the value of (credit exchange rate x credit amount)
       let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
 
-      this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
+      this.getWallet(creditWalletName).getAssetAccount(creditAsset).depositLot(lot);
 
     }
 
@@ -234,7 +247,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, creditWalletName);
 
-      this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
+      this.getWallet(creditWalletName).getAssetAccount(creditAsset).depositLot(lot);
 
     }
   }
@@ -247,25 +260,68 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     }
     else {
 
-      this.getWallet(debitWalletName).getAssetAccount(debitAsset).apportionFee(debitFee, rowIndex);
+      let assetAccount = this.getWallet(debitWalletName).getAssetAccount(debitAsset);
 
-      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).removeZeroSubunitLots();
+      assetAccount.apportionFee(debitFee, rowIndex);
 
-      this.closeLots(lots, date, this.fiatBase, 0, 0, 0, debitWalletName);
+      this.removeZeroSubunitLots(date, assetAccount);
     }
   }
   else if (action === 'Split') {
 
     if (debitAsset) {
 
-      this.splitAsset(debitAsset, -debitAmount, debitWalletName, rowIndex);
+      this.splitAsset(date, debitAsset, -debitAmount, debitWalletName, rowIndex);
     }
     else {
 
-      this.splitAsset(creditAsset, creditAmount, creditWalletName, rowIndex);
+      this.splitAsset(date, creditAsset, creditAmount, creditWalletName, rowIndex);
     }
   }
 };
+
+/**
+ * Wraps the lots that have been sold or exchanged in a ClosedLot objects and adds it to the closedLots collection.
+ * The credited amount and fees are assigned to the closed lots in proportion to the size of the lots.
+ * @param {lots} lots - The lots that have been sold or exchanged.
+ * @param {Date} date - The date of the sale or exchange.
+ * @param {string} creditAsset - The ticker of the fiat or asset credited for the lots sold or exchanged.
+ * @param {number} creditExRate - The exchange rate of the asset of the lots to fiat base at the time of the sale or exchange.
+ * @param {number} creditAmount - The amount of the fiat or asset credited for the lots sold or exchanged.
+ * @param {number} creditFee - The fee in the credited asset for transaction.
+ * @param {string} creditWalletName - The name of the wallet (or exchange) where transaction takes place.
+ */
+AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName) {
+
+  if (lots.length === 0) {
+    return;
+  }
+
+  let creditAmountSubunits = AssetTracker.round(creditAmount * creditAsset.subunits);
+  let creditFeeSubunits = AssetTracker.round(creditFee * creditAsset.subunits);
+
+  //apportion the fee to withdrawal lots
+  let lotsSubunits = [];
+  for (let lot of lots) {
+    lotsSubunits.push(lot.subunits);
+  }
+  let apportionedCreditAmountSubunits = AssetTracker.apportionInteger(creditAmountSubunits, lotsSubunits);
+  let apportionedCreditFeeSubunits = AssetTracker.apportionInteger(creditFeeSubunits, lotsSubunits);
+  let index = 0;
+  for (let lot of lots) {
+
+    let closedLot = new ClosedLot(lot,
+      date,
+      creditAsset,
+      creditExRate,
+      (apportionedCreditAmountSubunits[index] / creditAsset.subunits),
+      (apportionedCreditFeeSubunits[index] / creditAsset.subunits),
+      creditWalletName);
+
+    this.closedLots.push(closedLot);
+    index++;
+  }
+}
 
 /**
  * Adjusts the asset balance according to the split parameters.
@@ -275,24 +331,27 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
  * If just credit amount is specified it is added to the asset balance.
  * Throws an AssetAccountError if the balance is zero or insufficient.
  * Removes any lots with zero subunits.
+ * @param {Date} date - The date the split occurred.
  * @param {Asset} asset - The asset whose balance is being adjusted by the split.
  * @param {number} adjustAmount - The amount by which to adjust the amount of asset held.
  * @param {string} walletName - The name of the wallet to which to apply the split. If not given the split applied to all wallets.
  * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
-AssetTracker.prototype.splitAsset = function (asset, adjustAmount, walletName, rowIndex) {
+AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletName, rowIndex) {
 
   let wallets;
   let assetAccounts = [];
-  let assetAccountsSubunits = [];
+  let assetAccountSubunits = [];
   let totalSubunits = 0;
 
   if (walletName) {
 
+    //apply to just one wallet
     wallets = [this.getWallet(walletName)];
   }
   else {
 
+    //apply to all wallets
     wallets = this.wallets.values();
   }
 
@@ -302,7 +361,7 @@ AssetTracker.prototype.splitAsset = function (asset, adjustAmount, walletName, r
 
       let assetAccount = wallet.assetAccounts.get(asset.ticker);
       assetAccounts.push(assetAccount);
-      assetAccountsSubunits.push(assetAccount.subunits);
+      assetAccountSubunits.push(assetAccount.subunits);
       totalSubunits += assetAccount.subunits;
     }
   }
@@ -314,26 +373,20 @@ AssetTracker.prototype.splitAsset = function (asset, adjustAmount, walletName, r
     throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from balance of ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
   }
 
-  let assetAccountsAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountsSubunits);
+  let assetAccountAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountSubunits);
 
-  let assetAccountIndex = 0;
+  let index = 0;
   for (let assetAccount of assetAccounts) {
 
-    let assetAccountAdjustSubunits = assetAccountsAdjustSubunits[assetAccountIndex++];
+    assetAccount.adjust(assetAccountAdjustSubunits[index++]);
 
-    let lotsSubunits = [];
-    for (let lot of assetAccount.lots) {
-      lotsSubunits.push(lot.subunits);
-    }
-
-    let lotsAdjustSubunits = AssetTracker.apportionInteger(assetAccountAdjustSubunits, lotsSubunits);
-
-    let lotIndex = 0;
-    for (let lot of assetAccount.lots) {
-
-      lot.creditAmountSubunits += lotsAdjustSubunits[lotIndex++];
-    }
-
-    assetAccount.removeZeroSubunitLots();
+    this.removeZeroSubunitLots(date, assetAccount);
   }
+};
+
+AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount) {
+
+  let zeroSubunitLots = assetAccount.removeZeroSubunitLots();
+
+  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name);
 };
