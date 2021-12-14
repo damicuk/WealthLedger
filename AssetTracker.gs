@@ -51,12 +51,6 @@ var AssetTracker = class AssetTracker {
     this.closedLots = [];
 
     /**
-     * Collection of DonatedLots.
-     * @type {Array<Obeject>}
-     */
-    this.donatedLots = [];
-
-    /**
      * The number of decimal places to round exrate calculation.
      * @type {number}
      */
@@ -109,7 +103,6 @@ var AssetTracker = class AssetTracker {
 
     this.openPositionsReportName = 'Open Positions Report';
     this.closedPositionsReportName = 'Closed Positions Report';
-    this.donationsReportName = 'Donations Report';
     this.incomeReportName = 'Income Report';
     this.chartsDataSheetName = "Charts Data";
     this.openSummaryReportName = 'Open Summary Report';
@@ -121,7 +114,6 @@ var AssetTracker = class AssetTracker {
     this.defaultReportNames = [
       this.openPositionsReportName,
       this.closedPositionsReportName,
-      this.donationsReportName,
       this.incomeReportName,
       this.chartsDataSheetName,
       this.openSummaryReportName,
@@ -134,7 +126,6 @@ var AssetTracker = class AssetTracker {
     this.assetsRangeName = 'Assets';
     this.openPositionsRangeName = 'OpenPositions';
     this.closedPositionsRangeName = 'ClosedPositions';
-    this.donationsRangeName = 'Donations';
     this.incomeRangeName = 'Income';
 
     this.chartRange1Name = 'Chart1';

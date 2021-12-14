@@ -13,8 +13,9 @@ var ClosedLot = class ClosedLot {
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in credit asset units.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
+   * @param {string} action - The action that closed the lot.
    */
-  constructor(lot, date, creditAsset, creditExRate, creditAmount, creditFee, walletName) {
+  constructor(lot, date, creditAsset, creditExRate, creditAmount, creditFee, walletName, action) {
 
     /**
      * An amount of asset purchased together.
@@ -57,6 +58,12 @@ var ClosedLot = class ClosedLot {
      * @type {string}
      */
     this.walletName = walletName;
+
+    /**
+     * The action that closed the lot.
+     * @type {string}
+     */
+    this.action = action;
 
   }
 

@@ -174,7 +174,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       if (lot.subunits === 0) {
 
-        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName);
+        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action);
       }
       else {
 
@@ -186,7 +186,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName);
+      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
 
       this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
@@ -195,7 +195,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName);
+      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
 
       let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
 
@@ -204,7 +204,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       if (lot.subunits === 0) {
 
-        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName);
+        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action);
       }
       else {
 
@@ -249,11 +249,8 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
     let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-    for (let lot of lots) {
+    this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action);
 
-      this.donatedLots.push(new DonatedLot(lot, date, debitExRate, debitWalletName));
-
-    }
   }
   else if (action === 'Gift') {
 
@@ -283,18 +280,18 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       assetAccount.apportionFee(debitFee, rowIndex);
 
-      this.removeZeroSubunitLots(date, assetAccount);
+      this.removeZeroSubunitLots(date, assetAccount, action);
     }
   }
   else if (action === 'Split') {
 
     if (debitAsset) {
 
-      this.splitAsset(date, debitAsset, -debitAmount, debitWalletName, rowIndex);
+      this.splitAsset(date, debitAsset, -debitAmount, debitWalletName, action, rowIndex);
     }
     else {
 
-      this.splitAsset(date, creditAsset, creditAmount, creditWalletName, rowIndex);
+      this.splitAsset(date, creditAsset, creditAmount, creditWalletName, action, rowIndex);
     }
   }
 };
@@ -309,8 +306,9 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
  * @param {number} creditAmount - The amount of the fiat or asset credited for the lots sold or exchanged.
  * @param {number} creditFee - The fee in the credited asset for transaction.
  * @param {string} creditWalletName - The name of the wallet (or exchange) where transaction takes place.
+ * @param {string} action - The action that closed the lots.
  */
-AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName) {
+AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName, action) {
 
   if (lots.length === 0) {
     return;
@@ -335,7 +333,8 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
       creditExRate,
       (apportionedCreditAmountSubunits[index] / creditAsset.subunits),
       (apportionedCreditFeeSubunits[index] / creditAsset.subunits),
-      creditWalletName);
+      creditWalletName,
+      action);
 
     this.closedLots.push(closedLot);
     index++;
@@ -354,9 +353,10 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
  * @param {Asset} asset - The asset whose balance is being adjusted by the split.
  * @param {number} adjustAmount - The amount by which to adjust the amount of asset held.
  * @param {string} walletName - The name of the wallet to which to apply the split. If not given the split applied to all wallets.
+ * @param {string} action - The action, in this case 'Split'.
  * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
-AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletName, rowIndex) {
+AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletName, action, rowIndex) {
 
   let wallets;
   let assetAccounts = [];
@@ -399,13 +399,20 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
 
     assetAccount.adjust(assetAccountAdjustSubunits[index++]);
 
-    this.removeZeroSubunitLots(date, assetAccount);
+    this.removeZeroSubunitLots(date, assetAccount, action);
   }
 };
 
-AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount) {
+/**
+ * Removes and closes any lots with zero subunits in the account.
+ * Used when misc fee or split sets lot subunits to zero.
+ * @param {Date} date - The date 0f the action.
+ * @param {AssetAccount} assetAccount - The asset account from which to remove the zero subunit lots.
+ * @param {string} action - The action that resulted in the zero subunit lots.
+ */
+AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount, action) {
 
   let zeroSubunitLots = assetAccount.removeZeroSubunitLots();
 
-  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name);
+  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name, action);
 };

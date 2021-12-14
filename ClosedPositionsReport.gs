@@ -17,7 +17,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
       [
         'Buy Debit', , , , , , ,
         'Buy Credit', , , ,
-        'Sell Credit', , , , , , ,
+        'Sell Credit', , , , , , , ,
         'Calculations', , , , , , , ,
       ],
       [
@@ -39,6 +39,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
         'Amount',
         'Fee',
         'Wallet',
+        'Action',
         'Balance',
         'Cost Price',
         'Sell Price',
@@ -50,18 +51,18 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
       ]
     ];
 
-    sheet.getRange('A1:Z2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:AA2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:G2').setBackgroundColor('#ead1dc');
     sheet.getRange('H1:K2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('L1:R2').setBackgroundColor('#d9ead3');
-    sheet.getRange('S1:Z2').setBackgroundColor('#c9daf8');
+    sheet.getRange('L1:S2').setBackgroundColor('#d9ead3');
+    sheet.getRange('T1:AA2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:G1').mergeAcross();
     sheet.getRange('H1:K1').mergeAcross();
-    sheet.getRange('L1:R1').mergeAcross();
-    sheet.getRange('S1:Z1').mergeAcross();
+    sheet.getRange('L1:S1').mergeAcross();
+    sheet.getRange('T1:AA1').mergeAcross();
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('B3:C').setNumberFormat('@');
@@ -76,27 +77,29 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
     sheet.getRange('O3:O').setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange('P3:P').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('Q3:Q').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('R3:R').setNumberFormat('@');
-    sheet.getRange('S3:S').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('T3:W').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('X3:X').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('Y3:Y').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange('Z3:Z').setNumberFormat('@');
+    sheet.getRange('R3:S').setNumberFormat('@');
 
-    this.addLongShortCondition(sheet, 'Z3:Z');
+    sheet.getRange('T3:T').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('U3:X').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('Y3:Y').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange('Z3:Z').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange('AA3:AA').setNumberFormat('@');
+
+    this.addLongShortCondition(sheet, 'AA3:AA');
+    this.addActionCondtion(sheet, 'S3:S');
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(S3:S=0,,V3:V/S3:S), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(S3:S=0,,W3:W/S3:S), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(T3:T=0,,W3:W/T3:T), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(T3:T=0,,X3:X/T3:T), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, ROUND((E3:E+F3:F)*D3:D, 2), E3:E+F3:F), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(O3:O, ROUND((P3:P-Q3:Q)*O3:O, 2), P3:P-Q3:Q), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(W3:W-V3:V, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(V3:V=0,,X3:X/V3:V), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(X3:X-W3:W, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(W3:W=0,,Y3:Y/W3:W), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, L3:L, "Y") > 1)+(((DATEDIF(A3:A, L3:L, "Y") = 1)*(DATEDIF(A3:A, L3:L, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('S3:Z3').setFormulas(formulas);
+    sheet.getRange('T3:AA3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
@@ -104,7 +107,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
 
   let dataTable = this.getClosedPositionsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.closedPositionsRangeName, 2, 18, 8);
+  this.writeTable(ss, sheet, dataTable, this.closedPositionsRangeName, 2, 19, 8);
 
 };
 
@@ -141,6 +144,7 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;
+    let action = closedLot.action;
 
     table.push([
 
@@ -163,7 +167,8 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
       creditExRateSell,
       creditAmountSell,
       creditFeeSell,
-      walletSell
+      walletSell,
+      action
     ]);
   }
 

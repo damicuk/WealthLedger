@@ -77,7 +77,6 @@ AssetTracker.prototype.writeReports = function () {
     this.fiatAccountsSheet();
     this.openPositionsReport();
     this.closedPositionsReport();
-    this.donationsReport();
     this.incomeReport();
     this.chartsDataSheet();
     this.openSummaryReport();
