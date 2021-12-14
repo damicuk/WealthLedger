@@ -82,17 +82,18 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
-  let debitAsset = this.assets.get(ledgerRecord.debitAsset);
+  let debitAsset = ledgerRecord.debitAsset === '' ? null : this.assets.get(ledgerRecord.debitAsset);
   let debitExRate = debitAsset === this.fiatBase ? 1 : ledgerRecord.debitExRate;
   let debitAmount = ledgerRecord.debitAmount;
   let debitFee = ledgerRecord.debitFee;
   let debitWalletName = ledgerRecord.debitWalletName;
-  let creditAsset = this.assets.get(ledgerRecord.creditAsset);
+  let creditAsset = ledgerRecord.creditAsset === '' ? null : this.assets.get(ledgerRecord.creditAsset);
   let creditExRate = creditAsset === this.fiatBase ? 1 : ledgerRecord.creditExRate;
   let creditAmount = ledgerRecord.creditAmount;
   let creditFee = ledgerRecord.creditFee;
   let creditWalletName = ledgerRecord.creditWalletName;
   let lotMatching = ledgerRecord.lotMatching;
+
 
   if (lotMatching) {
     this.lotMatching = lotMatching;
@@ -241,7 +242,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     }
 
     //keep track of income separately
-    this.incomeLots.push(new IncomeLot(date, debitAsset ? debitAsset : null, creditAsset, creditExRate, creditAmount, creditWalletName));
+    this.incomeLots.push(new IncomeLot(date, debitAsset, creditAsset, creditExRate, creditAmount, creditWalletName));
 
   }
   else if (action === 'Donation') {

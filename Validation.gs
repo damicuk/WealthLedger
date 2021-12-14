@@ -222,12 +222,10 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
-  let debitAssetTicker = ledgerRecord.debitAsset;
   let debitExRate = ledgerRecord.debitExRate;
   let debitAmount = ledgerRecord.debitAmount;
   let debitFee = ledgerRecord.debitFee;
   let debitWalletName = ledgerRecord.debitWalletName;
-  let creditAssetTicker = ledgerRecord.creditAsset;
   let creditExRate = ledgerRecord.creditExRate;
   let creditAmount = ledgerRecord.creditAmount;
   let creditFee = ledgerRecord.creditFee;
@@ -235,18 +233,18 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   let lotMatching = ledgerRecord.lotMatching;
 
   let debitAsset;
-  if (debitAssetTicker) {
-    debitAsset = this.assets.get(debitAssetTicker);
+  if (ledgerRecord.debitAsset !== '') {
+    debitAsset = this.assets.get(ledgerRecord.debitAsset);
     if (!debitAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${debitAssetTicker}) is not found in the Assets sheet.`, rowIndex, 'debitAsset');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit asset (${ledgerRecord.debitAsset}) is not found in the Assets sheet.`, rowIndex, 'debitAsset');
     }
   }
 
   let creditAsset;
-  if (creditAssetTicker) {
-    creditAsset = this.assets.get(creditAssetTicker);
+  if (ledgerRecord.creditAsset !== '') {
+    creditAsset = this.assets.get(ledgerRecord.creditAsset);
     if (!creditAsset) {
-      throw new ValidationError(`${action} row ${rowIndex}: Credit asset (${creditAssetTicker}) is not found in the Assets sheet.`, rowIndex, 'creditAsset');
+      throw new ValidationError(`${action} row ${rowIndex}: Credit asset (${ledgerRecord.creditAsset}) is not found in the Assets sheet.`, rowIndex, 'creditAsset');
     }
   }
 
