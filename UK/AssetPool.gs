@@ -256,6 +256,9 @@ var AssetPool = class AssetPool {
     poolDeposit.creditFeeSubunits += poolWithdrawal.debitFeeSubunits;
     if (poolDeposit.subunits === 0) {
       this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1);
+      poolWithdrawal.debitFeeSubunits = 0;
+      let closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
+      this.closedPoolLots.push(closedPoolLot);
     }
     this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
     return;
@@ -270,6 +273,9 @@ var AssetPool = class AssetPool {
     poolDeposit.creditAmountSubunits -= poolWithdrawal.debitAmountSubunits;
     if (poolDeposit.subunits === 0) {
       this.poolDeposits.splice(this.poolDeposits.indexOf(poolDeposit), 1);
+      poolWithdrawal.debitAmountSubunits = 0;
+      let closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
+      this.closedPoolLots.push(closedPoolLot);
     }
     this.poolWithdrawals.splice(this.poolWithdrawals.indexOf(poolWithdrawal), 1);
     return;

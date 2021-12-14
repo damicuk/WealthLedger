@@ -106,7 +106,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(creditWalletName).getFiatAccount(creditAsset).transfer(creditAmount);
 
     }
-    else if (debitAsset && debitAsset.isFiat) { //Fiat transfer
+    else if (debitAsset && debitAsset.isFiat) { //Fiat withdrawal or exchange
 
       if (debitWalletName) { //Fiat withdrawal
 

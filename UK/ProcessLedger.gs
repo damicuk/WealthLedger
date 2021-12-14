@@ -48,7 +48,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
 
   if (action === 'Transfer') {
 
-    if (!debitAsset.isFiat) { //Asset transfer
+    if (debitAsset && !debitAsset.isFiat) { //Asset transfer
 
       let poolWithdrawal = new PoolWithdrawal(date, debitAsset, 0, debitFee, this.fiatBase, 0, 0, action);
       this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
