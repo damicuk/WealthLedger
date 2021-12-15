@@ -460,8 +460,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (!creditAsset.isFiatBase && creditExRate === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Missing credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'creditExRate');
     }
-    else if (!creditAsset.isFiatBase && creditExRate <= 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate must be greater than 0.`, rowIndex, 'creditExRate');
+    else if (!creditAsset.isFiatBase && creditExRate < 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate must be greater than or equal to 0.`, rowIndex, 'creditExRate');
     }
     else if (creditAmount === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No credit amount specified.`, rowIndex, 'creditAmount');
@@ -486,8 +486,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitExRate === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Missing debit asset (${debitAsset}) to fiat base (${this.fiatBase}) exchange rate.`, rowIndex, 'debitExRate');
     }
-    else if (debitExRate <= 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
+    else if (debitExRate < 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than or equal to 0.`, rowIndex, 'debitExRate');
     }
     else if (debitAmount === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit amount specified.`, rowIndex, 'debitAmount');
@@ -540,8 +540,8 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       else if (debitExRate === '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit asset (${debitAsset}) to fiat base (${this.fiatBase}) exchange rate must be specified.`, rowIndex, 'debitExRate');
       }
-      else if (debitExRate <= 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
+      else if (debitExRate < 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit exchange rate must be greater or equal to 0.`, rowIndex, 'debitExRate');
       }
       else if (debitAmount === '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit amount must be specified.`, rowIndex, 'debitAmount');
