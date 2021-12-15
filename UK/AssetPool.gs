@@ -333,11 +333,7 @@ var AssetPool = class AssetPool {
       closedPoolLot = new ClosedPoolLot(poolDeposits[0], poolWithdrawal);
 
     }
-    if (poolWithdrawal.action !== 'Gift') {
-
-      this.closedPoolLots.push(closedPoolLot);
-
-    }
+    this.closedPoolLots.push(closedPoolLot);
   }
 
   /**

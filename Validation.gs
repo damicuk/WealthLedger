@@ -527,9 +527,6 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitWalletName !== '' && creditWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Either debit wallet (for gifts given) or credit wallet (for gifts received) must be specified, but not both.`, rowIndex, 'debitWalletName');
     }
-    else if (debitExRate !== '') {
-      throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
-    }
     else if (debitFee < 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
@@ -539,6 +536,12 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (debitWalletName !== '') { //Gift given
       if (debitAsset.isFiat) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit asset ${debitAsset} is fiat. Not supported for gifts given. Use transfer action instead.`, rowIndex, 'debitAsset');
+      }
+      else if (debitExRate === '') {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit asset (${debitAsset}) to fiat base (${this.fiatBase}) exchange rate must be specified.`, rowIndex, 'debitExRate');
+      }
+      else if (debitExRate <= 0) {
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit exchange rate must be greater than 0.`, rowIndex, 'debitExRate');
       }
       else if (debitAmount === '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit amount must be specified.`, rowIndex, 'debitAmount');

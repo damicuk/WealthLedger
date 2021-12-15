@@ -250,7 +250,9 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
     if (debitWalletName) { //Gift given
 
-      this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+
+      this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action);
 
     }
     else { //Gift received
