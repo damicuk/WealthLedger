@@ -51,7 +51,7 @@ AssetTracker.prototype.ukDonationsSummaryReport = function (sheetName = this.ukD
   sheet.getRange('A2:A').setFontColor('#1155cc');
 
   const formula =
-    `IF(COUNTIF(INDEX(${referenceRangeName},0,15), "Donation")=0,,
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT P WHERE O='Donation'"))=0,,
 {
 QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
@@ -76,4 +76,6 @@ QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='D
   this.trimColumns(sheet, 7);
 
   sheet.autoResizeColumns(2, 6);
+
+  sheet.hideSheet();
 };

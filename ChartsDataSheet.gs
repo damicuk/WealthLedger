@@ -91,9 +91,9 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
   const formulas = [[
     `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT I, SUM(Q), SUM(R) / SUM(O) GROUP BY I ORDER BY I LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , ,
     `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT I, H, SUM(Q), SUM(R) / SUM(O) GROUP BY I, H ORDER BY I, H LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , , ,
-    `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT I, SUM(X), SUM(Y) WHERE S='Trade' GROUP BY I ORDER BY I LABEL SUM(X) '', SUM(Y) ''"))`, , ,
-    `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT I, H, SUM(X), SUM(Y) WHERE S='Trade' GROUP BY I, H ORDER BY I, H LABEL SUM(X) '', SUM(Y) ''"))`, , , ,
-    `IF(ISBLANK(INDEX(${referenceRangeName2}, 1, 1)),,QUERY(${referenceRangeName2}, "SELECT YEAR(L), SUM(X), SUM(Y) WHERE YEAR(L)>"&YEAR(TODAY())-5&" AND S='Trade' GROUP BY YEAR(L) ORDER BY YEAR(L) LABEL YEAR(L) '', SUM(X) '', SUM(Y) ''"))`
+    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT T WHERE S='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT I, SUM(X), SUM(Y) WHERE S='Trade' GROUP BY I ORDER BY I LABEL SUM(X) '', SUM(Y) ''"))`, , ,
+    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT T WHERE S='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT I, H, SUM(X), SUM(Y) WHERE S='Trade' GROUP BY I, H ORDER BY I, H LABEL SUM(X) '', SUM(Y) ''"))`, , , ,
+    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT T WHERE S='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(L), SUM(X), SUM(Y) WHERE YEAR(L)>"&YEAR(TODAY())-5&" AND S='Trade' GROUP BY YEAR(L) ORDER BY YEAR(L) LABEL YEAR(L) '', SUM(X) '', SUM(Y) ''"))`
   ]];
 
   sheet.getRange('A4:O4').setFormulas(formulas);

@@ -57,7 +57,8 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
   sheet.getRange('A2:A').setFontColor('#1155cc');
 
   const formula =
-    `IF(ISBLANK(INDEX(${referenceRangeName1}, 1, 1)),,{
+    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT I"))=0,,
+{
 IF(COUNT(QUERY(${referenceRangeName1}, "SELECT K"))=0,
 QUERY({QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col4), '       ', '        ', '         ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col4) '', '       ' '', '        ' '', '         ' ''"),
 QUERY({QUERY(${referenceRangeName1}, "SELECT E, F, I, L, M, N")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''"));

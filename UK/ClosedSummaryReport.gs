@@ -57,7 +57,8 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
   sheet.getRange('A2:A').setFontColor('#1155cc');
 
   const formula =
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT P WHERE O='Trade'"))=0,,
+{
 QUERY({{"", "", "", "", 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT F, G, Year(J), O, P, S, T, U WHERE O='Trade'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col6), SUM(Col7), SUM(Col8), SUM(Col8) / SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col6) '', SUM(Col7) '', SUM(Col8) '', SUM(Col8) / SUM(Col6) ''");
 {"", "", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", ""};

@@ -60,7 +60,8 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
   this.addLongShortCondition(sheet, 'E3:E');
 
   const formula =
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT T WHERE S='Trade'"))=0,,{
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT T WHERE S='Trade'"))=0,,
+{
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, YEAR(L), T, W, X, Y, AA WHERE S='Trade'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", "", ""};

@@ -36,11 +36,11 @@ AssetTracker.prototype.ukWalletsReport = function (sheetName = this.ukWalletsRep
   sheet.getRange(2, 2, sheet.getMaxRows(), sheet.getMaxColumns()).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
 
   sheet.getRange('A1').setFormula(
-    `IF(AND(ISBLANK(INDEX(${referenceRangeName1}, 1, 1)), COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0),,
+    `IF(AND(COUNT(QUERY(${referenceRangeName1}, "SELECT D"))=0, COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0),,
 TRANSPOSE(QUERY(
 IF(COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0,
 QUERY(${referenceRangeName1}, "SELECT B, C, A, SUM(D) GROUP BY B, C, A ORDER BY C, B, A LABEL SUM(D) ''"),
-IF(ISBLANK(INDEX(${referenceRangeName1}, 1, 1)),
+IF(COUNT(QUERY(${referenceRangeName1}, "SELECT D"))=0,
 QUERY(QUERY(${referenceRangeName2}, "SELECT B, 'Fiat', A, SUM(C) GROUP BY B, A ORDER BY B, A LABEL 'Fiat' '', SUM(C) ''"), "SELECT * WHERE Col4 <> 0"),
 {
 QUERY(${referenceRangeName1}, "SELECT B, C, A, SUM(D) GROUP BY B, C, A ORDER BY C, B, A LABEL SUM(D) ''");

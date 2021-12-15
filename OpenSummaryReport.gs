@@ -59,7 +59,8 @@ AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummar
   this.addLongShortCondition(sheet, 'E3:E');
 
   const formula =
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT M"))=0,,{
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT M"))=0,,
+{
 IF(COUNT(QUERY(${referenceRangeName}, "SELECT P"))=0,
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), '       ', '        ', '         ', '          ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', '        ' '', '         ' '', '          ' ''"),
 QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''"));
