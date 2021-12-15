@@ -19,9 +19,18 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
 
     super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action);
   }
+  
+  /**
+   * The balance in asset units.
+   * @type {number}
+   */
+  get balance() {
+
+    return this.subunits / this.creditAsset.subunits;
+  }
 
   /**
-   * The balance in subunits.
+   * The balance in asset subunits.
    * @type {number}
    */
   get subunits() {
@@ -30,7 +39,7 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
   }
 
   /**
-   * The cost basis in subunits.
+   * The cost basis in asset subunits.
    * @type {number}
    */
   get costBasisSubunits() {

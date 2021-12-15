@@ -163,52 +163,42 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
     }
-    else if (debitAsset.isFiat && !creditAsset.isFiat) {  //Buy asset
+    else { //Buy, sell or exchange asset
+      if (debitAsset.isFiat) {
 
-      this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
+        this.getWallet(debitWalletName).getFiatAccount(debitAsset).transfer(-debitAmount).transfer(-debitFee);
 
-      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
-
-      //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
-      let creditAssetAccount = this.getWallet(debitWalletName).getAssetAccount(creditAsset);
-
-      if (lot.subunits === 0) {
-
-        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action);
       }
       else {
 
-        creditAssetAccount.depositLot(lot);
+        let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
+
+        this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
+
+
       }
+      if (creditAsset.isFiat) {
 
-    }
-    else if (!debitAsset.isFiat && creditAsset.isFiat) { //Sell asset
+        this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
 
-      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
-
-      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
-
-      this.getWallet(debitWalletName).getFiatAccount(creditAsset).transfer(creditAmount).transfer(-creditFee);
-
-    }
-    else { //Exchange assets
-
-      let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
-
-      this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
-
-      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
-
-      //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
-      let creditAssetAccount = this.getWallet(debitWalletName).getAssetAccount(creditAsset);
-
-      if (lot.subunits === 0) {
-
-        this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action);
       }
       else {
 
-        creditAssetAccount.depositLot(lot);
+        let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
+
+        //If the lot has zero balance close it straight away
+        //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
+        let creditAssetAccount = this.getWallet(debitWalletName).getAssetAccount(creditAsset);
+
+        if (lot.subunits === 0) {
+
+          this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action);
+        }
+        else {
+
+          creditAssetAccount.depositLot(lot);
+        }
+
       }
     }
   }

@@ -22,7 +22,16 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
   }
 
   /**
-   * The balance in subunits.
+   * The balance in asset units.
+   * @type {number}
+   */
+  get balance() {
+
+    return this.subunits / this.debitAsset.subunits;
+  }
+
+  /**
+   * The balance in asset subunits.
    * @type {number}
    */
   get subunits() {

@@ -7,14 +7,21 @@ var AssetPool = class AssetPool {
   /**
    * Sets the asset and initializes an empty array to contain the asset deposits.
    * @param {Asset} asset - the asset.
+   * @param {AssetTraker} assetTracker - The asset tracker to which the asset pool belongs.
    */
-  constructor(asset) {
+  constructor(asset, assetTracker) {
 
     /**
      * The asset.
-     * @type {string}
+     * @type {Asset}
      */
     this.asset = asset;
+
+    /**
+     * The asset tracker to which the asset pool belongs.
+     * @type {AssetTraker}
+     */
+    this.assetTracker = assetTracker;
 
     /**
      * The collection of pool deposits.
@@ -65,6 +72,14 @@ var AssetPool = class AssetPool {
    */
   addPoolDeposit(poolDeposit) {
 
+    //If the deposit has zero balance close it straight away
+    if (poolDeposit.action === 'Trade' && poolDeposit.subunits === 0) {
+      let poolWithdrawal = new PoolWithdrawal(poolDeposit.date, poolDeposit.creditAsset, poolDeposit.balance, 0, this.assetTracker.fiatBase, 0, 0, 'Trade');
+      let closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
+      this.closedPoolLots.push(closedPoolLot);
+      return;
+    }
+
     if (poolDeposit.action !== 'Split') {
 
       let reversePoolDeposits = this.poolDeposits.slice().reverse();
@@ -96,6 +111,13 @@ var AssetPool = class AssetPool {
    * @param {PoolWithdrawal} poolWithdrawal - the pool withdrawal to add.
    */
   addPoolWithdrawal(poolWithdrawal) {
+
+    if (poolWithdrawal.action === 'Trade' && poolWithdrawal.subunits === 0) {
+      let poolDeposit = new PoolDeposit(poolWithdrawal.date, this.assetTracker.fiatBase, 0, 0, poolWithdrawal.debitAsset, poolWithdrawal.balance, 0, 'Trade');
+      let closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
+      this.closedPoolLots.push(closedPoolLot);
+      return;
+    }
 
     if (poolWithdrawal.action !== 'Transfer'
       && poolWithdrawal.action !== 'Fee'

@@ -6,14 +6,21 @@ class Wallet {
   /**
    * Sets the name of the wallet (or exchange) and initializes empty arrays to contain the fiat and asset accounts.
    * @param {string} name - The name of the wallet (or exchange).
+   * @param {AssetTraker} assetTracker - The asset tracker to which the wallet belongs.
    */
-  constructor(name) {
+  constructor(name, assetTracker) {
 
     /**
      * The name of the wallet (or exchange) and initializes empty arrays to contain the fiat and asset accounts.
      * @type {string}
      */
     this.name = name;
+
+    /**
+     * The asset tracker to which the wallet belongs.
+     * @type {AssetTraker}
+     */
+    this.assetTracker = assetTracker;
 
     /**
      * Map of tickers to fiat accounts.
