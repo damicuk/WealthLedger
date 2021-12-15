@@ -51,7 +51,7 @@ AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSu
   sheet.getRange('A2:A').setFontColor('#1155cc');
 
   const formula =
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT G"))=0,,{
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", "", ""};
