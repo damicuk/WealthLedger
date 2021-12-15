@@ -491,6 +491,7 @@ var AssetTracker = class AssetTracker {
     this.assetsSheet();
     this.ledgerSheet();
 
+    SpreadsheetApp.getActive().toast('Sample sheets complete', 'Finished', 10);
   }
 
   /**
@@ -545,6 +546,7 @@ var AssetTracker = class AssetTracker {
 
     userProperties.setProperties(userSettings);
     documentProperties.setProperties(documentSettings);
+    
     SpreadsheetApp.getActive().toast('Settings saved');
   }
 };

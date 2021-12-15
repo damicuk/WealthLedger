@@ -173,8 +173,12 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
         let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-        this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
+        //Handle withdrawal of zero
+        if (lots.length === 0) {
+          lots = [new Lot(date, this.fiatBase, 1, 0, 0, debitAsset, debitAmount, debitFee, debitWalletName)];
+        }
 
+        this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
 
       }
       if (creditAsset.isFiat) {
