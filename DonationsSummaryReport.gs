@@ -75,4 +75,6 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Dona
   this.trimColumns(sheet, 7);
 
   sheet.autoResizeColumns(2, 6);
+
+  sheet.hideSheet();
 };
