@@ -106,7 +106,7 @@ var AssetAccount = class AssetAccount {
 
     if (neededSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee} from balance of ${this.balance}`, rowIndex, 'debitAmount');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee ? fee : 0} from ${this.wallet.name} balance of ${this.balance}`, rowIndex, 'debitAmount');
 
     }
 
