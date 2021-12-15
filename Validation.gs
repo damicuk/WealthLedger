@@ -157,7 +157,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Current price (${currentPrice}) is not valid (number or blank).`, rowIndex, 'currentPrice');
   }
   else if (currentPrice < 0) {
-    throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater or equal to 0 (or blank).`, rowIndex, 'currentPrice');
+    throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater than or equal to 0 (or blank).`, rowIndex, 'currentPrice');
   }
   else if (apiName !== '' && !this.validApiNames.includes(apiName)) {
     throw new ValidationError(`Assets row ${rowIndex}: API (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
@@ -330,7 +330,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 0 when debit asset is specified.`, rowIndex, 'debitAmount');
     }
     else if (debitFee < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank) when debit asset is specified.`, rowIndex, 'debitFee');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater than or equal to 0 (or blank) when debit asset is specified.`, rowIndex, 'debitFee');
     }
     else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: Debit wallet must be specified when debit asset is specified.`, rowIndex, 'debitWalletName');
@@ -359,10 +359,10 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: No debit amount specified.`, rowIndex, 'debitAmount');
     }
     else if (debitAmount < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater or equal to 0.`, rowIndex, 'debitAmount');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than or equal to 0.`, rowIndex, 'debitAmount');
     }
     else if (debitFee < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater than or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
     else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
@@ -371,13 +371,13 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: No credit amount specified.`, rowIndex, 'creditAmount');
     }
     else if (creditAmount < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater or equal to 0.`, rowIndex, 'creditAmount');
+      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater than or equal to 0.`, rowIndex, 'creditAmount');
     }
     else if (debitAmount === 0 && creditAmount === 0) {
       throw new ValidationError(`${action} row ${rowIndex}: Debit amount or credit amount must be greater than 0.`, rowIndex, 'debitAmount');
     }
     else if (creditFee < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
+      throw new ValidationError(`${action} row ${rowIndex}: Credit fee must be greater than or equal to 0 (or blank).`, rowIndex, 'creditFee');
     }
     else if (creditFee > creditAmount) {
       throw new ValidationError(`${action} row ${rowIndex}: Credit fee must be less than or equal to credit amount (or blank).`, rowIndex, 'creditFee');
@@ -432,10 +432,10 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Remove one of the exchange rates.\n\nNon fiat base trade requires either debit asset (${debitAsset}) or credit asset (${creditAsset}) to fiat base (${this.fiatBase}) exchange rate, but not both. One exchange rate can be deduced from the other and the amounts of assets exchanged. The exchange rate of the least volatile, most widely traded asset is likely to be more accurate.`, rowIndex, 'debitExRate');
     }
     else if (debitExRate !== '' && debitExRate < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater or equal to 0.`, rowIndex, 'debitExRate');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit exchange rate must be greater than or equal to 0.`, rowIndex, 'debitExRate');
     }
     else if (creditExRate !== '' && creditExRate < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate must be greater or equal to 0.`, rowIndex, 'creditExRate');
+      throw new ValidationError(`${action} row ${rowIndex}: Credit exchange rate must be greater than or equal to 0.`, rowIndex, 'creditExRate');
     }
   }
   else if (action === 'Income') {
@@ -496,7 +496,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Debit amount must be greater than 0.`, rowIndex, 'debitAmount');
     }
     else if (debitFee < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater than or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
     else if (debitWalletName === '') {
       throw new ValidationError(`${action} row ${rowIndex}: No debit wallet specified.`, rowIndex, 'debitWalletName');
@@ -528,7 +528,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: Either debit wallet (for gifts given) or credit wallet (for gifts received) must be specified, but not both.`, rowIndex, 'debitWalletName');
     }
     else if (debitFee < 0) {
-      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater or equal to 0 (or blank).`, rowIndex, 'debitFee');
+      throw new ValidationError(`${action} row ${rowIndex}: Debit fee must be greater than or equal to 0 (or blank).`, rowIndex, 'debitFee');
     }
     else if (creditExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
@@ -541,7 +541,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit asset (${debitAsset}) to fiat base (${this.fiatBase}) exchange rate must be specified.`, rowIndex, 'debitExRate');
       }
       else if (debitExRate < 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit exchange rate must be greater or equal to 0.`, rowIndex, 'debitExRate');
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit exchange rate must be greater than or equal to 0.`, rowIndex, 'debitExRate');
       }
       else if (debitAmount === '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, debit amount must be specified.`, rowIndex, 'debitAmount');
@@ -567,7 +567,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit amount must be specified (for the inherited cost basis).`, rowIndex, 'debitAmount');
       }
       else if (debitAmount < 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit amount must be greater or equal to 0 (for the inherited cost basis).`, rowIndex, 'debitAmount');
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, debit amount must be greater than or equal to 0 (for the inherited cost basis).`, rowIndex, 'debitAmount');
       }
       else if (!creditAsset) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit asset must be specified.`, rowIndex, 'creditAsset');
@@ -582,7 +582,7 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit amount must be greater than 0.`, rowIndex, 'creditAmount');
       }
       else if (creditFee < 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be greater or equal to 0 (or blank).`, rowIndex, 'creditFee');
+        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be greater than or equal to 0 (or blank).`, rowIndex, 'creditFee');
       }
       else if (creditFee && creditFee >= creditAmount) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be less than the credit amount (or blank).`, rowIndex, 'creditFee');
