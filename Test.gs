@@ -13,21 +13,23 @@ function testProcessLedger(locale = 'Europe/Paris') {
 
   assetRecords = [
     new AssetRecord('USD', 'Fiat Base', 2, 1, '', '', ''),
-    new AssetRecord('EUR', 'Fiat', 2, '', '', '', ''),
-    new AssetRecord('ADA', 'Crypto', 6, '', '', '', '')
+    new AssetRecord('LMN', 'Stock', 0, '', '', '', '')
   ];
 
   ledgerRecords = [
-    new LedgerRecord(new Date(2020, 3, 1), 'Trade', 'EUR', '', 1200, '', 'Kraken', 'ADA', '', 1000, '', '', ''),
-    new LedgerRecord(new Date(2020, 3, 2), 'Trade', 'ADA', '', 1000, '', 'Kraken', 'EUR', '', 0, '', '', '')
+    new LedgerRecord(new Date(2020, 3, 1), 'Trade', 'USD', '', 2000, '', 'IB', 'LMN', '', 1000, 0, '', ''),
+    new LedgerRecord(new Date(2020, 3, 2), 'Trade', 'USD', '', 4000, '', 'IB', 'LMN', '', 2000, 0, '', ''),
+    new LedgerRecord(new Date(2020, 3, 3), 'Trade', 'USD', '', 6000, '', 'IB', 'LMN', '', 3000, 0, '', ''),
+    new LedgerRecord(new Date(2020, 3, 4), 'Trade', 'USD', '', 8000, '', 'IB', 'LMN', '', 4000, 0, '', ''),
+    new LedgerRecord(new Date(2020, 3, 2), 'Split', 'LMN', '', 10000, '', '', '', '', '', '', '', '')
   ];
 
   let assetTracker = new AssetTracker();
   assetTracker.validateAssetRecords(assetRecords);
   assetTracker.processAssets(assetRecords);
 
-  assetTracker.validateLedgerRecords(ledgerRecords, 'UK');
-  assetTracker.processLedgerUK(ledgerRecords, locale);
+  assetTracker.validateLedgerRecords(ledgerRecords, 'US');
+  assetTracker.processLedger(ledgerRecords);
   // let assetPool = assetTracker.assetPools.get('ADA');
 
   // let wallet = assetTracker.wallets.get('Kraken');

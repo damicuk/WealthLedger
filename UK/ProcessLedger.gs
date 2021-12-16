@@ -140,7 +140,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
     }
     else { //Gift given
 
-      let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, 0, 0, action);
+      let poolWithdrawal = new PoolWithdrawal(date, debitAsset, debitAmount, debitFee, this.fiatBase, debitExRate * debitAmount, 0, action);
       this.getAssetPool(debitAsset).addPoolWithdrawal(poolWithdrawal);
 
     }

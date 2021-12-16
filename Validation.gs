@@ -533,6 +533,9 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     else if (creditExRate !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
     }
+    else if (creditFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
+    }
     else if (debitWalletName !== '') { //Gift given
       if (debitAsset.isFiat) {
         throw new ValidationError(`${action} row ${rowIndex}: Debit asset ${debitAsset} is fiat. Not supported for gifts given. Use transfer action instead.`, rowIndex, 'debitAsset');
@@ -554,9 +557,6 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
       else if (creditAmount !== '') {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts given, leave credit amount blank.`, rowIndex, 'creditAmount');
-      }
-      else if (creditFee !== '') {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts given, leave credit fee blank.`, rowIndex, 'creditFee');
       }
     }
     else { //Gift received
@@ -580,12 +580,6 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       }
       else if (creditAmount <= 0) {
         throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit amount must be greater than 0.`, rowIndex, 'creditAmount');
-      }
-      else if (creditFee < 0) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be greater than or equal to 0 (or blank).`, rowIndex, 'creditFee');
-      }
-      else if (creditFee && creditFee >= creditAmount) {
-        throw new ValidationError(`${action} row ${rowIndex}: For gifts received, credit fee must be less than the credit amount (or blank).`, rowIndex, 'creditFee');
       }
     }
   }
