@@ -1,38 +1,44 @@
 /**
- * Cryptocurrency account.
+ * Asset account.
  * Calculation are done in integer amounts of subunits to avoid computational rounding errors.
  */
-var CryptoAccount = class CryptoAccount {
+var AssetAccount = class AssetAccount {
 
   /**
-   * Sets the cryptocurrency currency and initializes an empty array to contain the crytocurrency lots.
-   * @param {string} ticker - the cryptocurrency currency ticker.
+   * Sets the asset and initializes an empty array to contain the asset lots.
+   * @param {Asset} asset - The asset.
+   * @param {Wallet} wallet - The wallet to which the asset account belongs.
    */
-  constructor(ticker) {
+  constructor(asset, wallet) {
 
     /**
-     * The cryptocurrency currency ticker.
-     * @type {string}
+     * The asset.
+     * @type {Asset}
      */
-    this.ticker = ticker;
+    this.asset = asset;
 
     /**
-     * The crytocurrency lots.
+    * The wallet to which the asset account belongs.
+    * @type {Wallet}
+    */
+    this.wallet = wallet;
+
+    /**
+     * The asset lots.
      * @type {Array<Lot>}
      */
     this.lots = [];
 
   }
 
+  /**
+   * The asset ticker.
+   * @type {string}
+   */
   get ticker() {
 
-    return this._ticker;
-  }
+    return this.asset.ticker;
 
-  set ticker(ticker) {
-
-    this._ticker = ticker;
-    this._currencySubunits = Currency.subunits(ticker);
   }
 
   /**
@@ -56,33 +62,33 @@ var CryptoAccount = class CryptoAccount {
    */
   get balance() {
 
-    return this.subunits / this._currencySubunits;
+    return this.subunits / this.asset.subunits;
   }
 
   /**
-   * Deposits a single or multiple lots of cryptocurrency into the account.
-   * @param {(Lot|Lot[])} lots - The single lot or array of lots to deposit into the account.
+   * Deposits multiple asset lots into the account.
+   * @param {Array<Lot>} lots - The array of lots to deposit into the account.
    */
-  deposit(lots) {
+  depositLots(lots) {
 
-    if (Array.isArray(lots)) {
-
-      this.lots = this.lots.concat(lots);
-
-    }
-    else {
-
-      this.lots.push(lots);
-
-    }
+    this.lots = this.lots.concat(lots);
   }
 
   /**
-   * Withdraws an amount of cryptocurrency from the account.
+   * Deposits a single asset lot into the account.
+   * @param {Lot} lot - The single lot to deposit into the account.
+   */
+  depositLot(lot) {
+
+    this.lots.push(lot);
+  }
+
+  /**
+   * Withdraws an amount of asset from the account.
    * If necessary the last lot to be withdrawn is split.
    * The fee is assigned to the withdrawn lots in proportion to their size.
    * Throws an error if the amount requested is greater than the balance in the account.
-   * @param {number} amount - The amount of cryptocurrency to withdraw.
+   * @param {number} amount - The amount of asset to withdraw.
    * @param {number} fee - The fee which is also withdrawn from the account.
    * @param {string} lotMatching - The lot matching method used to determine the order in which lots are withdrawn.
    * FIFO First in first out.
@@ -90,17 +96,17 @@ var CryptoAccount = class CryptoAccount {
    * HIFO Highest cost first out.
    * LOFO Lowest cost first out.
    * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
-   * @return {Lot[]} The collection of lots withdrawn.
+   * @return {Array<Lot>} The collection of lots withdrawn.
    */
   withdraw(amount, fee, lotMatching, rowIndex) {
 
-    let amountSubunits = Math.round(amount * this._currencySubunits);
-    let feeSubunits = Math.round(fee * this._currencySubunits);
+    let amountSubunits = AssetTracker.round(amount * this.asset.subunits);
+    let feeSubunits = AssetTracker.round(fee * this.asset.subunits);
     let neededSubunits = amountSubunits + feeSubunits;
 
     if (neededSubunits > this.subunits) {
 
-      throw new CryptoAccountError(`Attempted to withdraw ${this.ticker} ${amount} + fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex);
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee ? fee : 0} from ${this.wallet.name} balance of ${this.balance}`, rowIndex, 'debitAmount');
 
     }
 
@@ -143,15 +149,15 @@ var CryptoAccount = class CryptoAccount {
    * The fee subunits are assigned to the lots in proportion to each lot's subunits.
    * Throws an error if the fee subunits are greater than the total lots' subunits.
    * @param {number} fee subunit - The fee subunits to assign to the lots.
-   * @param {Lot[]} lots - The collection of lots.
+   * @param {Array<Lot>} lots - The collection of lots.
    */
   apportionFeeSubunits(feeSubunits, lots) {
 
-    let lotSubunits = [];
+    let lotsSubunits = [];
     for (let lot of lots) {
-      lotSubunits.push(lot.subunits);
+      lotsSubunits.push(lot.subunits);
     }
-    let apportionedFeeSubunits = CryptoTracker.apportionInteger(feeSubunits, lotSubunits);
+    let apportionedFeeSubunits = AssetTracker.apportionInteger(feeSubunits, lotsSubunits);
     let index = 0;
     for (let lot of lots) {
       lot.creditFeeSubunits += apportionedFeeSubunits[index++];
@@ -167,11 +173,11 @@ var CryptoAccount = class CryptoAccount {
    */
   apportionFee(fee, rowIndex) {
 
-    let feeSubunits = Math.round(fee * this._currencySubunits);
+    let feeSubunits = AssetTracker.round(fee * this.asset.subunits);
 
     if (feeSubunits > this.subunits) {
 
-      throw new CryptoAccountError(`Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex);
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitFee');
 
     }
 
@@ -180,8 +186,7 @@ var CryptoAccount = class CryptoAccount {
 
   /**
    * Removes any lots with zero subunits.
-   * Used when misc fee sets lot subunits to zero.
-   * @return {Lot[]} The collection of lots with zero subunits.
+   * Used when misc fee or split sets lot subunits to zero.
    */
   removeZeroSubunitLots() {
 
@@ -201,6 +206,26 @@ var CryptoAccount = class CryptoAccount {
     this.lots = keepLots;
     return withdrawLots;
   }
+
+  /**
+   * Adjusts the account subunits by the ajust subunits
+   * @param {number} adjustSubunits - The subunits by which to adjust the account subunits.
+   */
+  adjust(adjustSubunits) {
+
+    let lotSubunits = [];
+    for (let lot of this.lots) {
+      lotSubunits.push(lot.subunits);
+    }
+
+    let lotAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, lotSubunits);
+
+    let index = 0;
+    for (let lot of this.lots) {
+
+      lot.creditAmountSubunits += lotAdjustSubunits[index++];
+    }
+  };
 
   /**
    * Given a lot matching method string returns a comparator function used to sort lots.

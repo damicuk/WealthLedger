@@ -2,10 +2,9 @@
  * Creates the fiat accounts sheet if it doesn't already exist.
  * Updates the sheet with the current fiat accounts data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-CryptoTracker.prototype.fiatAccountsSheet = function () {
-
-  const sheetName = this.fiatAccountsSheetName;
+AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccountsSheetName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -25,8 +24,7 @@ CryptoTracker.prototype.fiatAccountsSheet = function () {
 
     sheet.hideSheet();
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 
@@ -41,25 +39,28 @@ CryptoTracker.prototype.fiatAccountsSheet = function () {
  * The fiat accounts data is collected when the ledger is processed.
  * @return {Array<Array>} The current fiat accounts data.
  */
-CryptoTracker.prototype.getFiatTable = function () {
+AssetTracker.prototype.getFiatTable = function () {
 
   let table = [];
 
-  for (let wallet of this.wallets) {
+  for (let wallet of this.wallets.values()) {
 
-    for (let fiatAccount of wallet.fiatAccounts) {
+    for (let fiatAccount of wallet.fiatAccounts.values()) {
 
-      table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
+      if (fiatAccount.balance !== 0) {
 
+        table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
+
+      }
     }
   }
 
   table.sort(function (a, b) {
-    return a[0] > b[0] ? 1 : 
-          b[0] > a[0] ? -1 : 
-          a[1] > b[1] ? 1 : 
-          b[1] > a[1] ? -1 : 
-          0;
+    return a[0] > b[0] ? 1 :
+      b[0] > a[0] ? -1 :
+        a[1] > b[1] ? 1 :
+          b[1] > a[1] ? -1 :
+            0;
   });
 
   return table;

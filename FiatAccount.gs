@@ -1,20 +1,27 @@
 /**
- * Fiat currency account.
+ * Fiat account.
  * Calculation are done in integer amounts of subunits to avoid computational rounding errors.
  */
 var FiatAccount = class FiatAccount {
 
   /**
-   * Sets the fiat currency and initializes the balance to 0.
-   * @param {string} ticker - the fiat currency ticker.
+   * Sets the fiat asset and initializes the balance to 0.
+   * @param {Asset} asset - The fiat asset.
+   * @param {Wallet} wallet - The wallet to which the asset account belongs.
    */
-  constructor(ticker) {
+  constructor(asset, wallet) {
 
     /**
-     * The fiat currency ticker.
-     * @type {string}
+     * The fiat asset.
+     * @type {Asset}
      */
-    this.ticker = ticker;
+    this.asset = asset;
+
+    /**
+     * The wallet to which the asset account belongs.
+     * @type {Wallet}
+     */
+    this.wallet = wallet;
 
     /**
      * The balance in the account in subunits.
@@ -24,15 +31,14 @@ var FiatAccount = class FiatAccount {
 
   }
 
+  /**
+   * The fiat ticker.
+   * @type {string}
+   */
   get ticker() {
 
-    return this._ticker;
-  }
+    return this.asset.ticker;
 
-  set ticker(ticker) {
-
-    this._ticker = ticker;
-    this._currencySubunits = Currency.subunits(ticker);
   }
 
   /**
@@ -41,7 +47,7 @@ var FiatAccount = class FiatAccount {
    */
   get balance() {
 
-    return this.subunits / this._currencySubunits;
+    return this.subunits / this.asset.subunits;
 
   }
 
@@ -52,7 +58,7 @@ var FiatAccount = class FiatAccount {
    */
   transfer(amount) {
 
-    this.subunits += Math.round(amount * this._currencySubunits); //round because multiplying
+    this.subunits += AssetTracker.round(amount * this.asset.subunits); //round because multiplying
 
     return this;
 

@@ -1,13 +1,7 @@
 /**
  * Runs when the add-on is installed.
- * This method is only used by the regular add-on, and is never called by
- * the mobile add-on version.
- *
- * @param {Object} e The event parameter for a simple onInstall trigger. To
- *     determine which authorization mode (ScriptApp.AuthMode) the trigger is
- *     running in, inspect e.authMode. (In practice, onInstall triggers always
- *     run in AuthMode.FULL, but onOpen triggers may be AuthMode.LIMITED or
- *     AuthMode.NONE.)
+ * This method is only used by the regular add-on, and is never called by the mobile add-on version.
+ * @param {Object} e The event parameter for a simple onInstall trigger.
  */
 function onInstall(e) {
   onOpen(e);
@@ -15,49 +9,48 @@ function onInstall(e) {
 
 /**
  * Creates a menu entry in the Google Docs UI when the document is opened.
- * This method is only used by the regular add-on, and is never called by
- * the mobile add-on version.
- *
- * @param {Object} e The event parameter for a simple onOpen trigger. To
- *     determine which authorization mode (ScriptApp.AuthMode) the trigger is
- *     running in, inspect e.authMode.
+ * This method is only used by the regular add-on, and is never called by the mobile add-on version.
+ * @param {Object} e The event parameter for a simple onOpen trigger.
  */
 function onOpen(e) {
   SpreadsheetApp.getUi()
-    .createMenu('CryptoTracker')
-    .addItem('Step 1: Create sample ledger', 'createSampleLedger')
+    .createMenu('WealthLedger')
+    .addItem('Step 1: Create sample sheets', 'createSampleSheets')
     .addSeparator()
-    .addItem('Step 2: Validate ledger', 'validateLedger')
+    .addItem('Step 2: Validate', 'validate')
     .addSeparator()
     .addItem('Step 3: Write reports', 'writeReports')
+    .addSeparator()
+    .addItem('Delete reports', 'deleteReports')
     .addSeparator()
     .addItem('Settings', 'showSettingsDialog')
     .addToUi();
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
  */
-function createSampleLedger() {
+function createSampleSheets() {
 
-  new CryptoTracker().sampleLedger();
-}
-
-/**
- * Calls the corresponding method of a new instance of CryptoTracker
- */
-function validateLedger() {
-
-  new CryptoTracker().validateLedger();
+  new AssetTracker().createSampleSheets();
 
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
+ * Calls the corresponding method of a new instance of AssetTracker
+ */
+function validate() {
+
+  new AssetTracker().validate();
+
+}
+
+/**
+ * Calls the corresponding method of a new instance of AssetTracker
  */
 function writeReports() {
 
-  new CryptoTracker().writeReports();
+  new AssetTracker().writeReports();
 }
 
 /**
@@ -65,34 +58,30 @@ function writeReports() {
  */
 function showSettingsDialog() {
 
-  let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
-    .setWidth(480)
-    .setHeight(250);
-  SpreadsheetApp.getUi().showModalDialog(html, 'Settings');
+  new AssetTracker().showSettingsDialog();
+
 }
 
 /**
- * Calls the corresponding method of a new instance of CryptoTracker
- */
-function saveSettings(settings) {
-
-  new CryptoTracker().saveSettings(settings);
-  
-}
-
-/**
- * Calls the corresponding method of a new instance of CryptoTracker
- * Not intended for use by the end user
- * Useful in development and testing
+ * Calls the corresponding method of a new instance of AssetTracker
  */
 function deleteReports() {
 
-  new CryptoTracker().deleteReports();
+  new AssetTracker().deleteReports();
 
 }
 
 /**
- * Deletes all the user properties
+ * Calls the corresponding method of a new instance of AssetTracker
+ */
+function saveSettings(userSettings, documentSettings) {
+
+  new AssetTracker().saveSettings(userSettings, documentSettings);
+
+}
+
+/**
+ * Deletes all the user and document properties
  * Not intended for use by the end user
  * Useful in development and testing
  */
@@ -100,5 +89,8 @@ function deleteSettings() {
 
   let userProperties = PropertiesService.getUserProperties();
   userProperties.deleteAllProperties();
+
+  let documentProperties = PropertiesService.getDocumentProperties();
+  documentProperties.deleteAllProperties();
 
 }

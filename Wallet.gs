@@ -1,74 +1,73 @@
 /**
- * Wallet (or exchange) with fiat and/or cryptocurrency accounts.
+ * Wallet (or exchange) with fiat and/or asset accounts.
  */
 class Wallet {
 
   /**
-   * Sets the name of the wallet (or exchange) and initializes empty arrays to contain the fiat and cryptocurrency accounts.
+   * Sets the name of the wallet (or exchange) and initializes empty arrays to contain the fiat and asset accounts.
    * @param {string} name - The name of the wallet (or exchange).
+   * @param {AssetTraker} assetTracker - The asset tracker to which the wallet belongs.
    */
-  constructor(name) {
+  constructor(name, assetTracker) {
 
     /**
-     * The name of the wallet (or exchange) and initializes empty arrays to contain the fiat and cryptocurrency accounts.
+     * The name of the wallet (or exchange) and initializes empty arrays to contain the fiat and asset accounts.
      * @type {string}
      */
     this.name = name;
 
     /**
-     * The fiat accounts.
-     * @type {Array<FiatAccount>}
+     * The asset tracker to which the wallet belongs.
+     * @type {AssetTraker}
      */
-    this.fiatAccounts = [];
+    this.assetTracker = assetTracker;
 
     /**
-     * The cryptocurrency accounts.
-     * @type {Array<CryptoAccount>}
+     * Map of tickers to fiat accounts.
+     * @type {Map}
      */
-    this.cryptoAccounts = [];
+    this.fiatAccounts = new Map();
+
+    /**
+     * Map of tickers to asset accounts.
+     * @type {Map}
+     */
+    this.assetAccounts = new Map();
   }
 
   /**
-   * Returns the fiat account with the given ticker or creates adds and returns a new fiat account with that ticker.
-   * @param {string} ticker - The ticker of the fiat account to search for.
+   * Returns the fiat account of the given asset or creates adds and returns a new fiat account of that asset.
+   * @param {Asset} asset - The asset to search for.
    * @return {FiatAccount} The fiat account found or created.
    */
-  getFiatAccount(ticker) {
+  getFiatAccount(asset) {
 
-    for (let fiatAccount of this.fiatAccounts) {
+    let fiatAccount = this.fiatAccounts.get(asset.ticker);
 
-      if (fiatAccount.ticker === ticker) {
+    if (!fiatAccount) {
 
-        return fiatAccount;
-      }
+      fiatAccount = new FiatAccount(asset, this);
+      this.fiatAccounts.set(asset.ticker, fiatAccount);
     }
-
-    let fiatAccount = new FiatAccount(ticker);
-
-    this.fiatAccounts.push(fiatAccount);
 
     return fiatAccount;
   }
 
   /**
-   * Returns the cryptocurrency account with the given ticker or creates adds and returns a new cryptocurrency account with that ticker.
-   * @param {string} ticker - The ticker of the cryptocurrency account to search for.
-   * @return {CryptoAccount} The cryptocurrency account found or created.
+   * Returns the asset account of the given asset or creates adds and returns a new asset account with that asset.
+   * @param {Asset} asset - The asset to search for.
+   * @return {AssetAccount} The asset account found or created.
    */
-  getCryptoAccount(ticker) {
+  getAssetAccount(asset) {
 
-    for (let cryptoAccount of this.cryptoAccounts) {
+    let assetAccount = this.assetAccounts.get(asset.ticker);
 
-      if (cryptoAccount.ticker === ticker) {
+    if (!assetAccount) {
 
-        return cryptoAccount;
-      }
+      assetAccount = new AssetAccount(asset, this);
+      this.assetAccounts.set(asset.ticker, assetAccount);
     }
 
-    let cryptoAccount = new CryptoAccount(ticker);
-
-    this.cryptoAccounts.push(cryptoAccount);
-
-    return cryptoAccount;
+    return assetAccount;
   }
 }

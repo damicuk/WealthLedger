@@ -1,47 +1,47 @@
 /**
- * Validates and processes the ledger, retrieves the currenct crypto prices, and writes the reports.
- * Uses the error handler to handle any ValidatioError, CryptoAccountError, or ApiError .
- * Updates the data validation on the ledger currency and wallet columns.
+ * Validates and processes the ledger, retrieves the currenct prices, and writes the reports.
+ * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError .
+ * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
-CryptoTracker.prototype.writeReports = function () {
+AssetTracker.prototype.writeReports = function () {
 
-  let ledgerRecords;
-  try {
-    ledgerRecords = this.getLedgerRecords();
-    this.validateLedgerRecords(ledgerRecords);
+  let assetsValidationResults = this.validateAssetsSheet();
+  let assetsValidationSuccess = assetsValidationResults[0];
+  let assetRecords = assetsValidationResults[1];
+  let fiatBaseRowIndex = assetsValidationResults[2];
+  if (!assetsValidationSuccess) {
+    return;
   }
-  catch (error) {
-    if (error instanceof ValidationError) {
-      this.handleError('validation', error.message, error.rowIndex, error.columnName);
+
+  this.processAssets(assetRecords);
+
+  if (this.fiatBase.ticker === 'GBP' && this.accountingModel !== 'UK'
+    || this.fiatBase.ticker !== 'GBP' && this.accountingModel === 'UK') {
+    let ui = SpreadsheetApp.getUi();
+    let message = `Fiat base is ${this.fiatBase.ticker} but the accounting model is ${this.accountingModel}.\nYou can change the accounting model in setting.\n\nAre you sure you want to continue?`;
+    let result = ui.alert(`Warning`, message, ui.ButtonSet.YES_NO);
+    if (result !== ui.Button.YES) {
+      this.setCurrentCell(this.assetsSheetName, fiatBaseRowIndex, AssetRecord.getColumnIndex('assetType'));
+      SpreadsheetApp.getActive().toast('Reports canceled');
       return;
     }
-    else {
-      throw error;
-    }
+  }
+
+  let ledgerValidationResults = this.validateLedgerSheet();
+  let ledgerValidationSuccess = ledgerValidationResults[0];
+  let ledgerRecords = ledgerValidationResults[1];
+  if (!ledgerValidationSuccess) {
+    return;
   }
 
   try {
     this.processLedger(ledgerRecords);
   }
   catch (error) {
-    if (error instanceof CryptoAccountError) {
-      this.handleError('cryptoAccount', error.message, error.rowIndex, 'debitAmount');
+    if (error instanceof AssetAccountError) {
+      this.handleError('assetAccount', error.message, this.ledgerSheetName, error.rowIndex, LedgerRecord.getColumnIndex(error.columnName));
       return;
-    }
-    else {
-      throw error;
-    }
-  }
-
-  let apiError;
-  try {
-    this.exRatesSheet();
-  }
-  catch (error) {
-    if (error instanceof ApiError) {
-      //handle the error later
-      apiError = error;
     }
     else {
       throw error;
@@ -49,52 +49,72 @@ CryptoTracker.prototype.writeReports = function () {
   }
 
   this.fiatAccountsSheet();
-  this.openPositionsReport();
-  this.closedPositionsReport();
-  this.donationsReport();
-  this.incomeReport();
-  this.openSummaryReport();
-  this.closedSummaryReport();
-  this.incomeSummaryReport();
-  this.donationsSummaryReport();
-  this.cryptoWalletsReport();
-  this.fiatWalletsReport();
-  this.exRatesTable();
 
-  this.updateLedgerCurrencies();
-  this.updateLedgerWallets();
+  if (this.accountingModel === 'UK') {
 
-  if (apiError) {
-    this.handleError('api', apiError.message);
+    let timeZone = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
+
+    this.processLedgerUK(ledgerRecords, timeZone);
+
+    this.deleteSheets(this.defaultReportNames);
+
+    this.ukOpenPositionsReport();
+    this.ukAssetAccountsReport();
+    this.ukClosedPositionsReport();
+    this.incomeReport(this.ukIncomeReportName);
+    this.ukChartsDataSheet();
+    this.ukOpenSummaryReport();
+    this.ukClosedSummaryReport();
+    this.incomeSummaryReport(this.ukIncomeSummaryReportName);
+    this.ukDonationsSummaryReport();
+    this.ukWalletsReport();
+
   }
   else {
-    SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
+
+    this.deleteSheets(this.ukReportNames);
+
+    this.fiatAccountsSheet();
+    this.openPositionsReport();
+    this.closedPositionsReport();
+    this.incomeReport();
+    this.chartsDataSheet();
+    this.openSummaryReport();
+    this.closedSummaryReport();
+    this.incomeSummaryReport();
+    this.donationsSummaryReport();
+    this.walletsReport();
   }
+
+  this.updateLedger();
+  this.updateAssetsSheet(assetRecords);
+
+  try {
+    this.updateAssetPrices(assetRecords);
+  }
+  catch (error) {
+    if (error instanceof ApiError) {
+      this.handleError('api', error.message);
+    }
+    else {
+      throw error;
+    }
+  }
+
+  SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
 };
 
 /**
  * Deletes all the output sheets.
- * Not intended for use by the end user.
- * Useful in development and testing.
+ * Displays toast on completion.
  */
-CryptoTracker.prototype.deleteReports = function () {
+AssetTracker.prototype.deleteReports = function () {
 
   let sheetNames = [
-    this.openPositionsReportName,
-    this.closedPositionsReportName,
-    this.donationsReportName,
-    this.incomeReportName,
-    this.openSummaryReportName,
-    this.closedSummaryReportName,
-    this.incomeSummaryReportName,
-    this.donationsSummaryReportName,
-    this.cryptoWalletsReportName,
-    this.fiatWalletsReportName,
-    this.exRatesTableSheetName,
-    this.exRatesSheetName,
     this.fiatAccountsSheetName
-  ];
+  ].concat(this.defaultReportNames).concat(this.ukReportNames);
 
   this.deleteSheets(sheetNames);
 
+  SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
 };

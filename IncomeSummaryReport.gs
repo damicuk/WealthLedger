@@ -2,49 +2,78 @@
  * Creates the income summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-CryptoTracker.prototype.incomeSummaryReport = function () {
+AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSummaryReportName) {
 
-  const sheetName = this.incomeSummaryReportName;
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (sheet) {
-
-    return;
-
+    if (this.getSheetVersion(sheet) === version) {
+      return;
+    }
+    else {
+      sheet.clear();
+    }
+  }
+  else {
+    sheet = ss.insertSheet(sheetName);
   }
 
-  sheet = ss.insertSheet(sheetName);
+  this.setSheetVersion(sheet, version);
 
   const referenceRangeName = this.incomeRangeName;
 
   let headers = [
     [
+      '',
       'Year',
-      'Crypto',
+      'Source Asset',
+      'Source Asset Type',
+      'Income Asset',
+      'Income Asset Type',
       'Amount',
       'Income Value'
     ]
   ];
 
-  sheet.getRange('A1:D1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:H1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('B2:B').setNumberFormat('@');
-  sheet.getRange('C2:C').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('D2:D').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('A2:A').setNumberFormat('@');
+  sheet.getRange('C2:F').setNumberFormat('@');
+  sheet.getRange('G2:G').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('H2:H').setNumberFormat('#,##0.00;(#,##0.00)');
 
-  const formulas = [[
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{QUERY(${referenceRangeName}, "SELECT YEAR(A), B, SUM(D), SUM(F) GROUP BY B, YEAR(A) ORDER BY YEAR(A), B LABEL YEAR(A) '', SUM(D) '', SUM(F) ''");
-{QUERY(${referenceRangeName}, "SELECT YEAR(A), 'SUBTOTAL', ' ', SUM(F) GROUP BY YEAR(A) ORDER BY YEAR(A) LABEL YEAR(A) '', 'SUBTOTAL' '', ' ' '', SUM(F) ''")};
-{"","TOTAL","",QUERY(${referenceRangeName}, "SELECT SUM(F) LABEL SUM(F) ''")}})`, , , ,
-  ]];
+  sheet.getRange('A2:A').setFontColor('#1155cc');
 
-  sheet.getRange('A2:D2').setFormulas(formulas);
+  const formula =
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT G"))=0,,
+{
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', '   ', Col3, '    ', Col5, '     ', SUM(Col7) GROUP BY Col3, Col5 ORDER BY Col3, Col5 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BY ASSET", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', '  ', Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col2, Col3, Col4, Col5 ORDER BY Col2, Col3, Col4, Col5 LABEL ' ' '', '  ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BY YEAR", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col1, '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BT YEAR AND ASSET TYPE", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col1, '  ', Col3, '   ', Col5, '    ', SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col7) ''");
+{"", "", "", "", "", "", "", ""};
+{"BT YEAR AND ASSET", "", "", "", "", "", "", ""};
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), B, C, D, E, G, I")}, "SELECT ' ', Col1, Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col1, Col2, Col3, Col4, Col5 ORDER BY Col1, Col2, Col3, Col4, Col5 LABEL ' ' '', Col1 '', SUM(Col6) '', SUM(Col7) ''")
+})`;
 
-  this.trimColumns(sheet, 4);
+  sheet.getRange('A2').setFormula(formula);
 
-  sheet.autoResizeColumns(1, sheet.getMaxColumns());
+  this.trimColumns(sheet, 8);
+
+  sheet.autoResizeColumns(2, 7);
 };

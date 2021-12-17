@@ -2,11 +2,9 @@
  * Creates the open positions report if it doesn't already exist.
  * Updates the sheet with the current open positions data.
  * Trims the sheet to fit the data.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-CryptoTracker.prototype.openPositionsReport = function () {
-
-  const sheetName = this.openPositionsReportName;
-  const exRatesRangeName = this.exRatesRangeName;
+AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPositionsReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -15,28 +13,32 @@ CryptoTracker.prototype.openPositionsReport = function () {
 
     sheet = ss.insertSheet(sheetName);
 
+    const referenceRangeName = this.assetsRangeName;
+
     let headers = [
       [
-        'Buy Debit', , , , , ,
-        'Buy Credit', , ,
+        'Debit', , , , , , ,
+        'Credit', , , ,
         'Current',
         'Calculations', , , , , , , ,
       ],
       [
         'Date Time',
-        'Currency',
+        'Asset',
+        'Asset Type',
         'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
-        'Currency',
+        'Asset',
+        'Asset Type',
         'Amount',
         'Fee',
         'Wallet',
         'Balance',
         'Cost Price',
-        'Current Price',
         'Cost Basis',
+        'Current Price',
         'Current Value',
         'Unrealized P/L',
         'Unrealized P/L %',
@@ -44,57 +46,54 @@ CryptoTracker.prototype.openPositionsReport = function () {
       ]
     ];
 
-    sheet.getRange('A1:R2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:T2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(2);
 
-    sheet.getRange('A1:F2').setBackgroundColor('#ead1dc');
-    sheet.getRange('G1:I2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('J1:J2').setBackgroundColor('#d9d2e9');
-    sheet.getRange('K1:R2').setBackgroundColor('#c9daf8');
+    sheet.getRange('A1:G2').setBackgroundColor('#ead1dc');
+    sheet.getRange('H1:L2').setBackgroundColor('#d0e0e3');
+    sheet.getRange('M1:T2').setBackgroundColor('#c9daf8');
 
-    sheet.getRange('A1:F1').mergeAcross();
-    sheet.getRange('G1:I1').mergeAcross();
-    sheet.getRange('K1:R1').mergeAcross();
+    sheet.getRange('A1:G1').mergeAcross();
+    sheet.getRange('H1:L1').mergeAcross();
+    sheet.getRange('M1:T1').mergeAcross();
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('B3:B').setNumberFormat('@');
-    sheet.getRange('C3:C').setNumberFormat('#,##0.00000;(#,##0.00000);');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('F3:G').setNumberFormat('@');
-    sheet.getRange('H3:H').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('I3:I').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('J3:J').setNumberFormat('@');
-    sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('L3:O').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('P3:P').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('Q3:Q').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange('R3:R').setNumberFormat('@');
+    sheet.getRange('B3:C').setNumberFormat('@');
+    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('G3:I').setNumberFormat('@');
+    sheet.getRange('J3:J').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('L3:L').setNumberFormat('@');
+    sheet.getRange('M3:M').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('N3:Q').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('R3:R').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange('S3:S').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange('T3:T').setNumberFormat('@');
 
-    sheet.clearConditionalFormatRules();
-    this.addLongShortCondition(sheet, 'R3:R');
+    this.addLongShortCondition(sheet, 'T3:T');
 
     const formulas = [[
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(H3:H-I3:I, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(K3:K=0,,N3:N/K3:K), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(G3:G, QUERY(${exRatesRangeName}, "SELECT B, D"), 2, FALSE),), LEN(A3:A))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(C3:C, (D3:D+E3:E)*C3:C, D3:D+E3:E), LEN(A3:A)))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(K3:K*M3:M, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(O3:O-N3:N, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(M3:M),,FILTER(IF(N3:N=0,,P3:P/N3:N), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(M3:M=0,,O3:O/M3:M), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, ROUND((E3:E+F3:F)*D3:D, 2), E3:E+F3:F), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(H3:H, QUERY(${referenceRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(ROUND(M3:M*P3:P, 2), LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(Q3:Q-O3:O, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(IF(O3:O=0,,R3:R/O3:O), LEN(A3:A))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, NOW(), "Y") > 1)+(((DATEDIF(A3:A, NOW(), "Y") = 1)*(DATEDIF(A3:A, NOW(), "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('K3:R3').setFormulas(formulas);
+    sheet.getRange('M3:T3').setFormulas(formulas);
 
-    let protection = sheet.protect().setDescription('Essential Data Sheet');
-    protection.setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
 
   let dataTable = this.getOpenPositionsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 10, 8);
+  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 12, 8);
 
 };
 
@@ -103,23 +102,26 @@ CryptoTracker.prototype.openPositionsReport = function () {
  * The open positions data is collected when the ledger is processed.
  * @return {Array<Array>} The current open positions data.
  */
-CryptoTracker.prototype.getOpenPositionsTable = function () {
+AssetTracker.prototype.getOpenPositionsTable = function () {
 
   let table = [];
 
-  for (let wallet of this.wallets) {
-    for (let cryptoAccount of wallet.cryptoAccounts) {
+  for (let wallet of this.wallets.values()) {
 
-      for (let lot of cryptoAccount.lots) {
+    for (let assetAccount of wallet.assetAccounts.values()) {
+
+      for (let lot of assetAccount.lots) {
 
         let date = lot.date;
-        let debitCurrency = lot.debitCurrency;
-        let debitExRate = lot.debitExRate;
+        let debitAsset = lot.debitAsset.ticker;
+        let debitAssetType = lot.debitAsset.assetType;
+        let debitExRate = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;
 
-        let creditCurrency = lot.creditCurrency;
+        let creditAsset = lot.creditAsset.ticker;
+        let creditAssetType = lot.creditAsset.assetType;
         let creditAmount = lot.creditAmount;
         let creditFee = lot.creditFee;
 
@@ -128,13 +130,15 @@ CryptoTracker.prototype.getOpenPositionsTable = function () {
         table.push([
 
           date,
-          debitCurrency,
+          debitAsset,
+          debitAssetType,
           debitExRate,
           debitAmount,
           debitFee,
           buyWallet,
 
-          creditCurrency,
+          creditAsset,
+          creditAssetType,
           creditAmount,
           creditFee,
 

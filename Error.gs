@@ -1,60 +1,63 @@
-
 /**
  * Central error handling displays alert and sets the currenct cell when appropriate.
  * @param {string} error - The type of error.
  * @param {string} message - The message to display to the user.
- * @param {number} [rowIndex] - The row index of the cell in the ledger sheet.
- * @param {string} [columnName] - the name assigned to the column in the ledger sheet.
- * Used to get the index from LedgerRecord.getColumnIndex(columnName).
- * Avoids hard coding column numbers.
+ * @param {string} [sheetName] - The name of the sheet where the error was found.
+ * @param {number} [rowIndex] - The row index of the cell in the named sheet.
+ * @param {number} [columnIndex] - The column index of the cell in the named sheet.
  */
-CryptoTracker.prototype.handleError = function (error, message, rowIndex, columnName) {
+AssetTracker.prototype.handleError = function (error, message, sheetName, rowIndex, columnIndex) {
+
+  let alertTitle;
 
   if (error === 'validation') {
 
-    if (rowIndex && columnName) {
-      this.setCurrentCell(rowIndex, columnName);
+    if (sheetName && rowIndex && columnIndex) {
+      this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
-    SpreadsheetApp.getUi().alert(`Ledger validation failed`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Validation failed`;
+
   }
-  else if (error === 'cryptoAccount') {
+  else if (error === 'assetAccount') {
 
-     if (rowIndex && columnName) {
-      this.setCurrentCell(rowIndex, columnName);
+    if (sheetName && rowIndex && columnIndex) {
+      this.setCurrentCell(sheetName, rowIndex, columnIndex);
     }
 
-    SpreadsheetApp.getUi().alert(`Insufficient funds`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Insufficient funds`;
 
   }
   else if (error === 'api') {
 
-    SpreadsheetApp.getUi().alert(`Error updating crypto prices`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Error updating current prices`;
 
   }
   else if (error === 'settings') {
 
-    SpreadsheetApp.getUi().alert(`Failed to save settings`, message, SpreadsheetApp.getUi().ButtonSet.OK);
+    alertTitle = `Failed to save settings`;
 
   }
+
+  let ui = SpreadsheetApp.getUi();
+  ui.alert(alertTitle, message, ui.ButtonSet.OK);
+
 };
 
 /**
- * Sets the currenct cell in the ledger sheet.
- * @param {number} rowIndex - The row index of the cell in the ledger sheet.
- * @param {string} columnName - the name assigned to the column in the ledger sheet.
- * Used to get the index from LedgerRecord.getColumnIndex(columnName).
- * Avoids hard coding column numbers.
+ * Sets the currenct cell in named sheet.
+ * @param {string} sheetName - The name. of the sheet.
+ * @param {number} rowIndex - The row index of the cell in the named sheet.
+ * @param {number} columnIndex - The column index of the cell in the named sheet.
  */
-CryptoTracker.prototype.setCurrentCell = function (rowIndex, columnName) {
+AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnIndex) {
 
   let ss = SpreadsheetApp.getActive();
-  let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
+  let sheet = ss.getSheetByName(sheetName);
 
-  if (ledgerSheet) {
+  if (sheet) {
 
-    let columnIndex = LedgerRecord.getColumnIndex(columnName);
-    let range = ledgerSheet.getRange(rowIndex, columnIndex, 1, 1);
+    let range = sheet.getRange(rowIndex, columnIndex, 1, 1);
     ss.setCurrentCell(range);
     SpreadsheetApp.flush();
 
@@ -66,7 +69,7 @@ CryptoTracker.prototype.setCurrentCell = function (rowIndex, columnName) {
  * Assigns the name of the class to the name property and passes the message to super.
  * @extends Error
  */
-class CustomError extends Error {
+var CustomError = class CustomError extends Error {
 
   /**
    * Initializes class with message, sets name property to the name of the class.
@@ -84,7 +87,7 @@ class CustomError extends Error {
  * Error in the validation of the ledger.
  * @extends CustomError
  */
-class ValidationError extends CustomError {
+var ValidationError = class ValidationError extends CustomError {
 
   /**
    * Initializes class with message, rowIndex and columnName, sets name property to the name of the class.
@@ -114,17 +117,20 @@ class ValidationError extends CustomError {
 }
 
 /**
- * Error when attempting to withdraw from a cryptocurrency account.
+ * Error when attempting to withdraw from an asset account.
  * @extends CustomError
  */
-class CryptoAccountError extends CustomError {
+var AssetAccountError = class AssetAccountError extends CustomError {
 
   /**
    * Initializes class with message and rowIndex, sets name property to the name of the class.
    * @param {string} message - description of the error and suggested solution.
-   * @param {number} rowIndex - the row numer in the ledger sheet that requires atention.
+   * @param {number} [rowIndex] - the row numer in the ledger sheet that requires atention.
+   * @param {string} [columnName] - the name assigned to the column in the ledger sheet.
+   * Used to get the index from LedgerRecord.getColumnIndex(columnName).
+   * Avoids hard coding column numbers.
    */
-  constructor(message, rowIndex) {
+  constructor(message, rowIndex, columnName) {
 
     super(message);
 
@@ -133,14 +139,20 @@ class CryptoAccountError extends CustomError {
      * @type {number}
      */
     this.rowIndex = rowIndex;
+
+    /**
+     * The name assigned to the column in the ledger sheet.
+     * @type {string}
+     */
+    this.columnName = columnName;
   }
 }
 
 /**
- * Error when attempting to retrieve crypto prices from an API.
+ * Error when attempting to retrieve current prices from an API.
  * @extends CustomError
  */
-class ApiError extends CustomError {
+var ApiError = class ApiError extends CustomError {
 
   /**
    * Initializes class with message, sets name property to the name of the class.

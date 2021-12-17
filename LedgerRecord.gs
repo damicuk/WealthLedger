@@ -1,33 +1,33 @@
 /**
  * Represents a row in the ledger sheet.
  */
-class LedgerRecord {
+var LedgerRecord = class LedgerRecord {
 
   /**
    * Assigns each column value to a property.
-   * @param {date} date - the date the action occurred.
+   * @param {Date} date - The date the action occurred.
    * @param {string} action - Donation, Gift, Income, Stop, Trade, Transfer.
-   * @param {string} debitCurrency - The ticker of the fiat or cryptocurrency debited from the account.
-   * @param {number} debitExRate - The debit currency to accounting currency exchange rate, 0 if the debit currency is the accounting currency.
-   * @param {number} debitAmount - The amount of fiat or cryptocurrency debited from the account.
-   * @param {number} debitFee - The fee in the fiat or cryptocurrency debited from the account.
-   * @param {string} debitWalletName - The name of the wallet (or exchange) from which the fiat or cryptocurrency is debited.
-   * @param {string} creditCurrency - The ticker of the fiat or cryptocurrency credited to the account.
-   * @param {number} creditExRate - The credit currency to accounting currency exchange rate, 0 if the credit currency is the accounting currency.
-   * @param {number} creditAmount - The amount of fiat or cryptocurrency credited to the account.
-   * @param {number} creditFee - The fee in the fiat or cryptocurrency credited to the account.
-   * @param {string} creditWalletName - The name of the wallet (or exchange) to which the fiat or cryptocurrency is credited.
+   * @param {string} debitAsset - The ticker of the asset debited from the account.
+   * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
+   * @param {number} debitAmount - The amount of asset debited from the account.
+   * @param {number} debitFee - The fee in debit asset units.
+   * @param {string} debitWalletName - The name of the wallet (or exchange) from which the asset is debited.
+   * @param {string} creditAsset - The ticker of the asset credited to the account.
+   * @param {number} creditExRate - The credit asset to fiat base exchange rate, 0 if the credit asset is fiat base.
+   * @param {number} creditAmount - The amount of asset credited to the account.
+   * @param {number} creditFee - The fee in credit asset units.
+   * @param {string} creditWalletName - The name of the wallet (or exchange) to which the asset is credited.
    * @param {string} lotMatching - Sets the lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
    */
   constructor(
     date,
     action,
-    debitCurrency,
+    debitAsset,
     debitExRate,
     debitAmount,
     debitFee,
     debitWalletName,
-    creditCurrency,
+    creditAsset,
     creditExRate,
     creditAmount,
     creditFee,
@@ -47,61 +47,61 @@ class LedgerRecord {
     this.action = action;
 
     /**
-     * The ticker of the fiat or cryptocurrency debited from the account.
+     * The ticker of the asset debited from the account.
      * @type {string}
      */
-    this.debitCurrency = debitCurrency;
+    this.debitAsset = debitAsset;
 
     /**
-     * The debit currency to accounting currency exchange rate, 0 if the debit currency is the accounting currency.
+     * The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
      * @type {number}
      */
     this.debitExRate = debitExRate;
 
     /**
-    * The amount of fiat or cryptocurrency debited from the account.
+    * The amount of asset debited from the account.
     * @type {number}
     */
     this.debitAmount = debitAmount;
 
     /**
-    * The fee in the fiat or cryptocurrency debited from the account.
-    * @type {number}
-    */
+     * The fee in debit asset units.
+     * @type {number}
+     */
     this.debitFee = debitFee;
 
     /**
-     * The name of the wallet (or exchange) from which the fiat or cryptocurrency is debited.
+     * The name of the wallet (or exchange) from which the asset is debited.
      * @type {number}
      */
     this.debitWalletName = debitWalletName;
 
     /**
-     * The ticker of the fiat or cryptocurrency credited to the account.
+     * The ticker of the asset credited to the account.
      * @type {string}
      */
-    this.creditCurrency = creditCurrency;
+    this.creditAsset = creditAsset;
 
     /**
-     * The credit currency to accounting currency exchange rate, 0 if the credit currency is the accounting currency.
+     * The credit asset to fiat base exchange rate, 0 if the credit asset is fiat base.
      * @type {number}
      */
     this.creditExRate = creditExRate;
 
     /**
-     * The amount of fiat or cryptocurrency credited to the account.
+     * The amount of asset credited to the account.
      * @type {number}
      */
     this.creditAmount = creditAmount;
 
     /**
-     * The fee in the fiat or cryptocurrency credited to the account.
+     * The fee in credit asset units.
      * @type {number}
      */
     this.creditFee = creditFee;
 
     /**
-     *  The name of the wallet (or exchange) to which the fiat or cryptocurrency is credited.
+     *  The name of the wallet (or exchange) to which the asset is credited.
      * @type {number}
      */
     this.creditWalletName = creditWalletName;
@@ -126,12 +126,12 @@ class LedgerRecord {
     let columns = [
       'date',
       'action',
-      'debitCurrency',
+      'debitAsset',
       'debitExRate',
       'debitAmount',
       'debitFee',
       'debitWalletName',
-      'creditCurrency',
+      'creditAsset',
       'creditExRate',
       'creditAmount',
       'creditFee',
@@ -160,7 +160,7 @@ class LedgerRecord {
  * Retrieves the ledger records from the ledger sheet.
  * @return {LedgerRecord[]} The collection of ledger records.
  */
-CryptoTracker.prototype.getLedgerRecords = function () {
+AssetTracker.prototype.getLedgerRecords = function () {
 
   let ledgerRange = this.getLedgerRange();
   let ledgerData = ledgerRange.getValues();

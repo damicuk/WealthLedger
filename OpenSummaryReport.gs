@@ -2,28 +2,37 @@
  * Creates the open summary report if it doesn't already exist.
  * No data is writen to this sheet.
  * It contains formulas that pull data from other sheets.
+ * @param {string} [sheetName] - The name of the sheet.
  */
-CryptoTracker.prototype.openSummaryReport = function () {
+AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummaryReportName) {
 
-  const sheetName = this.openSummaryReportName;
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (sheet) {
-
-    return;
-
+    if (this.getSheetVersion(sheet) === version) {
+      return;
+    }
+    else {
+      sheet.clear();
+    }
+  }
+  else {
+    sheet = ss.insertSheet(sheetName);
   }
 
-  sheet = ss.insertSheet(sheetName);
+  this.setSheetVersion(sheet, version);
 
   const referenceRangeName = this.openPositionsRangeName;
 
   let headers = [
     [
+      '',
       'Wallet',
-      'Crypto',
+      'Asset Type',
+      'Asset',
       'Holding Period',
       'Balance',
       'Cost Price',
@@ -31,73 +40,109 @@ CryptoTracker.prototype.openSummaryReport = function () {
       'Cost Basis',
       'Current Value',
       'Unrealized P/L',
-      'Unrealized P/L %',
-      'Crypto (chart)',
-      'Value (chart)'
-
+      'Unrealized P/L %'
     ]
   ];
 
   sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('A2:C').setNumberFormat('@');
-  sheet.getRange('D2:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('E2:F').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('G2:H').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('I2:I').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-  sheet.getRange('J2:J').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-  sheet.getRange('K2:K').setNumberFormat('@');
-  sheet.getRange('L2:L').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('A2:E').setNumberFormat('@');
+  sheet.getRange('F2:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('G2:H').setNumberFormat('#,##0.0000;(#,##0.0000)');
+  sheet.getRange('I2:J').setNumberFormat('#,##0.00;(#,##0.00)');
+  sheet.getRange('K2:K').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+  sheet.getRange('L2:L').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-  sheet.clearConditionalFormatRules();
-  this.addLongShortCondition(sheet, 'C3:C');
+  sheet.getRange('A2:A').setFontColor('#1155cc');
 
-  const formulas = [[
-    `IF(ISBLANK(INDEX(${referenceRangeName}, 1, 1)),,{
-IF(COUNT(QUERY(${referenceRangeName}, "SELECT M"))=0,
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col4), '      ', '       ', '        ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', '      ' '', '       ' '', '        ' ''"),
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''"));
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY CRYPTO", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT ' ', Col1, '  ', SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col1 ORDER BY Col1 OFFSET 1 LABEL ' ' '', '  ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY WALLET", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT Col2, ' ', '  ', '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY WALLET AND CRYPTO", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT Col2, Col1, ' ', SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2, Col1 ORDER BY Col2, Col1 OFFSET 1 LABEL ' ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY HOLDING PERIOD", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT ' ', '  ', Col7, '   ', '    ', '     ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col7 ORDER BY Col7 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY CRYPTO AND HOLDING PERIOD", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT ' ', Col1, Col7, SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col1, Col7 ORDER BY Col1, Col7 OFFSET 1 LABEL ' ' '', SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY WALLET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT Col2, ' ', Col7, '  ', '   ', '    ', SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2, Col7 ORDER BY Col2, Col7 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''");
-{"", "", "", "", "", "", "", "", "", ""};
-{"BY WALLET CRYPTO AND HOLDING PERIOD", "", "", "", "", "", "", "", "", ""};
-QUERY({{"", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, J, K, N, O, P, R")}, "SELECT Col2, Col1, Col7, SUM(Col3), SUM(Col4) / SUM(Col3), SUM(Col5) / SUM(Col3), SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col6) / SUM(Col4) GROUP BY Col2, Col1, Col7 ORDER BY Col2, Col1, Col7 OFFSET 1 LABEL SUM(Col3) '', SUM(Col4) / SUM(Col3) '', SUM(Col5) / SUM(Col3) '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col6) / SUM(Col4) ''")
-})`, , , , , , , , , ,
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT M"))=0,,QUERY(${referenceRangeName}, "SELECT G, SUM(O) GROUP BY G ORDER BY G LABEL SUM(O) ''"))`
-  ]];
+  this.addLongShortCondition(sheet, 'E3:E');
 
-  sheet.getRange('A2:K2').setFormulas(formulas);
+  const formula =
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT M"))=0,,
+{
+IF(COUNT(QUERY(${referenceRangeName}, "SELECT P"))=0,
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), '       ', '        ', '         ', '          ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', '        ' '', '         ' '', '          ' ''"),
+QUERY({QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''"));
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', '  ', Col2, '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2 ORDER BY Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', '  ', Col2, Col1, '   ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col1 ORDER BY Col2, Col1 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', Col3, '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3 ORDER BY Col3 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET AND ASSET TYPE", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', Col3, Col2, '  ', '   ', '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2 ORDER BY Col3, Col2 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET AND ASSET", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', Col3, Col2, Col1, '  ', SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1 ORDER BY Col3, Col2, Col1  OFFSET 1 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', '  ', '   ', '    ', Col8, '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col8 ORDER BY Col8 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', '  ', Col2, '   ', Col8, '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col8 ORDER BY Col2, Col8 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', '  ', Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col1, Col8 ORDER BY Col2, Col1, Col8 OFFSET 1 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', Col3, '  ', '   ', Col8, '    ', '     ', '      ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col8 ORDER BY Col3, Col8 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET, ASSET TYPE AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', Col3, Col2, '  ', Col8, '   ', '    ', '     ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col2, Col3, Col8 ORDER BY Col3, Col2, Col8 OFFSET 1 LABEL ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
+{"", "", "", "", "", "", "", "", "", "", "", ""};
+{"BY WALLET, ASSET AND HOLDING PERIOD", "", "", "", "", "", "", "", "", "", "", ""};
+QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT H, I, L, M, O, Q, R, T")}, "SELECT ' ', Col3, Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1, Col8 ORDER BY Col3, Col2, Col1, Col8 OFFSET 1 LABEL ' ' '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
+})`;
 
-  sheet.hideColumns(11, 2);
+  sheet.getRange('A2').setFormula(formula);
 
   this.trimColumns(sheet, 19);
 
-  let pieChartBuilder = sheet.newChart().asPieChart();
-  let chart = pieChartBuilder
-    .addRange(sheet.getRange('K2:L1000'))
-    .setNumHeaders(0)
-    .setTitle('Value')
-    .setPosition(1, 13, 30, 30)
+  let chartRange1 = ss.getRangeByName(this.chartRange1Name);
+  let chartRange2 = ss.getRangeByName(this.chartRange2Name);
+
+  let assetTypeValueChart = sheet.newChart().asPieChart()
+    .addRange(chartRange1)
+    .setNumHeaders(1)
+    .setTitle('Asset Type Value')
+    .setPosition(1, 16, 30, 30)
     .build();
 
-  sheet.insertChart(chart);
+  sheet.insertChart(assetTypeValueChart);
 
-  sheet.autoResizeColumns(1, 14);
+  let assetValueChart = sheet.newChart().asPieChart()
+    .addRange(chartRange2.offset(0, 1, chartRange1.getHeight(), 2))
+    .setNumHeaders(1)
+    .setTitle('Asset Value')
+    .setPosition(21, 16, 30, 30)
+    .build();
+
+  sheet.insertChart(assetValueChart);
+
+  let assetTypePLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange1.offset(0, 0, chartRange1.getHeight(), 1))
+    .addRange(chartRange1.offset(0, 2, chartRange1.getHeight(), 1))
+    .setNumHeaders(1)
+    .setTitle('Asset Type Unrealized P/L %')
+    .setPosition(40, 16, 30, 30)
+    .build();
+
+  sheet.insertChart(assetTypePLChart);
+
+  let assetPLChart = sheet.newChart().asColumnChart()
+    .addRange(chartRange2.offset(0, 1, chartRange2.getHeight(), 1))
+    .addRange(chartRange2.offset(0, 3, chartRange2.getHeight(), 1))
+    .setNumHeaders(1)
+    .setTitle('Asset Unrealized P/L %')
+    .setPosition(59, 16, 30, 30)
+    .build();
+
+  sheet.insertChart(assetPLChart);
+
+  sheet.autoResizeColumns(2, 11);
 };
