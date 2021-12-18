@@ -111,7 +111,6 @@ var LedgerRecord = class LedgerRecord {
      * @type {string}
      */
     this.lotMatching = lotMatching;
-
   }
 
   /**

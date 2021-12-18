@@ -60,7 +60,6 @@ AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnInd
     let range = sheet.getRange(rowIndex, columnIndex, 1, 1);
     ss.setCurrentCell(range);
     SpreadsheetApp.flush();
-
   }
 };
 
@@ -112,7 +111,6 @@ var ValidationError = class ValidationError extends CustomError {
      * @type {string}
      */
     this.columnName = columnName;
-
   }
 }
 
@@ -161,6 +159,5 @@ var ApiError = class ApiError extends CustomError {
   constructor(message) {
 
     super(message);
-
   }
 }

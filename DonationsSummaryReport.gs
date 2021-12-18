@@ -51,24 +51,24 @@ AssetTracker.prototype.donationsSummaryReport = function (sheetName = this.donat
   sheet.getRange('A2:A').setFontColor('#1155cc');
 
   const formula =
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT T WHERE S='Donation'"))=0,,
+    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT U WHERE N='Donation'"))=0,,
 {
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', SUM(Col5), SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', SUM(Col5), SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Donation'")}, "SELECT ' ', '  ', '   ', Col3, '    ', SUM(Col5), SUM(Col6) GROUP BY Col3 ORDER BY Col3 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', '  ', '   ', Col3, '    ', SUM(Col5), SUM(Col6) GROUP BY Col3 ORDER BY Col3 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Donation'")}, "SELECT ' ', '  ', Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col2, Col3 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', '  ', Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col2, Col3 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY YEAR", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Donation'")}, "SELECT ' ', Col1, '  ', '   ', '    ', SUM(Col5), SUM(Col6) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', Col1, '  ', '   ', '    ', SUM(Col5), SUM(Col6) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY YEAR AND ASSET TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Donation'")}, "SELECT ' ', Col1, '  ', Col3, '   ', SUM(Col5), SUM(Col6) GROUP BY Col1, Col3 ORDER BY Col1, Col3 LABEL ' ' '', Col1 '', '  ' '', Col3 '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', Col1, '  ', Col3, '   ', SUM(Col5), SUM(Col6) GROUP BY Col1, Col3 ORDER BY Col1, Col3 LABEL ' ' '', Col1 '', '  ' '', Col3 '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY YEAR AND ASSET", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(L), H, I, T, W, X WHERE S='Donation'")}, "SELECT ' ', Col1, Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 LABEL ' ' '', Col1 '', Col2 '', Col3 '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''")
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', Col1, Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 LABEL ' ' '', Col1 '', Col2 '', Col3 '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''")
 })`;
 
   sheet.getRange('A2').setFormula(formula);

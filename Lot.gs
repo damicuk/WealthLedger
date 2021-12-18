@@ -15,8 +15,10 @@ var Lot = class Lot {
    * @param {number} creditAmount - The amount of asset credited.
    * @param {number} creditFee - The fee in credit asset units.
    * @param {string} walletName - The name of the wallet (or exchange) in which the transaction took place.
+   * @param {string} action - The action in the ledger sheet that gave rise to the lot.
+   * @param {number} rowIndex - The index of the row in the ledger sheet that gave rise to the lot.
    */
-  constructor(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, walletName) {
+  constructor(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, walletName, action, rowIndex) {
 
     /**
      * The date of the transaction.
@@ -72,6 +74,17 @@ var Lot = class Lot {
      */
     this.walletName = walletName;
 
+    /**
+     * The action in the ledger sheet that gave rise to the lot.
+     * @type {string}
+     */
+    this.action = action;
+
+    /**
+     * The index of the row in the ledger sheet that gave rise to the lot.
+     * @type {number}
+     */
+    this.rowIndex = rowIndex;
   }
 
   /**
@@ -137,8 +150,6 @@ var Lot = class Lot {
    */
   split(subunits) {
 
-    let splitLots = [];
-
     let debitAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.debitAmountSubunits);
     let debitFeeSubunits = AssetTracker.round((subunits / this.subunits) * this.debitFeeSubunits);
 
@@ -154,9 +165,10 @@ var Lot = class Lot {
       this.creditAsset,
       creditAmountSubunits / this.creditAsset.subunits,
       creditFeeSubunits / this.creditAsset.subunits,
-      this.walletName);
-
-    splitLots.push(lot1);
+      this.walletName,
+      this.action,
+      this.rowIndex
+    );
 
     let lot2 = new Lot(
       this.date,
@@ -167,12 +179,12 @@ var Lot = class Lot {
       this.creditAsset,
       (this.creditAmountSubunits - lot1.creditAmountSubunits) / this.creditAsset.subunits,
       (this.creditFeeSubunits - lot1.creditFeeSubunits) / this.creditAsset.subunits,
-      this.walletName);
+      this.walletName,
+      this.action,
+      this.rowIndex
+    );
 
-    splitLots.push(lot2);
-
-    return splitLots;
-
+    return [lot1, lot2];
   }
 
   /**
@@ -191,6 +203,9 @@ var Lot = class Lot {
       this.creditAsset,
       this.creditAmountSubunits / this.creditAsset.subunits,
       this.creditFeeSubunits / this.creditAsset.subunits,
-      this.walletName);
+      this.walletName,
+      this.action,
+      this.rowIndex
+    );
   }
 };

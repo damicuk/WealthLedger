@@ -28,7 +28,6 @@ var FiatAccount = class FiatAccount {
      * @type {number}
      */
     this.subunits = 0;
-
   }
 
   /**

@@ -89,11 +89,11 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
   sheet.getRange('Q4:Q').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
 
   const formulas = [[
-    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT I, SUM(Q), SUM(R) / SUM(O) GROUP BY I ORDER BY I LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , ,
-    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT P"))=0,,QUERY(${referenceRangeName1}, "SELECT I, H, SUM(Q), SUM(R) / SUM(O) GROUP BY I, H ORDER BY I, H LABEL SUM(Q) '', SUM(R) / SUM(O)  ''"))`, , , ,
-    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT T WHERE S='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT I, SUM(X), SUM(Y) WHERE S='Trade' GROUP BY I ORDER BY I LABEL SUM(X) '', SUM(Y) ''"))`, , ,
-    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT T WHERE S='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT I, H, SUM(X), SUM(Y) WHERE S='Trade' GROUP BY I, H ORDER BY I, H LABEL SUM(X) '', SUM(Y) ''"))`, , , ,
-    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT T WHERE S='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(L), SUM(X), SUM(Y) WHERE YEAR(L)>"&YEAR(TODAY())-5&" AND S='Trade' GROUP BY YEAR(L) ORDER BY YEAR(L) LABEL YEAR(L) '', SUM(X) '', SUM(Y) ''"))`
+    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0,,QUERY(${referenceRangeName1}, "SELECT J, SUM(R), SUM(S) / SUM(P) GROUP BY J ORDER BY J LABEL SUM(R) '', SUM(S) / SUM(P)  ''"))`, , ,
+    `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0,,QUERY(${referenceRangeName1}, "SELECT J, I, SUM(R), SUM(S) / SUM(P) GROUP BY J, I ORDER BY J, I LABEL SUM(R) '', SUM(S) / SUM(P)  ''"))`, , , ,
+    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT U WHERE N='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT J, SUM(Y), SUM(Z) WHERE N='Trade' GROUP BY J ORDER BY J LABEL SUM(Y) '', SUM(Z) ''"))`, , ,
+    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT U WHERE N='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT J, I, SUM(Y), SUM(Z) WHERE N='Trade' GROUP BY J, I ORDER BY J, I LABEL SUM(Y) '', SUM(Z) ''"))`, , , ,
+    `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT U WHERE N='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(M), SUM(Y), SUM(Z) WHERE YEAR(M)>"&YEAR(TODAY())-5&" AND N='Trade' GROUP BY YEAR(M) ORDER BY YEAR(M) LABEL YEAR(M) '', SUM(Y) '', SUM(Z) ''"))`
   ]];
 
   sheet.getRange('A4:O4').setFormulas(formulas);

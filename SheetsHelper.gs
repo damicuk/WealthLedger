@@ -233,6 +233,36 @@ AssetTracker.prototype.trimColumns = function (sheet, neededColumns) {
 };
 
 /**
+ * Writes a column of links to rows of the ledger sheet.
+ * @param {Spreadsheet} ss - Spreadsheet object e.g. from SpreadsheetApp.getActive().
+ * @param {Array<string,number>} linkTable - An table with the link texts and the row indexes of the ledger sheet to link to.
+ * @param {string} rangeName - The name of the named range where the links are to be writen.
+ * @param {number} columnIndex - The index of the column of the named range where the links are to be writen.
+ * If not provided it resizes to the size of the data keeping at lease one non-frozen column.
+ */
+AssetTracker.prototype.writeLedgerLinks = function (ss, linkTable, rangeName, columnIndex) {
+
+  let ledgerSheetId = ss.getSheetByName(this.ledgerSheetName).getSheetId();
+  let richTextValues = [];
+  for (let linkRow of linkTable) {
+    let linkText = linkRow[0];
+    let rowIndex = linkRow[1];
+
+    richTextValue = SpreadsheetApp.newRichTextValue()
+      .setText(linkText)
+      .setLinkUrl(`#gid=${ledgerSheetId}&range=A${rowIndex}:M${rowIndex}`)
+      .build();
+
+    richTextValues.push([richTextValue]);
+
+  }
+
+  let range = ss.getRangeByName(rangeName);
+  range = range.offset(0, columnIndex, range.getHeight(), 1);
+  range.setRichTextValues(richTextValues);
+}
+
+/**
  * Adds specific conditional text color formatting to a range of cells in a sheet.
  * Used to format the action column of the ledger sheet.
  * @param {Sheet} sheet - The sheet containing the range of cells to format.

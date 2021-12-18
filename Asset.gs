@@ -35,7 +35,6 @@ var Asset = class Asset {
      * @type {number}
      */
     this.decimalPlaces = decimalPlaces;
-
   }
 
   /**

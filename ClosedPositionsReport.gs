@@ -15,13 +15,16 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
 
     let headers = [
       [
-        'Buy Debit', , , , , , ,
-        'Buy Credit', , , ,
-        'Sell Credit', , , , , , , ,
+        , ,
+        'Buy Debit', , , , , ,
+        'Buy Credit', , , , ,
+        , ,
+        'Sell Credit', , , , ,
         'Calculations', , , , , , , ,
       ],
       [
         'Date Time',
+        'Action',
         'Asset',
         'Asset Type',
         'Ex Rate',
@@ -33,13 +36,13 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
         'Amount',
         'Fee',
         'Date Time',
+        'Action',
         'Asset',
         'Asset Type',
         'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
-        'Action',
         'Balance',
         'Cost Price',
         'Sell Price',
@@ -51,55 +54,60 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
       ]
     ];
 
-    sheet.getRange('A1:AA2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:AB2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(2);
 
-    sheet.getRange('A1:G2').setBackgroundColor('#ead1dc');
-    sheet.getRange('H1:K2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('L1:S2').setBackgroundColor('#d9ead3');
-    sheet.getRange('T1:AA2').setBackgroundColor('#c9daf8');
+    sheet.getRange('A1:B2').setBackgroundColor('#fce5cd');
+    sheet.getRange('C1:H2').setBackgroundColor('#ead1dc');
+    sheet.getRange('I1:L2').setBackgroundColor('#d0e0e3');
+    sheet.getRange('M1:N2').setBackgroundColor('#fce5cd');
+    sheet.getRange('O1:T2').setBackgroundColor('#d9ead3');
+    sheet.getRange('U1:AB2').setBackgroundColor('#c9daf8');
 
-    sheet.getRange('A1:G1').mergeAcross();
-    sheet.getRange('H1:K1').mergeAcross();
-    sheet.getRange('L1:S1').mergeAcross();
-    sheet.getRange('T1:AA1').mergeAcross();
+    sheet.getRange('A1:B1').mergeAcross();
+    sheet.getRange('C1:H1').mergeAcross();
+    sheet.getRange('I1:L1').mergeAcross();
+    sheet.getRange('M1:N1').mergeAcross();
+    sheet.getRange('O1:T1').mergeAcross();
+    sheet.getRange('U1:AB1').mergeAcross();
 
     sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('B3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('G3:I').setNumberFormat('@');
-    sheet.getRange('J3:J').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('L3:L').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('M3:N').setNumberFormat('@');
-    sheet.getRange('O3:O').setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange('P3:P').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('Q3:Q').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('R3:S').setNumberFormat('@');
+    sheet.getRange('B3:D').setNumberFormat('@');
+    sheet.getRange('E3:E').setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange('F3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('G3:G').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('H3:J').setNumberFormat('@');
+    sheet.getRange('K3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('L3:L').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('M3:M').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sheet.getRange('N3:P').setNumberFormat('@');
+    sheet.getRange('Q3:Q').setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange('R3:R').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('S3:S').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('T3:T').setNumberFormat('@');
 
-    sheet.getRange('T3:T').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('U3:X').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('Y3:Y').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('Z3:Z').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange('AA3:AA').setNumberFormat('@');
+    sheet.getRange('U3:U').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('V3:Y').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('Z3:Z').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange('AA3:AA').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange('AB3:AB').setNumberFormat('@');
 
-    this.addLongShortCondition(sheet, 'AA3:AA');
-    this.addActionCondtion(sheet, 'S3:S');
+    this.addActionCondtion(sheet, 'B3:B');
+    this.addActionCondtion(sheet, 'N3:N');
+    this.addLongShortCondition(sheet, 'AB3:AB');
 
     const formulas = [[
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(J3:J-K3:K, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(T3:T=0,,W3:W/T3:T), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(T3:T=0,,X3:X/T3:T), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(D3:D, ROUND((E3:E+F3:F)*D3:D, 2), E3:E+F3:F), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(O3:O, ROUND((P3:P-Q3:Q)*O3:O, 2), P3:P-Q3:Q), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(X3:X-W3:W, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(W3:W=0,,Y3:Y/W3:W), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, L3:L, "Y") > 1)+(((DATEDIF(A3:A, L3:L, "Y") = 1)*(DATEDIF(A3:A, L3:L, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(U3:U=0,,X3:X/U3:U), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(U3:U=0,,Y3:Y/U3:U), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(E3:E, ROUND((F3:F+G3:G)*E3:E, 2), F3:F+G3:G), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(Q3:Q, ROUND((R3:R-S3:S)*Q3:Q, 2), R3:R-S3:S), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(Y3:Y-X3:X, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(X3:X=0,,Z3:Z/X3:X), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, M3:M, "Y") > 1)+(((DATEDIF(A3:A, M3:M, "Y") = 1)*(DATEDIF(A3:A, M3:M, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('T3:AA3').setFormulas(formulas);
+    sheet.getRange('U3:AB3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
@@ -107,8 +115,26 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
 
   let dataTable = this.getClosedPositionsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.closedPositionsRangeName, 2, 19, 8);
+  let linkColumnIndex1 = 1;
+  let linkColumnIndex2 = 13;
 
+  let linkTable1 = [];
+  let linkTable2 = [];
+
+  for (let row of dataTable) {
+
+    //First splice off the last column (closed lot)
+    linkTable2.push([row[linkColumnIndex2], row.splice(-1, 1)]);
+
+    //Then splice the next last column (lot)
+    linkTable1.push([row[linkColumnIndex1], row.splice(-1, 1)]);
+  }
+
+  this.writeTable(ss, sheet, dataTable, this.closedPositionsRangeName, 2, 20, 8);
+
+  this.writeLedgerLinks(ss, linkTable1, this.closedPositionsRangeName, linkColumnIndex1);
+
+  this.writeLedgerLinks(ss, linkTable2, this.closedPositionsRangeName, linkColumnIndex2);
 };
 
 /**
@@ -136,6 +162,7 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
     let creditAssetTypeBuy = lot.creditAsset.assetType;
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
+    let lotAction = lot.action;
 
     let dateSell = closedLot.date;
     let creditAssetSell = closedLot.creditAsset.ticker;
@@ -144,11 +171,15 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;
-    let action = closedLot.action;
+    let closedLotAction = closedLot.action;
+
+    let lotRowIndex = lot.rowIndex;
+    let closedLotRowIndex = closedLot.rowIndex;
 
     table.push([
 
       dateBuy,
+      lotAction,
       debitAssetBuy,
       debitAssetTypeBuy,
       debitExRateBuy,
@@ -162,16 +193,19 @@ AssetTracker.prototype.getClosedPositionsTable = function () {
       creditFeeBuy,
 
       dateSell,
+      closedLotAction,
       creditAssetSell,
       creditAssetTypeSell,
       creditExRateSell,
       creditAmountSell,
       creditFeeSell,
       walletSell,
-      action
+
+      lotRowIndex,
+      closedLotRowIndex
     ]);
   }
 
-  return this.sortTable(table, 11);
+  return this.sortTable(table, 12);
 };
 
