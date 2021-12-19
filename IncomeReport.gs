@@ -39,6 +39,8 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
     sheet.getRange('J2:J').setNumberFormat('#,##0.00;(#,##0.00)');
 
     this.addActionCondtion(sheet, 'B2:B');
+    this.addAssetCondition(sheet, 'C3:C');
+    this.addAssetCondition(sheet, 'E3:E');
 
     const formulas = [[
       `IF(ISBLANK(A2),,ArrayFormula(FILTER(IF(ISBLANK(G2:G),H2:H,ROUND(G2:G*H2:H, 2)), LEN(A2:A))))`
@@ -52,16 +54,27 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
 
   let dataTable = this.getIncomeTable();
 
-  let linkColumnIndex = 1;
-  let linkTable = [];
+  let actionColumnIndex = 1;
+  let asset1ColumnIndex = 2;
+  let asset2ColumnIndex = 4;
+
+  let actionLinkTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
 
   for (let row of dataTable) {
-    linkTable.push([row[linkColumnIndex], row.splice(-1, 1)]);
+    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[asset1ColumnIndex] !== null ? row[asset1ColumnIndex] : '', row.splice(-1, 1)[0]]);
+    actionLinkTable.push([row[actionColumnIndex], row.splice(-1, 1)[0]]);
   }
 
   this.writeTable(ss, sheet, dataTable, this.incomeRangeName, 1, 9, 1);
 
-  this.writeLedgerLinks(ss, linkTable, this.incomeRangeName, linkColumnIndex);
+  this.writeLinks(ss, actionLinkTable, this.incomeRangeName, actionColumnIndex, this.ledgerSheetName, 'A', 'M');
+
+  this.writeLinks(ss, asset1LinkTable, this.incomeRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset2LinkTable, this.incomeRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
 };
 
 
@@ -84,7 +97,9 @@ AssetTracker.prototype.getIncomeTable = function () {
     let exRate = incomeLot.incomeAsset === this.fiatBase ? '' : incomeLot.exRate;
     let amount = incomeLot.amount;
     let wallet = incomeLot.walletName;
-    let rowIndex = incomeLot.rowIndex;
+    let actionRowIndex = incomeLot.rowIndex;
+    let asset1RowIndex = incomeLot.sourceAsset ? incomeLot.sourceAsset.rowIndex : null;
+    let asset2RowIndex = incomeLot.incomeAsset.rowIndex;
 
     table.push([
 
@@ -97,7 +112,9 @@ AssetTracker.prototype.getIncomeTable = function () {
       exRate,
       amount,
       wallet,
-      rowIndex
+      actionRowIndex,
+      asset1RowIndex,
+      asset2RowIndex
     ]);
   }
 

@@ -9,8 +9,9 @@ var Asset = class Asset {
    * @param {string} assetType - The asset type of the asset.
    * @param {boolean} isFiatBase - Whether the asset is fiat base.
    * @param {number} decimalPlaces - The number of decimal places of the asset.
+   * @param {number} rowIndex - The index of the row in the assets sheet.
    */
-  constructor(ticker, assetType, isFiatBase, decimalPlaces) {
+  constructor(ticker, assetType, isFiatBase, decimalPlaces, rowIndex) {
 
     /**
      * The ticker of the asset.
@@ -35,6 +36,12 @@ var Asset = class Asset {
      * @type {number}
      */
     this.decimalPlaces = decimalPlaces;
+
+    /**
+    * The index of the row in the assets sheet.
+    * @type {number}
+    */
+    this.rowIndex = rowIndex;
   }
 
   /**

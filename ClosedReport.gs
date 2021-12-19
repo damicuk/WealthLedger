@@ -93,7 +93,10 @@ AssetTracker.prototype.closedReport = function (sheetName = this.closedReportNam
     sheet.getRange('AB3:AB').setNumberFormat('@');
 
     this.addActionCondtion(sheet, 'B3:B');
+    this.addAssetCondition(sheet, 'C3:C');
+    this.addAssetCondition(sheet, 'I3:I');
     this.addActionCondtion(sheet, 'N3:N');
+    this.addAssetCondition(sheet, 'O3:O');
     this.addLongShortCondition(sheet, 'AB3:AB');
 
     const formulas = [[
@@ -115,26 +118,38 @@ AssetTracker.prototype.closedReport = function (sheetName = this.closedReportNam
 
   let dataTable = this.getClosedTable();
 
-  let linkColumnIndex1 = 1;
-  let linkColumnIndex2 = 13;
+  let action1ColumnIndex = 1;
+  let action2ColumnIndex = 13;
+  let asset1ColumnIndex = 2;
+  let asset2ColumnIndex = 8;
+  let asset3ColumnIndex = 14;
 
-  let linkTable1 = [];
-  let linkTable2 = [];
+  let action1LinkTable = [];
+  let action2LinkTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
+  let asset3LinkTable = [];
 
   for (let row of dataTable) {
 
-    //First splice off the last column (closed lot)
-    linkTable2.push([row[linkColumnIndex2], row.splice(-1, 1)]);
-
-    //Then splice the next last column (lot)
-    linkTable1.push([row[linkColumnIndex1], row.splice(-1, 1)]);
+    asset3LinkTable.push([row[asset3ColumnIndex], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
+    action2LinkTable.push([row[action2ColumnIndex], row.splice(-1, 1)[0]]);
+    action1LinkTable.push([row[action1ColumnIndex], row.splice(-1, 1)[0]]);
   }
 
   this.writeTable(ss, sheet, dataTable, this.closedRangeName, 2, 20, 8);
 
-  this.writeLedgerLinks(ss, linkTable1, this.closedRangeName, linkColumnIndex1);
+  this.writeLinks(ss, action1LinkTable, this.closedRangeName, action1ColumnIndex, this.ledgerSheetName, 'A', 'M');
 
-  this.writeLedgerLinks(ss, linkTable2, this.closedRangeName, linkColumnIndex2);
+  this.writeLinks(ss, action2LinkTable, this.closedRangeName, action2ColumnIndex, this.ledgerSheetName, 'A', 'M');
+
+  this.writeLinks(ss, asset1LinkTable, this.closedRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset2LinkTable, this.closedRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset3LinkTable, this.closedRangeName, asset3ColumnIndex, this.assetsSheetName, 'A', 'F');
 };
 
 /**
@@ -173,8 +188,11 @@ AssetTracker.prototype.getClosedTable = function () {
     let walletSell = closedLot.walletName;
     let closedLotAction = closedLot.action;
 
-    let lotRowIndex = lot.rowIndex;
-    let closedLotRowIndex = closedLot.rowIndex;
+    let action1RowIndex = lot.rowIndex;
+    let action2RowIndex = closedLot.rowIndex;
+    let asset1RowIndex = lot.debitAsset.rowIndex;
+    let asset2RowIndex = lot.creditAsset.rowIndex;
+    let asset3RowIndex = closedLot.creditAsset.rowIndex;
 
     table.push([
 
@@ -201,8 +219,11 @@ AssetTracker.prototype.getClosedTable = function () {
       creditFeeSell,
       walletSell,
 
-      lotRowIndex,
-      closedLotRowIndex
+      action1RowIndex,
+      action2RowIndex,
+      asset1RowIndex,
+      asset2RowIndex,
+      asset3RowIndex
     ]);
   }
 

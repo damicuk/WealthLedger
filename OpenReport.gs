@@ -76,7 +76,9 @@ AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
     sheet.getRange('U3:U').setNumberFormat('@');
 
     this.addActionCondtion(sheet, 'B3:B');
-    this.addLongShortCondition(sheet, 'T3:T');
+    this.addAssetCondition(sheet, 'C3:C');
+    this.addAssetCondition(sheet, 'I3:I');
+    this.addLongShortCondition(sheet, 'U3:U');
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
@@ -97,16 +99,27 @@ AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
 
   let dataTable = this.getOpenTable();
 
-  let linkColumnIndex = 1;
-  let linkTable = [];
+  let actionColumnIndex = 1;
+  let asset1ColumnIndex = 2;
+  let asset2ColumnIndex = 8;
+
+  let actionLinkTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
 
   for (let row of dataTable) {
-    linkTable.push([row[linkColumnIndex], row.splice(-1, 1)]);
+    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
+    actionLinkTable.push([row[actionColumnIndex], row.splice(-1, 1)[0]]);
   }
 
   this.writeTable(ss, sheet, dataTable, this.openRangeName, 2, 13, 8);
 
-  this.writeLedgerLinks(ss, linkTable, this.openRangeName, linkColumnIndex);
+  this.writeLinks(ss, actionLinkTable, this.openRangeName, actionColumnIndex, this.ledgerSheetName, 'A', 'M');
+
+  this.writeLinks(ss, asset1LinkTable, this.openRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset2LinkTable, this.openRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
 };
 
 /**
@@ -139,7 +152,9 @@ AssetTracker.prototype.getOpenTable = function () {
         let creditFee = lot.creditFee;
         let currentWallet = wallet.name;
 
-        let rowIndex = lot.rowIndex;
+        let actionRowIndex = lot.rowIndex;
+        let asset1RowIndex = lot.debitAsset.rowIndex;
+        let asset2RowIndex = lot.creditAsset.rowIndex;
 
         table.push([
 
@@ -158,7 +173,9 @@ AssetTracker.prototype.getOpenTable = function () {
           creditFee,
           currentWallet,
 
-          rowIndex
+          actionRowIndex,
+          asset1RowIndex,
+          asset2RowIndex
         ]);
       }
     }

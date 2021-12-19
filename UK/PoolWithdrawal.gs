@@ -48,8 +48,6 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
    */
   split(subunits) {
 
-    let poolWithdrawals = [];
-
     let debitAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.debitAmountSubunits);
     let debitFeeSubunits = subunits - debitAmountSubunits;
 
@@ -64,9 +62,8 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
       this.creditAsset,
       creditAmountSubunits / this.creditAsset.subunits,
       creditFeeSubunits / this.creditAsset.subunits,
-      this.action);
-
-    poolWithdrawals.push(poolWithdrawal1);
+      this.action
+    );
 
     let poolWithdrawal2 = new PoolWithdrawal(
       this.date,
@@ -76,10 +73,9 @@ var PoolWithdrawal = class PoolWithdrawal extends PoolTransaction {
       this.creditAsset,
       (this.creditAmountSubunits - poolWithdrawal1.creditAmountSubunits) / this.creditAsset.subunits,
       (this.creditFeeSubunits - poolWithdrawal1.creditFeeSubunits) / this.creditAsset.subunits,
-      this.action);
+      this.action
+    );
 
-    poolWithdrawals.push(poolWithdrawal2);
-
-    return poolWithdrawals;
+    return [poolWithdrawal1, poolWithdrawal2];
   }
 };

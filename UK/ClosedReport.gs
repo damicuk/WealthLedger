@@ -83,6 +83,9 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
     sheet.getRange('V3:V').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
     this.addPoolCondition(sheet, 'A3:A');
+    this.addAssetCondition(sheet, 'B3:B');
+    this.addAssetCondition(sheet, 'F3:F');
+    this.addAssetCondition(sheet, 'K3:K');
     this.addActionCondtion(sheet, 'O3:O');
 
     const formulas = [[
@@ -103,8 +106,28 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
 
   let dataTable = this.getUKClosedTable();
 
+  let asset1ColumnIndex = 1;
+  let asset2ColumnIndex = 5;
+  let asset3ColumnIndex = 10;
+
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
+  let asset3LinkTable = [];
+
+  for (let row of dataTable) {
+
+    asset3LinkTable.push([row[asset3ColumnIndex], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
+  }
+
   this.writeTable(ss, sheet, dataTable, this.ukClosedRangeName, 2, 15, 7);
 
+  this.writeLinks(ss, asset1LinkTable, this.ukClosedRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset2LinkTable, this.ukClosedRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset3LinkTable, this.ukClosedRangeName, asset3ColumnIndex, this.assetsSheetName, 'A', 'F');
 };
 
 /**
@@ -141,6 +164,10 @@ AssetTracker.prototype.getUKClosedTable = function () {
 
       let action = poolWithdrawal.action;
 
+      let asset1RowIndex = poolDeposit.debitAsset.rowIndex;
+      let asset2RowIndex = poolDeposit.creditAsset.rowIndex;
+      let asset3RowIndex = poolWithdrawal.creditAsset.rowIndex;
+
       table.push([
 
         dateBuy,
@@ -160,7 +187,11 @@ AssetTracker.prototype.getUKClosedTable = function () {
         creditAmountSell,
         creditFeeSell,
 
-        action
+        action,
+
+        asset1RowIndex,
+        asset2RowIndex,
+        asset3RowIndex
       ]);
     }
   }

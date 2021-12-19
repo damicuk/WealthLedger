@@ -6,6 +6,7 @@
  */
 AssetTracker.prototype.processAssets = function (assetRecords) {
 
+  let rowIndex = this.assetsHeaderRows + 1;
   for (let assetRecord of assetRecords) {
 
     let assetType;
@@ -22,7 +23,7 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
       }
     }
 
-    let asset = new Asset(assetRecord.ticker, assetType, isFiatBase, assetRecord.decimalPlaces);
+    let asset = new Asset(assetRecord.ticker, assetType, isFiatBase, assetRecord.decimalPlaces, rowIndex++);
 
     if (isFiatBase) {
       this.fiatBase = asset;
@@ -76,7 +77,7 @@ AssetTracker.prototype.processLedger = function (ledgerRecords) {
  * Processes a ledger record.
  * It treats the ledger record as an instuction and simulates the action specified.
  * @param {LedgerRecord} ledgerRecord - The ledger record to process.
- * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
+ * @param {number} rowIndex - The index of the row in the ledger sheet.
  */
 AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 

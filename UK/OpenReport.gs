@@ -51,7 +51,6 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     sheet.getRange('E1:H1').mergeAcross();
     sheet.getRange('I1:O1').mergeAcross();
 
-
     sheet.getRange('A3:B').setNumberFormat('@');
     sheet.getRange('C3:C').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
@@ -62,6 +61,9 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     sheet.getRange('J3:M').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('N3:N').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
     sheet.getRange('O3:O').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+
+    this.addAssetCondition(sheet, 'A3:A');
+    this.addAssetCondition(sheet, 'E3:E');
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(G3:G-H3:H, LEN(A3:A)))))`,
@@ -81,8 +83,22 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
 
   let dataTable = this.getUKOpenTable();
 
+  let asset1ColumnIndex = 0;
+  let asset2ColumnIndex = 4;
+
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
+
+  for (let row of dataTable) {
+    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
+  }
+
   this.writeTable(ss, sheet, dataTable, this.ukOpenRangeName, 2, 8, 7);
 
+  this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
 };
 
 /**
@@ -111,6 +127,9 @@ AssetTracker.prototype.getUKOpenTable = function () {
       let creditAmount = poolDeposit.creditAmount;
       let creditFee = poolDeposit.creditFee;
 
+      let asset1RowIndex = poolDeposit.debitAsset.rowIndex;
+      let asset2RowIndex = poolDeposit.creditAsset.rowIndex;
+
       table.push([
 
         debitAsset,
@@ -120,7 +139,9 @@ AssetTracker.prototype.getUKOpenTable = function () {
         creditAsset,
         creditAssetType,
         creditAmount,
-        creditFee
+        creditFee,
+        asset1RowIndex,
+        asset2RowIndex
       ]);
 
     }

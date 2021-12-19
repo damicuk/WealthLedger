@@ -238,11 +238,13 @@ AssetTracker.prototype.trimColumns = function (sheet, neededColumns) {
  * @param {Array<string,number>} linkTable - An table with the link texts and the row indexes of the ledger sheet to link to.
  * @param {string} rangeName - The name of the named range where the links are to be writen.
  * @param {number} columnIndex - The index of the column of the named range where the links are to be writen.
- * If not provided it resizes to the size of the data keeping at lease one non-frozen column.
+ * @param {string} sheetName - The name of the sheet to link.
+ * @param {string} firstColumn - The first column of the link A1 notation.
+ * @param {string} lastColumn - The last column of the link A1 notation.
  */
-AssetTracker.prototype.writeLedgerLinks = function (ss, linkTable, rangeName, columnIndex) {
+AssetTracker.prototype.writeLinks = function (ss, linkTable, rangeName, columnIndex, sheetName, firstColumn, lastColumn) {
 
-  let ledgerSheetId = ss.getSheetByName(this.ledgerSheetName).getSheetId();
+  let ledgerSheetId = ss.getSheetByName(sheetName).getSheetId();
   let richTextValues = [];
   for (let linkRow of linkTable) {
     let linkText = linkRow[0];
@@ -250,11 +252,10 @@ AssetTracker.prototype.writeLedgerLinks = function (ss, linkTable, rangeName, co
 
     richTextValue = SpreadsheetApp.newRichTextValue()
       .setText(linkText)
-      .setLinkUrl(`#gid=${ledgerSheetId}&range=A${rowIndex}:M${rowIndex}`)
+      .setLinkUrl(`#gid=${ledgerSheetId}&range=${firstColumn}${rowIndex}:${lastColumn}${rowIndex}`)
       .build();
 
     richTextValues.push([richTextValue]);
-
   }
 
   let range = ss.getRangeByName(rangeName);
@@ -325,5 +326,26 @@ AssetTracker.prototype.addLongShortCondition = function (sheet, a1Notation) {
   let rules = sheet.getConditionalFormatRules();
   rules.push(shortRule);
   rules.push(longRule);
+  sheet.setConditionalFormatRules(rules);
+};
+
+/**
+ * Adds specific conditional text color formatting to a range of cells in a sheet.
+ * Used to format the long / short columns in the reports sheets.
+ * @param {Sheet} sheet - The sheet containing the range of cells to format.
+ * @param {string} a1Notation - The A1 notation used to specify the range of cells to be formatted.
+ */
+AssetTracker.prototype.addAssetCondition = function (sheet, a1Notation) {
+
+  let range = sheet.getRange(a1Notation);
+
+  let fiatBaseRule = SpreadsheetApp.newConditionalFormatRule()
+    .whenTextEqualTo(this.fiatBase.ticker)
+    .setFontColor("#34a853")
+    .setRanges([range])
+    .build();
+
+  let rules = sheet.getConditionalFormatRules();
+  rules.push(fiatBaseRule);
   sheet.setConditionalFormatRules(rules);
 };

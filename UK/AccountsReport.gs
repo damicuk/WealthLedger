@@ -43,6 +43,8 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
     sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange('E3:F').setNumberFormat('#,##0.00;(#,##0.00)');
 
+    this.addAssetCondition(sheet, 'B3:B');
+
     const formulas = [[
       `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(B3:B, QUERY(${referenceRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
       `ArrayFormula(IF(ISBLANK(E3:E),,FILTER(ROUND(D3:D*E3:E, 2), LEN(A3:A))))`
@@ -56,8 +58,17 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
 
   let dataTable = this.getUKAccountsTable();
 
+  let assetColumnIndex = 1;
+  let assetLinkTable = [];
+
+  for (let row of dataTable) {
+
+    assetLinkTable.push([row[assetColumnIndex], row.splice(-1, 1)[0]]);
+  }
+
   this.writeTable(ss, sheet, dataTable, this.ukAccountsRangeName, 2, 4, 2);
 
+  this.writeLinks(ss, assetLinkTable, this.ukAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
 };
 
 /**
@@ -81,13 +92,15 @@ AssetTracker.prototype.getUKAccountsTable = function () {
 
         let ticker = assetAccount.ticker;
         let assetType = assetAccount.asset.assetType;
+        let assetRowIndex = assetAccount.asset.rowIndex;
 
         table.push([
 
           walletName,
           ticker,
           assetType,
-          balance
+          balance,
+          assetRowIndex
         ]);
 
       }
