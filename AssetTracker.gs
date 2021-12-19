@@ -101,8 +101,8 @@ var AssetTracker = class AssetTracker {
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
     this.fiatAccountsRangeName = 'FiatAccounts';
 
-    this.openPositionsReportName = 'Open Positions Report';
-    this.closedPositionsReportName = 'Closed Positions Report';
+    this.openReportName = 'Open Report';
+    this.closedReportName = 'Closed Report';
     this.incomeReportName = 'Income Report';
     this.chartsDataSheetName = "Charts Data";
     this.openSummaryReportName = 'Open Summary Report';
@@ -112,8 +112,8 @@ var AssetTracker = class AssetTracker {
     this.walletsReportName = 'Wallets Report';
 
     this.defaultReportNames = [
-      this.openPositionsReportName,
-      this.closedPositionsReportName,
+      this.openReportName,
+      this.closedReportName,
       this.incomeReportName,
       this.chartsDataSheetName,
       this.openSummaryReportName,
@@ -124,8 +124,8 @@ var AssetTracker = class AssetTracker {
     ];
 
     this.assetsRangeName = 'Assets';
-    this.openPositionsRangeName = 'OpenPositions';
-    this.closedPositionsRangeName = 'ClosedPositions';
+    this.openRangeName = 'Open';
+    this.closedRangeName = 'Closed';
     this.incomeRangeName = 'Income';
 
     this.chartRange1Name = 'Chart1';
@@ -134,10 +134,10 @@ var AssetTracker = class AssetTracker {
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
 
-    this.ukOpenPositionsReportName = 'UK Open Positions Report';
-    this.ukAssetAccountsReportName = 'UK Asset Accounts Report';
-    this.ukClosedPositionsReportName = 'UK Closed Positions Report';
+    this.ukOpenReportName = 'UK Open Report';
+    this.ukClosedReportName = 'UK Closed Report';
     this.ukIncomeReportName = 'UK Income Report';
+    this.ukAccountsReportName = 'UK Accounts Report';
     this.ukChartsDataSheetName = "UK Charts Data";
     this.ukOpenSummaryReportName = "UK Open Summary Report";
     this.ukClosedSummaryReportName = "UK Closed Summary Report";
@@ -146,10 +146,10 @@ var AssetTracker = class AssetTracker {
     this.ukWalletsReportName = 'UK Wallets Report';
 
     this.ukReportNames = [
-      this.ukOpenPositionsReportName,
-      this.ukAssetAccountsReportName,
-      this.ukClosedPositionsReportName,
+      this.ukOpenReportName,
+      this.ukClosedReportName,
       this.ukIncomeReportName,
+      this.ukAccountsReportName,
       this.ukChartsDataSheetName,
       this.ukOpenSummaryReportName,
       this.ukClosedSummaryReportName,
@@ -158,9 +158,9 @@ var AssetTracker = class AssetTracker {
       this.ukWalletsReportName
     ];
 
-    this.ukOpenPositionsRangeName = 'UKOpenPositions';
-    this.ukAssetAccountsRangeName = 'UKAssetAccounts';
-    this.ukClosedPositionsRangeName = 'UKClosedPositions';
+    this.ukOpenRangeName = 'UKOpen';
+    this.ukClosedRangeName = 'UKClosed';
+    this.ukAccountsRangeName = 'UKAccounts';
 
     this.ukChartRange1Name = 'UKChart1';
     this.ukChartRange2Name = 'UKChart2';
@@ -546,7 +546,7 @@ var AssetTracker = class AssetTracker {
 
     userProperties.setProperties(userSettings);
     documentProperties.setProperties(documentSettings);
-    
+
     SpreadsheetApp.getActive().toast('Settings saved');
   }
 };

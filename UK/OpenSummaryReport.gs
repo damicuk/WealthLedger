@@ -25,8 +25,8 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
 
   this.setSheetVersion(sheet, version);
 
-  const referenceRangeName1 = this.ukOpenPositionsRangeName;
-  const referenceRangeName2 = this.ukAssetAccountsRangeName;
+  const referenceRangeName1 = this.ukOpenRangeName;
+  const referenceRangeName2 = this.ukAccountsRangeName;
 
   let headers = [
     [

@@ -1,10 +1,10 @@
 /**
- * Creates the closed positions report if it doesn't already exist.
- * Updates the sheet with the current closed positions data.
+ * Creates the closed report if it doesn't already exist.
+ * Updates the sheet with the current closed data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closedPositionsReportName) {
+AssetTracker.prototype.closedReport = function (sheetName = this.closedReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -113,7 +113,7 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
 
   }
 
-  let dataTable = this.getClosedPositionsTable();
+  let dataTable = this.getClosedTable();
 
   let linkColumnIndex1 = 1;
   let linkColumnIndex2 = 13;
@@ -130,19 +130,19 @@ AssetTracker.prototype.closedPositionsReport = function (sheetName = this.closed
     linkTable1.push([row[linkColumnIndex1], row.splice(-1, 1)]);
   }
 
-  this.writeTable(ss, sheet, dataTable, this.closedPositionsRangeName, 2, 20, 8);
+  this.writeTable(ss, sheet, dataTable, this.closedRangeName, 2, 20, 8);
 
-  this.writeLedgerLinks(ss, linkTable1, this.closedPositionsRangeName, linkColumnIndex1);
+  this.writeLedgerLinks(ss, linkTable1, this.closedRangeName, linkColumnIndex1);
 
-  this.writeLedgerLinks(ss, linkTable2, this.closedPositionsRangeName, linkColumnIndex2);
+  this.writeLedgerLinks(ss, linkTable2, this.closedRangeName, linkColumnIndex2);
 };
 
 /**
- * Returns a table of the current closed positions data.
- * The closed positions data is collected when the ledger is processed.
- * @return {Array<Array>} The current closed positions data.
+ * Returns a table of the current closed data.
+ * The closed data is collected when the ledger is processed.
+ * @return {Array<Array>} The current closed data.
  */
-AssetTracker.prototype.getClosedPositionsTable = function () {
+AssetTracker.prototype.getClosedTable = function () {
 
   let table = [];
 

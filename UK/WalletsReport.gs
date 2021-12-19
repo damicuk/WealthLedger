@@ -25,7 +25,7 @@ AssetTracker.prototype.ukWalletsReport = function (sheetName = this.ukWalletsRep
 
   this.setSheetVersion(sheet, version);
 
-  const referenceRangeName1 = this.ukAssetAccountsRangeName;
+  const referenceRangeName1 = this.ukAccountsRangeName;
   const referenceRangeName2 = this.fiatAccountsRangeName;
 
   sheet.getRange('A1:2').setFontWeight('bold').setHorizontalAlignment("center");

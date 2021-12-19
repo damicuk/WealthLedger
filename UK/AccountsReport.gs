@@ -1,10 +1,10 @@
 /**
- * Creates the uk asset accounts report if it doesn't already exist.
+ * Creates the uk accounts report if it doesn't already exist.
  * Updates the sheet with the current asset accounts data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukAssetAccountsReport = function (sheetName = this.ukAssetAccountsReportName) {
+AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -54,18 +54,18 @@ AssetTracker.prototype.ukAssetAccountsReport = function (sheetName = this.ukAsse
 
   }
 
-  let dataTable = this.getUKAssetAccountsTable();
+  let dataTable = this.getUKAccountsTable();
 
-  this.writeTable(ss, sheet, dataTable, this.ukAssetAccountsRangeName, 2, 4, 2);
+  this.writeTable(ss, sheet, dataTable, this.ukAccountsRangeName, 2, 4, 2);
 
 };
 
 /**
- * Returns a table of the current asset accounts data.
+ * Returns a table of the current accounts data.
  * The asset accounts data is collected when the ledger is processed.
  * @return {Array<Array>} The current asset accounts data.
  */
-AssetTracker.prototype.getUKAssetAccountsTable = function () {
+AssetTracker.prototype.getUKAccountsTable = function () {
 
   let table = [];
 

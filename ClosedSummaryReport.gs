@@ -25,7 +25,7 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
 
   this.setSheetVersion(sheet, version);
 
-  const referenceRangeName = this.closedPositionsRangeName;
+  const referenceRangeName = this.closedRangeName;
 
   let headers = [
     [

@@ -25,13 +25,13 @@ AssetTracker.prototype.ukChartsDataSheet = function (sheetName = this.ukChartsDa
 
   this.setSheetVersion(sheet, version);
 
-  const referenceRangeName1 = this.ukOpenPositionsRangeName;
-  const referenceRangeName2 = this.ukClosedPositionsRangeName;
+  const referenceRangeName1 = this.ukOpenRangeName;
+  const referenceRangeName2 = this.ukClosedRangeName;
 
   let headers = [
     [
-      'Open Positions', , , , , , ,
-      'Closed Positions', , , , , , , , , ,
+      'Open', , , , , , ,
+      'Closed', , , , , , , , , ,
     ],
     [
       'Chart A', , , 'Chart B', , , , 'Chart C', , , 'Chart D', , , , 'Chart E', , ,

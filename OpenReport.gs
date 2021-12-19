@@ -1,10 +1,10 @@
 /**
- * Creates the open positions report if it doesn't already exist.
- * Updates the sheet with the current open positions data.
+ * Creates the open report if it doesn't already exist.
+ * Updates the sheet with the current open data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPositionsReportName) {
+AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -95,7 +95,7 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
 
   }
 
-  let dataTable = this.getOpenPositionsTable();
+  let dataTable = this.getOpenTable();
 
   let linkColumnIndex = 1;
   let linkTable = [];
@@ -104,17 +104,17 @@ AssetTracker.prototype.openPositionsReport = function (sheetName = this.openPosi
     linkTable.push([row[linkColumnIndex], row.splice(-1, 1)]);
   }
 
-  this.writeTable(ss, sheet, dataTable, this.openPositionsRangeName, 2, 13, 8);
+  this.writeTable(ss, sheet, dataTable, this.openRangeName, 2, 13, 8);
 
-  this.writeLedgerLinks(ss, linkTable, this.openPositionsRangeName, linkColumnIndex);
+  this.writeLedgerLinks(ss, linkTable, this.openRangeName, linkColumnIndex);
 };
 
 /**
- * Returns a table of the current open positions data.
- * The open positions data is collected when the ledger is processed.
- * @return {Array<Array>} The current open positions data.
+ * Returns a table of the current open data.
+ * The open data is collected when the ledger is processed.
+ * @return {Array<Array>} The current open data.
  */
-AssetTracker.prototype.getOpenPositionsTable = function () {
+AssetTracker.prototype.getOpenTable = function () {
 
   let table = [];
 

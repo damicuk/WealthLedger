@@ -1,10 +1,10 @@
 /**
- * Creates the uk closed positions report if it doesn't already exist.
- * Updates the sheet with the current closed positions data.
+ * Creates the uk closed report if it doesn't already exist.
+ * Updates the sheet with the current closed data.
  * Trims the sheet to fit the data.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukClosedPositionsReport = function (sheetName = this.ukClosedPositionsReportName) {
+AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedReportName) {
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -101,18 +101,18 @@ AssetTracker.prototype.ukClosedPositionsReport = function (sheetName = this.ukCl
 
   }
 
-  let dataTable = this.getUKClosedPositionsTable();
+  let dataTable = this.getUKClosedTable();
 
-  this.writeTable(ss, sheet, dataTable, this.ukClosedPositionsRangeName, 2, 15, 7);
+  this.writeTable(ss, sheet, dataTable, this.ukClosedRangeName, 2, 15, 7);
 
 };
 
 /**
- * Returns a table of the current closed positions data.
- * The closed positions data is collected when the ledger is processed.
- * @return {Array<Array>} The current closed positions data.
+ * Returns a table of the current closed data.
+ * The closed data is collected when the ledger is processed.
+ * @return {Array<Array>} The current closed data.
  */
-AssetTracker.prototype.getUKClosedPositionsTable = function () {
+AssetTracker.prototype.getUKClosedTable = function () {
 
   let table = [];
 

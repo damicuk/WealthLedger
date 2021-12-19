@@ -25,7 +25,7 @@ AssetTracker.prototype.ukDonationsSummaryReport = function (sheetName = this.ukD
 
   this.setSheetVersion(sheet, version);
 
-  const referenceRangeName = this.ukClosedPositionsRangeName;
+  const referenceRangeName = this.ukClosedRangeName;
 
   let headers = [
     [

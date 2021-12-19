@@ -58,10 +58,10 @@ AssetTracker.prototype.writeReports = function () {
 
     this.deleteSheets(this.defaultReportNames);
 
-    this.ukOpenPositionsReport();
-    this.ukAssetAccountsReport();
-    this.ukClosedPositionsReport();
+    this.ukOpenReport();
+    this.ukClosedReport();
     this.incomeReport(this.ukIncomeReportName);
+    this.ukAccountsReport();
     this.ukChartsDataSheet();
     this.ukOpenSummaryReport();
     this.ukClosedSummaryReport();
@@ -75,8 +75,8 @@ AssetTracker.prototype.writeReports = function () {
     this.deleteSheets(this.ukReportNames);
 
     this.fiatAccountsSheet();
-    this.openPositionsReport();
-    this.closedPositionsReport();
+    this.openReport();
+    this.closedReport();
     this.incomeReport();
     this.chartsDataSheet();
     this.openSummaryReport();
