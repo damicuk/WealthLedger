@@ -186,26 +186,4 @@ var Lot = class Lot {
 
     return [lot1, lot2];
   }
-
-  /**
-   * Duplicates a lot.
-   * Used to keep a separate account of income lots.
-   * @return {Lots} A copy of the lot.
-   */
-  duplicate() {
-
-    return new Lot(
-      this.date,
-      this.debitAsset,
-      this.debitExRate,
-      this.debitAmountSubunits / this.debitAsset.subunits,
-      this.debitFeeSubunits / this.debitAsset.subunits,
-      this.creditAsset,
-      this.creditAmountSubunits / this.creditAsset.subunits,
-      this.creditFeeSubunits / this.creditAsset.subunits,
-      this.walletName,
-      this.action,
-      this.rowIndex
-    );
-  }
 };
