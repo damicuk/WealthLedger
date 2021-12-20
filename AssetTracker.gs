@@ -495,6 +495,21 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
+   * Deletes all the output sheets.
+   * Displays toast on completion.
+   */
+  deleteReports() {
+
+    let sheetNames = [
+      this.fiatAccountsSheetName
+    ].concat(this.defaultReportNames).concat(this.ukReportNames);
+
+    this.deleteSheets(sheetNames);
+
+    SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
+  };
+
+  /**
    * Displays the settings dialog
    */
   showSettingsDialog() {

@@ -103,18 +103,3 @@ AssetTracker.prototype.writeReports = function () {
 
   SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
 };
-
-/**
- * Deletes all the output sheets.
- * Displays toast on completion.
- */
-AssetTracker.prototype.deleteReports = function () {
-
-  let sheetNames = [
-    this.fiatAccountsSheetName
-  ].concat(this.defaultReportNames).concat(this.ukReportNames);
-
-  this.deleteSheets(sheetNames);
-
-  SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
-};

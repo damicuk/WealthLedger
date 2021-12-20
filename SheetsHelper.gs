@@ -1,7 +1,5 @@
 /**
  * Deletes the named sheet if it exists.
- * Not intended for use by the end user.
- * Useful in development and testing.
  * @param {string} sheetName - The name of the sheet to delete.
  */
 AssetTracker.prototype.deleteSheet = function (sheetName) {
@@ -12,25 +10,18 @@ AssetTracker.prototype.deleteSheet = function (sheetName) {
   if (sheet) {
 
     ss.deleteSheet(sheet);
-
   }
 };
 
 /**
  * Deletes any sheet that exists given an array of sheet names.
- * Not intended for use by the end user.
- * Useful in development and testing.
  * @param {Array<string>} sheetNames - The names of the sheets to delete.
  */
 AssetTracker.prototype.deleteSheets = function (sheetNames) {
 
   for (let sheetName of sheetNames) {
 
-    if (sheetName) {
-
-      this.deleteSheet(sheetName);
-
-    }
+    this.deleteSheet(sheetName);
   }
 };
 
