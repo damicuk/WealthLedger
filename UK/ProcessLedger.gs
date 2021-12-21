@@ -174,7 +174,7 @@ AssetTracker.prototype.processLedgerRecordUK = function (ledgerRecord, timeZone)
     if (assetPool.subunits + adjustSubunits < 0) {
 
       //the application should have thrown an asset account error before reaching here
-      throw Error(`Insufficient funds: Attempted to subtract ${asset.ticker} ${-adjustAmount} from balance of ${asset.ticker} ${assetPool.subunits / asset.subunits}`);
+      throw Error(`Insufficient funds: Attempted to subtract ${asset.ticker} ${-adjustAmount} from balance of ${asset.ticker} ${assetPool.subunits / asset.subunits}.`);
     }
 
     if (adjustSubunits > 0) {
