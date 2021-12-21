@@ -391,7 +391,7 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
 
   if (totalSubunits + adjustSubunits < 0) {
 
-    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from ${walletName ? walletName.concat(' ') : ''}balance of ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
+    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from ${walletName ? walletName.concat(' ') : ''}balance of ${totalSubunits / asset.subunits}.`, rowIndex, 'debitAmount');
   }
 
   let assetAccountAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountSubunits);
@@ -417,5 +417,5 @@ AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount, act
 
   let zeroSubunitLots = assetAccount.removeZeroSubunitLots();
 
-  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name, action, rowIndex);
+  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.walletName, action, rowIndex);
 };
