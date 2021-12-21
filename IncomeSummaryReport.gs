@@ -76,4 +76,6 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELEC
   this.trimColumns(sheet, 8);
 
   sheet.autoResizeColumns(2, 7);
+
+  SpreadsheetApp.flush();
 };

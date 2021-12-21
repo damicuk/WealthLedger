@@ -54,7 +54,7 @@ AssetTracker.prototype.assetsSheet = function () {
     [sampleFiatBase, 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
     [sampleFiat, 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "${sampleFiatBase}"))`, , , `Fiat capital gains are ignored.`],
     ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "${sampleFiatBase}"))`, , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "${sampleFiatBase}"))`, , , `Google finance is used to fetch the current price. Alternatively select an API or your own method.`],
+    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "${sampleFiatBase}"))`, , , `Google finance is used to fetch the current price. Alternatively select an API or use your own method.`],
     ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "${sampleFiatBase}"))`, , , ,],
     ['USDC', 'Stablecoin', '2', usdcPrice, , , ,],
     ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)${currencyConvert}`, , , ,],
@@ -104,6 +104,8 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.autoResizeColumns(7, 1);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
+
+  SpreadsheetApp.flush();
 
   return sheet;
 };

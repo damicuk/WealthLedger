@@ -111,4 +111,6 @@ AssetTracker.prototype.ukChartsDataSheet = function (sheetName = this.ukChartsDa
   this.trimColumns(sheet, 17);
 
   sheet.autoResizeColumns(1, 17);
+
+  SpreadsheetApp.flush();
 };

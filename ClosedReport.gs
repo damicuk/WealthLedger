@@ -114,6 +114,7 @@ AssetTracker.prototype.closedReport = function (sheetName = this.closedReportNam
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
+    SpreadsheetApp.flush();
   }
 
   let dataTable = this.getClosedTable();

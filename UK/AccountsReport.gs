@@ -69,6 +69,8 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
   this.writeTable(ss, sheet, dataTable, this.ukAccountsRangeName, 2, 4, 2);
 
   this.writeLinks(ss, assetLinkTable, this.ukAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 };
 
 /**

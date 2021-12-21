@@ -32,6 +32,7 @@ AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccoun
 
   this.writeTable(ss, sheet, dataTable, this.fiatAccountsRangeName, 1, 3);
 
+  SpreadsheetApp.flush();
 };
 
 /**

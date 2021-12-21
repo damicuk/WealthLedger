@@ -49,4 +49,6 @@ QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A
   );
 
   sheet.autoResizeColumns(1, sheet.getMaxColumns());
+
+  SpreadsheetApp.flush();
 };

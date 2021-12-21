@@ -120,6 +120,8 @@ AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
   this.writeLinks(ss, asset1LinkTable, this.openRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
 
   this.writeLinks(ss, asset2LinkTable, this.openRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 };
 
 /**

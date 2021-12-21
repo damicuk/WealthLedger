@@ -23,6 +23,8 @@ AssetTracker.prototype.deleteSheets = function (sheetNames) {
 
     this.deleteSheet(sheetName);
   }
+
+  SpreadsheetApp.flush();
 };
 
 /**

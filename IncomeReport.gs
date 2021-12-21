@@ -75,6 +75,8 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
   this.writeLinks(ss, asset1LinkTable, this.incomeRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
 
   this.writeLinks(ss, asset2LinkTable, this.incomeRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 };
 
 
