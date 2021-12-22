@@ -26,12 +26,12 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('A2:B').setNumberFormat('@');
-  sheet.getRange('C2:C').setNumberFormat('0');
-  sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('E2:E').setNumberFormat('@');
-  sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-  sheet.getRange('G2:G').setNumberFormat('@');
+  sheet.getRange('A2:12').setNumberFormat('@');
+  sheet.getRange('C2:C12').setNumberFormat('0');
+  sheet.getRange('D2:D12').setNumberFormat('#,##0.0000;(#,##0.0000)');
+  sheet.getRange('E2:E12').setNumberFormat('@');
+  sheet.getRange('F2:F12').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+  sheet.getRange('G2:G12').setNumberFormat('@');
 
   let sampleFiatBase;
   let sampleFiat;
@@ -71,30 +71,30 @@ AssetTracker.prototype.assetsSheet = function () {
     .setAllowInvalid(false)
     .setHelpText(`Input must be 1-10 characters [A-Za-z0-9_$@] with optional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`)
     .build();
-  sheet.getRange('A2:A').setDataValidation(assetRule);
+  sheet.getRange('A2:A12').setDataValidation(assetRule);
 
   let assetTypeRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(Asset.defaultAssetTypes)
     .setAllowInvalid(true)
     .setHelpText(`New asset types will be added to the data validation dropdown when write reports is run.`)
     .build();
-  sheet.getRange('B2:B').setDataValidation(assetTypeRule);
+  sheet.getRange('B2:B12').setDataValidation(assetTypeRule);
 
   let decimalPlacesRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(C2), "^[012345678]{1}$")`)
     .setAllowInvalid(false)
     .setHelpText(`Input must be an integer between 0 and 8.`)
     .build();
-  sheet.getRange('C2:C').setDataValidation(decimalPlacesRule);
+  sheet.getRange('C2:C12').setDataValidation(decimalPlacesRule);
 
   let apiRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(this.validApiNames)
     .setAllowInvalid(false)
     .build();
-  sheet.getRange('E2:E').setDataValidation(apiRule);
+  sheet.getRange('E2:E12').setDataValidation(apiRule);
 
   if (!sheet.getFilter()) {
-    sheet.getRange('A1:G').createFilter();
+    sheet.getRange('A1:G12').createFilter();
   }
 
   this.trimSheet(sheet, 12, 7);
