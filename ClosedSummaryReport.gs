@@ -134,6 +134,4 @@ QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE 
   sheet.insertChart(yearProceedsPLChart);
 
   sheet.autoResizeColumns(2, 11);
-
-  SpreadsheetApp.flush();
 };

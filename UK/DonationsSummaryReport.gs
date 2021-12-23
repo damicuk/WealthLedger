@@ -78,6 +78,4 @@ QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='D
   sheet.autoResizeColumns(2, 6);
 
   sheet.hideSheet();
-
-  SpreadsheetApp.flush();
 };

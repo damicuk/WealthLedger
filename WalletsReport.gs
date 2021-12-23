@@ -52,5 +52,5 @@ QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A
 
   let dataRange = sheet.getDataRange();
 
-  sheet.autoResizeColumns(2, dataRange.getWidth()-1);
+  sheet.autoResizeColumns(2, dataRange.getWidth() - 1);
 };

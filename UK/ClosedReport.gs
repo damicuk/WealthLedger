@@ -9,6 +9,11 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
+  let dataTable = this.getUKClosedTable();
+  const headerRows = 2;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
+
   if (!sheet) {
 
     sheet = ss.insertSheet(sheetName);
@@ -62,31 +67,31 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
     sheet.getRange('J1:O1').mergeAcross();
     sheet.getRange('P1:V1').mergeAcross();
 
-    sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd');
-    sheet.getRange('B3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`A3:A${rowCount}`).setNumberFormat('yyyy-mm-dd');
+    sheet.getRange(`B3:C${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`D3:D${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`E3:E${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
 
-    sheet.getRange('F3:G').setNumberFormat('@');
-    sheet.getRange('H3:H').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('I3:I').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`F3:G${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`H3:H${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`I3:I${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
 
-    sheet.getRange('J3:J').setNumberFormat('yyyy-mm-dd');
-    sheet.getRange('K3:L').setNumberFormat('@');
-    sheet.getRange('M3:M').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('N3:N').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('O3:O').setNumberFormat('@');
+    sheet.getRange(`J3:J${rowCount}`).setNumberFormat('yyyy-mm-dd');
+    sheet.getRange(`K3:L${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`M3:M${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`N3:N${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`O3:O${rowCount}`).setNumberFormat('@');
 
-    sheet.getRange('P3:P').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('Q3:T').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('U3:U').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('V3:V').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`P3:P${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`Q3:T${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`U3:U${rowCount}`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`V3:V${rowCount}`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-    this.addPoolCondition(sheet, 'A3:A');
-    this.addAssetCondition(sheet, 'B3:B');
-    this.addAssetCondition(sheet, 'F3:F');
-    this.addAssetCondition(sheet, 'K3:K');
-    this.addActionCondtion(sheet, 'O3:O');
+    this.addPoolCondition(sheet, `A3:A${rowCount}`);
+    this.addAssetCondition(sheet, `B3:B${rowCount}`);
+    this.addAssetCondition(sheet, `F3:F${rowCount}`);
+    this.addAssetCondition(sheet, `K3:K${rowCount}`);
+    this.addActionCondtion(sheet, `O3:O${rowCount}`);
 
     const formulas = [[
       `IF(ISBLANK(B3),,(ArrayFormula(FILTER(H3:H-I3:I, LEN(B3:B)))))`,
@@ -101,10 +106,7 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
     sheet.getRange('P3:V3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-
   }
-
-  let dataTable = this.getUKClosedTable();
 
   let asset1ColumnIndex = 1;
   let asset2ColumnIndex = 5;
@@ -121,7 +123,13 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
     asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
   }
 
-  this.writeTable(ss, sheet, dataTable, this.ukClosedRangeName, 2, 15, 7);
+  this.trimSheet(sheet, rowCount, 22);
+
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 15);
+  dataRange.setValues(dataTable);
+
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 22);
+  ss.setNamedRange(this.ukClosedRangeName, namedRange);
 
   this.writeLinks(ss, asset1LinkTable, this.ukClosedRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
 
@@ -129,7 +137,7 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
 
   this.writeLinks(ss, asset3LinkTable, this.ukClosedRangeName, asset3ColumnIndex, this.assetsSheetName, 'A', 'F');
 
-  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(1, 22);
 };
 
 /**
@@ -198,5 +206,10 @@ AssetTracker.prototype.getUKClosedTable = function () {
     }
   }
 
-  return this.sortTable(table, 7);
+  if (table.length === 0) {
+
+    return [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+  }
+
+  return table.sort(function (a, b) { return a[7] - b[7]; });
 };

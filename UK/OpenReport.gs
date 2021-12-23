@@ -9,6 +9,11 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
+  let dataTable = this.getUKOpenTable();
+  const headerRows = 2;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
+
   if (!sheet) {
 
     sheet = ss.insertSheet(sheetName);
@@ -51,19 +56,19 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     sheet.getRange('E1:H1').mergeAcross();
     sheet.getRange('I1:O1').mergeAcross();
 
-    sheet.getRange('A3:B').setNumberFormat('@');
-    sheet.getRange('C3:C').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('E3:F').setNumberFormat('@');
-    sheet.getRange('G3:G').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('H3:H').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('I3:I').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('J3:M').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('N3:N').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('O3:O').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`A3:B${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`C3:C${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`D3:D${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`E3:F${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`G3:G${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`H3:H${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`I3:I${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`J3:M${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`N3:N${rowCount}`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`O3:O${rowCount}`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-    this.addAssetCondition(sheet, 'A3:A');
-    this.addAssetCondition(sheet, 'E3:E');
+    this.addAssetCondition(sheet, `A3:A${rowCount}`);
+    this.addAssetCondition(sheet, `E3:E${rowCount}`);
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(G3:G-H3:H, LEN(A3:A)))))`,
@@ -78,10 +83,7 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     sheet.getRange('I3:O3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-
   }
-
-  let dataTable = this.getUKOpenTable();
 
   let asset1ColumnIndex = 0;
   let asset2ColumnIndex = 4;
@@ -94,13 +96,19 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
   }
 
-  this.writeTable(ss, sheet, dataTable, this.ukOpenRangeName, 2, 8, 7);
+  this.trimSheet(sheet, rowCount, 15);
+
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 8);
+  dataRange.setValues(dataTable);
+
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 15);
+  ss.setNamedRange(this.ukOpenRangeName, namedRange);
 
   this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
 
   this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
 
-  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(1, 15);
 };
 
 /**
@@ -149,5 +157,10 @@ AssetTracker.prototype.getUKOpenTable = function () {
     }
   }
 
-  return this.sortTable(table, 4, true);
+  if (table.length === 0) {
+
+    return [['', '', '', '', '', '', '', '', '', '']];
+  }
+
+  return table.sort(function (a, b) { return AssetTracker.abcComparator(a[4], b[4]); });
 };

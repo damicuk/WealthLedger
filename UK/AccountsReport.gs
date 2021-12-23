@@ -9,6 +9,11 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
+  let dataTable = this.getUKAccountsTable();
+  const headerRows = 2;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
+
   if (!sheet) {
 
     sheet = ss.insertSheet(sheetName);
@@ -39,11 +44,11 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
     sheet.getRange('A1:D1').mergeAcross();
     sheet.getRange('E1:F1').mergeAcross();
 
-    sheet.getRange('A3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('E3:F').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`A3:C${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`D3:D${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`E3:F${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
 
-    this.addAssetCondition(sheet, 'B3:B');
+    this.addAssetCondition(sheet, `B3:B${rowCount}`);
 
     const formulas = [[
       `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(B3:B, QUERY(${referenceRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
@@ -53,10 +58,7 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
     sheet.getRange('E3:F3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-
   }
-
-  let dataTable = this.getUKAccountsTable();
 
   let assetColumnIndex = 1;
   let assetLinkTable = [];
@@ -66,11 +68,17 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
     assetLinkTable.push([row[assetColumnIndex], row.splice(-1, 1)[0]]);
   }
 
-  this.writeTable(ss, sheet, dataTable, this.ukAccountsRangeName, 2, 4, 2);
+  this.trimSheet(sheet, rowCount, 6);
+
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 4);
+  dataRange.setValues(dataTable);
+
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 6);
+  ss.setNamedRange(this.ukAccountsRangeName, namedRange);
 
   this.writeLinks(ss, assetLinkTable, this.ukAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
 
-  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(1, 6);
 };
 
 /**
@@ -109,13 +117,16 @@ AssetTracker.prototype.getUKAccountsTable = function () {
     }
   }
 
-  table.sort(
+  if (table.length === 0) {
+
+    return [['', '', '', '', '']];
+  }
+
+  return table.sort(
     function (a, b) {
       return AssetTracker.abcComparator(a[0], b[0]) !== 0 ?
         AssetTracker.abcComparator(a[0], b[0]) :
         AssetTracker.abcComparator(a[1], b[1]);
     }
   );
-
-  return table;
 };

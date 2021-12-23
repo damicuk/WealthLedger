@@ -113,6 +113,4 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
   sheet.insertChart(yearProceedsPLChart);
 
   sheet.autoResizeColumns(2, 10);
-
-  SpreadsheetApp.flush();
 };

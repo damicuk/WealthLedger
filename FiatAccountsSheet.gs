@@ -9,6 +9,11 @@ AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccoun
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
+  let dataTable = this.getFiatTable();
+  const headerRows = 1;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
+
   if (!sheet) {
 
     sheet = ss.insertSheet(sheetName);
@@ -18,21 +23,33 @@ AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccoun
     sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(1);
 
-    sheet.getRange('A2:A').setNumberFormat('@');
-    sheet.getRange('B2:B').setNumberFormat('@');
-    sheet.getRange('C2:C').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`A2:A${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`B2:B${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`C2:C${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
 
     sheet.hideSheet();
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-
   }
 
-  let dataTable = this.getFiatTable();
+  let assetColumnIndex = 1;
+  let assetLinkTable = [];
 
-  this.writeTable(ss, sheet, dataTable, this.fiatAccountsRangeName, 1, 3);
+  for (let row of dataTable) {
+    assetLinkTable.push([row[assetColumnIndex], row.splice(-1, 1)[0]]);
+  }
 
-  SpreadsheetApp.flush();
+  this.trimSheet(sheet, rowCount, 3);
+
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);
+  dataRange.setValues(dataTable);
+
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);
+  ss.setNamedRange(this.fiatAccountsRangeName, namedRange);
+
+  this.writeLinks(ss, assetLinkTable, this.fiatAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  sheet.autoResizeColumns(1, 3);
 };
 
 /**
@@ -50,19 +67,27 @@ AssetTracker.prototype.getFiatTable = function () {
 
       if (fiatAccount.balance !== 0) {
 
-        table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
+        table.push([
+          wallet.name,
+          fiatAccount.ticker,
+          fiatAccount.balance,
+          fiatAccount.asset.rowIndex
 
+        ]);
       }
     }
   }
 
-  table.sort(function (a, b) {
+  if (table.length === 0) {
+
+    return [['', '', '', '']];
+  }
+
+  return table.sort(function (a, b) {
     return a[0] > b[0] ? 1 :
       b[0] > a[0] ? -1 :
         a[1] > b[1] ? 1 :
           b[1] > a[1] ? -1 :
             0;
   });
-
-  return table;
 };

@@ -125,6 +125,4 @@ QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT ' ', Col1, Col3, C
   sheet.insertChart(assetPLChart);
 
   sheet.autoResizeColumns(2, 10);
-
-  SpreadsheetApp.flush();
 };

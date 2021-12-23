@@ -48,7 +48,9 @@ QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A
 })), "SELECT Col1, Col2, SUM(Col4) GROUP BY Col1, Col2 PIVOT Col3 ORDER BY Col2, Col1 LABEL Col1 'Wallet'")))`
   );
 
-  sheet.autoResizeColumns(1, sheet.getMaxColumns());
-
   SpreadsheetApp.flush();
+
+  let dataRange = sheet.getDataRange();
+
+  sheet.autoResizeColumns(2, dataRange.getWidth() - 1);
 };

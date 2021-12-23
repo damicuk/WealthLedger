@@ -9,6 +9,11 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
+  let dataTable = this.getIncomeTable();
+  const headerRows = 1;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
+
   if (!sheet) {
 
     sheet = ss.insertSheet(sheetName);
@@ -31,16 +36,16 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
     sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
     sheet.setFrozenRows(1);
 
-    sheet.getRange('A2:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange('B2:F').setNumberFormat('@');
-    sheet.getRange('G2:G').setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange('H2:H').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('I2:I').setNumberFormat('@');
-    sheet.getRange('J2:J').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`A2:A${rowCount}`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sheet.getRange(`B2:F${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`G2:G${rowCount}`).setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange(`H2:H${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`I2:I${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`J2:J${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
 
-    this.addActionCondtion(sheet, 'B2:B');
-    this.addAssetCondition(sheet, 'C3:C');
-    this.addAssetCondition(sheet, 'E3:E');
+    this.addActionCondtion(sheet, `B2:B${rowCount}`);
+    this.addAssetCondition(sheet, `C3:C${rowCount}`);
+    this.addAssetCondition(sheet, `E3:E${rowCount}`);
 
     const formulas = [[
       `IF(ISBLANK(A2),,ArrayFormula(FILTER(IF(ISBLANK(G2:G),H2:H,ROUND(G2:G*H2:H, 2)), LEN(A2:A))))`
@@ -51,8 +56,6 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
   }
-
-  let dataTable = this.getIncomeTable();
 
   let actionColumnIndex = 1;
   let asset1ColumnIndex = 2;
@@ -68,7 +71,13 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
     actionLinkTable.push([row[actionColumnIndex], row.splice(-1, 1)[0]]);
   }
 
-  this.writeTable(ss, sheet, dataTable, this.incomeRangeName, 1, 9, 1);
+  this.trimSheet(sheet, rowCount, 10);
+
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 9);
+  dataRange.setValues(dataTable);
+
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 10);
+  ss.setNamedRange(this.incomeRangeName, namedRange);
 
   this.writeLinks(ss, actionLinkTable, this.incomeRangeName, actionColumnIndex, this.ledgerSheetName, 'A', 'M');
 
@@ -76,7 +85,7 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
 
   this.writeLinks(ss, asset2LinkTable, this.incomeRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
 
-  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(1, 10);
 };
 
 
@@ -120,5 +129,10 @@ AssetTracker.prototype.getIncomeTable = function () {
     ]);
   }
 
-  return this.sortTable(table, 0);
+  if (table.length === 0) {
+
+    return [['', '', '', '', '', '', '', '', '', '', '', '']];
+  }
+
+  return table.sort(function (a, b) { return a[0] - b[0]; });
 };
