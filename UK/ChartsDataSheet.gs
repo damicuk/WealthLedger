@@ -57,7 +57,7 @@ AssetTracker.prototype.ukChartsDataSheet = function (sheetName = this.ukChartsDa
     ]
   ];
 
-  sheet.getRange('A1:Q3').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:Q3').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.setFrozenRows(3);
 
   sheet.getRange('A1:G1').mergeAcross();
@@ -109,6 +109,8 @@ AssetTracker.prototype.ukChartsDataSheet = function (sheetName = this.ukChartsDa
   ss.setNamedRange(this.ukChartRange5Name, sheet.getRange('O3:Q'));
 
   this.trimColumns(sheet, 17);
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(1, 17);
 };

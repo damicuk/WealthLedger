@@ -35,7 +35,7 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
       ]
     ];
 
-    sheet.getRange('A1:F2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:F2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:D2').setBackgroundColor('#d0e0e3');
@@ -77,6 +77,8 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
   ss.setNamedRange(this.ukAccountsRangeName, namedRange);
 
   this.writeLinks(ss, assetLinkTable, this.ukAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(1, 6);
 };

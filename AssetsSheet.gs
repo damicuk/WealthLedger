@@ -105,6 +105,8 @@ AssetTracker.prototype.assetsSheet = function () {
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);
 
+  SpreadsheetApp.flush();
+
   return sheet;
 };
 

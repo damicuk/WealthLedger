@@ -43,7 +43,7 @@ AssetTracker.prototype.ukClosedSummaryReport = function (sheetName = this.ukClos
     ]
   ];
 
-  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:A').setNumberFormat('@');
@@ -111,6 +111,8 @@ QUERY({{"", "", "", "", 0, 0, 0, 0};QUERY(${referenceRangeName}, "SELECT F, G, Y
     .build();
 
   sheet.insertChart(yearProceedsPLChart);
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(2, 10);
 };

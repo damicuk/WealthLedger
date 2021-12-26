@@ -44,7 +44,7 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
     ]
   ];
 
-  sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:A').setNumberFormat('@');
@@ -132,6 +132,8 @@ QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE 
     .build();
 
   sheet.insertChart(yearProceedsPLChart);
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(2, 11);
 };

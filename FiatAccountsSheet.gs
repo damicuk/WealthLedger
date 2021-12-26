@@ -20,7 +20,7 @@ AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccoun
 
     let headers = [['Wallet', 'Currency', 'Balance']];
 
-    sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);
 
     sheet.getRange(`A2:A${rowCount}`).setNumberFormat('@');
@@ -48,6 +48,8 @@ AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccoun
   ss.setNamedRange(this.fiatAccountsRangeName, namedRange);
 
   this.writeLinks(ss, assetLinkTable, this.fiatAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(1, 3);
 };

@@ -167,6 +167,8 @@ AssetTracker.prototype.ledgerSheet = function () {
 
   this.setSheetVersion(sheet, this.ledgerSheetVersion);
 
+  SpreadsheetApp.flush();
+
   return sheet;
 };
 

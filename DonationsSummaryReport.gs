@@ -39,7 +39,7 @@ AssetTracker.prototype.donationsSummaryReport = function (sheetName = this.donat
     ]
   ];
 
-  sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:A').setNumberFormat('@');
@@ -74,6 +74,8 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Dona
   sheet.getRange('A2').setFormula(formula);
 
   this.trimColumns(sheet, 7);
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(2, 6);
 

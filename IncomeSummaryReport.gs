@@ -40,7 +40,7 @@ AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSu
     ]
   ];
 
-  sheet.getRange('A1:H1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:H1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:A').setNumberFormat('@');
@@ -74,6 +74,8 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELEC
   sheet.getRange('A2').setFormula(formula);
 
   this.trimColumns(sheet, 8);
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(2, 7);
 };

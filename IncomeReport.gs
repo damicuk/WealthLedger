@@ -33,7 +33,7 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
       ]
     ];
 
-    sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);
 
     sheet.getRange(`A2:A${rowCount}`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
@@ -84,6 +84,8 @@ AssetTracker.prototype.incomeReport = function (sheetName = this.incomeReportNam
   this.writeLinks(ss, asset1LinkTable, this.incomeRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
 
   this.writeLinks(ss, asset2LinkTable, this.incomeRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(1, 10);
 };

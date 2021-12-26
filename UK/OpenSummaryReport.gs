@@ -44,7 +44,7 @@ AssetTracker.prototype.ukOpenSummaryReport = function (sheetName = this.ukOpenSu
     ]
   ];
 
-  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:K1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
   sheet.setFrozenRows(1);
 
   sheet.getRange('A2:D').setNumberFormat('@');
@@ -123,6 +123,8 @@ QUERY({{"", "", "", 0, 0, 0};${referenceRangeName2}}, "SELECT ' ', Col1, Col3, C
     .build();
 
   sheet.insertChart(assetPLChart);
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(2, 10);
 };

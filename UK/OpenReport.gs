@@ -45,7 +45,7 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
       ]
     ];
 
-    sheet.getRange('A1:O2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:O2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:D2').setBackgroundColor('#ead1dc');
@@ -107,6 +107,8 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
   this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
 
   this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+
+  SpreadsheetApp.flush();
 
   sheet.autoResizeColumns(1, 15);
 };
