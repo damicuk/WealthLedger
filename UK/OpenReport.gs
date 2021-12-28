@@ -2,21 +2,31 @@
  * Creates the uk open report if it doesn't already exist.
  * Updates the sheet with the current open pools data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The uk open data table.
+ * @param {Array<Array>} The asset 1 link table.
+ * @param {Array<Array>} The asset 2 link table.
  * @param {string} [sheetName] - The name of the sheet
  */
-AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportName) {
+AssetTracker.prototype.ukOpenReport = function (dataTable, asset1LinkTable, asset2LinkTable, sheetName = this.ukOpenReportName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  let dataTable = this.getUKOpenTable();
   const headerRows = 2;
   const dataRows = dataTable.length;
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
-
     sheet = ss.insertSheet(sheetName);
+  }
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
+
+    this.trimSheet(sheet, rowCount, 15);
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -83,17 +93,8 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     sheet.getRange('I3:O3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-  }
 
-  let asset1ColumnIndex = 0;
-  let asset2ColumnIndex = 4;
-
-  let asset1LinkTable = [];
-  let asset2LinkTable = [];
-
-  for (let row of dataTable) {
-    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
-    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
+    this.setSheetVersion(sheet, version);
   }
 
   this.trimSheet(sheet, rowCount, 15);
@@ -104,23 +105,23 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
   let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 15);
   ss.setNamedRange(this.ukOpenRangeName, namedRange);
 
-  this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, 0, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  SpreadsheetApp.flush();
+  this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, 4, this.assetsSheetName, 'A', 'F');
 
   sheet.autoResizeColumns(1, 15);
 };
 
 /**
- * Returns a table of the current open data.
- * The open data is collected when the ledger is processed.
- * @return {Array<Array>} The current open data.
+ * Returns the uk open data.
+ * The uk open data is collected when the ledger is processed.
+ * @return {Array<Array>} The uk open data table and the asset link tables.
  */
-AssetTracker.prototype.getUKOpenTable = function () {
+AssetTracker.prototype.getUKOpenData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
 
   for (let assetPool of this.assetPools.values()) {
 
@@ -142,7 +143,7 @@ AssetTracker.prototype.getUKOpenTable = function () {
       let asset1RowIndex = poolDeposit.debitAsset.rowIndex;
       let asset2RowIndex = poolDeposit.creditAsset.rowIndex;
 
-      table.push([
+      dataTable.push([
 
         debitAsset,
         debitAssetType,
@@ -159,10 +160,17 @@ AssetTracker.prototype.getUKOpenTable = function () {
     }
   }
 
-  if (table.length === 0) {
+  if (dataTable.length === 0) {
 
-    return [['', '', '', '', '', '', '', '', '', '']];
+    dataTable = [['', '', '', '', '', '', '', '', '', '']];
   }
 
-  return table.sort(function (a, b) { return AssetTracker.abcComparator(a[4], b[4]); });
+  dataTable.sort(function (a, b) { return AssetTracker.abcComparator(a[4], b[4]); });
+
+  for (let row of dataTable) {
+    asset2LinkTable.push([row[4], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[0], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, asset1LinkTable, asset2LinkTable];
 };

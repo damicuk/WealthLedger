@@ -11,47 +11,43 @@ AssetTracker.prototype.ukDonationsSummaryReport = function (sheetName = this.ukD
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  if (sheet) {
-    if (this.getSheetVersion(sheet) === version) {
-      return;
-    }
-    else {
-      sheet.clear();
-    }
-  }
-  else {
+  if (!sheet) {
     sheet = ss.insertSheet(sheetName);
   }
 
-  this.setSheetVersion(sheet, version);
+  if (this.getSheetVersion(sheet) !== version) {
 
-  const referenceRangeName = this.ukClosedRangeName;
+    sheet.clear();
 
-  let headers = [
-    [
-      '',
-      'Year',
-      'Asset',
-      'Asset Type',
-      'Amount',
-      'Cost Basis',
-      'Donation Value'
-    ]
-  ];
+    this.trimColumns(sheet, 7);
 
-  sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
-  sheet.setFrozenRows(1);
+    const referenceRangeName = this.ukClosedRangeName;
 
-  sheet.getRange('A2:A').setNumberFormat('@');
-  sheet.getRange('C2:D').setNumberFormat('@');
-  sheet.getRange('E2:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('F2:F').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('G2:G').setNumberFormat('#,##0.00;(#,##0.00)');
+    let headers = [
+      [
+        '',
+        'Year',
+        'Asset',
+        'Asset Type',
+        'Amount',
+        'Cost Basis',
+        'Donation Value'
+      ]
+    ];
 
-  sheet.getRange('A2:A').setFontColor('#1155cc');
+    sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.setFrozenRows(1);
 
-  const formula =
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT P WHERE O='Donation'"))=0,,
+    sheet.getRange('A2:A').setNumberFormat('@');
+    sheet.getRange('C2:D').setNumberFormat('@');
+    sheet.getRange('E2:E').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('F2:F').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('G2:G').setNumberFormat('#,##0.00;(#,##0.00)');
+
+    sheet.getRange('A2:A').setFontColor('#1155cc');
+
+    const formula =
+      `IF(COUNT(QUERY(${referenceRangeName}, "SELECT P WHERE O='Donation'"))=0,,
 {
 QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', SUM(Col6), SUM(Col7) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col6) '', SUM(Col7) ''");
 {"", "", "", "", "", "", ""};
@@ -71,13 +67,12 @@ QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='D
 QUERY({QUERY(${referenceRangeName}, "SELECT F, G, YEAR(J), O, P, S, T WHERE O='Donation'")}, "SELECT ' ', Col3, Col1, Col2, SUM(Col5), SUM(Col6), SUM(Col7) GROUP BY Col3, Col1, Col2 ORDER BY Col3, Col1, Col2 LABEL ' ' '', Col3 '', Col1 '', Col2 '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) ''")
 })`;
 
-  sheet.getRange('A2').setFormula(formula);
+    sheet.getRange('A2').setFormula(formula);
 
-  this.trimColumns(sheet, 7);
+    sheet.autoResizeColumns(2, 6);
 
-  SpreadsheetApp.flush();
+    sheet.hideSheet();
 
-  sheet.autoResizeColumns(2, 6);
-
-  sheet.hideSheet();
+    this.setSheetVersion(sheet, version);
+  }
 };

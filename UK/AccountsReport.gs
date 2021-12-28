@@ -2,21 +2,30 @@
  * Creates the uk accounts report if it doesn't already exist.
  * Updates the sheet with the current asset accounts data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The uk accounts data table.
+ * @param {Array<Array>} The asset link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsReportName) {
+AssetTracker.prototype.ukAccountsReport = function (dataTable, assetLinkTable, sheetName = this.ukAccountsReportName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  let dataTable = this.getUKAccountsTable();
   const headerRows = 2;
   const dataRows = dataTable.length;
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
-
     sheet = ss.insertSheet(sheetName);
+  }
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
+
+    this.trimSheet(sheet, rowCount, 6);
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -58,14 +67,8 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
     sheet.getRange('E3:F3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-  }
 
-  let assetColumnIndex = 1;
-  let assetLinkTable = [];
-
-  for (let row of dataTable) {
-
-    assetLinkTable.push([row[assetColumnIndex], row.splice(-1, 1)[0]]);
+    this.setSheetVersion(sheet, version);
   }
 
   this.trimSheet(sheet, rowCount, 6);
@@ -76,21 +79,20 @@ AssetTracker.prototype.ukAccountsReport = function (sheetName = this.ukAccountsR
   let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 6);
   ss.setNamedRange(this.ukAccountsRangeName, namedRange);
 
-  this.writeLinks(ss, assetLinkTable, this.ukAccountsRangeName, assetColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  SpreadsheetApp.flush();
+  this.writeLinks(ss, assetLinkTable, this.ukAccountsRangeName, 1, this.assetsSheetName, 'A', 'F');
 
   sheet.autoResizeColumns(1, 6);
 };
 
 /**
- * Returns a table of the current accounts data.
- * The asset accounts data is collected when the ledger is processed.
- * @return {Array<Array>} The current asset accounts data.
+ * Returns the uk accounts data.
+ * The uk accounts data is collected when the ledger is processed.
+ * @return {Array<Array>} The uk accounts data table and the asset link table.
  */
-AssetTracker.prototype.getUKAccountsTable = function () {
+AssetTracker.prototype.getUKAccountsData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let assetLinkTable = [];
 
   for (let wallet of this.wallets.values()) {
 
@@ -106,7 +108,7 @@ AssetTracker.prototype.getUKAccountsTable = function () {
         let assetType = assetAccount.asset.assetType;
         let assetRowIndex = assetAccount.asset.rowIndex;
 
-        table.push([
+        dataTable.push([
 
           walletName,
           ticker,
@@ -119,16 +121,23 @@ AssetTracker.prototype.getUKAccountsTable = function () {
     }
   }
 
-  if (table.length === 0) {
+  if (dataTable.length === 0) {
 
-    return [['', '', '', '', '']];
+    dataTable = [['', '', '', '', '']];
   }
 
-  return table.sort(
+  dataTable.sort(
     function (a, b) {
       return AssetTracker.abcComparator(a[0], b[0]) !== 0 ?
         AssetTracker.abcComparator(a[0], b[0]) :
         AssetTracker.abcComparator(a[1], b[1]);
     }
   );
+
+  for (let row of dataTable) {
+
+    assetLinkTable.push([row[1], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, assetLinkTable];
 };

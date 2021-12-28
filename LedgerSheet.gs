@@ -61,7 +61,6 @@ AssetTracker.prototype.ledgerSheet = function () {
     sheet.getRange('A2:N30').createFilter();
   }
 
-
   let sampleFiatBase;
   if (this.accountingModel === 'UK') {
     sampleFiatBase = 'GBP';
@@ -166,8 +165,6 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.autoResizeColumns(14, 1);
 
   this.setSheetVersion(sheet, this.ledgerSheetVersion);
-
-  SpreadsheetApp.flush();
 
   return sheet;
 };

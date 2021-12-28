@@ -2,21 +2,32 @@
  * Creates the uk closed report if it doesn't already exist.
  * Updates the sheet with the current closed data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The uk closed data table.
+ * @param {Array<Array>} The asset 1 link table.
+ * @param {Array<Array>} The asset 2 link table.
+ * @param {Array<Array>} The asset 3 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedReportName) {
+AssetTracker.prototype.ukClosedReport = function (dataTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.ukClosedReportName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  let dataTable = this.getUKClosedTable();
   const headerRows = 2;
   const dataRows = dataTable.length;
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
-
     sheet = ss.insertSheet(sheetName);
+  }
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
+
+    this.trimSheet(sheet, rowCount, 22);
 
     let headers = [
       [
@@ -106,21 +117,8 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
     sheet.getRange('P3:V3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-  }
 
-  let asset1ColumnIndex = 1;
-  let asset2ColumnIndex = 5;
-  let asset3ColumnIndex = 10;
-
-  let asset1LinkTable = [];
-  let asset2LinkTable = [];
-  let asset3LinkTable = [];
-
-  for (let row of dataTable) {
-
-    asset3LinkTable.push([row[asset3ColumnIndex], row.splice(-1, 1)[0]]);
-    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
-    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
+    this.setSheetVersion(sheet, version);
   }
 
   this.trimSheet(sheet, rowCount, 22);
@@ -131,25 +129,26 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
   let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 22);
   ss.setNamedRange(this.ukClosedRangeName, namedRange);
 
-  this.writeLinks(ss, asset1LinkTable, this.ukClosedRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset1LinkTable, this.ukClosedRangeName, 1, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset2LinkTable, this.ukClosedRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset2LinkTable, this.ukClosedRangeName, 5, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset3LinkTable, this.ukClosedRangeName, asset3ColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  SpreadsheetApp.flush();
+  this.writeLinks(ss, asset3LinkTable, this.ukClosedRangeName, 10, this.assetsSheetName, 'A', 'F');
 
   sheet.autoResizeColumns(1, 22);
 };
 
 /**
- * Returns a table of the current closed data.
- * The closed data is collected when the ledger is processed.
- * @return {Array<Array>} The current closed data.
+ * Returns uk closed data.
+ * The uk closed data is collected when the ledger is processed.
+ * @return {Array<Array>} The uk closed data table and the asset link tables.
  */
-AssetTracker.prototype.getUKClosedTable = function () {
+AssetTracker.prototype.getUKClosedData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
+  let asset3LinkTable = [];
 
   for (let assetPool of this.assetPools.values()) {
 
@@ -180,7 +179,7 @@ AssetTracker.prototype.getUKClosedTable = function () {
       let asset2RowIndex = poolDeposit.creditAsset.rowIndex;
       let asset3RowIndex = poolWithdrawal.creditAsset.rowIndex;
 
-      table.push([
+      dataTable.push([
 
         dateBuy,
         debitAssetBuy,
@@ -208,10 +207,19 @@ AssetTracker.prototype.getUKClosedTable = function () {
     }
   }
 
-  if (table.length === 0) {
+  if (dataTable.length === 0) {
 
-    return [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
   }
 
-  return table.sort(function (a, b) { return a[7] - b[7]; });
+  dataTable.sort(function (a, b) { return a[7] - b[7]; });
+
+  for (let row of dataTable) {
+
+    asset3LinkTable.push([row[10], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[5], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[1], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, asset1LinkTable, asset2LinkTable, asset3LinkTable];
 };

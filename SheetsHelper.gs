@@ -1,4 +1,23 @@
 /**
+ * Sets the currenct cell in named sheet.
+ * @param {string} sheetName - The name. of the sheet.
+ * @param {number} rowIndex - The row index of the cell in the named sheet.
+ * @param {number} columnIndex - The column index of the cell in the named sheet.
+ */
+AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnIndex) {
+
+  let ss = SpreadsheetApp.getActive();
+  let sheet = ss.getSheetByName(sheetName);
+
+  if (sheet) {
+
+    let range = sheet.getRange(rowIndex, columnIndex, 1, 1);
+    ss.setCurrentCell(range);
+    SpreadsheetApp.flush();
+  }
+};
+
+/**
  * Deletes the named sheet if it exists.
  * @param {string} sheetName - The name of the sheet to delete.
  */

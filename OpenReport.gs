@@ -2,21 +2,32 @@
  * Creates the open report if it doesn't already exist.
  * Updates the sheet with the current open data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The open data table.
+ * @param {Array<Array>} The action link table.
+ * @param {Array<Array>} The asset 1 link table.
+ * @param {Array<Array>} The asset 2 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
+AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.openReportName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  let dataTable = this.getOpenTable();
   const headerRows = 2;
   const dataRows = dataTable.length;
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
-
     sheet = ss.insertSheet(sheetName);
+  }
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
+
+    this.trimSheet(sheet, rowCount, 21);
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -99,20 +110,8 @@ AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
     sheet.getRange('N3:U3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
-  }
 
-  let actionColumnIndex = 1;
-  let asset1ColumnIndex = 2;
-  let asset2ColumnIndex = 8;
-
-  let actionLinkTable = [];
-  let asset1LinkTable = [];
-  let asset2LinkTable = [];
-
-  for (let row of dataTable) {
-    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
-    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
-    actionLinkTable.push([row[actionColumnIndex], row.splice(-1, 1)[0]]);
+    this.setSheetVersion(sheet, version);
   }
 
   this.trimSheet(sheet, rowCount, 21);
@@ -123,25 +122,26 @@ AssetTracker.prototype.openReport = function (sheetName = this.openReportName) {
   let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 21);
   ss.setNamedRange(this.openRangeName, namedRange);
 
-  this.writeLinks(ss, actionLinkTable, this.openRangeName, actionColumnIndex, this.ledgerSheetName, 'A', 'M');
+  this.writeLinks(ss, actionLinkTable, this.openRangeName, 1, this.ledgerSheetName, 'A', 'M');
 
-  this.writeLinks(ss, asset1LinkTable, this.openRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset1LinkTable, this.openRangeName, 2, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset2LinkTable, this.openRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  SpreadsheetApp.flush();
+  this.writeLinks(ss, asset2LinkTable, this.openRangeName, 8, this.assetsSheetName, 'A', 'F');
 
   sheet.autoResizeColumns(1, 21);
 };
 
 /**
- * Returns a table of the current open data.
+ * Returns the open data.
  * The open data is collected when the ledger is processed.
- * @return {Array<Array>} The current open data.
+ * @return {Array<Array>} The open data table and the action and asset link tables.
  */
-AssetTracker.prototype.getOpenTable = function () {
+AssetTracker.prototype.getOpenData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let actionLinkTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
 
   for (let wallet of this.wallets.values()) {
 
@@ -168,7 +168,7 @@ AssetTracker.prototype.getOpenTable = function () {
         let asset1RowIndex = lot.debitAsset.rowIndex;
         let asset2RowIndex = lot.creditAsset.rowIndex;
 
-        table.push([
+        dataTable.push([
 
           date,
           action,
@@ -193,10 +193,18 @@ AssetTracker.prototype.getOpenTable = function () {
     }
   }
 
-  if (table.length === 0) {
+  if (dataTable.length === 0) {
 
-    return [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
   }
 
-  return table.sort(function (a, b) { return a[0] - b[0]; });
+  dataTable.sort(function (a, b) { return a[0] - b[0]; });
+
+  for (let row of dataTable) {
+    asset2LinkTable.push([row[8], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[2], row.splice(-1, 1)[0]]);
+    actionLinkTable.push([row[1], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable];
 };

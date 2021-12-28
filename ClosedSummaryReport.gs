@@ -11,56 +11,52 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  if (sheet) {
-    if (this.getSheetVersion(sheet) === version) {
-      return;
-    }
-    else {
-      sheet.clear();
-    }
-  }
-  else {
+  if (!sheet) {
     sheet = ss.insertSheet(sheetName);
   }
 
-  this.setSheetVersion(sheet, version);
+  if (this.getSheetVersion(sheet) !== version) {
 
-  const referenceRangeName = this.closedRangeName;
+    sheet.clear();
 
-  let headers = [
-    [
-      '',
-      'Year',
-      'Asset Type',
-      'Asset',
-      'Holding Period',
-      'Balance',
-      'Cost Price',
-      'Sell Price',
-      'Cost Basis',
-      'Proceeds',
-      'Realized P/L',
-      'Realized P/L %'
-    ]
-  ];
+    this.trimColumns(sheet, 19);
 
-  sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
-  sheet.setFrozenRows(1);
+    const referenceRangeName = this.closedRangeName;
 
-  sheet.getRange('A2:A').setNumberFormat('@');
-  sheet.getRange('C2:E').setNumberFormat('@');
-  sheet.getRange('F2:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('G2:H').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('I2:J').setNumberFormat('#,##0.00;(#,##0.00)');
-  sheet.getRange('K2:K').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-  sheet.getRange('L2:L').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    let headers = [
+      [
+        '',
+        'Year',
+        'Asset Type',
+        'Asset',
+        'Holding Period',
+        'Balance',
+        'Cost Price',
+        'Sell Price',
+        'Cost Basis',
+        'Proceeds',
+        'Realized P/L',
+        'Realized P/L %'
+      ]
+    ];
 
-  sheet.getRange('A2:A').setFontColor('#1155cc');
+    sheet.getRange('A1:L1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.setFrozenRows(1);
 
-  this.addLongShortCondition(sheet, 'E3:E');
+    sheet.getRange('A2:A').setNumberFormat('@');
+    sheet.getRange('C2:E').setNumberFormat('@');
+    sheet.getRange('F2:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange('G2:H').setNumberFormat('#,##0.0000;(#,##0.0000)');
+    sheet.getRange('I2:J').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange('K2:K').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange('L2:L').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-  const formula =
-    `IF(COUNT(QUERY(${referenceRangeName}, "SELECT U WHERE N='Trade'"))=0,,
+    sheet.getRange('A2:A').setFontColor('#1155cc');
+
+    this.addLongShortCondition(sheet, 'E3:E');
+
+    const formula =
+      `IF(COUNT(QUERY(${referenceRangeName}, "SELECT U WHERE N='Trade'"))=0,,
 {
 QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE N='Trade'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''");
 {"", "", "", "", "", "", "", "", "", "", "", ""};
@@ -98,42 +94,41 @@ QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE 
 QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE N='Trade'")}, "SELECT ' ', Col3, Col2, Col1, Col8, SUM(Col4), SUM(Col5) / SUM(Col4), SUM(Col6) / SUM(Col4), SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) GROUP BY Col3, Col2, Col1, Col8 ORDER BY Col3, Col2, Col1, Col8 LABEL ' ' '', Col3 '', SUM(Col4) '', SUM(Col5) / SUM(Col4) '', SUM(Col6) / SUM(Col4) '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''")
 })`;
 
-  sheet.getRange('A2').setFormula(formula);
+    sheet.getRange('A2').setFormula(formula);
 
-  this.trimColumns(sheet, 19);
+    let chartRange3 = ss.getRangeByName(this.chartRange3Name);
+    let chartRange4 = ss.getRangeByName(this.chartRange4Name);
+    let chartRange5 = ss.getRangeByName(this.chartRange5Name);
 
-  let chartRange3 = ss.getRangeByName(this.chartRange3Name);
-  let chartRange4 = ss.getRangeByName(this.chartRange4Name);
-  let chartRange5 = ss.getRangeByName(this.chartRange5Name);
+    let assetTypeProceedsPLChart = sheet.newChart().asColumnChart()
+      .addRange(chartRange3)
+      .setNumHeaders(1)
+      .setTitle('Asset Type')
+      .setPosition(1, 16, 30, 30)
+      .build();
 
-  let assetTypeProceedsPLChart = sheet.newChart().asColumnChart()
-    .addRange(chartRange3)
-    .setNumHeaders(1)
-    .setTitle('Asset Type')
-    .setPosition(1, 16, 30, 30)
-    .build();
+    sheet.insertChart(assetTypeProceedsPLChart);
 
-  sheet.insertChart(assetTypeProceedsPLChart);
+    let assetProceedsPLChart = sheet.newChart().asColumnChart()
+      .addRange(chartRange4.offset(0, 1, chartRange4.getHeight(), 3))
+      .setNumHeaders(1)
+      .setTitle('Asset')
+      .setPosition(21, 16, 30, 30)
+      .build();
 
-  let assetProceedsPLChart = sheet.newChart().asColumnChart()
-    .addRange(chartRange4.offset(0, 1, chartRange4.getHeight(), 3))
-    .setNumHeaders(1)
-    .setTitle('Asset')
-    .setPosition(21, 16, 30, 30)
-    .build();
+    sheet.insertChart(assetProceedsPLChart);
 
-  sheet.insertChart(assetProceedsPLChart);
+    let yearProceedsPLChart = sheet.newChart().asColumnChart()
+      .addRange(chartRange5)
+      .setNumHeaders(1)
+      .setTitle('Last 5 Years')
+      .setPosition(40, 16, 30, 30)
+      .build();
 
-  let yearProceedsPLChart = sheet.newChart().asColumnChart()
-    .addRange(chartRange5)
-    .setNumHeaders(1)
-    .setTitle('Last 5 Years')
-    .setPosition(40, 16, 30, 30)
-    .build();
+    sheet.insertChart(yearProceedsPLChart);
 
-  sheet.insertChart(yearProceedsPLChart);
+    sheet.autoResizeColumns(2, 11);
 
-  SpreadsheetApp.flush();
-
-  sheet.autoResizeColumns(2, 11);
+    this.setSheetVersion(sheet, version);
+  }
 };
