@@ -23,11 +23,11 @@ AssetTracker.prototype.ukClosedReport = function (dataTable, asset1LinkTable, as
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 22);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 22);
 
     let headers = [
       [
@@ -120,8 +120,6 @@ AssetTracker.prototype.ukClosedReport = function (dataTable, asset1LinkTable, as
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 22);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 15);
   dataRange.setValues(dataTable);

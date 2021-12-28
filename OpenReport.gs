@@ -23,11 +23,11 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 21);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 21);
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -113,8 +113,6 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 21);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 13);
   dataRange.setValues(dataTable);

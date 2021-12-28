@@ -21,11 +21,11 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 3);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 3);
 
     let headers = [['Wallet', 'Currency', 'Balance']];
 
@@ -42,8 +42,6 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 3);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);
   dataRange.setValues(dataTable);

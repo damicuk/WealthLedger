@@ -21,11 +21,11 @@ AssetTracker.prototype.ukAccountsReport = function (dataTable, assetLinkTable, s
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 6);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 6);
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -70,8 +70,6 @@ AssetTracker.prototype.ukAccountsReport = function (dataTable, assetLinkTable, s
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 6);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 4);
   dataRange.setValues(dataTable);

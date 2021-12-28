@@ -22,11 +22,11 @@ AssetTracker.prototype.ukOpenReport = function (dataTable, asset1LinkTable, asse
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 15);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 15);
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -96,8 +96,6 @@ AssetTracker.prototype.ukOpenReport = function (dataTable, asset1LinkTable, asse
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 15);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 8);
   dataRange.setValues(dataTable);

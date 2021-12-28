@@ -23,11 +23,11 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 10);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 10);
 
     let headers = [
       [
@@ -68,8 +68,6 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 10);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 9);
   dataRange.setValues(dataTable);

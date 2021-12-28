@@ -25,11 +25,11 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
     sheet = ss.insertSheet(sheetName);
   }
 
+  this.trimSheet(sheet, rowCount, 28);
+
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
-
-    this.trimSheet(sheet, rowCount, 28);
 
     let headers = [
       [
@@ -134,8 +134,6 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
 
     this.setSheetVersion(sheet, version);
   }
-
-  this.trimSheet(sheet, rowCount, 28);
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 20);
   dataRange.setValues(dataTable);
