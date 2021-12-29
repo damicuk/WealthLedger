@@ -2,10 +2,10 @@
  * Creates the income report if it doesn't already exist.
  * Updates the sheet with the current income data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The income data table.
- * @param {Array<Array>} The action link table.
- * @param {Array<Array>} The asset 1 link table.
- * @param {Array<Array>} The asset 2 link table.
+ * @param {Array<Array>} dataTable - The income data table.
+ * @param {Array<Array>} actionLinkTable - The action link table.
+ * @param {Array<Array>} asset1LinkTable - The asset 1 link table.
+ * @param {Array<Array>} asset2LinkTable - The asset 2 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
 AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.incomeReportName) {

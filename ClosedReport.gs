@@ -2,12 +2,12 @@
  * Creates the closed report if it doesn't already exist.
  * Updates the sheet with the current closed data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The closed data table.
- * @param {Array<Array>} The action 1 link table.
- * @param {Array<Array>} The action 2 link table.
- * @param {Array<Array>} The asset 1 link table.
- * @param {Array<Array>} The asset 2 link table.
- * @param {Array<Array>} The asset 3 link table.
+ * @param {Array<Array>} dataTable - The closed data table.
+ * @param {Array<Array>} action1LinkTable - The action 1 link table.
+ * @param {Array<Array>} action2LinkTable - The action 2 link table.
+ * @param {Array<Array>} asset1LinkTable - The asset 1 link table.
+ * @param {Array<Array>} asset2LinkTable - The asset 2 link table.
+ * @param {Array<Array>} asset3LinkTable - The asset 3 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
 AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, action2LinkTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.closedReportName) {
