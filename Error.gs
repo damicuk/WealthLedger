@@ -61,7 +61,7 @@ var CustomError = class CustomError extends Error {
 
     this.name = this.constructor.name;
   }
-}
+};
 
 /**
  * Error in the validation of the ledger.
@@ -93,7 +93,7 @@ var ValidationError = class ValidationError extends CustomError {
      */
     this.columnName = columnName;
   }
-}
+};
 
 /**
  * Error when attempting to withdraw from an asset account.
@@ -125,7 +125,7 @@ var AssetAccountError = class AssetAccountError extends CustomError {
      */
     this.columnName = columnName;
   }
-}
+};
 
 /**
  * Error when attempting to retrieve current prices from an API.
@@ -141,4 +141,4 @@ var ApiError = class ApiError extends CustomError {
 
     super(message);
   }
-}
+};
