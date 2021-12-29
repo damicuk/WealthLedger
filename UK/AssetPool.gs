@@ -6,10 +6,10 @@ var AssetPool = class AssetPool {
 
   /**
    * Sets the asset and initializes an empty array to contain the asset deposits.
-   * @param {Asset} asset - The asset.
-   * @param {Asset} fiatBase - The fiat base asset.
+   * @param {Asset} asset - the asset.
+   * @param {AssetTraker} assetTracker - The asset tracker to which the asset pool belongs.
    */
-  constructor(asset, fiatBase) {
+  constructor(asset, assetTracker) {
 
     /**
      * The asset.
@@ -18,10 +18,10 @@ var AssetPool = class AssetPool {
     this.asset = asset;
 
     /**
-     * The fiat base asset.
-     * @type {Asset}
+     * The asset tracker to which the asset pool belongs.
+     * @type {AssetTraker}
      */
-    this.fiatBase = fiatBase;
+    this.assetTracker = assetTracker;
 
     /**
      * The collection of pool deposits.
@@ -74,7 +74,7 @@ var AssetPool = class AssetPool {
 
     //If the deposit has zero balance close it straight away
     if (poolDeposit.action === 'Trade' && poolDeposit.subunits === 0) {
-      let poolWithdrawal = new PoolWithdrawal(poolDeposit.date, poolDeposit.creditAsset, poolDeposit.balance, 0, this.fiatBase, 0, 0, 'Trade');
+      let poolWithdrawal = new PoolWithdrawal(poolDeposit.date, poolDeposit.creditAsset, poolDeposit.balance, 0, this.assetTracker.fiatBase, 0, 0, 'Trade');
       let closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
       this.closedPoolLots.push(closedPoolLot);
       return;
@@ -113,7 +113,7 @@ var AssetPool = class AssetPool {
   addPoolWithdrawal(poolWithdrawal) {
 
     if (poolWithdrawal.action === 'Trade' && poolWithdrawal.subunits === 0) {
-      let poolDeposit = new PoolDeposit(poolWithdrawal.date, this.fiatBase, 0, 0, poolWithdrawal.debitAsset, poolWithdrawal.balance, 0, 'Trade');
+      let poolDeposit = new PoolDeposit(poolWithdrawal.date, this.assetTracker.fiatBase, 0, 0, poolWithdrawal.debitAsset, poolWithdrawal.balance, 0, 'Trade');
       let closedPoolLot = new ClosedPoolLot(poolDeposit, poolWithdrawal);
       this.closedPoolLots.push(closedPoolLot);
       return;

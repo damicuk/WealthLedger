@@ -11,32 +11,26 @@ AssetTracker.prototype.ukWalletsReport = function (sheetName = this.ukWalletsRep
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  if (sheet) {
-    if (this.getSheetVersion(sheet) === version) {
-      return;
-    }
-    else {
-      sheet.clear();
-    }
-  }
-  else {
+  if (!sheet) {
     sheet = ss.insertSheet(sheetName);
   }
 
-  this.setSheetVersion(sheet, version);
+  if (this.getSheetVersion(sheet) !== version) {
 
-  const referenceRangeName1 = this.ukAccountsRangeName;
-  const referenceRangeName2 = this.fiatAccountsRangeName;
+    sheet.clear();
 
-  sheet.getRange('A1:2').setFontWeight('bold').setHorizontalAlignment("center");
-  sheet.setFrozenRows(2);
-  sheet.setFrozenColumns(1);
+    const referenceRangeName1 = this.ukAccountsRangeName;
+    const referenceRangeName2 = this.fiatAccountsRangeName;
 
-  sheet.getRange('A2:B').setNumberFormat('@');
-  sheet.getRange(2, 2, sheet.getMaxRows(), sheet.getMaxColumns()).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange('A1:2').setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.setFrozenRows(2);
+    sheet.setFrozenColumns(1);
 
-  sheet.getRange('A1').setFormula(
-    `IF(AND(COUNT(QUERY(${referenceRangeName1}, "SELECT D"))=0, COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0),,
+    sheet.getRange('A2:B').setNumberFormat('@');
+    sheet.getRange(2, 2, sheet.getMaxRows(), sheet.getMaxColumns()).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+
+    sheet.getRange('A1').setFormula(
+      `IF(AND(COUNT(QUERY(${referenceRangeName1}, "SELECT D"))=0, COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0),,
 TRANSPOSE(QUERY(
 IF(COUNT(QUERY(${referenceRangeName2}, "SELECT C"))=0,
 QUERY(${referenceRangeName1}, "SELECT B, C, A, SUM(D) GROUP BY B, C, A ORDER BY C, B, A LABEL SUM(D) ''"),
@@ -46,7 +40,15 @@ QUERY(QUERY(${referenceRangeName2}, "SELECT B, 'Fiat', A, SUM(C) GROUP BY B, A O
 QUERY(${referenceRangeName1}, "SELECT B, C, A, SUM(D) GROUP BY B, C, A ORDER BY C, B, A LABEL SUM(D) ''");
 QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A ORDER BY B, A LABEL ' Fiat ' '', SUM(C) ''"), "SELECT * WHERE Col4 <> 0")
 })), "SELECT Col1, Col2, SUM(Col4) GROUP BY Col1, Col2 PIVOT Col3 ORDER BY Col2, Col1 LABEL Col1 'Wallet'")))`
-  );
+    );
 
-  sheet.autoResizeColumns(1, sheet.getMaxColumns());
+    this.setSheetVersion(sheet, version);
+  }
+
+  SpreadsheetApp.flush();
+  let dataRange = sheet.getDataRange();
+  let dataRangeWidth = dataRange.getWidth();
+  if (dataRangeWidth >= 2) {
+    sheet.autoResizeColumns(2, dataRange.getWidth() - 1);
+  }
 };

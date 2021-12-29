@@ -7,9 +7,9 @@ var FiatAccount = class FiatAccount {
   /**
    * Sets the fiat asset and initializes the balance to 0.
    * @param {Asset} asset - The fiat asset.
-   * @param {string} walletName - The name of the wallet to which the asset account belongs.
+   * @param {Wallet} wallet - The wallet to which the asset account belongs.
    */
-  constructor(asset, walletName) {
+  constructor(asset, wallet) {
 
     /**
      * The fiat asset.
@@ -18,10 +18,10 @@ var FiatAccount = class FiatAccount {
     this.asset = asset;
 
     /**
-     * The name of the wallet to which the asset account belongs.
-     * @type {string}
+     * The wallet to which the asset account belongs.
+     * @type {Wallet}
      */
-    this.walletName = walletName;
+    this.wallet = wallet;
 
     /**
      * The balance in the account in subunits.

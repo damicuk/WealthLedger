@@ -417,5 +417,5 @@ AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount, act
 
   let zeroSubunitLots = assetAccount.removeZeroSubunitLots();
 
-  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.walletName, action, rowIndex);
+  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name, action, rowIndex);
 };

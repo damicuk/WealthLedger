@@ -7,9 +7,9 @@ var AssetAccount = class AssetAccount {
   /**
    * Sets the asset and initializes an empty array to contain the asset lots.
    * @param {Asset} asset - The asset.
-   * @param {string} walletName - The name of the wallet to which the asset account belongs.
+   * @param {Wallet} wallet - The wallet to which the asset account belongs.
    */
-  constructor(asset, walletName) {
+  constructor(asset, wallet) {
 
     /**
      * The asset.
@@ -18,10 +18,10 @@ var AssetAccount = class AssetAccount {
     this.asset = asset;
 
     /**
-    * The name of the wallet to which the asset account belongs.
-    * @type {string}
+    * The wallet to which the asset account belongs.
+    * @type {Wallet}
     */
-    this.walletName = walletName;
+    this.wallet = wallet;
 
     /**
      * The asset lots.
@@ -104,7 +104,7 @@ var AssetAccount = class AssetAccount {
 
     if (neededSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee ? fee : 0} from ${this.walletName} balance of ${this.balance}.`, rowIndex, 'debitAmount');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee ? fee : 0} from ${this.wallet.name} balance of ${this.balance}.`, rowIndex, 'debitAmount');
 
     }
 
@@ -175,7 +175,7 @@ var AssetAccount = class AssetAccount {
 
     if (feeSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw fee ${this.ticker} ${fee} from ${this.walletName} balance of ${this.balance}.`, rowIndex, 'debitFee');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw fee ${this.ticker} ${fee} from ${this.wallet.name} balance of ${this.balance}.`, rowIndex, 'debitFee');
 
     }
 

@@ -2,16 +2,32 @@
  * Creates the uk closed report if it doesn't already exist.
  * Updates the sheet with the current closed data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The uk closed data table.
+ * @param {Array<Array>} The asset 1 link table.
+ * @param {Array<Array>} The asset 2 link table.
+ * @param {Array<Array>} The asset 3 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedReportName) {
+AssetTracker.prototype.ukClosedReport = function (dataTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.ukClosedReportName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  if (!sheet) {
+  const headerRows = 2;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
 
+  if (!sheet) {
     sheet = ss.insertSheet(sheetName);
+  }
+
+  this.trimSheet(sheet, rowCount, 22);
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
 
     let headers = [
       [
@@ -49,7 +65,7 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
       ]
     ];
 
-    sheet.getRange('A1:V2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:V2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:E2').setBackgroundColor('#ead1dc');
@@ -62,31 +78,31 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
     sheet.getRange('J1:O1').mergeAcross();
     sheet.getRange('P1:V1').mergeAcross();
 
-    sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd');
-    sheet.getRange('B3:C').setNumberFormat('@');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('E3:E').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`A3:A${rowCount}`).setNumberFormat('yyyy-mm-dd');
+    sheet.getRange(`B3:C${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`D3:D${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`E3:E${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
 
-    sheet.getRange('F3:G').setNumberFormat('@');
-    sheet.getRange('H3:H').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('I3:I').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`F3:G${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`H3:H${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`I3:I${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
 
-    sheet.getRange('J3:J').setNumberFormat('yyyy-mm-dd');
-    sheet.getRange('K3:L').setNumberFormat('@');
-    sheet.getRange('M3:M').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('N3:N').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('O3:O').setNumberFormat('@');
+    sheet.getRange(`J3:J${rowCount}`).setNumberFormat('yyyy-mm-dd');
+    sheet.getRange(`K3:L${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`M3:M${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`N3:N${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`O3:O${rowCount}`).setNumberFormat('@');
 
-    sheet.getRange('P3:P').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('Q3:T').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('U3:U').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('V3:V').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`P3:P${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`Q3:T${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`U3:U${rowCount}`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`V3:V${rowCount}`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-    this.addPoolCondition(sheet, 'A3:A');
-    this.addAssetCondition(sheet, 'B3:B');
-    this.addAssetCondition(sheet, 'F3:F');
-    this.addAssetCondition(sheet, 'K3:K');
-    this.addActionCondtion(sheet, 'O3:O');
+    this.addPoolCondition(sheet, `A3:A${rowCount}`);
+    this.addAssetCondition(sheet, `B3:B${rowCount}`);
+    this.addAssetCondition(sheet, `F3:F${rowCount}`);
+    this.addAssetCondition(sheet, `K3:K${rowCount}`);
+    this.addActionCondtion(sheet, `O3:O${rowCount}`);
 
     const formulas = [[
       `IF(ISBLANK(B3),,(ArrayFormula(FILTER(H3:H-I3:I, LEN(B3:B)))))`,
@@ -102,42 +118,35 @@ AssetTracker.prototype.ukClosedReport = function (sheetName = this.ukClosedRepor
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
+    this.setSheetVersion(sheet, version);
   }
 
-  let dataTable = this.getUKClosedTable();
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 15);
+  dataRange.setValues(dataTable);
 
-  let asset1ColumnIndex = 1;
-  let asset2ColumnIndex = 5;
-  let asset3ColumnIndex = 10;
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 22);
+  ss.setNamedRange(this.ukClosedRangeName, namedRange);
 
-  let asset1LinkTable = [];
-  let asset2LinkTable = [];
-  let asset3LinkTable = [];
+  this.writeLinks(ss, asset1LinkTable, this.ukClosedRangeName, 1, this.assetsSheetName, 'A', 'F');
 
-  for (let row of dataTable) {
+  this.writeLinks(ss, asset2LinkTable, this.ukClosedRangeName, 5, this.assetsSheetName, 'A', 'F');
 
-    asset3LinkTable.push([row[asset3ColumnIndex], row.splice(-1, 1)[0]]);
-    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
-    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
-  }
+  this.writeLinks(ss, asset3LinkTable, this.ukClosedRangeName, 10, this.assetsSheetName, 'A', 'F');
 
-  this.writeTable(ss, sheet, dataTable, this.ukClosedRangeName, 2, 15, 7);
-
-  this.writeLinks(ss, asset1LinkTable, this.ukClosedRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  this.writeLinks(ss, asset2LinkTable, this.ukClosedRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  this.writeLinks(ss, asset3LinkTable, this.ukClosedRangeName, asset3ColumnIndex, this.assetsSheetName, 'A', 'F');
+  sheet.autoResizeColumns(1, 22);
 };
 
 /**
- * Returns a table of the current closed data.
- * The closed data is collected when the ledger is processed.
- * @return {Array<Array>} The current closed data.
+ * Returns uk closed data.
+ * The uk closed data is collected when the ledger is processed.
+ * @return {Array<Array>} The uk closed data table and the asset link tables.
  */
-AssetTracker.prototype.getUKClosedTable = function () {
+AssetTracker.prototype.getUKClosedData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
+  let asset3LinkTable = [];
 
   for (let assetPool of this.assetPools.values()) {
 
@@ -168,7 +177,7 @@ AssetTracker.prototype.getUKClosedTable = function () {
       let asset2RowIndex = poolDeposit.creditAsset.rowIndex;
       let asset3RowIndex = poolWithdrawal.creditAsset.rowIndex;
 
-      table.push([
+      dataTable.push([
 
         dateBuy,
         debitAssetBuy,
@@ -196,5 +205,19 @@ AssetTracker.prototype.getUKClosedTable = function () {
     }
   }
 
-  return this.sortTable(table, 7);
+  if (dataTable.length === 0) {
+
+    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+  }
+
+  dataTable.sort(function (a, b) { return a[7] - b[7]; });
+
+  for (let row of dataTable) {
+
+    asset3LinkTable.push([row[10], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[5], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[1], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, asset1LinkTable, asset2LinkTable, asset3LinkTable];
 };

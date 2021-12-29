@@ -2,16 +2,31 @@
  * Creates the uk open report if it doesn't already exist.
  * Updates the sheet with the current open pools data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The uk open data table.
+ * @param {Array<Array>} The asset 1 link table.
+ * @param {Array<Array>} The asset 2 link table.
  * @param {string} [sheetName] - The name of the sheet
  */
-AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportName) {
+AssetTracker.prototype.ukOpenReport = function (dataTable, asset1LinkTable, asset2LinkTable, sheetName = this.ukOpenReportName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
-  if (!sheet) {
+  const headerRows = 2;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
 
+  if (!sheet) {
     sheet = ss.insertSheet(sheetName);
+  }
+
+  this.trimSheet(sheet, rowCount, 15);
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
 
     const referenceRangeName = this.assetsRangeName;
 
@@ -40,7 +55,7 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
       ]
     ];
 
-    sheet.getRange('A1:O2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+    sheet.getRange('A1:O2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:D2').setBackgroundColor('#ead1dc');
@@ -51,19 +66,19 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
     sheet.getRange('E1:H1').mergeAcross();
     sheet.getRange('I1:O1').mergeAcross();
 
-    sheet.getRange('A3:B').setNumberFormat('@');
-    sheet.getRange('C3:C').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('D3:D').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('E3:F').setNumberFormat('@');
-    sheet.getRange('G3:G').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('H3:H').setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange('I3:I').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange('J3:M').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('N3:N').setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange('O3:O').setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`A3:B${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`C3:C${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`D3:D${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`E3:F${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`G3:G${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`H3:H${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`I3:I${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`J3:M${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`N3:N${rowCount}`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`O3:O${rowCount}`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
 
-    this.addAssetCondition(sheet, 'A3:A');
-    this.addAssetCondition(sheet, 'E3:E');
+    this.addAssetCondition(sheet, `A3:A${rowCount}`);
+    this.addAssetCondition(sheet, `E3:E${rowCount}`);
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(G3:G-H3:H, LEN(A3:A)))))`,
@@ -79,36 +94,32 @@ AssetTracker.prototype.ukOpenReport = function (sheetName = this.ukOpenReportNam
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
+    this.setSheetVersion(sheet, version);
   }
 
-  let dataTable = this.getUKOpenTable();
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 8);
+  dataRange.setValues(dataTable);
 
-  let asset1ColumnIndex = 0;
-  let asset2ColumnIndex = 4;
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 15);
+  ss.setNamedRange(this.ukOpenRangeName, namedRange);
 
-  let asset1LinkTable = [];
-  let asset2LinkTable = [];
+  this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, 0, this.assetsSheetName, 'A', 'F');
 
-  for (let row of dataTable) {
-    asset2LinkTable.push([row[asset2ColumnIndex], row.splice(-1, 1)[0]]);
-    asset1LinkTable.push([row[asset1ColumnIndex], row.splice(-1, 1)[0]]);
-  }
+  this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, 4, this.assetsSheetName, 'A', 'F');
 
-  this.writeTable(ss, sheet, dataTable, this.ukOpenRangeName, 2, 8, 7);
-
-  this.writeLinks(ss, asset1LinkTable, this.ukOpenRangeName, asset1ColumnIndex, this.assetsSheetName, 'A', 'F');
-
-  this.writeLinks(ss, asset2LinkTable, this.ukOpenRangeName, asset2ColumnIndex, this.assetsSheetName, 'A', 'F');
+  sheet.autoResizeColumns(1, 15);
 };
 
 /**
- * Returns a table of the current open data.
- * The open data is collected when the ledger is processed.
- * @return {Array<Array>} The current open data.
+ * Returns the uk open data.
+ * The uk open data is collected when the ledger is processed.
+ * @return {Array<Array>} The uk open data table and the asset link tables.
  */
-AssetTracker.prototype.getUKOpenTable = function () {
+AssetTracker.prototype.getUKOpenData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let asset1LinkTable = [];
+  let asset2LinkTable = [];
 
   for (let assetPool of this.assetPools.values()) {
 
@@ -130,7 +141,7 @@ AssetTracker.prototype.getUKOpenTable = function () {
       let asset1RowIndex = poolDeposit.debitAsset.rowIndex;
       let asset2RowIndex = poolDeposit.creditAsset.rowIndex;
 
-      table.push([
+      dataTable.push([
 
         debitAsset,
         debitAssetType,
@@ -147,5 +158,17 @@ AssetTracker.prototype.getUKOpenTable = function () {
     }
   }
 
-  return this.sortTable(table, 4, true);
+  if (dataTable.length === 0) {
+
+    dataTable = [['', '', '', '', '', '', '', '', '', '']];
+  }
+
+  dataTable.sort(function (a, b) { return AssetTracker.abcComparator(a[4], b[4]); });
+
+  for (let row of dataTable) {
+    asset2LinkTable.push([row[4], row.splice(-1, 1)[0]]);
+    asset1LinkTable.push([row[0], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, asset1LinkTable, asset2LinkTable];
 };

@@ -48,19 +48,18 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('H1:L1').mergeAcross();
   sheet.getRange('M1:N1').mergeAcross();
 
-  sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-  sheet.getRange('B3:C').setNumberFormat('@');
-  sheet.getRange('D3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('G3:H').setNumberFormat('@');
-  sheet.getRange('I3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('L3:N').setNumberFormat('@');
+  sheet.getRange('A3:A30').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+  sheet.getRange('B3:C30').setNumberFormat('@');
+  sheet.getRange('D3:F30').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('G3:H30').setNumberFormat('@');
+  sheet.getRange('I3:K30').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+  sheet.getRange('L3:N30').setNumberFormat('@');
 
-  this.addActionCondtion(sheet, 'B3:B');
+  this.addActionCondtion(sheet, 'B3:B30');
 
   if (!sheet.getFilter()) {
-    sheet.getRange('A2:N').createFilter();
+    sheet.getRange('A2:N30').createFilter();
   }
-
 
   let sampleFiatBase;
   if (this.accountingModel === 'UK') {
@@ -74,7 +73,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2019-03-01 12:00:00', 'Transfer', , , , , , sampleFiatBase, , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
     ['2019-03-02 12:00:00', 'Trade', sampleFiatBase, , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
     ['2019-03-03 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
-    ['2019-03-04 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 6010, 10, , , ,],
+    ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 6010, 10, , , ,],
     ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 20010, 10, , , ,],
     ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , `Exchange assets.`],
     ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', sampleFiatBase, , 12010, 10, , , ,],
@@ -109,53 +108,53 @@ AssetTracker.prototype.ledgerSheet = function () {
     .setAllowInvalid(false)
     .setHelpText('Input must be a date.')
     .build();
-  sheet.getRange('A3:A').setDataValidation(dateRule);
+  sheet.getRange('A3:A30').setDataValidation(dateRule);
 
   let actionRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Skip', 'Split', 'Stop', 'Trade', 'Transfer'])
     .setAllowInvalid(false)
     .build();
-  sheet.getRange('B3:B').setDataValidation(actionRule);
+  sheet.getRange('B3:B30').setDataValidation(actionRule);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(assetList)
     .setAllowInvalid(true)
     .setHelpText(`New assets will be added to the data validation dropdown when write reports is run.`)
     .build();
-  sheet.getRange('C3:C').setDataValidation(assetRule);
-  sheet.getRange('H3:H').setDataValidation(assetRule);
+  sheet.getRange('C3:C30').setDataValidation(assetRule);
+  sheet.getRange('H3:H30').setDataValidation(assetRule);
 
   let positiveNumberRule = SpreadsheetApp.newDataValidation()
     .requireNumberGreaterThan(0)
     .setAllowInvalid(false)
     .setHelpText(`Input must be a number greater than 0.`)
     .build();
-  sheet.getRange('D3:D').setDataValidation(positiveNumberRule);
-  sheet.getRange('I3:I').setDataValidation(positiveNumberRule);
+  sheet.getRange('D3:D30').setDataValidation(positiveNumberRule);
+  sheet.getRange('I3:I30').setDataValidation(positiveNumberRule);
 
   let nonNegativeNumberRule = SpreadsheetApp.newDataValidation()
     .requireNumberGreaterThanOrEqualTo(0)
     .setAllowInvalid(false)
     .setHelpText(`Input must be a number greater than or equal to 0.`)
     .build();
-  sheet.getRange('E3:E').setDataValidation(nonNegativeNumberRule);
-  sheet.getRange('F3:F').setDataValidation(nonNegativeNumberRule);
-  sheet.getRange('J3:J').setDataValidation(nonNegativeNumberRule);
-  sheet.getRange('K3:K').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('E3:E30').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('F3:F30').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('J3:J30').setDataValidation(nonNegativeNumberRule);
+  sheet.getRange('K3:K30').setDataValidation(nonNegativeNumberRule);
 
   let walletRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['Binance', 'Deposit', 'IB', 'Kraken', 'Ledger', 'Rewards'])
     .setAllowInvalid(true)
     .setHelpText(`New wallets will be added to the data validation dropdown when write reports is run.`)
     .build();
-  sheet.getRange('G3:G').setDataValidation(walletRule);
-  sheet.getRange('L3:L').setDataValidation(walletRule);
+  sheet.getRange('G3:G30').setDataValidation(walletRule);
+  sheet.getRange('L3:L30').setDataValidation(walletRule);
 
   let lotMatchingRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['FIFO', 'LIFO', 'HIFO', 'LOFO'])
     .setAllowInvalid(false)
     .build();
-  sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
+  sheet.getRange('M3:M30').setDataValidation(lotMatchingRule);
 
   this.trimSheet(sheet, 30, 14);
 

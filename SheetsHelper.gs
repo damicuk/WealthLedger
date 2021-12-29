@@ -1,4 +1,23 @@
 /**
+ * Sets the currenct cell in named sheet.
+ * @param {string} sheetName - The name. of the sheet.
+ * @param {number} rowIndex - The row index of the cell in the named sheet.
+ * @param {number} columnIndex - The column index of the cell in the named sheet.
+ */
+AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnIndex) {
+
+  let ss = SpreadsheetApp.getActive();
+  let sheet = ss.getSheetByName(sheetName);
+
+  if (sheet) {
+
+    let range = sheet.getRange(rowIndex, columnIndex, 1, 1);
+    ss.setCurrentCell(range);
+    SpreadsheetApp.flush();
+  }
+};
+
+/**
  * Deletes the named sheet if it exists.
  * @param {string} sheetName - The name of the sheet to delete.
  */
@@ -53,74 +72,6 @@ AssetTracker.prototype.getSheetVersion = function (sheet) {
   let metadataArray = sheet.createDeveloperMetadataFinder().withKey('version').find();
   let metadataValue = metadataArray.length > 0 ? metadataArray[0].getValue() : '';
   return metadataValue;
-};
-
-/**
- * Writes a table of data values to a given sheet, adds a named range, trims the sheet to the correct size and resizes the columns.
- * @param {Spreadsheet} ss - Spreadsheet object e.g. from SpreadsheetApp.getActive().
- * @param {Sheet} sheet - The sheet to which the data values should be written.
- * @param {Array<Array>} dataTable - The table of values to write to the sheet.
- * @param {string} rangeName - The named range name to apply to the data range.
- * @param {number} headerRows - The number of header rows.
- * @param {number} dataColumns - The number of data columns - needed as the table may be empty.
- * @param {number} [formulaColumns] - The number of columns containing formulas to the right of the data.
- */
-AssetTracker.prototype.writeTable = function (ss, sheet, dataTable, rangeName, headerRows, dataColumns, formulaColumns = 0) {
-
-  const dataRows = dataTable.length;
-
-  //keep at least header and one row for arrayformula references
-  const neededRows = Math.max(headerRows + dataRows, headerRows + 1);
-
-  const neededColumns = dataColumns + formulaColumns;
-
-  this.trimSheet(sheet, neededRows, neededColumns);
-
-  if (dataRows > 0) {
-
-    let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, dataColumns);
-
-    dataRange.setValues(dataTable);
-
-    let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, dataColumns + formulaColumns);
-
-    ss.setNamedRange(rangeName, namedRange);
-
-  }
-  else {
-
-    let dataRange = sheet.getRange(headerRows + 1, 1, 1, dataColumns);
-
-    dataRange.clearContent();
-
-    let namedRange = sheet.getRange(headerRows + 1, 1, 1, dataColumns + formulaColumns);
-
-    ss.setNamedRange(rangeName, namedRange);
-
-  }
-
-  sheet.autoResizeColumns(1, sheet.getMaxColumns());
-};
-
-
-/**
- * Sorts a table of values given a column index.
- * @param {Array<Array>} dataTable - The table of values to be sorted.
- * @param {number} index - The index of the column by which to sort.
- * @param {boolean} [abc=false] - The column should be sorted in alphabetical order rather than numeric or date.
- */
-AssetTracker.prototype.sortTable = function (dataTable, index, abc = false) {
-
-  dataTable.sort(function (a, b) {
-    if (abc) {
-      return AssetTracker.abcComparator(a[index], b[index]);
-    }
-    else {
-      return a[index] - b[index];
-    }
-  });
-
-  return dataTable;
 };
 
 /**

@@ -45,25 +45,6 @@ AssetTracker.prototype.handleError = function (error, message, sheetName, rowInd
 };
 
 /**
- * Sets the currenct cell in named sheet.
- * @param {string} sheetName - The name. of the sheet.
- * @param {number} rowIndex - The row index of the cell in the named sheet.
- * @param {number} columnIndex - The column index of the cell in the named sheet.
- */
-AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnIndex) {
-
-  let ss = SpreadsheetApp.getActive();
-  let sheet = ss.getSheetByName(sheetName);
-
-  if (sheet) {
-
-    let range = sheet.getRange(rowIndex, columnIndex, 1, 1);
-    ss.setCurrentCell(range);
-    SpreadsheetApp.flush();
-  }
-};
-
-/**
  * General custom error from which to inherit.
  * Assigns the name of the class to the name property and passes the message to super.
  * @extends Error

@@ -2,46 +2,67 @@
  * Creates the fiat accounts sheet if it doesn't already exist.
  * Updates the sheet with the current fiat accounts data.
  * Trims the sheet to fit the data.
+ * @param {Array<Array>} The fiat accounts data table.
+ * @param {Array<Array>} The asset link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
-AssetTracker.prototype.fiatAccountsSheet = function (sheetName = this.fiatAccountsSheetName) {
+AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, sheetName = this.fiatAccountsSheetName) {
+
+  const version = '1';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
+  const headerRows = 1;
+  const dataRows = dataTable.length;
+  const rowCount = dataRows + headerRows;
+
   if (!sheet) {
-
     sheet = ss.insertSheet(sheetName);
+  }
 
-    let headers = [['Wallet', 'Currency', 'Balance']];
+  this.trimSheet(sheet, rowCount, 3);
 
-    sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
+
+    let headers = [['Wallet', 'Asset', 'Balance']];
+
+    sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);
 
-    sheet.getRange('A2:A').setNumberFormat('@');
-    sheet.getRange('B2:B').setNumberFormat('@');
-    sheet.getRange('C2:C').setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`A2:A${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`B2:B${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`C2:C${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
 
     sheet.hideSheet();
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
+    this.setSheetVersion(sheet, version);
   }
 
-  let dataTable = this.getFiatTable();
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);
+  dataRange.setValues(dataTable);
 
-  this.writeTable(ss, sheet, dataTable, this.fiatAccountsRangeName, 1, 3);
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);
+  ss.setNamedRange(this.fiatAccountsRangeName, namedRange);
 
+  this.writeLinks(ss, assetLinkTable, this.fiatAccountsRangeName, 1, this.assetsSheetName, 'A', 'F');
+
+  sheet.autoResizeColumns(1, 3);
 };
 
 /**
- * Returns a table of the current fiat accounts data.
+ * Returns the fiat accounts data.
  * The fiat accounts data is collected when the ledger is processed.
- * @return {Array<Array>} The current fiat accounts data.
+ * @return {Array<Array>} The fiat accounts data table and the asset link table.
  */
-AssetTracker.prototype.getFiatTable = function () {
+AssetTracker.prototype.getFiatData = function () {
 
-  let table = [];
+  let dataTable = [];
+  let assetLinkTable = [];
 
   for (let wallet of this.wallets.values()) {
 
@@ -49,13 +70,23 @@ AssetTracker.prototype.getFiatTable = function () {
 
       if (fiatAccount.balance !== 0) {
 
-        table.push([wallet.name, fiatAccount.ticker, fiatAccount.balance]);
+        dataTable.push([
+          wallet.name,
+          fiatAccount.ticker,
+          fiatAccount.balance,
+          fiatAccount.asset.rowIndex
 
+        ]);
       }
     }
   }
 
-  table.sort(function (a, b) {
+  if (dataTable.length === 0) {
+
+    dataTable = [['', '', '', '']];
+  }
+
+  dataTable.sort(function (a, b) {
     return a[0] > b[0] ? 1 :
       b[0] > a[0] ? -1 :
         a[1] > b[1] ? 1 :
@@ -63,5 +94,9 @@ AssetTracker.prototype.getFiatTable = function () {
             0;
   });
 
-  return table;
+  for (let row of dataTable) {
+    assetLinkTable.push([row[1], row.splice(-1, 1)[0]]);
+  }
+
+  return [dataTable, assetLinkTable];
 };

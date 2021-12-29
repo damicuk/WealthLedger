@@ -451,7 +451,7 @@ var AssetTracker = class AssetTracker {
 
     if (!wallet) {
 
-      wallet = new Wallet(name);
+      wallet = new Wallet(name, this);
       this.wallets.set(name, wallet);
     }
 
@@ -470,7 +470,7 @@ var AssetTracker = class AssetTracker {
 
     if (!assetPool) {
 
-      assetPool = new AssetPool(asset, this.fiatBase);
+      assetPool = new AssetPool(asset, this);
       this.assetPools.set(asset.ticker, assetPool);
     }
 
