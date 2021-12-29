@@ -59,10 +59,6 @@ AssetTracker.prototype.ledgerSheet = function () {
 
   this.addActionCondtion(sheet, 'B3:B');
 
-  if (!sheet.getFilter()) {
-    sheet.getRange('A2:N').createFilter();
-  }
-
   let sampleData = [
     ['2019-03-01 12:00:00', 'Transfer', , , , , , 'USD', , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
     ['2019-03-02 12:00:00', 'Trade', 'USD', , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
@@ -149,6 +145,10 @@ AssetTracker.prototype.ledgerSheet = function () {
     .setAllowInvalid(false)
     .build();
   sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
+
+  if (!sheet.getFilter()) {
+    sheet.getRange('A2:N').createFilter();
+  }
 
   sheet.autoResizeColumns(1, 1);
   sheet.autoResizeColumns(5, 1);
