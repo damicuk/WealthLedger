@@ -51,6 +51,7 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
 
   this.writeLinks(ss, assetLinkTable, this.fiatAccountsRangeName, 1, this.assetsSheetName, 'A', 'F');
 
+  SpreadsheetApp.flush();
   sheet.autoResizeColumns(1, 3);
 };
 

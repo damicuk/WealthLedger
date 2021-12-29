@@ -154,6 +154,8 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.autoResizeColumns(5, 1);
   sheet.autoResizeColumns(10, 1);
   sheet.setColumnWidth(13, 120);
+
+  SpreadsheetApp.flush();
   sheet.autoResizeColumns(14, 1);
 
   this.setSheetVersion(sheet, this.ledgerSheetVersion);

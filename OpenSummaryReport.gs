@@ -138,8 +138,9 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT I, J, M
 
     sheet.insertChart(assetPLChart);
 
-    sheet.autoResizeColumns(2, 11);
-
     this.setSheetVersion(sheet, version);
   }
+
+  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(2, 11);
 };

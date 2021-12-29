@@ -126,6 +126,7 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
 
   this.writeLinks(ss, asset2LinkTable, this.openRangeName, 8, this.assetsSheetName, 'A', 'F');
 
+  SpreadsheetApp.flush();
   sheet.autoResizeColumns(1, 21);
 };
 

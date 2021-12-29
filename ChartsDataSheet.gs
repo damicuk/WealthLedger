@@ -104,8 +104,9 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
     ss.setNamedRange(this.chartRange4Name, sheet.getRange('K3:N'));
     ss.setNamedRange(this.chartRange5Name, sheet.getRange('O3:Q'));
 
-    sheet.autoResizeColumns(1, 17);
-
     this.setSheetVersion(sheet, version);
   }
+
+  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(1, 17);
 };

@@ -81,6 +81,7 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
 
   this.writeLinks(ss, asset2LinkTable, this.incomeRangeName, 4, this.assetsSheetName, 'A', 'F');
 
+  SpreadsheetApp.flush();
   sheet.autoResizeColumns(1, 10);
 };
 

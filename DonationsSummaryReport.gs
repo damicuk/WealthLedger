@@ -69,10 +69,11 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Dona
 
     sheet.getRange('A2').setFormula(formula);
 
-    sheet.autoResizeColumns(2, 6);
-
     sheet.hideSheet();
 
     this.setSheetVersion(sheet, version);
   }
+
+  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(2, 6);
 };
