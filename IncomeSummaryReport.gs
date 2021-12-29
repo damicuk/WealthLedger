@@ -69,8 +69,9 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELEC
 
     sheet.getRange('A2').setFormula(formula);
 
-    sheet.autoResizeColumns(2, 7);
-
     this.setSheetVersion(sheet, version);
   }
+
+  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(2, 7);
 };

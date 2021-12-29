@@ -58,7 +58,7 @@ AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummar
       `IF(COUNT(QUERY(${referenceRangeName}, "SELECT N"))=0,,
 {
 IF(COUNT(QUERY(${referenceRangeName}, "SELECT P"))=0,
-QUERY({QUERY(${referenceRangeName}, "SELECT I, J, M, N, Q, R, S, U")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', SUM(Col5), '       ', '        ', '         ', '          ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', '        ' '', '         ' '', '          ' ''"),
+QUERY({QUERY(${referenceRangeName}, "SELECT I, J, M, N, Q, R, S, U")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), '        ', '         ', '          ' LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', '        ' '', '         ' '', '          ' ''"),
 QUERY({QUERY(${referenceRangeName}, "SELECT I, J, M, N, Q, R, S, U")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', '     ', '      ', '       ', SUM(Col5), SUM(Col6), SUM(Col7), SUM(Col7) / SUM(Col5) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', '       ' '', SUM(Col5) '', SUM(Col6) '', SUM(Col7) '', SUM(Col7) / SUM(Col5) ''"));
 {"", "", "", "", "", "", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", "", "", "", "", "", ""};
@@ -138,8 +138,9 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT I, J, M
 
     sheet.insertChart(assetPLChart);
 
-    sheet.autoResizeColumns(2, 11);
-
     this.setSheetVersion(sheet, version);
   }
+
+  SpreadsheetApp.flush();
+  sheet.autoResizeColumns(2, 11);
 };
