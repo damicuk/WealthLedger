@@ -48,8 +48,6 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
-  this.fiatAccountsSheet();
-
   if (this.accountingModel === 'UK') {
 
     let timeZone = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
@@ -58,10 +56,18 @@ AssetTracker.prototype.writeReports = function () {
 
     this.deleteSheets(this.defaultReportNames);
 
-    this.ukOpenPositionsReport();
-    this.ukAssetAccountsReport();
-    this.ukClosedPositionsReport();
-    this.incomeReport(this.ukIncomeReportName);
+    let fiatData = this.getFiatData();
+    let ukOpenData = this.getUKOpenData();
+    let ukClosedData = this.getUKClosedData();
+    let incomeData = this.getIncomeData();
+    let ukAccountsData = this.getUKAccountsData();
+
+    this.fiatAccountsSheet(fiatData[0], fiatData[1]);
+    this.ukOpenReport(ukOpenData[0], ukOpenData[1], ukOpenData[2]);
+    this.ukClosedReport(ukClosedData[0], ukClosedData[1], ukClosedData[2], ukClosedData[3]);
+    this.incomeReport(incomeData[0], incomeData[1], incomeData[2], incomeData[3], this.ukIncomeReportName);
+    this.ukAccountsReport(ukAccountsData[0], ukAccountsData[1]);
+
     this.ukChartsDataSheet();
     this.ukOpenSummaryReport();
     this.ukClosedSummaryReport();
@@ -74,10 +80,16 @@ AssetTracker.prototype.writeReports = function () {
 
     this.deleteSheets(this.ukReportNames);
 
-    this.fiatAccountsSheet();
-    this.openPositionsReport();
-    this.closedPositionsReport();
-    this.incomeReport();
+    let fiatData = this.getFiatData();
+    let openData = this.getOpenData();
+    let closedData = this.getClosedData();
+    let incomeData = this.getIncomeData();
+
+    this.fiatAccountsSheet(fiatData[0], fiatData[1]);
+    this.openReport(openData[0], openData[1], openData[2], openData[3]);
+    this.closedReport(closedData[0], closedData[1], closedData[2], closedData[3], closedData[4], closedData[5]);
+    this.incomeReport(incomeData[0], incomeData[1], incomeData[2], incomeData[3]);
+
     this.chartsDataSheet();
     this.openSummaryReport();
     this.closedSummaryReport();
@@ -102,19 +114,4 @@ AssetTracker.prototype.writeReports = function () {
   }
 
   SpreadsheetApp.getActive().toast('Reports complete', 'Finished', 10);
-};
-
-/**
- * Deletes all the output sheets.
- * Displays toast on completion.
- */
-AssetTracker.prototype.deleteReports = function () {
-
-  let sheetNames = [
-    this.fiatAccountsSheetName
-  ].concat(this.defaultReportNames).concat(this.ukReportNames);
-
-  this.deleteSheets(sheetNames);
-
-  SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
 };

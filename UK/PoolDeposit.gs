@@ -19,7 +19,7 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
 
     super(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, action);
   }
-  
+
   /**
    * The balance in asset units.
    * @type {number}
@@ -56,8 +56,6 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
    */
   split(subunits) {
 
-    let poolDeposits = [];
-
     let debitAmountSubunits = AssetTracker.round((subunits / this.subunits) * this.debitAmountSubunits);
     let debitFeeSubunits = AssetTracker.round((subunits / this.subunits) * this.debitFeeSubunits);
 
@@ -72,9 +70,8 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
       this.creditAsset,
       creditAmountSubunits / this.creditAsset.subunits,
       creditFeeSubunits / this.creditAsset.subunits,
-      this.action);
-
-    poolDeposits.push(poolDeposit1);
+      this.action
+    );
 
     let poolDeposit2 = new PoolDeposit(
       this.date,
@@ -84,10 +81,9 @@ var PoolDeposit = class PoolDeposit extends PoolTransaction {
       this.creditAsset,
       (this.creditAmountSubunits - poolDeposit1.creditAmountSubunits) / this.creditAsset.subunits,
       (this.creditFeeSubunits - poolDeposit1.creditFeeSubunits) / this.creditAsset.subunits,
-      this.action);
+      this.action
+    );
 
-    poolDeposits.push(poolDeposit2);
-
-    return poolDeposits;
+    return [poolDeposit1, poolDeposit2];
   }
 };

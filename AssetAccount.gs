@@ -28,7 +28,6 @@ var AssetAccount = class AssetAccount {
      * @type {Array<Lot>}
      */
     this.lots = [];
-
   }
 
   /**
@@ -66,22 +65,21 @@ var AssetAccount = class AssetAccount {
   }
 
   /**
-   * Deposits multiple asset lots into the account.
-   * @param {Array<Lot>} lots - The array of lots to deposit into the account.
-   */
-  depositLots(lots) {
-
-    this.lots = this.lots.concat(lots);
-  }
-
-  /**
    * Deposits a single asset lot into the account.
-   * @param {Lot} lot - The single lot to deposit into the account.
+   * @param {Lot|Array<Lot>} lot - The single lot or array of lots to deposit into the account.
    */
-  depositLot(lot) {
+  deposit(lot) {
 
-    this.lots.push(lot);
+    if (Array.isArray(lot)) {
+
+      this.lots.push(...lot);
+    }
+    else {
+
+      this.lots.push(lot);
+    }
   }
+
 
   /**
    * Withdraws an amount of asset from the account.
@@ -106,7 +104,7 @@ var AssetAccount = class AssetAccount {
 
     if (neededSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee ? fee : 0} from ${this.wallet.name} balance of ${this.balance}`, rowIndex, 'debitAmount');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw ${this.ticker} ${amount} + fee ${fee ? fee : 0} from ${this.wallet.name} balance of ${this.balance}.`, rowIndex, 'debitAmount');
 
     }
 
@@ -177,7 +175,7 @@ var AssetAccount = class AssetAccount {
 
     if (feeSubunits > this.subunits) {
 
-      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw fee ${fee} from balance of ${this.ticker} ${this.balance}`, rowIndex, 'debitFee');
+      throw new AssetAccountError(`Ledger row ${rowIndex}: Attempted to withdraw fee ${this.ticker} ${fee} from ${this.wallet.name} balance of ${this.balance}.`, rowIndex, 'debitFee');
 
     }
 

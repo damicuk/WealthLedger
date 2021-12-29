@@ -6,6 +6,7 @@
  */
 AssetTracker.prototype.processAssets = function (assetRecords) {
 
+  let rowIndex = this.assetsHeaderRows + 1;
   for (let assetRecord of assetRecords) {
 
     let assetType;
@@ -22,7 +23,7 @@ AssetTracker.prototype.processAssets = function (assetRecords) {
       }
     }
 
-    let asset = new Asset(assetRecord.ticker, assetType, isFiatBase, assetRecord.decimalPlaces);
+    let asset = new Asset(assetRecord.ticker, assetType, isFiatBase, assetRecord.decimalPlaces, rowIndex++);
 
     if (isFiatBase) {
       this.fiatBase = asset;
@@ -76,7 +77,7 @@ AssetTracker.prototype.processLedger = function (ledgerRecords) {
  * Processes a ledger record.
  * It treats the ledger record as an instuction and simulates the action specified.
  * @param {LedgerRecord} ledgerRecord - The ledger record to process.
- * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
+ * @param {number} rowIndex - The index of the row in the ledger sheet.
  */
 AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
@@ -95,7 +96,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
   let lotMatching = ledgerRecord.lotMatching;
 
 
-  if (lotMatching) {
+  if (lotMatching !== '') {
     this.lotMatching = lotMatching;
   }
 
@@ -123,7 +124,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.getWallet(creditWalletName).getAssetAccount(debitAsset).depositLots(lots);
+      this.getWallet(creditWalletName).getAssetAccount(debitAsset).deposit(lots);
 
     }
   }
@@ -175,10 +176,10 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
         //Handle withdrawal of zero
         if (lots.length === 0) {
-          lots = [new Lot(date, this.fiatBase, 1, 0, 0, debitAsset, debitAmount, debitFee, debitWalletName)];
+          lots = [new Lot(date, this.fiatBase, 1, 0, 0, debitAsset, debitAmount, debitFee, debitWalletName, action, rowIndex)];
         }
 
-        this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action);
+        this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action, rowIndex);
 
       }
       if (creditAsset.isFiat) {
@@ -188,7 +189,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       }
       else {
 
-        let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName);
+        let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName, action, rowIndex);
 
         //If the lot has zero balance close it straight away
         //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
@@ -196,11 +197,11 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
         if (lot.subunits === 0) {
 
-          this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action);
+          this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action, rowIndex);
         }
         else {
 
-          creditAssetAccount.depositLot(lot);
+          creditAssetAccount.deposit(lot);
         }
 
       }
@@ -229,21 +230,21 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     else { // Asset income
 
       //the cost base is the value of (credit exchange rate x credit amount)
-      let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName);
+      let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName, action, rowIndex);
 
-      this.getWallet(creditWalletName).getAssetAccount(creditAsset).depositLot(lot);
+      this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
 
     //keep track of income separately
-    this.incomeLots.push(new IncomeLot(date, debitAsset, creditAsset, creditExRate, creditAmount, creditWalletName));
+    this.incomeLots.push(new IncomeLot(date, debitAsset, creditAsset, creditExRate, creditAmount, creditWalletName, rowIndex));
 
   }
   else if (action === 'Donation') {
 
     let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-    this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action);
+    this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action, rowIndex);
 
   }
   else if (action === 'Gift') {
@@ -252,14 +253,14 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action);
+      this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action, rowIndex);
 
     }
     else { //Gift received
 
-      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, creditWalletName);
+      let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, creditWalletName, action, rowIndex);
 
-      this.getWallet(creditWalletName).getAssetAccount(creditAsset).depositLot(lot);
+      this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
     }
   }
@@ -276,7 +277,7 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       assetAccount.apportionFee(debitFee, rowIndex);
 
-      this.removeZeroSubunitLots(date, assetAccount, action);
+      this.removeZeroSubunitLots(date, assetAccount, action, rowIndex);
     }
   }
   else if (action === 'Split') {
@@ -302,9 +303,11 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
  * @param {number} creditAmount - The amount of the fiat or asset credited for the lots sold or exchanged.
  * @param {number} creditFee - The fee in the credited asset for transaction.
  * @param {string} creditWalletName - The name of the wallet (or exchange) where transaction takes place.
- * @param {string} action - The action that closed the lots.
+ * @param {string} action - The action in the ledger sheet that closed the lot.
+ * @param {number} rowIndex - The index of the row in the ledger sheet.
+ * 
  */
-AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName, action) {
+AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRate, creditAmount, creditFee, creditWalletName, action, rowIndex) {
 
   if (lots.length === 0) {
     return;
@@ -323,14 +326,17 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
   let index = 0;
   for (let lot of lots) {
 
-    let closedLot = new ClosedLot(lot,
+    let closedLot = new ClosedLot(
+      lot,
       date,
       creditAsset,
       creditExRate,
       (apportionedCreditAmountSubunits[index] / creditAsset.subunits),
       (apportionedCreditFeeSubunits[index] / creditAsset.subunits),
       creditWalletName,
-      action);
+      action,
+      rowIndex
+    );
 
     this.closedLots.push(closedLot);
     index++;
@@ -350,7 +356,7 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
  * @param {number} adjustAmount - The amount by which to adjust the amount of asset held.
  * @param {string} walletName - The name of the wallet to which to apply the split. If not given the split applied to all wallets.
  * @param {string} action - The action, in this case 'Split'.
- * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
+ * @param {number} rowIndex - The index of the row in the ledger sheet.
  */
 AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletName, action, rowIndex) {
 
@@ -385,7 +391,7 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
 
   if (totalSubunits + adjustSubunits < 0) {
 
-    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from ${walletName ? walletName.concat(' ') : ''}balance of ${totalSubunits / asset.subunits}`, rowIndex, 'debitAmount');
+    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from ${walletName ? walletName.concat(' ') : ''}balance of ${totalSubunits / asset.subunits}.`, rowIndex, 'debitAmount');
   }
 
   let assetAccountAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountSubunits);
@@ -395,7 +401,7 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
 
     assetAccount.adjust(assetAccountAdjustSubunits[index++]);
 
-    this.removeZeroSubunitLots(date, assetAccount, action);
+    this.removeZeroSubunitLots(date, assetAccount, action, rowIndex);
   }
 };
 
@@ -404,11 +410,12 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
  * Used when misc fee or split sets lot subunits to zero.
  * @param {Date} date - The date 0f the action.
  * @param {AssetAccount} assetAccount - The asset account from which to remove the zero subunit lots.
- * @param {string} action - The action that resulted in the zero subunit lots.
+ * @param {string} action - The action in the ledger sheet that closed the lots.
+ * @param {number} rowIndex - The index of the row in the ledger sheet.
  */
-AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount, action) {
+AssetTracker.prototype.removeZeroSubunitLots = function (date, assetAccount, action, rowIndex) {
 
   let zeroSubunitLots = assetAccount.removeZeroSubunitLots();
 
-  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name, action);
+  this.closeLots(zeroSubunitLots, date, this.fiatBase, 1, 0, 0, assetAccount.wallet.name, action, rowIndex);
 };

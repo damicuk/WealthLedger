@@ -11,6 +11,8 @@ AssetTracker.prototype.assetsSheet = function () {
   let ss = SpreadsheetApp.getActive();
   sheet = ss.insertSheet(sheetName);
 
+  this.trimSheet(sheet, 12, 7);
+
   let headers = [
     [
       'Asset',
@@ -26,7 +28,7 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('A1:G1').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(1);
 
-  sheet.getRange('A2:B').setNumberFormat('@');
+  sheet.getRange('A2:A').setNumberFormat('@');
   sheet.getRange('C2:C').setNumberFormat('0');
   sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
   sheet.getRange('E2:E').setNumberFormat('@');
@@ -54,7 +56,7 @@ AssetTracker.prototype.assetsSheet = function () {
     [sampleFiatBase, 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
     [sampleFiat, 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "${sampleFiatBase}"))`, , , `Fiat capital gains are ignored.`],
     ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "${sampleFiatBase}"))`, , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "${sampleFiatBase}"))`, , , `Google finance is used to fetch the current price. Alternatively select an API or your own method.`],
+    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "${sampleFiatBase}"))`, , , `Google finance is used to fetch the current price. Alternatively select an API or use your own method.`],
     ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "${sampleFiatBase}"))`, , , ,],
     ['USDC', 'Stablecoin', '2', usdcPrice, , , ,],
     ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)${currencyConvert}`, , , ,],
@@ -64,7 +66,7 @@ AssetTracker.prototype.assetsSheet = function () {
     [, , , , , , ,]
   ];
 
-  sheet.getRange('A2:G12').setValues(sampleData);
+  sheet.getRange('A2:G').setValues(sampleData);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?[\\w$@]{1,10}$")`)
@@ -96,8 +98,6 @@ AssetTracker.prototype.assetsSheet = function () {
   if (!sheet.getFilter()) {
     sheet.getRange('A1:G').createFilter();
   }
-
-  this.trimSheet(sheet, 12, 7);
 
   sheet.setColumnWidths(1, 5, 140);
   sheet.setColumnWidth(6, 170);

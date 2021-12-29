@@ -11,8 +11,9 @@ var IncomeLot = class IncomeLot {
    * @param {number} exRate - The income asset to fiat base exchange rate.
    * @param {number} amount - The amount of income in asset units.
    * @param {string} walletName - The name of the wallet (or exchange) to which the income was credited.
+   * @param {number} rowIndex - The index of the row in the ledger sheet that gave rise to the income lot.
    */
-  constructor(date, sourceAsset, incomeAsset, exRate, amount, walletName) {
+  constructor(date, sourceAsset, incomeAsset, exRate, amount, walletName, rowIndex) {
 
 
     /**
@@ -50,5 +51,11 @@ var IncomeLot = class IncomeLot {
      * @type {string}
      */
     this.walletName = walletName;
+
+    /**
+     * The index of the row in the ledger sheet that gave rise to the income lot.
+     * @type {number}
+     */
+    this.rowIndex = rowIndex;
   }
 };
