@@ -133,6 +133,50 @@ var AssetTracker = class AssetTracker {
     this.chartRange3Name = 'Chart3';
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
+
+    this.ukOpenReportName = 'UK Open Report';
+    this.ukClosedReportName = 'UK Closed Report';
+    this.ukIncomeReportName = 'UK Income Report';
+    this.ukAccountsReportName = 'UK Accounts Report';
+    this.ukChartsDataSheetName = "UK Charts Data";
+    this.ukOpenSummaryReportName = "UK Open Summary Report";
+    this.ukClosedSummaryReportName = "UK Closed Summary Report";
+    this.ukIncomeSummaryReportName = 'UK Income Summary Report';
+    this.ukDonationsSummaryReportName = 'UK Donations Summary Report';
+    this.ukWalletsReportName = 'UK Wallets Report';
+
+    this.ukReportNames = [
+      this.ukOpenReportName,
+      this.ukClosedReportName,
+      this.ukIncomeReportName,
+      this.ukAccountsReportName,
+      this.ukChartsDataSheetName,
+      this.ukOpenSummaryReportName,
+      this.ukClosedSummaryReportName,
+      this.ukIncomeSummaryReportName,
+      this.ukDonationsSummaryReportName,
+      this.ukWalletsReportName
+    ];
+
+    this.ukOpenRangeName = 'UKOpen';
+    this.ukClosedRangeName = 'UKClosed';
+    this.ukAccountsRangeName = 'UKAccounts';
+
+    this.ukChartRange1Name = 'UKChart1';
+    this.ukChartRange2Name = 'UKChart2';
+    this.ukChartRange3Name = 'UKChart3';
+    this.ukChartRange4Name = 'UKChart4';
+    this.ukChartRange5Name = 'UKChart5';
+  }
+
+  /**
+   * Array of supported accounting models.
+   * @type {string[]}
+   * @static
+   */
+  static get accountingModels() {
+
+    return ['US', 'UK'];
   }
 
   /**
@@ -305,6 +349,48 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
+   * Gets the accounting model from document properties or sets and returns a default.
+   * @return {string} The accounting model.
+   */
+
+  /**
+   * The accounting model used to determine how to process transactions.
+   * @type {string}
+   */
+  get accountingModel() {
+
+    let documentProperties = PropertiesService.getDocumentProperties();
+
+    let accountingModel = documentProperties.getProperty('accountingModel');
+
+    if (!accountingModel) {
+
+      accountingModel = this.defaultAccountingModel;
+
+      documentProperties.setProperty('accountingModel', accountingModel);
+    }
+    return accountingModel;
+  }
+
+  /**
+   * The default accounting model.
+   * It's value depends on the spreadsheet locale.
+   * @return {string} The accounting model.
+   */
+  get defaultAccountingModel() {
+
+    let ss = SpreadsheetApp.getActive();
+    let locale = ss.getSpreadsheetLocale();
+
+    if (locale === 'en_GB') {
+      return 'UK';
+    }
+    else {
+      return 'US';
+    }
+  }
+
+  /**
    * Set of fiat tickers used by this instance.
    * Only filled once processLedger has completed.
    * @type {Set}
@@ -378,18 +464,18 @@ var AssetTracker = class AssetTracker {
     * @param {Asset} asset - The asset of the asset pool to search for.
     * @return {AssetPool} The asset pool found or created.
     */
-  // getAssetPool(asset) {
+  getAssetPool(asset) {
 
-  //   let assetPool = this.assetPools.get(asset.ticker);
+    let assetPool = this.assetPools.get(asset.ticker);
 
-  //   if (!assetPool) {
+    if (!assetPool) {
 
-  //     assetPool = new AssetPool(asset, this);
-  //     this.assetPools.set(asset.ticker, assetPool);
-  //   }
+      assetPool = new AssetPool(asset, this);
+      this.assetPools.set(asset.ticker, assetPool);
+    }
 
-  //   return assetPool;
-  // }
+    return assetPool;
+  }
 
   /**
    * Creates a sample assets sheet.
@@ -416,7 +502,7 @@ var AssetTracker = class AssetTracker {
 
     let sheetNames = [
       this.fiatAccountsSheetName
-    ].concat(this.defaultReportNames);//.concat(this.ukReportNames);
+    ].concat(this.defaultReportNames).concat(this.ukReportNames);
 
     this.deleteSheets(sheetNames);
 
@@ -428,6 +514,8 @@ var AssetTracker = class AssetTracker {
    */
   showSettingsDialog() {
 
+    this.accountingModel; //Sets the default if necessary
+
     let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
       .setWidth(480)
       .setHeight(250);
@@ -436,12 +524,14 @@ var AssetTracker = class AssetTracker {
 
   /**
    * Saves a set of key value pairs as user properties.
+   * Saves a set of key value pairs as document properties.
    * Validates apiKeys setting if attempting to change the existing value.
    * Sends message to the error handler if the api key validation fails.
    * Displays toast on success.
    * @param {Object.<string, string>} userSettings - The key value pairs to save as user properties.
+   * @param {Object.<string, string>} documentSettings - The key value pairs to save as document properties.
    */
-  saveSettings(userSettings) {
+  saveSettings(userSettings, documentSettings) {
 
     let userProperties = PropertiesService.getUserProperties();
 
@@ -466,6 +556,11 @@ var AssetTracker = class AssetTracker {
         return;
       }
     }
+
+    let documentProperties = PropertiesService.getDocumentProperties();
+
+    userProperties.setProperties(userSettings);
+    documentProperties.setProperties(documentSettings);
 
     SpreadsheetApp.getActive().toast('Settings saved');
   }

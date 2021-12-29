@@ -74,9 +74,9 @@ function deleteReports() {
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function saveSettings(userSettings) {
+function saveSettings(userSettings, documentSettings) {
 
-  new AssetTracker().saveSettings(userSettings);
+  new AssetTracker().saveSettings(userSettings, documentSettings);
 
 }
 
