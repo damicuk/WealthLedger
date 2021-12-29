@@ -61,45 +61,37 @@ AssetTracker.prototype.ledgerSheet = function () {
     sheet.getRange('A2:N30').createFilter();
   }
 
-  let sampleFiatBase;
-  if (this.accountingModel === 'UK') {
-    sampleFiatBase = 'GBP';
-  }
-  else {
-    sampleFiatBase = 'USD';
-  }
-
   let sampleData = [
-    ['2019-03-01 12:00:00', 'Transfer', , , , , , sampleFiatBase, , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
-    ['2019-03-02 12:00:00', 'Trade', sampleFiatBase, , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
-    ['2019-03-03 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
-    ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 6010, 10, , , ,],
-    ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 20010, 10, , , ,],
+    ['2019-03-01 12:00:00', 'Transfer', , , , , , 'USD', , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
+    ['2019-03-02 12:00:00', 'Trade', 'USD', , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
+    ['2019-03-03 12:00:00', 'Trade', 'USD', , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
+    ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 6010, 10, , , ,],
+    ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 20010, 10, , , ,],
     ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , `Exchange assets.`],
-    ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', sampleFiatBase, , 12010, 10, , , ,],
+    ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', 'USD', , 12010, 10, , , ,],
     ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Ledger', , `Transfer from one wallet to another.`],
     ['2020-12-05 12:00:00', 'Transfer', 'BTC', , 0.9995, 0.0005, 'Kraken', , , , , 'Ledger', , ,],
-    ['2020-12-06 12:00:00', 'Transfer', sampleFiatBase, , 30000, , 'Kraken', , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
+    ['2020-12-06 12:00:00', 'Transfer', 'USD', , 30000, , 'Kraken', , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
     ['2021-02-01 12:00:00', 'Income', , , , , , 'ADA', 1, 10, , 'Rewards', , `Staking reward.`],
     ['2021-02-05 12:00:00', 'Income', , , , , , 'ADA', 1.3, 10, , 'Rewards', , ,],
     ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Donation (e.g. to a registered charity).`],
     ['2021-03-02 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `To track donations unhide the donations summary report.`],
     ['2021-03-03 12:00:00', 'Gift', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Gift given (e.g. to friends or family).`],
-    ['2021-03-04 12:00:00', 'Gift', sampleFiatBase, , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are the inherited cost basis.`],
+    ['2021-03-04 12:00:00', 'Gift', 'USD', , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are the inherited cost basis.`],
     ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Ledger', , , , , , , `Miscellaneous fee.`],
-    ['2021-04-01 12:00:00', 'Transfer', , , , , , sampleFiatBase, , 40000, , 'IB', , ,],
-    ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'IB', 'GE', , 760, , , , ,],
+    ['2021-04-01 12:00:00', 'Transfer', , , , , , 'USD', , 40000, , 'IB', , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
     ['2021-07-20 00:00:00', 'Split', , , , , , 'NVDA', , 54, , , , `The amount held is increased by the credit amount.`],
     ['2021-08-02 00:00:00', 'Split', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount.`],
-    ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', sampleFiatBase, , 9010, 10, , , ,],
-    ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , sampleFiatBase, , 11.52, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
-    ['2021-08-31 12:00:00', 'Income', , , , , , sampleFiatBase, , 20, , 'IB', , `Fiat interest.`]
+    ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , ,],
+    ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , 'USD', , 11.52, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
+    ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Fiat interest.`]
   ];
 
-  let assetList = [sampleFiatBase, 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
+  let assetList = ['USD', 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
 
   sheet.getRange('A3:N29').setValues(sampleData);
 
