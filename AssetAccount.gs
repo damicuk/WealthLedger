@@ -223,7 +223,7 @@ var AssetAccount = class AssetAccount {
 
       lot.creditAmountSubunits += lotAdjustSubunits[index++];
     }
-  };
+  }
 
   /**
    * Given a lot matching method string returns a comparator function used to sort lots.

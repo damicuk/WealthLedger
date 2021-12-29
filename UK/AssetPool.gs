@@ -119,9 +119,7 @@ var AssetPool = class AssetPool {
       return;
     }
 
-    if (poolWithdrawal.action !== 'Transfer'
-      && poolWithdrawal.action !== 'Fee'
-      && poolWithdrawal.action !== 'Split') {
+    if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Fee' && poolWithdrawal.action !== 'Split') {
 
       let reversedPoolWithrawals = this.poolWithdrawals.slice().reverse();
 
@@ -172,15 +170,11 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (poolWithdrawal.action !== 'Transfer'
-        && poolWithdrawal.action !== 'Fee'
-        && poolWithdrawal.action !== 'Split') {
+      if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Fee' && poolWithdrawal.action !== 'Split') {
 
         for (let poolDeposit of this.poolDeposits) {
 
-          if (poolDeposit.action !== 'Split'
-            && poolDeposit.action !== 'Gift'
-            && poolDeposit.action !== 'Income') {
+          if (poolDeposit.action !== 'Split' && poolDeposit.action !== 'Gift' && poolDeposit.action !== 'Income') {
 
             if (poolWithdrawal.date.getTime() === poolDeposit.date.getTime()) {
 
@@ -204,15 +198,11 @@ var AssetPool = class AssetPool {
 
     for (let poolWithdrawal of this.poolWithdrawals) {
 
-      if (poolWithdrawal.action !== 'Transfer'
-        && poolWithdrawal.action !== 'Fee'
-        && poolWithdrawal.action !== 'Split') {
+      if (poolWithdrawal.action !== 'Transfer' && poolWithdrawal.action !== 'Fee' && poolWithdrawal.action !== 'Split') {
 
         for (let poolDeposit of this.poolDeposits) {
 
-          if (poolDeposit.action !== 'Split'
-            && poolDeposit.action !== 'Gift'
-            && poolDeposit.action !== 'Income') {
+          if (poolDeposit.action !== 'Split' && poolDeposit.action !== 'Gift' && poolDeposit.action !== 'Income') {
 
             let diffDays = AssetTracker.diffDays(poolWithdrawal.date, poolDeposit.date);
 
