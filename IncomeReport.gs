@@ -47,16 +47,16 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
     sheet.getRange('A1:J1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);
 
-    sheet.getRange(`A2:A${rowCount}`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange(`B2:F${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`G2:G${rowCount}`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`H2:H${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`I2:I${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`J2:J${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`A2:A`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sheet.getRange(`B2:F`).setNumberFormat('@');
+    sheet.getRange(`G2:G`).setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange(`H2:H`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`I2:I`).setNumberFormat('@');
+    sheet.getRange(`J2:J`).setNumberFormat('#,##0.00;(#,##0.00)');
 
-    this.addActionCondtion(sheet, `B2:B${rowCount}`);
-    this.addAssetCondition(sheet, `C3:C${rowCount}`);
-    this.addAssetCondition(sheet, `E3:E${rowCount}`);
+    this.addActionCondtion(sheet, `B2:B`);
+    this.addAssetCondition(sheet, `C3:C`);
+    this.addAssetCondition(sheet, `E3:E`);
 
     const formulas = [[
       `IF(ISBLANK(A2),,ArrayFormula(FILTER(IF(ISBLANK(G2:G),H2:H,ROUND(G2:G*H2:H, 2)), LEN(A2:A))))`

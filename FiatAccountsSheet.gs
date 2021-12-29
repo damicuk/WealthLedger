@@ -32,9 +32,9 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
     sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);
 
-    sheet.getRange(`A2:A${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`B2:B${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`C2:C${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`A2:A`).setNumberFormat('@');
+    sheet.getRange(`B2:B`).setNumberFormat('@');
+    sheet.getRange(`C2:C`).setNumberFormat('#,##0.00;(#,##0.00)');
 
     sheet.hideSheet();
 

@@ -76,25 +76,25 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
     sheet.getRange('I1:M1').mergeAcross();
     sheet.getRange('N1:U1').mergeAcross();
 
-    sheet.getRange(`A3:A${rowCount}`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange(`B3:D${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`E3:E${rowCount}`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`F3:F${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`G3:G${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`H3:J${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`K3:K${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`L3:L${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`M3:M${rowCount}`).setNumberFormat('@');
-    sheet.getRange(`N3:N${rowCount}`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`O3:R${rowCount}`).setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange(`S3:S${rowCount}`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange(`T3:T${rowCount}`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange(`U3:U${rowCount}`).setNumberFormat('@');
+    sheet.getRange(`A3:A`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sheet.getRange(`B3:D`).setNumberFormat('@');
+    sheet.getRange(`E3:E`).setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange(`F3:F`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`G3:G`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`H3:J`).setNumberFormat('@');
+    sheet.getRange(`K3:K`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`L3:L`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`M3:M`).setNumberFormat('@');
+    sheet.getRange(`N3:N`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`O3:R`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`S3:S`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`T3:T`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`U3:U`).setNumberFormat('@');
 
-    this.addActionCondtion(sheet, `B3:B${rowCount}`);
-    this.addAssetCondition(sheet, `C3:C${rowCount}`);
-    this.addAssetCondition(sheet, `I3:I${rowCount}`);
-    this.addLongShortCondition(sheet, `U3:U${rowCount}`);
+    this.addActionCondtion(sheet, `B3:B`);
+    this.addAssetCondition(sheet, `C3:C`);
+    this.addAssetCondition(sheet, `I3:I`);
+    this.addLongShortCondition(sheet, `U3:U`);
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
