@@ -27,7 +27,7 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
 
     sheet.clear();
 
-    let headers = [['Wallet', 'Currency', 'Balance']];
+    let headers = [['Wallet', 'Asset', 'Balance']];
 
     sheet.getRange('A1:C1').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(1);

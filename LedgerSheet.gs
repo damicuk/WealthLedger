@@ -73,7 +73,7 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2019-03-01 12:00:00', 'Transfer', , , , , , sampleFiatBase, , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
     ['2019-03-02 12:00:00', 'Trade', sampleFiatBase, , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
     ['2019-03-03 12:00:00', 'Trade', sampleFiatBase, , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
-    ['2019-03-04 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 6010, 10, , , ,],
+    ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 6010, 10, , , ,],
     ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', sampleFiatBase, , 20010, 10, , , ,],
     ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , `Exchange assets.`],
     ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', sampleFiatBase, , 12010, 10, , , ,],

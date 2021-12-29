@@ -54,8 +54,8 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
         'Wallet',
         'Balance',
         'Cost Price',
-        'Cost Basis',
         'Current Price',
+        'Cost Basis',
         'Current Value',
         'Unrealized P/L',
         'Unrealized P/L %',
@@ -98,12 +98,12 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(N3:N=0,,P3:P/N3:N), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(E3:E, ROUND((F3:F+G3:G)*E3:E, 2), F3:F+G3:G), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(N3:N=0,,Q3:Q/N3:N), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(I3:I, QUERY(${referenceRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(Q3:Q),,FILTER(ROUND(N3:N*Q3:Q, 2), LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(Q3:Q),,FILTER(R3:R-P3:P, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(Q3:Q),,FILTER(IF(P3:P=0,,S3:S/P3:P), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(E3:E, ROUND((F3:F+G3:G)*E3:E, 2), F3:F+G3:G), LEN(A3:A)))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(ROUND(N3:N*P3:P, 2), LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(R3:R-Q3:Q, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(IF(Q3:Q=0,,S3:S/Q3:Q), LEN(A3:A))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, NOW(), "Y") > 1)+(((DATEDIF(A3:A, NOW(), "Y") = 1)*(DATEDIF(A3:A, NOW(), "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
