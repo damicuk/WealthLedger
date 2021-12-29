@@ -16,8 +16,7 @@ AssetTracker.prototype.writeReports = function () {
 
   this.processAssets(assetRecords);
 
-  if (this.fiatBase.ticker === 'GBP' && this.accountingModel !== 'UK'
-    || this.fiatBase.ticker !== 'GBP' && this.accountingModel === 'UK') {
+  if (this.fiatBase.ticker === 'GBP' && this.accountingModel !== 'UK' || this.fiatBase.ticker !== 'GBP' && this.accountingModel === 'UK') {
     let ui = SpreadsheetApp.getUi();
     let message = `Fiat base is ${this.fiatBase.ticker} but the accounting model is ${this.accountingModel}.\nYou can change the accounting model in setting.\n\nAre you sure you want to continue?`;
     let result = ui.alert(`Warning`, message, ui.ButtonSet.YES_NO);

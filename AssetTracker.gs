@@ -223,7 +223,7 @@ var AssetTracker = class AssetTracker {
     dateTime -= dateTZ.getMilliseconds();
 
     return new Date(dateTime);
-  };
+  }
 
   /**
   * Gets the difference in days between two dates.
@@ -502,14 +502,14 @@ var AssetTracker = class AssetTracker {
     this.deleteSheets(sheetNames);
 
     SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
-  };
+  }
 
   /**
    * Displays the settings dialog
    */
   showSettingsDialog() {
 
-    this.accountingModel; //Sets the default if necessary
+    let accountingModel = this.accountingModel; //Sets the default if necessary
 
     let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
       .setWidth(480)
