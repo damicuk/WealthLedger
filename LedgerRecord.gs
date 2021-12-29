@@ -153,7 +153,7 @@ var LedgerRecord = class LedgerRecord {
 
     return ledgerRecords.length > 1 && ledgerRecords[ledgerRecords.length - 1].date < ledgerRecords[0].date;
   }
-}
+};
 
 /**
  * Retrieves the ledger records from the ledger sheet.

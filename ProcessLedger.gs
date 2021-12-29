@@ -341,7 +341,7 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
     this.closedLots.push(closedLot);
     index++;
   }
-}
+};
 
 /**
  * Adjusts the asset balance according to the split parameters.

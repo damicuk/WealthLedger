@@ -87,7 +87,7 @@ var AssetRecord = class AssetRecord {
 
     return index === -1 ? index : index + 1;
   }
-}
+};
 
 /**
  * Retrieves the asset records from the asset sheet.

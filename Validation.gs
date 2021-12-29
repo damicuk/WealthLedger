@@ -622,30 +622,26 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
 
     //14 invalid configurations - decide which column to highlight - no obvious pattern
     let columnName;
-    if ((debitAsset && debitAmount !== '' && creditAsset && creditAmount !== '')
-      || (debitAsset && debitAmount === '' && creditAsset && creditAmount !== '')
-      || (debitAsset && debitAmount === '' && creditAsset && creditAmount === '')
-      || (debitAsset && debitAmount === '' && !creditAsset && creditAmount !== '')
-      || (!debitAsset && debitAmount !== '' && !creditAsset && creditAmount === '')
-      || (!debitAsset && debitAmount === '' && !creditAsset && creditAmount === '')
-    ) {
+    if ((debitAsset && debitAmount !== '' && creditAsset && creditAmount !== '') ||
+      (debitAsset && debitAmount === '' && creditAsset && creditAmount !== '') ||
+      (debitAsset && debitAmount === '' && creditAsset && creditAmount === '') ||
+      (debitAsset && debitAmount === '' && !creditAsset && creditAmount !== '') ||
+      (!debitAsset && debitAmount !== '' && !creditAsset && creditAmount === '') ||
+      (!debitAsset && debitAmount === '' && !creditAsset && creditAmount === '')) {
       columnName = 'debitAsset';
     }
-    else if ((debitAsset && debitAmount === '' && !creditAsset && creditAmount === '')
-      || (!debitAsset && debitAmount !== '' && creditAsset && creditAmount !== '')
-      || (!debitAsset && debitAmount !== '' && creditAsset && creditAmount === '')
-      || (!debitAsset && debitAmount !== '' && !creditAsset && creditAmount !== '')
-    ) {
+    else if ((debitAsset && debitAmount === '' && !creditAsset && creditAmount === '') ||
+      (!debitAsset && debitAmount !== '' && creditAsset && creditAmount !== '') ||
+      (!debitAsset && debitAmount !== '' && creditAsset && creditAmount === '') ||
+      (!debitAsset && debitAmount !== '' && !creditAsset && creditAmount !== '')) {
       columnName = 'debitAmount';
     }
-    else if ((debitAsset && debitAmount !== '' && creditAsset && creditAmount === '')
-      || (!debitAsset && debitAmount === '' && !creditAsset && creditAmount !== '')
-    ) {
+    else if ((debitAsset && debitAmount !== '' && creditAsset && creditAmount === '') ||
+      (!debitAsset && debitAmount === '' && !creditAsset && creditAmount !== '')) {
       columnName = 'creditAsset';
     }
-    else if ((debitAsset && debitAmount !== '' && !creditAsset && creditAmount !== '')
-      || (!debitAsset && debitAmount === '' && creditAsset && creditAmount === '')
-    ) {
+    else if ((debitAsset && debitAmount !== '' && !creditAsset && creditAmount !== '') ||
+      (!debitAsset && debitAmount === '' && creditAsset && creditAmount === '')) {
       columnName = 'creditAmount';
     }
 

@@ -349,11 +349,6 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Gets the accounting model from document properties or sets and returns a default.
-   * @return {string} The accounting model.
-   */
-
-  /**
    * The accounting model used to determine how to process transactions.
    * @type {string}
    */

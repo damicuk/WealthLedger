@@ -203,7 +203,7 @@ AssetTracker.prototype.writeLinks = function (ss, linkTable, rangeName, columnIn
   let range = ss.getRangeByName(rangeName);
   range = range.offset(0, columnIndex, range.getHeight(), 1);
   range.setRichTextValues(richTextValues);
-}
+};
 
 /**
  * Adds specific conditional text color formatting to a range of cells in a sheet.
