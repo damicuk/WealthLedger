@@ -2,9 +2,9 @@
  * Creates the uk open report if it doesn't already exist.
  * Updates the sheet with the current open pools data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The uk open data table.
- * @param {Array<Array>} The asset 1 link table.
- * @param {Array<Array>} The asset 2 link table.
+ * @param {Array<Array>} dataTable - The uk open data table.
+ * @param {Array<Array>} asset1LinkTable - The asset 1 link table.
+ * @param {Array<Array>} asset2LinkTable - The asset 2 link table.
  * @param {string} [sheetName] - The name of the sheet
  */
 AssetTracker.prototype.ukOpenReport = function (dataTable, asset1LinkTable, asset2LinkTable, sheetName = this.ukOpenReportName) {

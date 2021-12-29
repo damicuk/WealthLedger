@@ -2,8 +2,8 @@
  * Creates the fiat accounts sheet if it doesn't already exist.
  * Updates the sheet with the current fiat accounts data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The fiat accounts data table.
- * @param {Array<Array>} The asset link table.
+ * @param {Array<Array>} dataTable - The fiat accounts data table.
+ * @param {Array<Array>} assetLinkTable - The asset link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
 AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, sheetName = this.fiatAccountsSheetName) {

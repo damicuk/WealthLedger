@@ -2,10 +2,10 @@
  * Creates the uk closed report if it doesn't already exist.
  * Updates the sheet with the current closed data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The uk closed data table.
- * @param {Array<Array>} The asset 1 link table.
- * @param {Array<Array>} The asset 2 link table.
- * @param {Array<Array>} The asset 3 link table.
+ * @param {Array<Array>} dataTable - The uk closed data table.
+ * @param {Array<Array>} asset1LinkTable - The asset 1 link table.
+ * @param {Array<Array>} asset2LinkTable - The asset 2 link table.
+ * @param {Array<Array>} asset3LinkTable - The asset 3 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
 AssetTracker.prototype.ukClosedReport = function (dataTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.ukClosedReportName) {

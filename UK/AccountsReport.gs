@@ -2,8 +2,8 @@
  * Creates the uk accounts report if it doesn't already exist.
  * Updates the sheet with the current asset accounts data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The uk accounts data table.
- * @param {Array<Array>} The asset link table.
+ * @param {Array<Array>} dataTable - The uk accounts data table.
+ * @param {Array<Array>} assetLinkTable - The asset link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
 AssetTracker.prototype.ukAccountsReport = function (dataTable, assetLinkTable, sheetName = this.ukAccountsReportName) {

@@ -2,10 +2,10 @@
  * Creates the open report if it doesn't already exist.
  * Updates the sheet with the current open data.
  * Trims the sheet to fit the data.
- * @param {Array<Array>} The open data table.
- * @param {Array<Array>} The action link table.
- * @param {Array<Array>} The asset 1 link table.
- * @param {Array<Array>} The asset 2 link table.
+ * @param {Array<Array>} dataTable - The open data table.
+ * @param {Array<Array>} actionLinkTable - The action link table.
+ * @param {Array<Array>} asset1LinkTable - The asset 1 link table.
+ * @param {Array<Array>} asset2LinkTable - The asset 2 link table.
  * @param {string} [sheetName] - The name of the sheet.
  */
 AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.openReportName) {
