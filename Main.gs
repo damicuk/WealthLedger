@@ -1,8 +1,8 @@
 /**
- * Runs when the add-on is installed.
- * This method is only used by the regular add-on, and is never called by the mobile add-on version.
- * @param {Object} e The event parameter for a simple onInstall trigger.
- */
+* Runs when the add-on is installed.
+* This method is only used by the regular add-on, and is never called by the mobile add-on version.
+* @param {Object} e The event parameter for a simple onInstall trigger.
+*/
 function onInstall(e) {
   onOpen(e);
 }
