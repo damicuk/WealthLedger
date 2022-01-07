@@ -474,6 +474,7 @@ var AssetTracker = class AssetTracker {
 
   /**
    * Creates a sample assets sheet.
+   * Sets the spreadsheet locale to en_US unless it is already set to a locale that starts with "en_".
    * Renames any existing assets sheet so as not to overwrite it.
    * Creates a sample ledger sheet.
    * Renames any existing ledger sheet so as not to overwrite it.
@@ -482,6 +483,8 @@ var AssetTracker = class AssetTracker {
    * Updates the prices in the api price sheets if necessary.
    */
   createSampleSheets() {
+
+    this.checkLocale();
 
     this.assetsSheet();
     this.ledgerSheet();
@@ -558,5 +561,19 @@ var AssetTracker = class AssetTracker {
     documentProperties.setProperties(documentSettings);
 
     SpreadsheetApp.getActive().toast('Settings saved');
+  }
+
+  /**
+   * Sets the spreadsheet locale to en_US unless it is already set to a locale that starts with "en_".
+   * Formulas break when the spreadsheet locale is set to a locale where the function separator is a semicolon e.g. much of europe.
+   */
+  checkLocale() {
+
+    let ss = SpreadsheetApp.getActive();
+    let locale = ss.getSpreadsheetLocale();
+
+    if (locale.slice(0, 3) !== 'en_') {
+      ss.setSpreadsheetLocale('en_US');
+    }
   }
 };
