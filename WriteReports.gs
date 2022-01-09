@@ -1,6 +1,7 @@
 /**
  * Validates and processes the ledger, retrieves the currenct prices, and writes the reports.
- * Sets the spreadsheet locale to en_US unless it is already set to a locale that starts with "en_".
+ * Shows a warning dialog if the spreadsheet locale is not English.
+ * Shows a warning dialog if there is a accounting model fiat base mismatch.
  * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError .
  * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
