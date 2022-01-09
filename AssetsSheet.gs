@@ -101,6 +101,8 @@ AssetTracker.prototype.assetsSheet = function () {
 
   sheet.setColumnWidths(1, 5, 140);
   sheet.setColumnWidth(6, 170);
+
+  SpreadsheetApp.flush();
   sheet.autoResizeColumns(7, 1);
 
   this.setSheetVersion(sheet, this.assetsSheetVersion);

@@ -158,12 +158,12 @@ AssetTracker.prototype.ledgerSheet = function () {
     .build();
   sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
 
-  sheet.autoResizeColumns(1, 1);
-  sheet.autoResizeColumns(5, 1);
-  sheet.autoResizeColumns(10, 1);
   sheet.setColumnWidth(13, 120);
 
   SpreadsheetApp.flush();
+  sheet.autoResizeColumns(1, 1);
+  sheet.autoResizeColumns(5, 1);
+  sheet.autoResizeColumns(10, 1);
   sheet.autoResizeColumns(14, 1);
 
   this.setSheetVersion(sheet, this.ledgerSheetVersion);
