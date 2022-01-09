@@ -474,7 +474,7 @@ var AssetTracker = class AssetTracker {
 
   /**
    * Creates a sample assets sheet.
-   * Sets the spreadsheet locale to en_US unless it is already set to a locale that starts with "en_".
+   * Shows a warning dialog if the spreadsheet locale is not English.
    * Renames any existing assets sheet so as not to overwrite it.
    * Creates a sample ledger sheet.
    * Renames any existing ledger sheet so as not to overwrite it.
@@ -484,7 +484,9 @@ var AssetTracker = class AssetTracker {
    */
   createSampleSheets() {
 
-    this.checkLocale();
+    if (!this.checkLocale()) {
+      return;
+    }
 
     this.assetsSheet();
     this.ledgerSheet();
@@ -564,8 +566,9 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Sets the spreadsheet locale to en_US unless it is already set to a locale that starts with "en_".
-   * Formulas break when the spreadsheet locale is set to a locale where the function separator is a semicolon e.g. much of europe.
+   * Shows a warning dialog if the spreadsheet locale is not English.
+   * Sets the spreadsheet locale to United States if the user confirms.
+   * @return {boolean} Whether the original spreadsheet local was English.
    */
   checkLocale() {
 
@@ -573,7 +576,21 @@ var AssetTracker = class AssetTracker {
     let locale = ss.getSpreadsheetLocale();
 
     if (locale.slice(0, 3) !== 'en_') {
-      ss.setSpreadsheetLocale('en_US');
+
+      let ui = SpreadsheetApp.getUi();
+      let message = `To perform the requested action the spreadsheet locale must be English.\nE.g. Australia, Canada, United Kingdom, United States.\n\nYou can change the spreadsheet locale in the spreadsheet menu (File - Setting).\nRun the command again with an English spreadsheet locale.\n\nDo you want to change the spreadsheet locale to United States?`;
+      let result = ui.alert(`Warning`, message, ui.ButtonSet.YES_NO);
+
+      if (result === ui.Button.YES) {
+        ss.setSpreadsheetLocale('en_US');
+        //Toast fails
+        SpreadsheetApp.getActive().toast('Spreadsheet locale set to United States');
+      }
+      else {
+        SpreadsheetApp.getActive().toast('Action canceled');
+      }
+      return false;
     }
+    return true;
   }
 };
