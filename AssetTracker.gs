@@ -582,6 +582,8 @@ var AssetTracker = class AssetTracker {
 
       if (result === ui.Button.YES) {
         ss.setSpreadsheetLocale('en_US');
+        //Toast fails
+        SpreadsheetApp.getActive().toast('Spreadsheet locale set to United States');
       }
       else {
         SpreadsheetApp.getActive().toast('Action canceled');
