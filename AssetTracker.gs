@@ -484,7 +484,9 @@ var AssetTracker = class AssetTracker {
    */
   createSampleSheets() {
 
-    this.checkLocale();
+    if (!this.checkLocale()) {
+      return;
+    }
 
     this.assetsSheet();
     this.ledgerSheet();
@@ -573,7 +575,19 @@ var AssetTracker = class AssetTracker {
     let locale = ss.getSpreadsheetLocale();
 
     if (locale.slice(0, 3) !== 'en_') {
-      ss.setSpreadsheetLocale('en_US');
+
+      let ui = SpreadsheetApp.getUi();
+      let message = `To perform the requested action the spreadsheet locale must be English.\nE.g. Australia, Canada, United Kingdom, United States.\n\nYou can change the spreadsheet locale in the spreadsheet menu (File - Setting).\nRun the command again with an English spreadsheet locale.\n\nDo you want to change the spreadsheet locale to United States?`;
+      let result = ui.alert(`Warning`, message, ui.ButtonSet.YES_NO);
+
+      if (result === ui.Button.YES) {
+        ss.setSpreadsheetLocale('en_US');
+      }
+      else {
+        SpreadsheetApp.getActive().toast('Action canceled');
+      }
+      return false;
     }
+    return true;
   }
 };

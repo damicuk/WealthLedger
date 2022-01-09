@@ -7,7 +7,9 @@
  */
 AssetTracker.prototype.writeReports = function () {
 
-  this.checkLocale();
+  if (!this.checkLocale()) {
+    return;
+  }
 
   let assetsValidationResults = this.validateAssetsSheet();
   let assetsValidationSuccess = assetsValidationResults[0];
