@@ -6,7 +6,7 @@
  */
 AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSummaryReportName) {
 
-  const version = '1';
+  const version = '2';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -58,7 +58,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELEC
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELECT ' ', '  ', Col2, Col3, Col4, Col5, SUM(Col6), SUM(Col7) GROUP BY Col2, Col3, Col4, Col5 ORDER BY Col2, Col3, Col4, Col5 LABEL ' ' '', '  ' '', SUM(Col6) '', SUM(Col7) ''");
 {"", "", "", "", "", "", "", ""};
 {"BY YEAR", "", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELECT ' ', Col1, '  ', '   ', '    ', '     ', SUM(Col6), SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', SUM(Col6) '', SUM(Col7) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELECT ' ', Col1, '  ', '   ', '    ', '     ', '      ', SUM(Col7) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', '     ' '', '      ' '', SUM(Col7) ''");
 {"", "", "", "", "", "", "", ""};
 {"BT YEAR AND ASSET TYPE", "", "", "", "", "", "", ""};
 QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELECT ' ', Col1, '  ', Col3, '   ', Col5, '    ', SUM(Col7) GROUP BY Col1, Col3, Col5 ORDER BY Col1, Col3, Col5 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col7) ''");
