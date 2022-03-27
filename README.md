@@ -1,4 +1,5 @@
-The order of the script files is important. I have them in the following order, although it's not the only possibility:
+The order of the script files is important.
+I have them in the following order, although it's not the only possibility:
 
 Main
 AssetTracker
