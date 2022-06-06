@@ -11,7 +11,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   let ss = SpreadsheetApp.getActive();
   sheet = ss.insertSheet(sheetName);
 
-  this.trimSheet(sheet, 30, 14);
+  this.trimSheet(sheet, 31, 14);
 
   let headers = [
     [
@@ -98,12 +98,13 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2021-08-02 00:00:00', 'Split', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount.`],
     ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', sampleFiatBase, , 9010, 10, , , ,],
     ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , sampleFiatBase, , 11.52, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
-    ['2021-08-31 12:00:00', 'Income', , , , , , sampleFiatBase, , 20, , 'IB', , `Fiat interest.`]
+    ['2021-08-31 12:00:00', 'Income', , , , , , sampleFiatBase, , 20, , 'IB', , `Fiat interest.`],
+    ['2022-06-06 00:00:00', 'Split', , , , , , 'AMZN', , 57, , , , `The amount held is increased by the credit amount.`]
   ];
 
   let assetList = [sampleFiatBase, 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
 
-  sheet.getRange('A3:N29').setValues(sampleData);
+  sheet.getRange('A3:N30').setValues(sampleData);
 
   let dateRule = SpreadsheetApp.newDataValidation()
     .requireDate()
