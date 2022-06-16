@@ -21,12 +21,6 @@ var AssetTracker = class AssetTracker {
     this.assets = new Map();
 
     /**
-     * Map of asset ticker to asset pools.
-     * @type {Map}
-     */
-    this.assetPools = new Map();
-
-    /**
      * Map of wallet names to wallets.
      * @type {Map}
      */
@@ -111,7 +105,8 @@ var AssetTracker = class AssetTracker {
     this.donationsSummaryReportName = 'Donations Summary Report';
     this.walletsReportName = 'Wallets Report';
 
-    this.defaultReportNames = [
+    this.reportNames = [
+      this.fiatAccountsSheetName,
       this.openReportName,
       this.closedReportName,
       this.incomeReportName,
@@ -133,50 +128,6 @@ var AssetTracker = class AssetTracker {
     this.chartRange3Name = 'Chart3';
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
-
-    this.ukOpenReportName = 'UK Open Report';
-    this.ukClosedReportName = 'UK Closed Report';
-    this.ukIncomeReportName = 'UK Income Report';
-    this.ukAccountsReportName = 'UK Accounts Report';
-    this.ukChartsDataSheetName = "UK Charts Data";
-    this.ukOpenSummaryReportName = "UK Open Summary Report";
-    this.ukClosedSummaryReportName = "UK Closed Summary Report";
-    this.ukIncomeSummaryReportName = 'UK Income Summary Report';
-    this.ukDonationsSummaryReportName = 'UK Donations Summary Report';
-    this.ukWalletsReportName = 'UK Wallets Report';
-
-    this.ukReportNames = [
-      this.ukOpenReportName,
-      this.ukClosedReportName,
-      this.ukIncomeReportName,
-      this.ukAccountsReportName,
-      this.ukChartsDataSheetName,
-      this.ukOpenSummaryReportName,
-      this.ukClosedSummaryReportName,
-      this.ukIncomeSummaryReportName,
-      this.ukDonationsSummaryReportName,
-      this.ukWalletsReportName
-    ];
-
-    this.ukOpenRangeName = 'UKOpen';
-    this.ukClosedRangeName = 'UKClosed';
-    this.ukAccountsRangeName = 'UKAccounts';
-
-    this.ukChartRange1Name = 'UKChart1';
-    this.ukChartRange2Name = 'UKChart2';
-    this.ukChartRange3Name = 'UKChart3';
-    this.ukChartRange4Name = 'UKChart4';
-    this.ukChartRange5Name = 'UKChart5';
-  }
-
-  /**
-   * Array of supported accounting models.
-   * @type {string[]}
-   * @static
-   */
-  static get accountingModels() {
-
-    return ['US', 'UK'];
   }
 
   /**
@@ -204,56 +155,6 @@ var AssetTracker = class AssetTracker {
     return a > b ? 1 :
       b > a ? -1 :
         0;
-  }
-
-  /**
-   * Subtracts the amount of milliseconds to get back to the time 00:00 (midnight) on the same day in that time zone.
-   * @param {Date} date - The given date.
-   * @param {string} [timeZone] - The tz database time zone.
-   * @return {Date} The date at midnight on the day of the given date.
-   * @static
-   */
-  static getMidnight(date, timeZone) {
-
-    let dateTZ = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
-
-    let dateTime = date.getTime();
-    dateTime -= dateTZ.getHours() * 3600000;
-    dateTime -= dateTZ.getMinutes() * 60000;
-    dateTime -= dateTZ.getMilliseconds();
-
-    return new Date(dateTime);
-  }
-
-  /**
-  * Gets the difference in days between two dates.
-  * @param {Date} date1 - The first date.
-  * @param {Date} date2 - The second date.
-  * @param {string} [timeZone] - The tz database time zone.
-  * @return {Date} The difference in days between the two dates.
-  * @static
- */
-  static diffDays(date1, date2, timeZone) {
-
-    date1 = AssetTracker.convertTZDateOnly(date1, timeZone);
-    date2 = AssetTracker.convertTZDateOnly(date2, timeZone);
-
-    const oneDay = 24 * 60 * 60 * 1000;
-
-    const diffDays = AssetTracker.round((date2 - date1) / oneDay);
-
-    return diffDays;
-  }
-
-  /**
-   * Gets the date in the a particular time zone given a date.
-   * @param {Date} date - The given date.
-   * @param {string} timeZone - The tz database time zone.
-   * @return {Date} The date in the given time zone.
-   * @static
-  */
-  static convertTZDateOnly(date, timeZone) {
-    return new Date((typeof date === 'string' ? new Date(date) : date).toLocaleDateString('en-US', { timeZone: timeZone }));
   }
 
   /**
@@ -346,43 +247,6 @@ var AssetTracker = class AssetTracker {
 
     let userProperties = PropertiesService.getUserProperties();
     return userProperties.getProperty('cmcApiKey');
-  }
-
-  /**
-   * The accounting model used to determine how to process transactions.
-   * @type {string}
-   */
-  get accountingModel() {
-
-    let documentProperties = PropertiesService.getDocumentProperties();
-
-    let accountingModel = documentProperties.getProperty('accountingModel');
-
-    if (!accountingModel) {
-
-      accountingModel = this.defaultAccountingModel;
-
-      documentProperties.setProperty('accountingModel', accountingModel);
-    }
-    return accountingModel;
-  }
-
-  /**
-   * The default accounting model.
-   * It's value depends on the spreadsheet locale.
-   * @return {string} The accounting model.
-   */
-  get defaultAccountingModel() {
-
-    let ss = SpreadsheetApp.getActive();
-    let locale = ss.getSpreadsheetLocale();
-
-    if (locale === 'en_GB') {
-      return 'UK';
-    }
-    else {
-      return 'US';
-    }
   }
 
   /**
@@ -500,11 +364,7 @@ var AssetTracker = class AssetTracker {
    */
   deleteReports() {
 
-    let sheetNames = [
-      this.fiatAccountsSheetName
-    ].concat(this.defaultReportNames).concat(this.ukReportNames);
-
-    this.deleteSheets(sheetNames);
+    this.deleteSheets(this.reportNames);
 
     SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
   }
@@ -514,11 +374,9 @@ var AssetTracker = class AssetTracker {
    */
   showSettingsDialog() {
 
-    let accountingModel = this.accountingModel; //Sets the default if necessary
-
     let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
       .setWidth(480)
-      .setHeight(250);
+      .setHeight(160);
     SpreadsheetApp.getUi().showModalDialog(html, 'Settings');
   }
 
@@ -529,9 +387,8 @@ var AssetTracker = class AssetTracker {
    * Sends message to the error handler if the api key validation fails.
    * Displays toast on success.
    * @param {Object.<string, string>} userSettings - The key value pairs to save as user properties.
-   * @param {Object.<string, string>} documentSettings - The key value pairs to save as document properties.
    */
-  saveSettings(userSettings, documentSettings) {
+  saveSettings(userSettings) {
 
     let userProperties = PropertiesService.getUserProperties();
 
@@ -557,10 +414,7 @@ var AssetTracker = class AssetTracker {
       }
     }
 
-    let documentProperties = PropertiesService.getDocumentProperties();
-
     userProperties.setProperties(userSettings);
-    documentProperties.setProperties(documentSettings);
 
     SpreadsheetApp.getActive().toast('Settings saved');
   }
