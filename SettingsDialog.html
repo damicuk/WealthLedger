@@ -10,7 +10,6 @@
 <script>
   function saveSettings() {
 
-    let accountingModel = document.getElementById('accounting-model').value;
     let ccApiKey = document.getElementById('cc-api-key').value;
     let cmcApiKey = document.getElementById('cmc-api-key').value;
 
@@ -19,21 +18,16 @@
       cmcApiKey : cmcApiKey
     }
 
-    let documentSettings = {
-      accountingModel: accountingModel
-    }
-
     google.script.run
     .withSuccessHandler(onSuccess)
     .withFailureHandler(onFailure)
-    .saveSettings(userSettings, documentSettings);
+    .saveSettings(userSettings);
   
  }
 
  function onSuccess() {
 
    google.script.host.close();
-
  }
 
  function onFailure(error) {
@@ -44,30 +38,17 @@
 
 </script>
 
-<? 
-
-let documentProperties = PropertiesService.getDocumentProperties();
-let accountingModel = documentProperties.getProperty('accountingModel');
+<?
 
 let userProperties = PropertiesService.getUserProperties();
 let ccApiKey = userProperties.getProperty('ccApiKey');
 let cmcApiKey = userProperties.getProperty('cmcApiKey');
-
-let accountingModels = AssetTracker.accountingModels;
 
 ?>
 
 <body>
   <div>
     <form id="settingsForm">
-      <div class="block form-group">
-        <label for="accounting-model">Accounting Model</label>
-        <select id="accounting-model">
-           <? for(let country of accountingModels) {?>
-           <option <? if(country === accountingModel) {?>selected<?} ?>><?= country ?></option>
-           <?}?>
-        </select>
-      </div>
       <div class="block form-group">
         <label for="cc-api-key">CryptoCompare API key</label>
         <input type="text" id="cc-api-key" style="width: 460px;" value="<?=ccApiKey?>" placeholder="< -- paste API key here -- >">

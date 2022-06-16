@@ -169,13 +169,8 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
  * Skips ledger records with the skip action.
  * Stops reading if it encounters the stop action.
  * @param {Array<LedgerRecord>} ledgerRecords - The colection of ledger records to validate.
- * @param {string} [accountingModel] - The accounting model used to determine how to process transactions. Only used for testing otherwise gets value from document properties or default.
  */
-AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords, accountingModel) {
-
-  if (!accountingModel) {
-    accountingModel = this.accountingModel;
-  }
+AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords) {
 
   if (LedgerRecord.inReverseOrder(ledgerRecords)) {
 
@@ -190,7 +185,7 @@ AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords, accounti
       else if (ledgerRecord.action === 'Stop') {
         break;
       }
-      this.validateLedgerRecord(ledgerRecord, previousRecord, rowIndex--, accountingModel);
+      this.validateLedgerRecord(ledgerRecord, previousRecord, rowIndex--);
       previousRecord = ledgerRecord;
     }
   }
@@ -206,7 +201,7 @@ AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords, accounti
       else if (ledgerRecord.action === 'Stop') {
         break;
       }
-      this.validateLedgerRecord(ledgerRecord, previousRecord, rowIndex++, accountingModel);
+      this.validateLedgerRecord(ledgerRecord, previousRecord, rowIndex++);
       previousRecord = ledgerRecord;
     }
   }
@@ -218,7 +213,7 @@ AssetTracker.prototype.validateLedgerRecords = function (ledgerRecords, accounti
  * @param {LedgerRecord} previousRecord - The previous ledger record validated.
  * @param {number} rowIndex - The index of the row in the ledger sheet used to set the current cell in case of an error.
  */
-AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRecord, rowIndex, accountingModel) {
+AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRecord, rowIndex) {
 
   let date = ledgerRecord.date;
   let action = ledgerRecord.action;
@@ -277,9 +272,6 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
   }
   else if (isNaN(creditFee)) {
     throw new ValidationError(`${action} row ${rowIndex}: Credit fee is not valid (number or blank).`, rowIndex, 'creditFee');
-  }
-  else if (accountingModel === 'UK' && lotMatching !== '') {
-    throw new ValidationError(`${action} row ${rowIndex}: Leave lot matching blank when using the UK accounting model.`, rowIndex, 'lotMatching');
   }
   else if (lotMatching !== '' && !AssetTracker.lotMatchings.includes(lotMatching)) {
     throw new ValidationError(`${action} row ${rowIndex}: Lot matching (${lotMatching}) is not valid (${AssetTracker.lotMatchings.join(', ')}) or blank.`, rowIndex, 'lotMatching');
