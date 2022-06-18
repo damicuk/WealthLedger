@@ -19,7 +19,7 @@ AssetTracker.prototype.assetsSheet = function () {
       'Asset Type',
       'Decimal Places',
       'Current Price',
-      'API',
+      'CoinMarketCap ID',
       'Timestamp',
       'Comment'
     ]
@@ -31,22 +31,22 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('A2:A').setNumberFormat('@');
   sheet.getRange('C2:C').setNumberFormat('0');
   sheet.getRange('D2:D').setNumberFormat('#,##0.0000;(#,##0.0000)');
-  sheet.getRange('E2:E').setNumberFormat('@');
+  sheet.getRange('E2:E').setNumberFormat('0');
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
   let sampleData = [
-    ['USD', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
-    ['CAD', 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))`, , , `Fiat capital gains are ignored.`],
-    ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))`, , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, , , `Google finance is used to fetch the current price. Alternatively select an API or use your own method.`],
-    ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))`, , , ,],
-    ['USDC', 'Stablecoin', '2', '1', , , ,],
-    ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, , , ,],
-    ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)`, , , ,],
-    ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
-    ['NVDA', 'Stock', '0', `=GOOGLEFINANCE(A11)`, , , ,],
-    [, , , , , , ,]
+    ['USD', 'Fiat Base', '2', '1', , ,  `Every asset in the ledger sheet must have an entry in the assets sheet.`],
+    ['CAD', 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))`, ,  , `Fiat capital gains are ignored.`],
+    ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))`, ,  , `Forex is treated as any other asset.`],
+    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, ,  , `Google finance is used to fetch the current price. Alternatively enter a CoinMarketCap ID or use your own method.`],
+    ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))`, ,  , ,],
+    ['USDC', 'Stablecoin', '2', '1', , ,  ,],
+    ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, ,  , ,],
+    ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)`, , ,  ,],
+    ['GE', 'Stock', '0', , , ,  `Current price is not needed for assets no longer held.`],
+    ['NVDA', 'Stock', '0', `=GOOGLEFINANCE(A11)`, ,  , ,],
+    [, , , , ,  , ,]
   ];
 
   sheet.getRange('A2:G').setValues(sampleData);
@@ -72,18 +72,11 @@ AssetTracker.prototype.assetsSheet = function () {
     .build();
   sheet.getRange('C2:C').setDataValidation(decimalPlacesRule);
 
-  let apiRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(this.validApiNames)
-    .setAllowInvalid(false)
-    .build();
-  sheet.getRange('E2:E').setDataValidation(apiRule);
-
   if (!sheet.getFilter()) {
     sheet.getRange('A1:G').createFilter();
   }
 
-  sheet.setColumnWidths(1, 5, 140);
-  sheet.setColumnWidth(6, 170);
+  sheet.setColumnWidths(1, 6, 170);
 
   SpreadsheetApp.flush();
   sheet.autoResizeColumns(7, 1);

@@ -124,7 +124,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   let assetType = assetRecord.assetType;
   let decimalPlaces = assetRecord.decimalPlaces;
   let currentPrice = assetRecord.currentPrice;
-  let apiName = assetRecord.apiName;
+  let cmcId = assetRecord.cmcId;
 
   if (ticker === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset is missing.`, rowIndex, 'ticker');
@@ -150,7 +150,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   else if (!Asset.decimalPlacesRegExp.test(decimalPlaces)) {
     throw new ValidationError(`Assets row ${rowIndex}: Decimal places is not valid (integer between 0 and 8).`, rowIndex, 'decimalPlaces');
   }
-  else if (assetType === 'Fiat Base' && currentPrice != 1) {
+  else if (assetType === 'Fiat Base' && currentPrice !== 1) {
     throw new ValidationError(`Assets row ${rowIndex}: Fiat base current price must be 1.`, rowIndex, 'currentPrice');
   }
   else if (isNaN(currentPrice)) {
@@ -159,8 +159,8 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   else if (currentPrice < 0) {
     throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater than or equal to 0 (or blank).`, rowIndex, 'currentPrice');
   }
-  else if (apiName !== '' && !this.validApiNames.includes(apiName)) {
-    throw new ValidationError(`Assets row ${rowIndex}: API (${apiName}) is not valid (${this.validApiNames.join(', ')}) or blank.`, rowIndex, 'apiName');
+  else if (cmcId !== '' && !Asset.cmcIdRegExp.test(cmcId)) {
+    throw new ValidationError(`Assets row ${rowIndex}: CoinMarketCap ID (${cmcId}) is not valid (0-999999).`, rowIndex, 'cmcId');
   }
 };
 

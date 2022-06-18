@@ -10,7 +10,7 @@ var AssetRecord = class AssetRecord {
    * @param {number} decimalPlaces - The number of decimal places of the asset.
    * @param {number} currentPrice - The current price of the asset.
    * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
-   * @param {string} apiName - The api to call to fetch the current price.
+   * @param {string} cmcId - The CoinMarketCap asset id e.g. Bitcoin id = 1.
    * @param {Date} date - When the current price was last updated by the selected API.
    */
   constructor(
@@ -19,7 +19,7 @@ var AssetRecord = class AssetRecord {
     decimalPlaces,
     currentPrice,
     currentPriceFormula,
-    apiName,
+    cmcId,
     date) {
 
     /**
@@ -53,10 +53,10 @@ var AssetRecord = class AssetRecord {
     this.currentPriceFormula = currentPriceFormula;
 
     /**
-     * The api to call to fetch the current price.
+     * The CoinMarketCap asset id e.g. Bitcoin id = 1.
      * @type {string}
      */
-    this.apiName = apiName;
+    this.cmcId = cmcId;
 
     /**
      * When the current price was last updated.
@@ -79,7 +79,7 @@ var AssetRecord = class AssetRecord {
       'assetType',
       'decimalPlaces',
       'currentPrice',
-      'apiName',
+      'cmcId',
       'date'
     ];
 
@@ -111,7 +111,7 @@ AssetTracker.prototype.getAssetRecords = function () {
       row[2],
       row[3],
       currentPriceFormulas[rowIndex][0],
-      row[4],
+      row[4].toString(),
       row[5]
     );
 

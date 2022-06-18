@@ -75,6 +75,16 @@ var Asset = class Asset {
   }
 
   /**
+  * Regular expression to validate cmcId.
+  * @type {RegExp}
+  * @static
+  */
+  static get cmcIdRegExp() {
+
+    return /^\d{0,6}$/;
+  }
+
+  /**
    * Array of default asset types.
    * @type {Array<string>}
    * @static

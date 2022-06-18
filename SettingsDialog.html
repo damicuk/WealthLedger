@@ -10,11 +10,9 @@
 <script>
   function saveSettings() {
 
-    let ccApiKey = document.getElementById('cc-api-key').value;
     let cmcApiKey = document.getElementById('cmc-api-key').value;
 
     let userSettings = {
-      ccApiKey: ccApiKey,
       cmcApiKey : cmcApiKey
     }
 
@@ -41,7 +39,6 @@
 <?
 
 let userProperties = PropertiesService.getUserProperties();
-let ccApiKey = userProperties.getProperty('ccApiKey');
 let cmcApiKey = userProperties.getProperty('cmcApiKey');
 
 ?>
@@ -49,10 +46,6 @@ let cmcApiKey = userProperties.getProperty('cmcApiKey');
 <body>
   <div>
     <form id="settingsForm">
-      <div class="block form-group">
-        <label for="cc-api-key">CryptoCompare API key</label>
-        <input type="text" id="cc-api-key" style="width: 460px;" value="<?=ccApiKey?>" placeholder="< -- paste API key here -- >">
-      </div>
       <div class="block form-group">
         <label for="cmc-api-key">CoinMarketCap API key</label>
         <input type="text" id="cmc-api-key" style="width: 460px;" value="<?=cmcApiKey?>" placeholder="< -- paste API key here -- >">
