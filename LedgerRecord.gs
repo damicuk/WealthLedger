@@ -17,6 +17,9 @@ var LedgerRecord = class LedgerRecord {
    * @param {number} creditAmount - The amount of asset credited to the account.
    * @param {number} creditFee - The fee in credit asset units.
    * @param {string} creditWalletName - The name of the wallet (or exchange) to which the asset is credited.
+   * @param {string} thirdAsset - The ticker of the third party fee asset.
+   * @param {number} thirdExRate - The third party fee asset to fiat base exchange rate, 0 if the third party fee asset is fiat base.
+   * @param {number} thirdFee - The fee in third party asset units.
    * @param {string} lotMatching - Sets the lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
    */
   constructor(
@@ -32,6 +35,9 @@ var LedgerRecord = class LedgerRecord {
     creditAmount,
     creditFee,
     creditWalletName,
+    thirdAsset,
+    thirdExRate,
+    thirdFee,
     lotMatching) {
 
     /**
@@ -107,6 +113,24 @@ var LedgerRecord = class LedgerRecord {
     this.creditWalletName = creditWalletName;
 
     /**
+     * The ticker of the third party fee asset.
+     * @type {string}
+     */
+    this.thirdAsset = thirdAsset;
+
+    /**
+     * The third party fee asset to fiat base exchange rate, 0 if the third party fee asset is fiat base.
+     * @type {number}
+     */
+    this.thirdExRate = thirdExRate;
+
+    /**
+     * The fee in third party asset units.
+     * @type {number}
+     */
+    this.thirdFee = thirdFee;
+
+    /**
      * The lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
      * @type {string}
      */
@@ -135,6 +159,9 @@ var LedgerRecord = class LedgerRecord {
       'creditAmount',
       'creditFee',
       'creditWalletName',
+      'thirdAsset',
+      'thirdExRate',
+      'thirdFee',
       'lotMatching'
     ];
 
@@ -181,7 +208,10 @@ AssetTracker.prototype.getLedgerRecords = function () {
       row[9],
       row[10],
       row[11],
-      row[12]
+      row[12],
+      row[13],
+      row[14],
+      row[15]
     );
 
     ledgerRecords.push(ledgerRecord);
