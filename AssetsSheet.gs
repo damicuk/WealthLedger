@@ -39,7 +39,7 @@ AssetTracker.prototype.assetsSheet = function () {
     ['USD', 'Fiat Base', '2', '1', , ,  `Every asset in the ledger sheet must have an entry in the assets sheet.`],
     ['CAD', 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))`, ,  , `Fiat capital gains are ignored.`],
     ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))`, ,  , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, ,  , `Google finance is used to fetch the current price. Alternatively enter a CoinMarketCap ID or use your own method.`],
+    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, ,  , `Use Google Finance to fetch the current price. Alternatively enter a CoinMarketCap ID or use your own method.`],
     ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))`, ,  , ,],
     ['USDC', 'Stablecoin', '2', '1', , ,  ,],
     ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, ,  , ,],
