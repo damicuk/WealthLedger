@@ -159,7 +159,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
   else if (currentPrice < 0) {
     throw new ValidationError(`Assets row ${rowIndex}: Current price must be greater than or equal to 0 (or blank).`, rowIndex, 'currentPrice');
   }
-  else if (cmcId !== '' && !Asset.cmcIdRegExp.test(cmcId)) {
+  else if (!Asset.cmcIdRegExp.test(cmcId)) {
     throw new ValidationError(`Assets row ${rowIndex}: CoinMarketCap ID (${cmcId}) is not valid (0-999999).`, rowIndex, 'cmcId');
   }
 };
