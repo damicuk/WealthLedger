@@ -11,15 +11,13 @@ AssetTracker.prototype.ledgerSheet = function () {
   let ss = SpreadsheetApp.getActive();
   sheet = ss.insertSheet(sheetName);
 
-  this.trimSheet(sheet, 29, 17);
+  this.trimSheet(sheet, 29, 14);
 
   let headers = [
     [
       , ,
       'Debit', , , , ,
-      'Credit', , , , ,
-      'Other Asset Fee', , ,
-      , ,
+      'Credit', , , , , , ,
     ],
     [
       'Date Time',
@@ -34,77 +32,69 @@ AssetTracker.prototype.ledgerSheet = function () {
       'Amount',
       'Fee',
       'Wallet',
-      'Asset',
-      'Ex Rate',
-      'Fee',
       'Lot Matching',
       'Comment'
     ]
   ];
 
-  sheet.getRange('A1:Q2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
+  sheet.getRange('A1:N2').setValues(headers).setFontWeight('bold').setHorizontalAlignment("center");
   sheet.setFrozenRows(2);
 
   sheet.getRange('A1:B2').setBackgroundColor('#fce5cd');
   sheet.getRange('C1:G2').setBackgroundColor('#ead1dc');
   sheet.getRange('H1:L2').setBackgroundColor('#d0e0e3');
-  sheet.getRange('M1:O2').setBackgroundColor('#d9ead3');
-  sheet.getRange('P1:Q2').setBackgroundColor('#c9daf8');
+  sheet.getRange('M1:N2').setBackgroundColor('#c9daf8');
 
   sheet.getRange('A1:B1').mergeAcross();
   sheet.getRange('C1:G1').mergeAcross();
   sheet.getRange('H1:L1').mergeAcross();
-  sheet.getRange('M1:O1').mergeAcross();
-  sheet.getRange('P1:Q1').mergeAcross();
+  sheet.getRange('M1:N1').mergeAcross();
 
   sheet.getRange('A3:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('B3:C').setNumberFormat('@');
   sheet.getRange('D3:F').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
   sheet.getRange('G3:H').setNumberFormat('@');
   sheet.getRange('I3:K').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-  sheet.getRange('L3:M').setNumberFormat('@');
-  sheet.getRange('N3:O').setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-
-  sheet.getRange('P3:Q').setNumberFormat('@');
+  sheet.getRange('L3:N').setNumberFormat('@');
 
   this.addActionCondtion(sheet, 'B3:B');
 
   if (!sheet.getFilter()) {
-    sheet.getRange('A2:Q').createFilter();
+    sheet.getRange('A2:N').createFilter();
   }
 
   let sampleData = [
-    ['2019-03-01 12:00:00', 'Transfer', , , , , , 'USD', , 20000, , 'Kraken', , , , , `Leave debit wallet blank when transferring fiat from a bank account.`],
-    ['2019-03-02 12:00:00', 'Trade', 'USD', , 7990, 10, 'Kraken', 'BTC', , 2, , , , , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
-    ['2019-03-03 12:00:00', 'Trade', 'USD', , 9990, 10, 'Kraken', 'BTC', , 2, , , , , , , ,],
-    ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 6010, 10, , , , , , ,],
-    ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 20010, 10, , , , , , ,],
-    ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , , , , `Exchange assets.`],
-    ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', 'USD', , 12010, 10, , , , , , ,],
-    ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Ledger', , , , , `Transfer from one wallet to another.`],
-    ['2020-12-05 12:00:00', 'Transfer', 'BTC', , 0.9995, 0.0005, 'Kraken', , , , , 'Ledger', , , , , ,],
-    ['2020-12-06 12:00:00', 'Transfer', 'USD', , 30000, , 'Kraken', , , , , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
-    ['2021-02-01 12:00:00', 'Income', , , , , , 'ADA', 1, 10, , 'Rewards', , , , , `Staking reward.`],
-    ['2021-02-05 12:00:00', 'Income', , , , , , 'ADA', 1.3, 10, , 'Rewards', , , , , ,],
-    ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , , , , `Donation (e.g. to a registered charity).`],
-    ['2021-03-02 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , , , , `To track donations unhide the donations summary report.`],
-    ['2021-03-03 12:00:00', 'Gift', 'ADA', 1.1, 500, , 'Ledger', , , , , , , , , , `Gift given (e.g. to friends or family).`],
-    ['2021-03-04 12:00:00', 'Gift', 'USD', , 40000, 10, , 'BTC', , '1', , 'Ledger', , , , , `Gift received. The debit amount and fee are the inherited cost basis.`],
-    ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Ledger', , , , , , , , , , `Miscellaneous fee.`],
-    ['2021-04-01 12:00:00', 'Transfer', , , , , , 'USD', , 30000, , 'IB', , , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , , , , ,],
-    ['2021-08-02 00:00:00', 'Adjust', 'GE', , 665, , , , , , , , , , , , `The amount held is decreased by the debit amount (reverse split).`],
-    ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , , , , ,],
-    ['2021-08-31 12:00:00', 'Income', 'AAPL', , , , , 'USD', , 18.40, , 'IB', , , , , `Dividend. The debit asset is the source of the dividend.`],
-    ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , , , , `Fiat interest.`],
-    ['2022-06-06 00:00:00', 'Adjust', , , , , , 'AMZN', , 57, , , , , , , `The amount held is increased by the credit amount (forward split).`]
+    ['2019-03-01 12:00:00', 'Transfer', , , , , , 'USD', , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
+    ['2019-03-02 12:00:00', 'Trade', 'USD', , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
+    ['2019-03-03 12:00:00', 'Trade', 'USD', , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
+    ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 6010, 10, , , ,],
+    ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 20010, 10, , , ,],
+    ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , `Exchange assets.`],
+    ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', 'USD', , 12010, 10, , , ,],
+    ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Ledger', , `Transfer from one wallet to another.`],
+    ['2020-12-05 12:00:00', 'Transfer', 'BTC', , 0.9995, 0.0005, 'Kraken', , , , , 'Ledger', , ,],
+    ['2020-12-06 12:00:00', 'Transfer', 'USD', , 30000, , 'Kraken', , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
+    ['2021-02-01 12:00:00', 'Income', , , , , , 'ADA', 1, 10, , 'Rewards', , `Staking reward.`],
+    ['2021-02-05 12:00:00', 'Income', , , , , , 'ADA', 1.3, 10, , 'Rewards', , ,],
+    ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Donation (e.g. to a registered charity).`],
+    ['2021-03-02 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `To track donations unhide the donations summary report.`],
+    ['2021-03-03 12:00:00', 'Gift', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Gift given (e.g. to friends or family).`],
+    ['2021-03-04 12:00:00', 'Gift', 'USD', , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are the inherited cost basis.`],
+    ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Ledger', , , , , , , `Miscellaneous fee.`],
+    ['2021-04-01 12:00:00', 'Transfer', , , , , , 'USD', , 30000, , 'IB', , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
+    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
+    ['2021-08-02 00:00:00', 'Adjust', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount (reverse split).`],
+    ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , ,],
+    ['2021-08-31 12:00:00', 'Income', 'AAPL', , , , , 'USD', , 18.40, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
+    ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Fiat interest.`],
+    ['2022-06-06 00:00:00', 'Adjust', , , , , , 'AMZN', , 57, , , , `The amount held is increased by the credit amount (forward split).`]
   ];
 
   let assetList = ['USD', 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
 
-  sheet.getRange('A3:Q28').setValues(sampleData);
+  sheet.getRange('A3:N28').setValues(sampleData);
 
   let dateRule = SpreadsheetApp.newDataValidation()
     .requireDate()
@@ -126,7 +116,6 @@ AssetTracker.prototype.ledgerSheet = function () {
     .build();
   sheet.getRange('C3:C').setDataValidation(assetRule);
   sheet.getRange('H3:H').setDataValidation(assetRule);
-  sheet.getRange('M3:M').setDataValidation(assetRule);
 
   let positiveNumberRule = SpreadsheetApp.newDataValidation()
     .requireNumberGreaterThan(0)
@@ -135,7 +124,6 @@ AssetTracker.prototype.ledgerSheet = function () {
     .build();
   sheet.getRange('D3:D').setDataValidation(positiveNumberRule);
   sheet.getRange('I3:I').setDataValidation(positiveNumberRule);
-  sheet.getRange('N3:N').setDataValidation(positiveNumberRule);
 
   let nonNegativeNumberRule = SpreadsheetApp.newDataValidation()
     .requireNumberGreaterThanOrEqualTo(0)
@@ -146,7 +134,6 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('F3:F').setDataValidation(nonNegativeNumberRule);
   sheet.getRange('J3:J').setDataValidation(nonNegativeNumberRule);
   sheet.getRange('K3:K').setDataValidation(nonNegativeNumberRule);
-  sheet.getRange('O3:O').setDataValidation(nonNegativeNumberRule);
 
   let walletRule = SpreadsheetApp.newDataValidation()
     .requireValueInList(['Binance', 'Deposit', 'IB', 'Kraken', 'Ledger', 'Rewards'])
@@ -160,16 +147,15 @@ AssetTracker.prototype.ledgerSheet = function () {
     .requireValueInList(['FIFO', 'LIFO', 'HIFO', 'LOFO'])
     .setAllowInvalid(false)
     .build();
-  sheet.getRange('P3:P').setDataValidation(lotMatchingRule);
+  sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
 
-  sheet.setColumnWidth(16, 120);
+  sheet.setColumnWidth(13, 120);
 
   SpreadsheetApp.flush();
   sheet.autoResizeColumns(1, 1);
   sheet.autoResizeColumns(5, 1);
   sheet.autoResizeColumns(10, 1);
-  // sheet.autoResizeColumns(15, 1);
-  sheet.autoResizeColumns(17, 1);
+  sheet.autoResizeColumns(14, 1);
 
   this.setSheetVersion(sheet, this.ledgerSheetVersion);
 
@@ -223,7 +209,6 @@ AssetTracker.prototype.updateLedgerAssets = function (sheet) {
     .build();
   sheet.getRange('C3:C').setDataValidation(assetRule);
   sheet.getRange('H3:H').setDataValidation(assetRule);
-  sheet.getRange('M3:M').setDataValidation(assetRule);
 
 };
 

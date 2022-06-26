@@ -68,7 +68,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the ledger sheet.
      * @type {number}
      */
-    this.ledgerDataColumns = 16;
+    this.ledgerDataColumns = 13;
 
     /**
      * The number of header rows in the assets sheet.

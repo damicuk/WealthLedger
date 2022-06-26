@@ -25,7 +25,7 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
     sheet = ss.insertSheet(sheetName);
   }
 
-  this.trimSheet(sheet, rowCount, 34);
+  this.trimSheet(sheet, rowCount, 28);
 
   if (this.getSheetVersion(sheet) !== version) {
 
@@ -36,10 +36,8 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
         , ,
         'Buy Debit', , , , , ,
         'Buy Credit', , , , ,
-        'Other Asset Fee', , ,
         , ,
         'Sell Credit', , , , ,
-        'Other Asset Fee', , ,
         'Calculations', , , , , , , ,
       ],
       [
@@ -55,9 +53,6 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
         'Asset Type',
         'Amount',
         'Fee',
-        'Asset',
-        'Ex Rate',
-        'Fee',
         'Date Time',
         'Action',
         'Asset',
@@ -66,9 +61,6 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
         'Amount',
         'Fee',
         'Wallet',
-        'Asset',
-        'Ex Rate',
-        'Fee',
         'Balance',
         'Cost Price',
         'Sell Price',
@@ -80,26 +72,22 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
       ]
     ];
 
-    sheet.getRange('A1:AH2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.getRange('A1:AB2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:B2').setBackgroundColor('#fce5cd');
     sheet.getRange('C1:H2').setBackgroundColor('#ead1dc');
     sheet.getRange('I1:L2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('M1:O2').setBackgroundColor('#d9ead3');
-    sheet.getRange('P1:Q2').setBackgroundColor('#fce5cd');
-    sheet.getRange('R1:W2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('X1:Z2').setBackgroundColor('#d9ead3');
-    sheet.getRange('AA1:AH2').setBackgroundColor('#c9daf8');
+    sheet.getRange('M1:N2').setBackgroundColor('#fce5cd');
+    sheet.getRange('O1:T2').setBackgroundColor('#d0e0e3');
+    sheet.getRange('U1:AB2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:B1').mergeAcross();
     sheet.getRange('C1:H1').mergeAcross();
     sheet.getRange('I1:L1').mergeAcross();
-    sheet.getRange('M1:O1').mergeAcross();
-    sheet.getRange('P1:Q1').mergeAcross();
-    sheet.getRange('R1:W1').mergeAcross();
-    sheet.getRange('X1:Z1').mergeAcross();
-    sheet.getRange('AA1:AH1').mergeAcross();
+    sheet.getRange('M1:N1').mergeAcross();
+    sheet.getRange('O1:T1').mergeAcross();
+    sheet.getRange('U1:AB1').mergeAcross();
 
     sheet.getRange(`A3:A`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange(`B3:D`).setNumberFormat('@');
@@ -109,71 +97,62 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
     sheet.getRange(`H3:J`).setNumberFormat('@');
     sheet.getRange(`K3:K`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
     sheet.getRange(`L3:L`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`M3:M`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sheet.getRange(`N3:P`).setNumberFormat('@');
+    sheet.getRange(`Q3:Q`).setNumberFormat('#,##0.00000;(#,##0.00000)');
+    sheet.getRange(`R3:R`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`S3:S`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`T3:T`).setNumberFormat('@');
 
-    sheet.getRange(`M3:M`).setNumberFormat('@');
-    sheet.getRange(`N3:N`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`O3:O`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-
-    sheet.getRange(`P3:P`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange(`Q3:S`).setNumberFormat('@');
-    sheet.getRange(`T3:T`).setNumberFormat('#,##0.00000;(#,##0.00000)');
     sheet.getRange(`U3:U`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`V3:V`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`W3:W`).setNumberFormat('@');
-
-    sheet.getRange(`X3:X`).setNumberFormat('@');
-    sheet.getRange(`Y3:Y`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`Z3:Z`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-
-    sheet.getRange(`AA3:AA`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`AB3:AE`).setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange(`AF3:AF`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange(`AG3:AG`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange(`AH3:AH`).setNumberFormat('@');
+    sheet.getRange(`V3:Y`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`Z3:Z`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`AA3:AA`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`AB3:AB`).setNumberFormat('@');
 
     this.addActionCondtion(sheet, `B3:B`);
     this.addAssetCondition(sheet, `C3:C`);
     this.addAssetCondition(sheet, `I3:I`);
-    this.addActionCondtion(sheet, `Q3:Q`);
-    this.addAssetCondition(sheet, `R3:R`);
-    this.addLongShortCondition(sheet, `AH3:AH`);
+    this.addActionCondtion(sheet, `N3:N`);
+    this.addAssetCondition(sheet, `O3:O`);
+    this.addLongShortCondition(sheet, `AB3:AB`);
 
     const formulas = [[
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(AA3:AA=0,,AD3:AD/AA3:AA), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(AA3:AA=0,,AE3:AE/AA3:AA), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(U3:U=0,,X3:X/U3:U), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(U3:U=0,,Y3:Y/U3:U), LEN(A3:A)))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(E3:E, ROUND((F3:F+G3:G)*E3:E, 2), F3:F+G3:G), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(T3:T, ROUND((U3:U-V3:V)*T3:T, 2), U3:U-V3:V), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(AE3:AE-AD3:AD, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(AD3:AD=0,,AF3:AF/AD3:AD), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, P3:P, "Y") > 1)+(((DATEDIF(A3:A, P3:P, "Y") = 1)*(DATEDIF(A3:A, P3:P, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(Q3:Q, ROUND((R3:R-S3:S)*Q3:Q, 2), R3:R-S3:S), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(Y3:Y-X3:X, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(X3:X=0,,Z3:Z/X3:X), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, M3:M, "Y") > 1)+(((DATEDIF(A3:A, M3:M, "Y") = 1)*(DATEDIF(A3:A, M3:M, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('AA3:AH3').setFormulas(formulas);
+    sheet.getRange('U3:AB3').setFormulas(formulas);
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
     this.setSheetVersion(sheet, version);
   }
 
-  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 26);
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 20);
   dataRange.setValues(dataTable);
 
-  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 34);
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 28);
   ss.setNamedRange(this.closedRangeName, namedRange);
 
-  this.writeLinks(ss, action1LinkTable, this.closedRangeName, 1, this.ledgerSheetName, 'A', 'P');
+  this.writeLinks(ss, action1LinkTable, this.closedRangeName, 1, this.ledgerSheetName, 'A', 'M');
 
-  this.writeLinks(ss, action2LinkTable, this.closedRangeName, 16, this.ledgerSheetName, 'A', 'P');
+  this.writeLinks(ss, action2LinkTable, this.closedRangeName, 13, this.ledgerSheetName, 'A', 'M');
 
   this.writeLinks(ss, asset1LinkTable, this.closedRangeName, 2, this.assetsSheetName, 'A', 'F');
 
   this.writeLinks(ss, asset2LinkTable, this.closedRangeName, 8, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset3LinkTable, this.closedRangeName, 17, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset3LinkTable, this.closedRangeName, 14, this.assetsSheetName, 'A', 'F');
 
   SpreadsheetApp.flush();
-  sheet.autoResizeColumns(1, 34);
+  sheet.autoResizeColumns(1, 28);
 };
 
 /**
@@ -208,10 +187,6 @@ AssetTracker.prototype.getClosedData = function () {
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
 
-    let otherAssetBuy = '';
-    let otherExRateBuy = '';
-    let otherFeeBuy = '';
-
     let dateSell = closedLot.date;
     let closedLotAction = closedLot.action;
     let creditAssetSell = closedLot.creditAsset.ticker;
@@ -220,10 +195,6 @@ AssetTracker.prototype.getClosedData = function () {
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;
-
-    let otherAssetSell = '';
-    let otherExRateSell = '';
-    let otherFeeSell = '';
 
     let action1RowIndex = lot.rowIndex;
     let action2RowIndex = closedLot.rowIndex;
@@ -247,10 +218,6 @@ AssetTracker.prototype.getClosedData = function () {
       creditAmountBuy,
       creditFeeBuy,
 
-      otherAssetBuy,
-      otherExRateBuy,
-      otherFeeBuy,
-
       dateSell,
       closedLotAction,
       creditAssetSell,
@@ -259,10 +226,6 @@ AssetTracker.prototype.getClosedData = function () {
       creditAmountSell,
       creditFeeSell,
       walletSell,
-
-      otherAssetSell,
-      otherExRateSell,
-      otherFeeSell,
 
       action1RowIndex,
       action2RowIndex,
@@ -274,17 +237,17 @@ AssetTracker.prototype.getClosedData = function () {
 
   if (dataTable.length === 0) {
 
-    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
   }
 
-  dataTable.sort(function (a, b) { return a[15] - b[15]; });
+  dataTable.sort(function (a, b) { return a[12] - b[12]; });
 
   for (let row of dataTable) {
 
-    asset3LinkTable.push([row[17], row.splice(-1, 1)[0]]);
+    asset3LinkTable.push([row[14], row.splice(-1, 1)[0]]);
     asset2LinkTable.push([row[8], row.splice(-1, 1)[0]]);
     asset1LinkTable.push([row[2], row.splice(-1, 1)[0]]);
-    action2LinkTable.push([row[16], row.splice(-1, 1)[0]]);
+    action2LinkTable.push([row[13], row.splice(-1, 1)[0]]);
     action1LinkTable.push([row[1], row.splice(-1, 1)[0]]);
   }
 

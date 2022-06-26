@@ -17,9 +17,6 @@ var LedgerRecord = class LedgerRecord {
    * @param {number} creditAmount - The amount of asset credited to the account.
    * @param {number} creditFee - The fee in credit asset units.
    * @param {string} creditWalletName - The name of the wallet (or exchange) to which the asset is credited.
-   * @param {string} otherAsset - The ticker of the other asset.
-   * @param {number} otherExRate - The other asset to fiat base exchange rate, 0 if the other asset is fiat base.
-   * @param {number} otherFee - The fee in other asset units.
    * @param {string} lotMatching - Sets the lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
    */
   constructor(
@@ -35,9 +32,6 @@ var LedgerRecord = class LedgerRecord {
     creditAmount,
     creditFee,
     creditWalletName,
-    otherAsset,
-    otherExRate,
-    otherFee,
     lotMatching) {
 
     /**
@@ -113,24 +107,6 @@ var LedgerRecord = class LedgerRecord {
     this.creditWalletName = creditWalletName;
 
     /**
-     * The ticker of the other asset.
-     * @type {string}
-     */
-    this.otherAsset = otherAsset;
-
-    /**
-     * The other asset to fiat base exchange rate, 0 if the other asset is fiat base.
-     * @type {number}
-     */
-    this.otherExRate = otherExRate;
-
-    /**
-     * The fee in other asset units.
-     * @type {number}
-     */
-    this.otherFee = otherFee;
-
-    /**
      * The lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
      * @type {string}
      */
@@ -159,9 +135,6 @@ var LedgerRecord = class LedgerRecord {
       'creditAmount',
       'creditFee',
       'creditWalletName',
-      'otherAsset',
-      'otherExRate',
-      'otherFee',
       'lotMatching'
     ];
 
@@ -208,10 +181,7 @@ AssetTracker.prototype.getLedgerRecords = function () {
       row[9],
       row[10],
       row[11],
-      row[12],
-      row[13],
-      row[14],
-      row[15]
+      row[12]
     );
 
     ledgerRecords.push(ledgerRecord);
