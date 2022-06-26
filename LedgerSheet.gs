@@ -144,7 +144,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('L3:L').setDataValidation(walletRule);
 
   let lotMatchingRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['FIFO', 'LIFO', 'HIFO', 'LOFO'])
+    .requireValueInList(AssetTracker.lotMatchings)
     .setAllowInvalid(false)
     .build();
   sheet.getRange('M3:M').setDataValidation(lotMatchingRule);
