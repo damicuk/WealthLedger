@@ -36,10 +36,10 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
         , ,
         'Buy Debit', , , , , ,
         'Buy Credit', , , , ,
-        'Third Party Fee', , ,
+        'Other Asset Fee', , ,
         , ,
         'Sell Credit', , , , ,
-        'Third Party Fee', , ,
+        'Other Asset Fee', , ,
         'Calculations', , , , , , , ,
       ],
       [
@@ -208,9 +208,9 @@ AssetTracker.prototype.getClosedData = function () {
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
 
-    let thirdAssetBuy = '';
-    let thirdExRateBuy = '';
-    let thirdFeeBuy = '';
+    let otherAssetBuy = '';
+    let otherExRateBuy = '';
+    let otherFeeBuy = '';
 
     let dateSell = closedLot.date;
     let closedLotAction = closedLot.action;
@@ -221,9 +221,9 @@ AssetTracker.prototype.getClosedData = function () {
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;
 
-    let thirdAssetSell = '';
-    let thirdExRateSell = '';
-    let thirdFeeSell = '';
+    let otherAssetSell = '';
+    let otherExRateSell = '';
+    let otherFeeSell = '';
 
     let action1RowIndex = lot.rowIndex;
     let action2RowIndex = closedLot.rowIndex;
@@ -247,9 +247,9 @@ AssetTracker.prototype.getClosedData = function () {
       creditAmountBuy,
       creditFeeBuy,
 
-      thirdAssetBuy,
-      thirdExRateBuy,
-      thirdFeeBuy,
+      otherAssetBuy,
+      otherExRateBuy,
+      otherFeeBuy,
 
       dateSell,
       closedLotAction,
@@ -260,9 +260,9 @@ AssetTracker.prototype.getClosedData = function () {
       creditFeeSell,
       walletSell,
 
-      thirdAssetSell,
-      thirdExRateSell,
-      thirdFeeSell,
+      otherAssetSell,
+      otherExRateSell,
+      otherFeeSell,
 
       action1RowIndex,
       action2RowIndex,

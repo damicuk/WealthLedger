@@ -36,7 +36,7 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
         , ,
         'Debit', , , , , ,
         'Credit', , , , ,
-        'Third Party Fee', , ,
+        'Other Asset Fee', , ,
         'Calculations', , , , , , , ,
       ],
       [
@@ -172,9 +172,9 @@ AssetTracker.prototype.getOpenData = function () {
         let creditFee = lot.creditFee;
         let currentWallet = wallet.name;
 
-        let firstAsset = '';
-        let firstExRate = '';
-        let firstFee = '';
+        let otherAsset = '';
+        let otherExRate = '';
+        let otherFee = '';
 
         let actionRowIndex = lot.rowIndex;
         let asset1RowIndex = lot.debitAsset.rowIndex;
@@ -197,9 +197,9 @@ AssetTracker.prototype.getOpenData = function () {
           creditFee,
           currentWallet,
 
-          firstAsset,
-          firstExRate,
-          firstFee,
+          otherAsset,
+          otherExRate,
+          otherFee,
 
           actionRowIndex,
           asset1RowIndex,

@@ -18,7 +18,7 @@ AssetTracker.prototype.ledgerSheet = function () {
       , ,
       'Debit', , , , ,
       'Credit', , , , ,
-      'Third Party Fee', , ,
+      'Other Asset Fee', , ,
       , ,
     ],
     [

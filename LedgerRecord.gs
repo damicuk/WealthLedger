@@ -17,9 +17,9 @@ var LedgerRecord = class LedgerRecord {
    * @param {number} creditAmount - The amount of asset credited to the account.
    * @param {number} creditFee - The fee in credit asset units.
    * @param {string} creditWalletName - The name of the wallet (or exchange) to which the asset is credited.
-   * @param {string} thirdAsset - The ticker of the third party fee asset.
-   * @param {number} thirdExRate - The third party fee asset to fiat base exchange rate, 0 if the third party fee asset is fiat base.
-   * @param {number} thirdFee - The fee in third party asset units.
+   * @param {string} otherAsset - The ticker of the other asset.
+   * @param {number} otherExRate - The other asset to fiat base exchange rate, 0 if the other asset is fiat base.
+   * @param {number} otherFee - The fee in other asset units.
    * @param {string} lotMatching - Sets the lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
    */
   constructor(
@@ -35,9 +35,9 @@ var LedgerRecord = class LedgerRecord {
     creditAmount,
     creditFee,
     creditWalletName,
-    thirdAsset,
-    thirdExRate,
-    thirdFee,
+    otherAsset,
+    otherExRate,
+    otherFee,
     lotMatching) {
 
     /**
@@ -113,22 +113,22 @@ var LedgerRecord = class LedgerRecord {
     this.creditWalletName = creditWalletName;
 
     /**
-     * The ticker of the third party fee asset.
+     * The ticker of the other asset.
      * @type {string}
      */
-    this.thirdAsset = thirdAsset;
+    this.otherAsset = otherAsset;
 
     /**
-     * The third party fee asset to fiat base exchange rate, 0 if the third party fee asset is fiat base.
+     * The other asset to fiat base exchange rate, 0 if the other asset is fiat base.
      * @type {number}
      */
-    this.thirdExRate = thirdExRate;
+    this.otherExRate = otherExRate;
 
     /**
-     * The fee in third party asset units.
+     * The fee in other asset units.
      * @type {number}
      */
-    this.thirdFee = thirdFee;
+    this.otherFee = otherFee;
 
     /**
      * The lot matching method to use from this point onwards - FIFO, LIFO, HIFO, LOFO.
@@ -159,9 +159,9 @@ var LedgerRecord = class LedgerRecord {
       'creditAmount',
       'creditFee',
       'creditWalletName',
-      'thirdAsset',
-      'thirdExRate',
-      'thirdFee',
+      'otherAsset',
+      'otherExRate',
+      'otherFee',
       'lotMatching'
     ];
 
