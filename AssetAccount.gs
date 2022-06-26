@@ -184,7 +184,7 @@ var AssetAccount = class AssetAccount {
 
   /**
    * Removes any lots with zero subunits.
-   * Used when misc fee or split sets lot subunits to zero.
+   * Used when misc fee or adjust sets lot subunits to zero.
    */
   removeZeroSubunitLots() {
 
