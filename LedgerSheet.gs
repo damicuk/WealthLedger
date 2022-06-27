@@ -11,7 +11,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   let ss = SpreadsheetApp.getActive();
   sheet = ss.insertSheet(sheetName);
 
-  this.trimSheet(sheet, 31, 14);
+  this.trimSheet(sheet, 29, 14);
 
   let headers = [
     [
@@ -81,22 +81,20 @@ AssetTracker.prototype.ledgerSheet = function () {
     ['2021-03-03 12:00:00', 'Gift', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Gift given (e.g. to friends or family).`],
     ['2021-03-04 12:00:00', 'Gift', 'USD', , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are the inherited cost basis.`],
     ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Ledger', , , , , , , `Miscellaneous fee.`],
-    ['2021-04-01 12:00:00', 'Transfer', , , , , , 'USD', , 40000, , 'IB', , ,],
+    ['2021-04-01 12:00:00', 'Transfer', , , , , , 'USD', , 30000, , 'IB', , ,],
     ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
     ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
-    ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'NVDA', , 18, , , , ,],
     ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
-    ['2021-07-20 00:00:00', 'Split', , , , , , 'NVDA', , 54, , , , `The amount held is increased by the credit amount.`],
-    ['2021-08-02 00:00:00', 'Split', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount.`],
+    ['2021-08-02 00:00:00', 'Adjust', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount (reverse split).`],
     ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , ,],
-    ['2021-08-31 12:00:00', 'Income', 'NVDA', , , , , 'USD', , 11.52, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
+    ['2021-08-31 12:00:00', 'Income', 'AAPL', , , , , 'USD', , 18.40, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
     ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Fiat interest.`],
-    ['2022-06-06 00:00:00', 'Split', , , , , , 'AMZN', , 57, , , , `The amount held is increased by the credit amount.`]
+    ['2022-06-06 00:00:00', 'Adjust', , , , , , 'AMZN', , 57, , , , `The amount held is increased by the credit amount (forward split).`]
   ];
 
   let assetList = ['USD', 'ADA', 'AAPL', 'AMZN', 'BTC', 'GE', 'NVDA'];
 
-  sheet.getRange('A3:N30').setValues(sampleData);
+  sheet.getRange('A3:N28').setValues(sampleData);
 
   let dateRule = SpreadsheetApp.newDataValidation()
     .requireDate()
@@ -106,7 +104,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('A3:A').setDataValidation(dateRule);
 
   let actionRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Skip', 'Split', 'Stop', 'Trade', 'Transfer'])
+    .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Skip', 'Adjust', 'Stop', 'Trade', 'Transfer'])
     .setAllowInvalid(false)
     .build();
   sheet.getRange('B3:B').setDataValidation(actionRule);
@@ -146,7 +144,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('L3:L').setDataValidation(walletRule);
 
   let lotMatchingRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['FIFO', 'LIFO', 'HIFO', 'LOFO'])
+    .requireValueInList(AssetTracker.lotMatchings)
     .setAllowInvalid(false)
     .build();
   sheet.getRange('M3:M').setDataValidation(lotMatchingRule);

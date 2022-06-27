@@ -80,7 +80,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the assets sheet.
      * @type {number}
      */
-    this.assetsDataColumns = 7;
+    this.assetsDataColumns = 6;
 
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
@@ -88,7 +88,6 @@ var AssetTracker = class AssetTracker {
     this.assetsSheetVersion = '1';
 
     this.cmcApiName = 'CoinMarketCap';
-    this.ccApiName = 'CryptoCompare';
 
     this.validApiNames = [this.cmcApiName, this.ccApiName,];
 
@@ -376,7 +375,7 @@ var AssetTracker = class AssetTracker {
 
     let html = HtmlService.createTemplateFromFile('SettingsDialog').evaluate()
       .setWidth(480)
-      .setHeight(160);
+      .setHeight(100);
     SpreadsheetApp.getUi().showModalDialog(html, 'Settings');
   }
 
@@ -392,20 +391,9 @@ var AssetTracker = class AssetTracker {
 
     let userProperties = PropertiesService.getUserProperties();
 
-    if (userSettings.ccApiKey && userSettings.ccApiKey !== userProperties.ccApiKey) {
-
-      let apiKeyValid = this.validateApiKey('CryptoCompare', userSettings.ccApiKey);
-
-      if (!apiKeyValid) {
-
-        this.handleError('settings', 'Invalid CryptoCompare key');
-        return;
-      }
-    }
-
     if (userSettings.cmcApiKey && userSettings.cmcApiKey !== userProperties.cmcApiKey) {
 
-      let apiKeyValid = this.validateApiKey('CoinMarketCap', userSettings.cmcApiKey);
+      let apiKeyValid = this.validateApiKey(userSettings.cmcApiKey);
 
       if (!apiKeyValid) {
 

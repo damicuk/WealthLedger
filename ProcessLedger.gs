@@ -280,15 +280,15 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.removeZeroSubunitLots(date, assetAccount, action, rowIndex);
     }
   }
-  else if (action === 'Split') {
+  else if (action === 'Adjust') {
 
     if (debitAsset) {
 
-      this.splitAsset(date, debitAsset, -debitAmount, debitWalletName, action, rowIndex);
+      this.adjustAsset(date, debitAsset, -debitAmount, debitWalletName, action, rowIndex);
     }
     else {
 
-      this.splitAsset(date, creditAsset, creditAmount, creditWalletName, action, rowIndex);
+      this.adjustAsset(date, creditAsset, creditAmount, creditWalletName, action, rowIndex);
     }
   }
 };
@@ -344,21 +344,21 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
 };
 
 /**
- * Adjusts the asset balance according to the split parameters.
+ * Adjusts the asset balance according to the parameters.
  * If both debit amount and credit amount are specified the asset balance is adjusted in the ratio of credit amount (numerator) / debit amount (denominator).
  * Rounds the balance subunits in the case of fractional results.
  * If just debit amount is specified it is subtracted from the asset balance.
  * If just credit amount is specified it is added to the asset balance.
  * Throws an AssetAccountError if the balance is zero or insufficient.
  * Removes any lots with zero subunits.
- * @param {Date} date - The date the split occurred.
- * @param {Asset} asset - The asset whose balance is being adjusted by the split.
+ * @param {Date} date - The date the adjust occurred.
+ * @param {Asset} asset - The asset whose balance is being adjusted.
  * @param {number} adjustAmount - The amount by which to adjust the amount of asset held.
- * @param {string} walletName - The name of the wallet to which to apply the split. If not given the split applied to all wallets.
- * @param {string} action - The action, in this case 'Split'.
+ * @param {string} walletName - The name of the wallet to which to apply the adjust. If not given the adjust is applied to all wallets.
+ * @param {string} action - The action, in this case 'Adjust'.
  * @param {number} rowIndex - The index of the row in the ledger sheet.
  */
-AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletName, action, rowIndex) {
+AssetTracker.prototype.adjustAsset = function (date, asset, adjustAmount, walletName, action, rowIndex) {
 
   let wallets;
   let assetAccounts = [];
@@ -391,7 +391,7 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
 
   if (totalSubunits + adjustSubunits < 0) {
 
-    throw new AssetAccountError(`Split row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from ${walletName ? walletName.concat(' ') : ''}balance of ${totalSubunits / asset.subunits}.`, rowIndex, 'debitAmount');
+    throw new AssetAccountError(`Adjust row ${rowIndex}: Attempted to subtract ${asset.ticker} ${-adjustAmount} from ${walletName ? walletName.concat(' ') : ''}balance of ${totalSubunits / asset.subunits}.`, rowIndex, 'debitAmount');
   }
 
   let assetAccountAdjustSubunits = AssetTracker.apportionInteger(adjustSubunits, assetAccountSubunits);
@@ -407,7 +407,7 @@ AssetTracker.prototype.splitAsset = function (date, asset, adjustAmount, walletN
 
 /**
  * Removes and closes any lots with zero subunits in the account.
- * Used when misc fee or split sets lot subunits to zero.
+ * Used when misc fee or adjust sets lot subunits to zero.
  * @param {Date} date - The date 0f the action.
  * @param {AssetAccount} assetAccount - The asset account from which to remove the zero subunit lots.
  * @param {string} action - The action in the ledger sheet that closed the lots.

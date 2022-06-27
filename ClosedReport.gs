@@ -79,7 +79,7 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
     sheet.getRange('C1:H2').setBackgroundColor('#ead1dc');
     sheet.getRange('I1:L2').setBackgroundColor('#d0e0e3');
     sheet.getRange('M1:N2').setBackgroundColor('#fce5cd');
-    sheet.getRange('O1:T2').setBackgroundColor('#d9ead3');
+    sheet.getRange('O1:T2').setBackgroundColor('#d0e0e3');
     sheet.getRange('U1:AB2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:B1').mergeAcross();
@@ -174,6 +174,7 @@ AssetTracker.prototype.getClosedData = function () {
     let lot = closedLot.lot;
 
     let dateBuy = lot.date;
+    let lotAction = lot.action;
     let debitAssetBuy = lot.debitAsset.ticker;
     let debitAssetTypeBuy = lot.debitAsset.assetType;
     let debitExRateBuy = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
@@ -185,16 +186,15 @@ AssetTracker.prototype.getClosedData = function () {
     let creditAssetTypeBuy = lot.creditAsset.assetType;
     let creditAmountBuy = lot.creditAmount;
     let creditFeeBuy = lot.creditFee;
-    let lotAction = lot.action;
 
     let dateSell = closedLot.date;
+    let closedLotAction = closedLot.action;
     let creditAssetSell = closedLot.creditAsset.ticker;
     let creditAssetTypeSell = closedLot.creditAsset.assetType;
     let creditExRateSell = closedLot.creditAsset === this.fiatBase ? '' : closedLot.creditExRate;
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;
-    let closedLotAction = closedLot.action;
 
     let action1RowIndex = lot.rowIndex;
     let action2RowIndex = closedLot.rowIndex;
