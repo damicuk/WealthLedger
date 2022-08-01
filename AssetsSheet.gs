@@ -154,13 +154,13 @@ AssetTracker.prototype.getAssetsRange = function () {
 
   let assetsRange = assetsSheet.getDataRange();
 
-  ss.setNamedRange(this.assetsRangeName, assetsRange);
-
   if (assetsRange.getHeight() < this.assetsHeaderRows + 1) {
     throw new ValidationError('Asset sheet contains no data rows.');
   }
 
   assetsRange = assetsRange.offset(this.assetsHeaderRows, 0, assetsRange.getHeight() - this.assetsHeaderRows, this.assetsDataColumns);
+
+  ss.setNamedRange(this.assetsRangeName, assetsRange);
 
   return assetsRange;
 };
