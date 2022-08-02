@@ -772,7 +772,7 @@ QUERY(FILTER(R3:V, LEN(R3:R)), "SELECT Col1, 'Total', SUM(Col5) WHERE Col5<>0 GR
 
     // sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    ss.setNamedRange(this.investmentRange2Name, sheet.getRange('R3:V'));
+    ss.setNamedRange(this.investmentsRange2Name, sheet.getRange('R3:V'));
     // ss.setNamedRange(this.chartRange2Name, sheet.getRange('D3:G'));
     // ss.setNamedRange(this.chartRange3Name, sheet.getRange('H3:J'));
     // ss.setNamedRange(this.chartRange4Name, sheet.getRange('K3:N'));
