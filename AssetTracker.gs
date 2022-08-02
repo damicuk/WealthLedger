@@ -97,12 +97,14 @@ var AssetTracker = class AssetTracker {
     this.openReportName = 'Open Report';
     this.closedReportName = 'Closed Report';
     this.incomeReportName = 'Income Report';
-    this.chartsDataSheetName = "Charts Data";
+    this.chartsDataSheetName = 'Charts Data';
     this.openSummaryReportName = 'Open Summary Report';
     this.closedSummaryReportName = 'Closed Summary Report';
     this.incomeSummaryReportName = 'Income Summary Report';
     this.donationsSummaryReportName = 'Donations Summary Report';
     this.walletsReportName = 'Wallets Report';
+    this.investmentsDataSheetName = 'Investments Data';
+    this.investmentsReportName = 'Investments Report';
 
     this.reportNames = [
       this.fiatAccountsSheetName,
@@ -114,7 +116,9 @@ var AssetTracker = class AssetTracker {
       this.closedSummaryReportName,
       this.incomeSummaryReportName,
       this.donationsSummaryReportName,
-      this.walletsReportName
+      this.walletsReportName,
+      this.investmentsDataSheetName,
+      this.investmentsReportName
     ];
 
     this.assetsRangeName = 'Assets';
@@ -127,6 +131,8 @@ var AssetTracker = class AssetTracker {
     this.chartRange3Name = 'Chart3';
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
+
+    this.investmentsRange2Name = 'InvestmentsTable2';
   }
 
   /**
