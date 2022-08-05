@@ -132,7 +132,15 @@ var AssetTracker = class AssetTracker {
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
 
-    this.investmentsRange2Name = 'InvestmentsTable2';
+    this.investmentsAssetsRangeName = "InvestmentsAssets"
+    this.investmentsChartRange1Name = 'InvestmentsChart1';
+    this.investmentsChartRange2Name = 'InvestmentsChart2';
+    this.investmentsChartRange3Name = 'InvestmentsChart3';
+    this.investmentsChartRange4Name = 'InvestmentsChart4';
+    this.investmentsChartRange5Name = 'InvestmentsChart5';
+    this.investmentsChartRange6Name = 'InvestmentsChart6';
+    this.investmentsChartRange7Name = 'InvestmentsChart7';
+    this.investmentsChartRange8Name = 'InvestmentsChart8';
   }
 
   /**

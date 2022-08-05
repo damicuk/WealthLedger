@@ -1,0 +1,133 @@
+/**
+ * Creates the investments report if it doesn't already exist.
+ * No data is writen to this sheet.
+ * It contains formulas that pull data from other sheets.
+ * @param {string} [sheetName] - The name of the sheet.
+ */
+AssetTracker.prototype.investmentsReport = function (sheetName = this.investmentsReportName) {
+
+  const version = '1';
+
+  let ss = SpreadsheetApp.getActive();
+  let sheet = ss.getSheetByName(sheetName);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+  }
+
+  if (this.getSheetVersion(sheet) !== version) {
+
+    sheet.clear();
+
+    this.trimColumns(sheet, 26);
+
+    sheet.getRange('A1').setValue('SELECT ASSET:').setFontWeight('bold').setFontColor('red');
+    sheet.getRange('B1').setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.setColumnWidth(1, 110);
+
+    let investmentsAssetsRange = ss.getRangeByName(this.investmentsAssetsRangeName);
+    let investmentsChartRange1 = ss.getRangeByName(this.investmentsChartRange1Name);
+    let investmentsChartRange2 = ss.getRangeByName(this.investmentsChartRange2Name);
+    let investmentsChartRange3 = ss.getRangeByName(this.investmentsChartRange3Name);
+    let investmentsChartRange4 = ss.getRangeByName(this.investmentsChartRange4Name);
+    let investmentsChartRange5 = ss.getRangeByName(this.investmentsChartRange5Name);
+    let investmentsChartRange6 = ss.getRangeByName(this.investmentsChartRange6Name);
+    let investmentsChartRange7 = ss.getRangeByName(this.investmentsChartRange7Name);
+    let investmentsChartRange8 = ss.getRangeByName(this.investmentsChartRange8Name);
+
+    let assetRule = SpreadsheetApp.newDataValidation()
+      .requireValueInRange(investmentsAssetsRange)
+      .setAllowInvalid(false)
+      .setHelpText(`Select an asset from the drop-down list.`)
+      .build();
+    sheet.getRange('B1').setDataValidation(assetRule);
+
+    let chart1 = sheet.newChart().asLineChart()
+      .addRange(investmentsChartRange1)
+      .setNumHeaders(1)
+      .setXAxisTitle('Date')
+      .setTitle('Asset Type: Net Investment Timeline')
+      .setPosition(3, 1, 14, 0)
+      .build();
+
+    sheet.insertChart(chart1);
+
+    let chart2 = sheet.newChart().asColumnChart()
+      .addRange(investmentsChartRange2)
+      .setNumHeaders(1)
+      .setTitle('Asset Type: Net Investment vs Current Value')
+      .setPosition(22, 1, 14, 0)
+      .build();
+
+    sheet.insertChart(chart2);
+
+    let chart3 = sheet.newChart().asLineChart()
+      .addRange(investmentsChartRange3)
+      .setNumHeaders(1)
+      .setXAxisTitle('Date')
+      .setTitle('Selected Asset: Total Units and Net Investment')
+      .setOption('series', [{}, { targetAxisIndex: 1 }])
+      .setPosition(3, 7, 14, 0)
+      .build();
+
+    sheet.insertChart(chart3);
+
+    let chart4 = sheet.newChart().asColumnChart()
+      .addRange(investmentsChartRange4)
+      .setNumHeaders(1)
+      .setTitle('Selected Asset: Net Investment vs Current Value')
+      .setOption('useFirstColumnAsDomain', false)
+      .setPosition(22, 7, 14, 0)
+      .build();
+
+    sheet.insertChart(chart4);
+
+    //     const referenceRangeName = this.openRangeName;
+
+    //     let chartRange1 = ss.getRangeByName(this.chartRange1Name);
+    //     let chartRange2 = ss.getRangeByName(this.chartRange2Name);
+
+    //     let assetTypeValueChart = sheet.newChart().asPieChart()
+    //       .addRange(chartRange1)
+    //       .setNumHeaders(1)
+    //       .setTitle('Asset Type Value')
+    //       .setPosition(1, 16, 30, 30)
+    //       .build();
+
+    //     sheet.insertChart(assetTypeValueChart);
+
+    //     let assetValueChart = sheet.newChart().asPieChart()
+    //       .addRange(chartRange2.offset(0, 1, chartRange1.getHeight(), 2))
+    //       .setNumHeaders(1)
+    //       .setTitle('Asset Value')
+    //       .setPosition(21, 16, 30, 30)
+    //       .build();
+
+    //     sheet.insertChart(assetValueChart);
+
+    //     let assetTypePLChart = sheet.newChart().asColumnChart()
+    //       .addRange(chartRange1.offset(0, 0, chartRange1.getHeight(), 1))
+    //       .addRange(chartRange1.offset(0, 2, chartRange1.getHeight(), 1))
+    //       .setNumHeaders(1)
+    //       .setTitle('Asset Type Unrealized P/L %')
+    //       .setPosition(40, 16, 30, 30)
+    //       .build();
+
+    //     sheet.insertChart(assetTypePLChart);
+
+    //     let assetPLChart = sheet.newChart().asColumnChart()
+    //       .addRange(chartRange2.offset(0, 1, chartRange2.getHeight(), 1))
+    //       .addRange(chartRange2.offset(0, 3, chartRange2.getHeight(), 1))
+    //       .setNumHeaders(1)
+    //       .setTitle('Asset Unrealized P/L %')
+    //       .setPosition(59, 16, 30, 30)
+    //       .build();
+
+    //     sheet.insertChart(assetPLChart);
+
+    this.setSheetVersion(sheet, version);
+  }
+
+  SpreadsheetApp.flush();
+  // sheet.autoResizeColumn(1);
+};

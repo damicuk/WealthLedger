@@ -58,6 +58,7 @@ AssetTracker.prototype.writeReports = function () {
   this.donationsSummaryReport();
   this.walletsReport();
   this.investmentsDataSheet();
+  this.investmentsReport();
 
   this.updateLedger();
   this.updateAssetsSheet(assetRecords);
