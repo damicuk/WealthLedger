@@ -153,14 +153,12 @@ AssetTracker.prototype.investmentsDataSheet = function (sheetName = this.investm
     sheet.getRange('P4:P').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('Q4:S').setNumberFormat('#,##0.0000;(#,##0.0000)');
     sheet.getRange('T4:T').setNumberFormat('@');
-    sheet.getRange('U4:U').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('V4:X').setNumberFormat('#,##0.0000;(#,##0.0000)');
+    sheet.getRange('U4:X').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('Y4:Y').setNumberFormat('@');
     sheet.getRange('Z4:Z').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('AA4:AA').setNumberFormat('#,##0.0000;(#,##0.0000)');
     sheet.getRange('AB4:AB').setNumberFormat('@');
-    sheet.getRange('AC4:AC').setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange('AD4:AD').setNumberFormat('#,##0.0000;(#,##0.0000)');
+    sheet.getRange('AC4:AD').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('AE4:AE').setNumberFormat('@');
 
     sheet.getRange('AF4:AF').setNumberFormat('yyyy-mm-dd');
