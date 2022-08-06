@@ -64,7 +64,7 @@ AssetTracker.prototype.investmentsReport = function (sheetName = this.investment
     let chart3 = sheet.newChart().asLineChart()
       .addRange(investmentsChartRange3)
       .setNumHeaders(1)
-      .setTitle('Selected Asset: Total Units and Net Investment')
+      .setTitle('Selected Asset: Total Units and Net Investment Timeline')
       .setXAxisTitle('Date')
       .setOption('series', [{}, { targetAxisIndex: 1 }])
       .setPosition(3, 7, 14, 0)
@@ -133,51 +133,6 @@ AssetTracker.prototype.investmentsReport = function (sheetName = this.investment
       .build();
 
     sheet.insertChart(chart8);
-
-
-
-    //     const referenceRangeName = this.openRangeName;
-
-    //     let chartRange1 = ss.getRangeByName(this.chartRange1Name);
-    //     let chartRange2 = ss.getRangeByName(this.chartRange2Name);
-
-    //     let assetTypeValueChart = sheet.newChart().asPieChart()
-    //       .addRange(chartRange1)
-    //       .setNumHeaders(1)
-    //       .setTitle('Asset Type Value')
-    //       .setPosition(1, 16, 30, 30)
-    //       .build();
-
-    //     sheet.insertChart(assetTypeValueChart);
-
-    //     let assetValueChart = sheet.newChart().asPieChart()
-    //       .addRange(chartRange2.offset(0, 1, chartRange1.getHeight(), 2))
-    //       .setNumHeaders(1)
-    //       .setTitle('Asset Value')
-    //       .setPosition(21, 16, 30, 30)
-    //       .build();
-
-    //     sheet.insertChart(assetValueChart);
-
-    //     let assetTypePLChart = sheet.newChart().asColumnChart()
-    //       .addRange(chartRange1.offset(0, 0, chartRange1.getHeight(), 1))
-    //       .addRange(chartRange1.offset(0, 2, chartRange1.getHeight(), 1))
-    //       .setNumHeaders(1)
-    //       .setTitle('Asset Type Unrealized P/L %')
-    //       .setPosition(40, 16, 30, 30)
-    //       .build();
-
-    //     sheet.insertChart(assetTypePLChart);
-
-    //     let assetPLChart = sheet.newChart().asColumnChart()
-    //       .addRange(chartRange2.offset(0, 1, chartRange2.getHeight(), 1))
-    //       .addRange(chartRange2.offset(0, 3, chartRange2.getHeight(), 1))
-    //       .setNumHeaders(1)
-    //       .setTitle('Asset Unrealized P/L %')
-    //       .setPosition(59, 16, 30, 30)
-    //       .build();
-
-    //     sheet.insertChart(assetPLChart);
 
     this.setSheetVersion(sheet, version);
   }
