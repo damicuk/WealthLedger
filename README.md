@@ -30,5 +30,5 @@ ClosedSummeryReport,
 IncomeSummaryReport,
 DonnationsSummaryReport,
 WalletsReport,
-InvestmetsSheets,
+InvestmentsSheets,
 SettingsDialog
