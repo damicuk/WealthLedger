@@ -35,7 +35,7 @@ AssetTracker.prototype.investmentsReportPart1 = function (ss, sheet, dataSheetNa
 
     sheet.clear();
 
-    this.trimColumns(sheet, 26);
+    this.trimSheet(sheet, 40, 25);
 
     sheet.getRange('A1').setValue('SELECT ASSET:').setFontWeight('bold').setFontColor('red');
     sheet.getRange('B1').setFormula(`'${dataSheetName}'!A4`).setFontWeight('bold').setHorizontalAlignment('center');
