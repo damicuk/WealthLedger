@@ -37,8 +37,9 @@ AssetTracker.prototype.investmentsReportPart1 = function (ss, sheet, dataSheetNa
 
     this.trimSheet(sheet, 40, 25);
 
-    sheet.getRange('A1').setValue('SELECT ASSET:').setFontWeight('bold').setFontColor('red');
-    sheet.getRange('B1').setFormula(`'${dataSheetName}'!A4`).setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.getRange('A1:B1').setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.getRange('A1').setValue('SELECT ASSET:').setFontColor('red');
+    sheet.getRange('B1').setFormula(`'${dataSheetName}'!A4`);
 
     sheet.setColumnWidth(1, 110);
 
