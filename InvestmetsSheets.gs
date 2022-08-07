@@ -160,9 +160,6 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
 
     this.setSheetVersion(sheet, version);
   }
-
-  SpreadsheetApp.flush();
-  // sheet.autoResizeColumn(1);
 }
 
 AssetTracker.prototype.investmentsDataSheetPart1 = function (ss, sheet, version) {
@@ -963,9 +960,9 @@ AssetTracker.prototype.investmentsDataSheetPart2 = function (ss, sheet, reportSh
 
     sheet.getRange('BM3').setFormula(pivotFormula);
 
-    // sheet.hideSheet();
+    sheet.hideSheet();
 
-    // sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
+    sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
     ss.setNamedRange(this.investmentsChartRange1Name, sheet.getRange('BM3:ZZ'));
     ss.setNamedRange(this.investmentsChartRange2Name, sheet.getRange('AS3:AV'));
@@ -978,7 +975,4 @@ AssetTracker.prototype.investmentsDataSheetPart2 = function (ss, sheet, reportSh
 
     this.setSheetVersion(sheet, version);
   }
-
-  // SpreadsheetApp.flush();
-  // sheet.autoResizeColumns(1, 70);
 };
