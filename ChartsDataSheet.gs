@@ -6,7 +6,7 @@
  */
 AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSheetName) {
 
-  const version = '2';
+  const version = '3';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -66,20 +66,20 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
     sheet.getRange('O2:Q2').mergeAcross();
 
     sheet.getRange('A4:A').setNumberFormat('@');
-    sheet.getRange('B4:B').setNumberFormat('#,##0;(#,##0)');
+    sheet.getRange('B4:B').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('C4:C').setNumberFormat('0%');
 
     sheet.getRange('D4:E').setNumberFormat('@');
-    sheet.getRange('F4:F').setNumberFormat('#,##0;(#,##0)');
+    sheet.getRange('F4:F').setNumberFormat('#,##0.00;(#,##0.00)');
     sheet.getRange('G4:G').setNumberFormat('0%');
 
     sheet.getRange('H4:H').setNumberFormat('@');
-    sheet.getRange('I4:J').setNumberFormat('#,##0;(#,##0)');
+    sheet.getRange('I4:J').setNumberFormat('#,##0.00;(#,##0.00)');
 
     sheet.getRange('K4:L').setNumberFormat('@');
-    sheet.getRange('M4:N').setNumberFormat('#,##0;(#,##0)');
+    sheet.getRange('M4:N').setNumberFormat('#,##0.00;(#,##0.00)');
 
-    sheet.getRange('P4:Q').setNumberFormat('#,##0;(#,##0)');
+    sheet.getRange('P4:Q').setNumberFormat('#,##0.00;(#,##0.00)');
 
     const formulas = [[
       `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0,,QUERY(${referenceRangeName1}, "SELECT J, SUM(R), SUM(S) / SUM(Q) GROUP BY J ORDER BY J LABEL SUM(R) '', SUM(S) / SUM(Q)  ''"))`, , ,
