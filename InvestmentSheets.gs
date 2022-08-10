@@ -114,6 +114,7 @@ AssetTracker.prototype.investmentReportPart2 = function (ss, sheet, version) {
       .setXAxisTitle('Price Range')
       .setYAxisTitle('Units')
       .setLegendPosition(Charts.Position.RIGHT)
+      .setOption('series', [{ color: '#fbbc04' }, { color: '#4285f4' }, { color: '#ea4335' }])
       .setStacked()
       .setPosition(3, 13, 24, 0)
       .build();
@@ -127,6 +128,7 @@ AssetTracker.prototype.investmentReportPart2 = function (ss, sheet, version) {
       .setXAxisTitle('Price Range')
       .setYAxisTitle('Cost')
       .setLegendPosition(Charts.Position.RIGHT)
+      .setOption('series', [{ color: '#fbbc04' }, { color: '#4285f4' }, { color: '#ea4335' }])
       .setStacked()
       .setPosition(22, 13, 24, 0)
       .build();
@@ -215,13 +217,13 @@ AssetTracker.prototype.investmentDataSheetPart1 = function (ss, sheet, version) 
         'Disposed Units',
         'Disposed Cost Basis', ,
         'Price Range',
+        'Disposed',
         'Acquired',
-        'Income',
-        'Disposed', ,
+        'Income', ,
         'Price Range',
+        'Disposed',
         'Acquired',
-        'Income',
-        'Disposed', ,
+        'Income', ,
         'Price Range',
         'Net Units', ,
         'Price Range',
@@ -826,19 +828,19 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
 
       `ARRAYFORMULA(IF(LEN(H4:H),H4:H,))`,
 
+      `ARRAYFORMULA(IF(LEN(M4:M),M4:M,))`,
+
       `ARRAYFORMULA(IF(LEN(I4:I),I4:I,))`,
 
-      `ARRAYFORMULA(IF(LEN(K4:K),K4:K,))`,
-
-      `ARRAYFORMULA(IF(LEN(M4:M),M4:M,))`, ,
+      `ARRAYFORMULA(IF(LEN(K4:K),K4:K,))`, ,
 
       `ARRAYFORMULA(IF(LEN(H4:H),H4:H,))`,
 
+      `ARRAYFORMULA(IF(LEN(N4:N),N4:N,))`,
+
       `ARRAYFORMULA(IF(LEN(J4:J),J4:J,))`,
 
-      `ARRAYFORMULA(IF(LEN(L4:L),L4:L,))`,
-
-      `ARRAYFORMULA(IF(LEN(N4:N),N4:N,))`, ,
+      `ARRAYFORMULA(IF(LEN(L4:L),L4:L,))`, ,
 
       `ARRAYFORMULA(IF(LEN(H4:H),H4:H,))`,
 
