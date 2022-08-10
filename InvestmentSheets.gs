@@ -208,18 +208,18 @@ AssetTracker.prototype.investmentDataSheetPart1 = function (ss, sheet, version) 
         'Price From',
         'Price To',
         'Price Range',
-        'Purchased Units',
-        'Purchased Cost Basis',
+        'Acquired Units',
+        'Acquired Cost Basis',
         'Income Units',
         'Income Cost Basis',
         'Disposed Units',
         'Disposed Cost Basis', ,
         'Price Range',
-        'Purchased',
+        'Acquired',
         'Income',
         'Disposed', ,
         'Price Range',
-        'Purchased',
+        'Acquired',
         'Income',
         'Disposed', ,
         'Price Range',
@@ -354,20 +354,20 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
       `IF(LEN('${reportSheetName}'!$B$1),QUERY(${assetsRangeName}, "SELECT D WHERE A='"&'${reportSheetName}'!$B$1&"' LABEL D ''"),)`,
 
       `IF(NOT(LEN('${reportSheetName}'!$B$1)),,
-    IF(AND(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND (B = 'Trade' OR B = 'Income')"))=0, COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"'"))=0),,
+    IF(AND(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"'"))=0, COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"'"))=0),,
     QUERY(
     {
-    QUERY(${openRangeName}, "SELECT MIN(O) WHERE I='"&'${reportSheetName}'!$B$1&"' AND (B = 'Trade' OR B = 'Income') LABEL MIN(O) ''");
-    QUERY(${closedRangeName}, "SELECT MIN(V) WHERE I='"&'${reportSheetName}'!$B$1&"' AND (B = 'Trade' OR B = 'Income') LABEL MIN(V) ''");
+    QUERY(${openRangeName}, "SELECT MIN(O) WHERE I='"&'${reportSheetName}'!$B$1&"' LABEL MIN(O) ''");
+    QUERY(${closedRangeName}, "SELECT MIN(V) WHERE I='"&'${reportSheetName}'!$B$1&"' LABEL MIN(V) ''");
     QUERY(${closedRangeName}, "SELECT MIN(W) WHERE I='"&'${reportSheetName}'!$B$1&"' LABEL MIN(W) ''")
     }, "SELECT MIN(Col1) LABEL MIN(Col1) ''")))`,
 
       `IF(NOT(LEN('${reportSheetName}'!$B$1)),,
-    IF(AND(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND (B = 'Trade' OR B = 'Income')"))=0, COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"'"))=0),,
+    IF(AND(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"'"))=0, COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"'"))=0),,
     QUERY(
     {
-    QUERY(${openRangeName}, "SELECT MAX(O) WHERE I='"&'${reportSheetName}'!$B$1&"' AND (B = 'Trade' OR B = 'Income') LABEL MAX(O) ''");
-    QUERY(${closedRangeName}, "SELECT MAX(V) WHERE I='"&'${reportSheetName}'!$B$1&"' AND (B = 'Trade' OR B = 'Income') LABEL MAX(V) ''");
+    QUERY(${openRangeName}, "SELECT MAX(O) WHERE I='"&'${reportSheetName}'!$B$1&"' LABEL MAX(O) ''");
+    QUERY(${closedRangeName}, "SELECT MAX(V) WHERE I='"&'${reportSheetName}'!$B$1&"' LABEL MAX(V) ''");
     QUERY(${closedRangeName}, "SELECT MAX(W) WHERE I='"&'${reportSheetName}'!$B$1&"' LABEL MAX(W) ''")
     }, "SELECT MAX(Col1) LABEL MAX(Col1) ''")))`
     ]];
@@ -389,13 +389,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$4),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -429,13 +429,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O < "&F6&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O < "&F6&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O < "&F6&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O < "&F6&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V < "&F6&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V < "&F6&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V < "&F6&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V < "&F6&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -469,13 +469,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F6&" AND O < "&F7&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F6&" AND O < "&F7&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F6&" AND O < "&F7&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F6&" AND O < "&F7&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F6&" AND V < "&F7&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F6&" AND V < "&F7&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F6&" AND V < "&F7&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F6&" AND V < "&F7&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -509,13 +509,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F7&" AND O < "&F8&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F7&" AND O < "&F8&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F7&" AND O < "&F8&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F7&" AND O < "&F8&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F7&" AND V < "&F8&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F7&" AND V < "&F8&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F7&" AND V < "&F8&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F7&" AND V < "&F8&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -549,13 +549,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F8&" AND O < "&F9&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F8&" AND O < "&F9&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F8&" AND O < "&F9&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F8&" AND O < "&F9&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F8&" AND V < "&F9&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F8&" AND V < "&F9&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F8&" AND V < "&F9&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F8&" AND V < "&F9&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -589,13 +589,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F9&" AND O < "&F10&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F9&" AND O < "&F10&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F9&" AND O < "&F10&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F9&" AND O < "&F10&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F9&" AND V < "&F10&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F9&" AND V < "&F10&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F9&" AND V < "&F10&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F9&" AND V < "&F10&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -629,13 +629,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F10&" AND O < "&F11&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F10&" AND O < "&F11&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F10&" AND O < "&F11&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F10&" AND O < "&F11&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F10&" AND V < "&F11&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F10&" AND V < "&F11&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F10&" AND V < "&F11&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F10&" AND V < "&F11&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -669,13 +669,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F11&" AND O < "&F12&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F11&" AND O < "&F12&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F11&" AND O < "&F12&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F11&" AND O < "&F12&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F11&" AND V < "&F12&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F11&" AND V < "&F12&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F11&" AND V < "&F12&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F11&" AND V < "&F12&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -709,13 +709,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F12&" AND O < "&F13&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F12&" AND O < "&F13&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F12&" AND O < "&F13&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F12&" AND O < "&F13&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F12&" AND V < "&F13&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F12&" AND V < "&F13&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F12&" AND V < "&F13&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F12&" AND V < "&F13&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -749,13 +749,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F13&" AND O < "&F14&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F13&" AND O < "&F14&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F13&" AND O < "&F14&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F13&" AND O < "&F14&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F13&" AND V < "&F14&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F13&" AND V < "&F14&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F13&" AND V < "&F14&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F13&" AND V < "&F14&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -789,13 +789,13 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
         `IF(ISBLANK($F$5),,
     QUERY({
 
-    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F14&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${openRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F14&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F14&" AND B = 'Trade' LABEL SUM(N) '', SUM(Q) ''"));
+    QUERY(${openRangeName}, "SELECT SUM(N), SUM(Q) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND O >= "&F14&" AND B <> 'Income' LABEL SUM(N) '', SUM(Q) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F14&" AND B = 'Trade'"))=0,
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F14&" AND B <> 'Income'"))=0,
     {0, 0},
-    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F14&" AND B = 'Trade' LABEL SUM(U) '', SUM(X) ''"))
+    QUERY(${closedRangeName}, "SELECT SUM(U), SUM(X) WHERE I = '"&'${reportSheetName}'!$B$1&"' AND V >= "&F14&" AND B <> 'Income' LABEL SUM(U) '', SUM(X) ''"))
 
     }, "SELECT SUM(Col1), SUM(Col2) LABEL SUM(Col1) '', SUM(Col2) ''")
     )`, ,
@@ -855,10 +855,10 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
     IF(COUNT(QUERY(${openRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     QUERY(${openRangeName}, "SELECT toDate(A), I, J, N, Q LABEL toDate(A) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE N='Trade'"))=0,{"", "", "", 0, 0},
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     {
-    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X WHERE N='Trade' LABEL toDate(A) ''");
-    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y WHERE N='Trade' LABEL toDate(M) '', 0-U '', 0-Y ''")
+    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X LABEL toDate(A) ''");
+    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y LABEL toDate(M) '', 0-U '', 0-Y ''")
     });
 
     IF(COUNT(QUERY(${incomeRangeName}, "SELECT * WHERE C IS NULL AND F<>'Fiat'"))=0,{"", "", "", 0, 0},
@@ -875,10 +875,10 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
     IF(COUNT(QUERY(${openRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     QUERY(${openRangeName}, "SELECT toDate(A), I, J, N, Q LABEL toDate(A) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE N='Trade'"))=0,{"", "", "", 0, 0},
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     {
-    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X WHERE N='Trade' LABEL toDate(A) ''");
-    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y WHERE N='Trade' LABEL toDate(M) '', 0-U '', 0-Y ''")
+    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X LABEL toDate(A) ''");
+    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y LABEL toDate(M) '', 0-U '', 0-Y ''")
     });
 
     IF(COUNT(QUERY(${incomeRangeName}, "SELECT * WHERE C IS NULL AND F<>'Fiat'"))=0,{"", "", "", 0, 0},
@@ -895,10 +895,10 @@ AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportShe
     IF(COUNT(QUERY(${openRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     QUERY(${openRangeName}, "SELECT toDate(A), I, J, N, Q LABEL toDate(A) ''"));
 
-    IF(COUNT(QUERY(${closedRangeName}, "SELECT * WHERE N='Trade'"))=0,{"", "", "", 0, 0},
+    IF(COUNT(QUERY(${closedRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     {
-    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X WHERE N='Trade' LABEL toDate(A) ''");
-    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y WHERE N='Trade' LABEL toDate(M) '', 0-U '', 0-Y ''")
+    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X LABEL toDate(A) ''");
+    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y LABEL toDate(M) '', 0-U '', 0-Y ''")
     });
 
     IF(COUNT(QUERY(${incomeRangeName}, "SELECT * WHERE C IS NULL AND F<>'Fiat'"))=0,{"", "", "", 0, 0},
