@@ -103,8 +103,8 @@ var AssetTracker = class AssetTracker {
     this.incomeSummaryReportName = 'Income Summary Report';
     this.donationsSummaryReportName = 'Donations Summary Report';
     this.walletsReportName = 'Wallets Report';
-    this.investmentsDataSheetName = 'Investments Data';
-    this.investmentsReportName = 'Investments Report';
+    this.investmentDataSheetName = 'Investment Data';
+    this.investmentReportName = 'Investment Report';
 
     this.reportNames = [
       this.fiatAccountsSheetName,
@@ -117,8 +117,8 @@ var AssetTracker = class AssetTracker {
       this.incomeSummaryReportName,
       this.donationsSummaryReportName,
       this.walletsReportName,
-      this.investmentsDataSheetName,
-      this.investmentsReportName
+      this.investmentDataSheetName,
+      this.investmentReportName
     ];
 
     this.assetsRangeName = 'Assets';
@@ -132,15 +132,15 @@ var AssetTracker = class AssetTracker {
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
 
-    this.investmentsAssetsRangeName = "InvestmentsAssets";
-    this.investmentsChartRange1Name = 'InvestmentsChart1';
-    this.investmentsChartRange2Name = 'InvestmentsChart2';
-    this.investmentsChartRange3Name = 'InvestmentsChart3';
-    this.investmentsChartRange4Name = 'InvestmentsChart4';
-    this.investmentsChartRange5Name = 'InvestmentsChart5';
-    this.investmentsChartRange6Name = 'InvestmentsChart6';
-    this.investmentsChartRange7Name = 'InvestmentsChart7';
-    this.investmentsChartRange8Name = 'InvestmentsChart8';
+    this.investmentAssetsRangeName = "InvestmentAssets";
+    this.investmentChartRange1Name = 'InvestmentChart1';
+    this.investmentChartRange2Name = 'InvestmentChart2';
+    this.investmentChartRange3Name = 'InvestmentChart3';
+    this.investmentChartRange4Name = 'InvestmentChart4';
+    this.investmentChartRange5Name = 'InvestmentChart5';
+    this.investmentChartRange6Name = 'InvestmentChart6';
+    this.investmentChartRange7Name = 'InvestmentChart7';
+    this.investmentChartRange8Name = 'InvestmentChart8';
   }
 
   /**

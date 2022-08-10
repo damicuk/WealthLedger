@@ -1,11 +1,11 @@
 /**
- * Creates the investments data sheet and investments report if they doesn't already exist.
+ * Creates the investment data sheet and investment report if they doesn't already exist.
  * No data is writen to these sheets.
  * They contains formulas that pull data from other sheets.
  * @param {string} [dataSheetName] - The name of the data sheet.
  * @param {string} [reportSheetName] - The name of the report sheet.
  */
-AssetTracker.prototype.investmentsSheets = function (dataSheetName = this.investmentsDataSheetName, reportSheetName = this.investmentsReportName) {
+AssetTracker.prototype.investmentSheets = function (dataSheetName = this.investmentDataSheetName, reportSheetName = this.investmentReportName) {
 
   const version = '1';
 
@@ -20,16 +20,16 @@ AssetTracker.prototype.investmentsSheets = function (dataSheetName = this.invest
     reportSheet = ss.insertSheet(reportSheetName);
   }
 
-  this.investmentsDataSheetPart1(ss, dataSheet, version); //Creates the assets list
+  this.investmentDataSheetPart1(ss, dataSheet, version); //Creates the assets list
 
-  this.investmentsReportPart1(ss, reportSheet, dataSheetName, version); //Creates the select asset drop-down and default value
+  this.investmentReportPart1(ss, reportSheet, dataSheetName, version); //Creates the select asset drop-down and default value
 
-  this.investmentsDataSheetPart2(ss, dataSheet, reportSheetName, version); //Creates the data tables based on the selected asset
+  this.investmentDataSheetPart2(ss, dataSheet, reportSheetName, version); //Creates the data tables based on the selected asset
 
-  this.investmentsReportPart2(ss, reportSheet, version); //Creates the charts from the data tables
+  this.investmentReportPart2(ss, reportSheet, version); //Creates the charts from the data tables
 }
 
-AssetTracker.prototype.investmentsReportPart1 = function (ss, sheet, dataSheetName, version) {
+AssetTracker.prototype.investmentReportPart1 = function (ss, sheet, dataSheetName, version) {
 
   if (this.getSheetVersion(sheet) !== version) {
 
@@ -43,10 +43,10 @@ AssetTracker.prototype.investmentsReportPart1 = function (ss, sheet, dataSheetNa
 
     sheet.setColumnWidth(1, 110);
 
-    let investmentsAssetsRange = ss.getRangeByName(this.investmentsAssetsRangeName);
+    let investmentAssetsRange = ss.getRangeByName(this.investmentAssetsRangeName);
 
     let assetRule = SpreadsheetApp.newDataValidation()
-      .requireValueInRange(investmentsAssetsRange)
+      .requireValueInRange(investmentAssetsRange)
       .setAllowInvalid(false)
       .setHelpText(`Select an asset from the drop-down list.`)
       .build();
@@ -54,21 +54,21 @@ AssetTracker.prototype.investmentsReportPart1 = function (ss, sheet, dataSheetNa
   }
 }
 
-AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
+AssetTracker.prototype.investmentReportPart2 = function (ss, sheet, version) {
 
   if (this.getSheetVersion(sheet) !== version) {
 
-    let investmentsChartRange1 = ss.getRangeByName(this.investmentsChartRange1Name);
-    let investmentsChartRange2 = ss.getRangeByName(this.investmentsChartRange2Name);
-    let investmentsChartRange3 = ss.getRangeByName(this.investmentsChartRange3Name);
-    let investmentsChartRange4 = ss.getRangeByName(this.investmentsChartRange4Name);
-    let investmentsChartRange5 = ss.getRangeByName(this.investmentsChartRange5Name);
-    let investmentsChartRange6 = ss.getRangeByName(this.investmentsChartRange6Name);
-    let investmentsChartRange7 = ss.getRangeByName(this.investmentsChartRange7Name);
-    let investmentsChartRange8 = ss.getRangeByName(this.investmentsChartRange8Name);
+    let investmentChartRange1 = ss.getRangeByName(this.investmentChartRange1Name);
+    let investmentChartRange2 = ss.getRangeByName(this.investmentChartRange2Name);
+    let investmentChartRange3 = ss.getRangeByName(this.investmentChartRange3Name);
+    let investmentChartRange4 = ss.getRangeByName(this.investmentChartRange4Name);
+    let investmentChartRange5 = ss.getRangeByName(this.investmentChartRange5Name);
+    let investmentChartRange6 = ss.getRangeByName(this.investmentChartRange6Name);
+    let investmentChartRange7 = ss.getRangeByName(this.investmentChartRange7Name);
+    let investmentChartRange8 = ss.getRangeByName(this.investmentChartRange8Name);
 
     let chart1 = sheet.newChart().asLineChart()
-      .addRange(investmentsChartRange1)
+      .addRange(investmentChartRange1)
       .setNumHeaders(1)
       .setTitle('Asset Type: Net Investment Timeline')
       .setXAxisTitle('Date')
@@ -78,7 +78,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart1);
 
     let chart2 = sheet.newChart().asColumnChart()
-      .addRange(investmentsChartRange2)
+      .addRange(investmentChartRange2)
       .setNumHeaders(1)
       .setTitle('Asset Type: Net Investment vs Current Value')
       .setPosition(22, 1, 14, 0)
@@ -87,7 +87,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart2);
 
     let chart3 = sheet.newChart().asLineChart()
-      .addRange(investmentsChartRange3)
+      .addRange(investmentChartRange3)
       .setNumHeaders(1)
       .setTitle('Selected Asset: Total Units and Net Investment Timeline')
       .setXAxisTitle('Date')
@@ -98,7 +98,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart3);
 
     let chart4 = sheet.newChart().asColumnChart()
-      .addRange(investmentsChartRange4)
+      .addRange(investmentChartRange4)
       .setNumHeaders(1)
       .setTitle('Selected Asset: Net Investment vs Current Value')
       .setOption('useFirstColumnAsDomain', false)
@@ -108,7 +108,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart4);
 
     let chart5 = sheet.newChart().asColumnChart()
-      .addRange(investmentsChartRange5)
+      .addRange(investmentChartRange5)
       .setNumHeaders(1)
       .setTitle('Selected Asset: Units x Price Range')
       .setXAxisTitle('Price Range')
@@ -121,7 +121,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart5);
 
     let chart6 = sheet.newChart().asColumnChart()
-      .addRange(investmentsChartRange6)
+      .addRange(investmentChartRange6)
       .setNumHeaders(1)
       .setTitle('Selected Asset: Cost x Price Range')
       .setXAxisTitle('Price Range')
@@ -134,7 +134,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart6);
 
     let chart7 = sheet.newChart().asColumnChart()
-      .addRange(investmentsChartRange7)
+      .addRange(investmentChartRange7)
       .setNumHeaders(1)
       .setTitle('Selected Asset: Net Units x Price Range')
       .setXAxisTitle('Price Range')
@@ -147,7 +147,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
     sheet.insertChart(chart7);
 
     let chart8 = sheet.newChart().asColumnChart()
-      .addRange(investmentsChartRange8)
+      .addRange(investmentChartRange8)
       .setNumHeaders(1)
       .setTitle('Selected Asset: Net Cost x Price Range')
       .setXAxisTitle('Price Range')
@@ -163,7 +163,7 @@ AssetTracker.prototype.investmentsReportPart2 = function (ss, sheet, version) {
   }
 }
 
-AssetTracker.prototype.investmentsDataSheetPart1 = function (ss, sheet, version) {
+AssetTracker.prototype.investmentDataSheetPart1 = function (ss, sheet, version) {
 
   if (this.getSheetVersion(sheet) !== version) {
 
@@ -175,14 +175,14 @@ AssetTracker.prototype.investmentsDataSheetPart1 = function (ss, sheet, version)
 
     let headers = [
       [, , , , , , , , , , , , , , ,
-        'Investments Chart 5', , , , ,
-        'Investments Chart 6', , , , ,
-        'Investments Chart 7', , ,
-        'Investments Chart 8', , , , , , , , , , , , , , , ,
-        'Investments Chart 2', , , , ,
-        'Investments Chart 3', , , , , ,
-        'Investments Chart 4', , , , , , , , ,
-        'Investments Chart 1', , , , , ,
+        'Investment Chart 5', , , , ,
+        'Investment Chart 6', , , , ,
+        'Investment Chart 7', , ,
+        'Investment Chart 8', , , , , , , , , , , , , , , ,
+        'Investment Chart 2', , , , ,
+        'Investment Chart 3', , , , , ,
+        'Investment Chart 4', , , , , , , , ,
+        'Investment Chart 1', , , , , ,
       ],
       [
         'Asset List',
@@ -337,11 +337,11 @@ AssetTracker.prototype.investmentsDataSheetPart1 = function (ss, sheet, version)
 
     sheet.getRange('A4').setFormula(assetsListFormula);
 
-    ss.setNamedRange(this.investmentsAssetsRangeName, sheet.getRange('A4:A'));
+    ss.setNamedRange(this.investmentAssetsRangeName, sheet.getRange('A4:A'));
   }
 }
 
-AssetTracker.prototype.investmentsDataSheetPart2 = function (ss, sheet, reportSheetName, version) {
+AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportSheetName, version) {
 
   const assetsRangeName = this.assetsRangeName;
   const openRangeName = this.openRangeName;
@@ -965,14 +965,14 @@ AssetTracker.prototype.investmentsDataSheetPart2 = function (ss, sheet, reportSh
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    ss.setNamedRange(this.investmentsChartRange1Name, sheet.getRange('BM3:ZZ'));
-    ss.setNamedRange(this.investmentsChartRange2Name, sheet.getRange('AS3:AV'));
-    ss.setNamedRange(this.investmentsChartRange3Name, sheet.getRange('AZ3:BB'));
-    ss.setNamedRange(this.investmentsChartRange4Name, sheet.getRange('BD3:BF4'));
-    ss.setNamedRange(this.investmentsChartRange5Name, sheet.getRange('P3:S'));
-    ss.setNamedRange(this.investmentsChartRange6Name, sheet.getRange('U3:X'));
-    ss.setNamedRange(this.investmentsChartRange7Name, sheet.getRange('Z3:AA'));
-    ss.setNamedRange(this.investmentsChartRange8Name, sheet.getRange('AC3:AD'));
+    ss.setNamedRange(this.investmentChartRange1Name, sheet.getRange('BM3:ZZ'));
+    ss.setNamedRange(this.investmentChartRange2Name, sheet.getRange('AS3:AV'));
+    ss.setNamedRange(this.investmentChartRange3Name, sheet.getRange('AZ3:BB'));
+    ss.setNamedRange(this.investmentChartRange4Name, sheet.getRange('BD3:BF4'));
+    ss.setNamedRange(this.investmentChartRange5Name, sheet.getRange('P3:S'));
+    ss.setNamedRange(this.investmentChartRange6Name, sheet.getRange('U3:X'));
+    ss.setNamedRange(this.investmentChartRange7Name, sheet.getRange('Z3:AA'));
+    ss.setNamedRange(this.investmentChartRange8Name, sheet.getRange('AC3:AD'));
 
     this.setSheetVersion(sheet, version);
   }
