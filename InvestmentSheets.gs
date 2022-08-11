@@ -7,7 +7,7 @@
  */
 AssetTracker.prototype.investmentSheets = function (dataSheetName = this.investmentDataSheetName, reportSheetName = this.investmentReportName) {
 
-  const version = '1';
+  const version = '2';
 
   let ss = SpreadsheetApp.getActive();
   let dataSheet = ss.getSheetByName(dataSheetName);
@@ -72,6 +72,7 @@ AssetTracker.prototype.investmentReportPart2 = function (ss, sheet, version) {
       .setNumHeaders(1)
       .setTitle('Asset Type: Net Investment Timeline')
       .setXAxisTitle('Date')
+      .setOption('interpolateNulls', true)
       .setPosition(3, 1, 14, 0)
       .build();
 
