@@ -27,7 +27,7 @@ AssetTracker.prototype.investmentSheets = function (dataSheetName = this.investm
   this.investmentDataSheetPart2(ss, dataSheet, reportSheetName, version); //Creates the data tables based on the selected asset
 
   this.investmentReportPart2(ss, reportSheet, version); //Creates the charts from the data tables
-}
+};
 
 AssetTracker.prototype.investmentReportPart1 = function (ss, sheet, dataSheetName, version) {
 
@@ -52,7 +52,7 @@ AssetTracker.prototype.investmentReportPart1 = function (ss, sheet, dataSheetNam
       .build();
     sheet.getRange('B1').setDataValidation(assetRule);
   }
-}
+};
 
 AssetTracker.prototype.investmentReportPart2 = function (ss, sheet, version) {
 
@@ -163,7 +163,7 @@ AssetTracker.prototype.investmentReportPart2 = function (ss, sheet, version) {
 
     this.setSheetVersion(sheet, version);
   }
-}
+};
 
 AssetTracker.prototype.investmentDataSheetPart1 = function (ss, sheet, version) {
 
@@ -341,7 +341,7 @@ AssetTracker.prototype.investmentDataSheetPart1 = function (ss, sheet, version) 
 
     ss.setNamedRange(this.investmentAssetsRangeName, sheet.getRange('A4:A'));
   }
-}
+};
 
 AssetTracker.prototype.investmentDataSheetPart2 = function (ss, sheet, reportSheetName, version) {
 
