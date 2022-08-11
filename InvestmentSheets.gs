@@ -7,7 +7,7 @@
  */
 AssetTracker.prototype.investmentSheets = function (dataSheetName = this.investmentDataSheetName, reportSheetName = this.investmentReportName) {
 
-  const version = '2';
+  const version = '3';
 
   let ss = SpreadsheetApp.getActive();
   let dataSheet = ss.getSheetByName(dataSheetName);
@@ -228,7 +228,7 @@ AssetTracker.prototype.investmentDataSheetPart1 = function (ss, sheet, version) 
         'Price Range',
         'Net Units', ,
         'Price Range',
-        'Net Cost Basis', ,
+        'Net Cost', ,
         'Date',
         'Asset',
         'Asset Type',
