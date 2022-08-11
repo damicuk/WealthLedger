@@ -253,4 +253,3 @@ AssetTracker.prototype.getClosedData = function () {
 
   return [dataTable, action1LinkTable, action2LinkTable, asset1LinkTable, asset2LinkTable, asset3LinkTable];
 };
-

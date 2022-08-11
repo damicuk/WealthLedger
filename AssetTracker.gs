@@ -97,12 +97,14 @@ var AssetTracker = class AssetTracker {
     this.openReportName = 'Open Report';
     this.closedReportName = 'Closed Report';
     this.incomeReportName = 'Income Report';
-    this.chartsDataSheetName = "Charts Data";
+    this.chartsDataSheetName = 'Charts Data';
     this.openSummaryReportName = 'Open Summary Report';
     this.closedSummaryReportName = 'Closed Summary Report';
     this.incomeSummaryReportName = 'Income Summary Report';
     this.donationsSummaryReportName = 'Donations Summary Report';
     this.walletsReportName = 'Wallets Report';
+    this.investmentDataSheetName = 'Investment Data';
+    this.investmentReportName = 'Investment Report';
 
     this.reportNames = [
       this.fiatAccountsSheetName,
@@ -114,7 +116,9 @@ var AssetTracker = class AssetTracker {
       this.closedSummaryReportName,
       this.incomeSummaryReportName,
       this.donationsSummaryReportName,
-      this.walletsReportName
+      this.walletsReportName,
+      this.investmentDataSheetName,
+      this.investmentReportName
     ];
 
     this.assetsRangeName = 'Assets';
@@ -127,6 +131,16 @@ var AssetTracker = class AssetTracker {
     this.chartRange3Name = 'Chart3';
     this.chartRange4Name = 'Chart4';
     this.chartRange5Name = 'Chart5';
+
+    this.investmentAssetsRangeName = "InvestmentAssets";
+    this.investmentChartRange1Name = 'InvestmentChart1';
+    this.investmentChartRange2Name = 'InvestmentChart2';
+    this.investmentChartRange3Name = 'InvestmentChart3';
+    this.investmentChartRange4Name = 'InvestmentChart4';
+    this.investmentChartRange5Name = 'InvestmentChart5';
+    this.investmentChartRange6Name = 'InvestmentChart6';
+    this.investmentChartRange7Name = 'InvestmentChart7';
+    this.investmentChartRange8Name = 'InvestmentChart8';
   }
 
   /**

@@ -345,10 +345,6 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
 
 /**
  * Adjusts the asset balance according to the parameters.
- * If both debit amount and credit amount are specified the asset balance is adjusted in the ratio of credit amount (numerator) / debit amount (denominator).
- * Rounds the balance subunits in the case of fractional results.
- * If just debit amount is specified it is subtracted from the asset balance.
- * If just credit amount is specified it is added to the asset balance.
  * Throws an AssetAccountError if the balance is zero or insufficient.
  * Removes any lots with zero subunits.
  * @param {Date} date - The date the adjust occurred.
