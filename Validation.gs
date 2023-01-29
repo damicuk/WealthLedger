@@ -133,7 +133,7 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
   }
   else if (!Asset.tickerRegExp.test(ticker)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-10 characters [A-Za-z0-9_$@].\nOptional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`, rowIndex, 'ticker');
+    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-26 characters [A-Za-z0-9_#$/:@].`, rowIndex, 'ticker');
   }
   else if (assetType === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
