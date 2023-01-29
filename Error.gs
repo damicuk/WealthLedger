@@ -64,7 +64,7 @@ var CustomError = class CustomError extends Error {
 };
 
 /**
- * Error in the validation of the ledger.
+ * Error in the validation of the assets or ledger sheet.
  * @extends CustomError
  */
 var ValidationError = class ValidationError extends CustomError {
@@ -72,23 +72,21 @@ var ValidationError = class ValidationError extends CustomError {
   /**
    * Initializes class with message, rowIndex and columnName, sets name property to the name of the class.
    * @param {string} message - description of the error and suggested solution.
-   * @param {number} [rowIndex] - the row numer in the ledger sheet that requires atention.
-   * @param {string} [columnName] - the name assigned to the column in the ledger sheet.
-   * Used to get the index from LedgerRecord.getColumnIndex(columnName).
-   * Avoids hard coding column numbers.
+   * @param {number} [rowIndex] - the row numer in the assets or ledger sheet that requires attention.
+   * @param {string} [columnName] - the name assigned to the column in the assets or ledger sheet.
    */
   constructor(message, rowIndex, columnName) {
 
     super(message);
 
     /**
-     * The row numer in the ledger sheet that requires atention.
+     * The row numer in the assets or ledger sheet that requires attention.
      * @type {number}
      */
     this.rowIndex = rowIndex;
 
     /**
-     * The name assigned to the column in the ledger sheet.
+     * The name assigned to the column in the assets or ledger sheet.
      * @type {string}
      */
     this.columnName = columnName;
@@ -104,23 +102,21 @@ var AssetAccountError = class AssetAccountError extends CustomError {
   /**
    * Initializes class with message and rowIndex, sets name property to the name of the class.
    * @param {string} message - description of the error and suggested solution.
-   * @param {number} [rowIndex] - the row numer in the ledger sheet that requires atention.
-   * @param {string} [columnName] - the name assigned to the column in the ledger sheet.
-   * Used to get the index from LedgerRecord.getColumnIndex(columnName).
-   * Avoids hard coding column numbers.
+   * @param {number} [rowIndex] - the row numer in the assets or ledger sheet that requires attention.
+   * @param {string} [columnName] - the name assigned to the column in the assets or ledger sheet.
    */
   constructor(message, rowIndex, columnName) {
 
     super(message);
 
     /**
-     * The row numer in the ledger sheet that requires atention.
+     * The row numer in the assets or ledger sheet that requires attention.
      * @type {number}
      */
     this.rowIndex = rowIndex;
 
     /**
-     * The name assigned to the column in the ledger sheet.
+     * The name assigned to the column in the assets or ledger sheet.
      * @type {string}
      */
     this.columnName = columnName;

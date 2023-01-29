@@ -51,9 +51,9 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('A2:G').setValues(sampleData);
 
   let assetRule = SpreadsheetApp.newDataValidation()
-    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^(\\w{1,15}:)?[\\w$@]{1,10}$")`)
+    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^[\\w#$/:@]{1,26}$")`)
     .setAllowInvalid(false)
-    .setHelpText(`Input must be 1-10 characters [A-Za-z0-9_$@] with optional prefix of 1-15 characters [A-Za-z0-9_] and colon [:].`)
+    .setHelpText(`Input must be 1-26 characters [A-Za-z0-9_#$/:@].`)
     .build();
   sheet.getRange('A2:A').setDataValidation(assetRule);
 
@@ -104,7 +104,12 @@ AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
   if (this.getSheetVersion(sheet) !== this.assetsSheetVersion) {
 
     //Future updates to the assets sheet can be inserted here
-
+    let assetRule = SpreadsheetApp.newDataValidation()
+      .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^[\\w#$/:@]{1,26}$")`)
+      .setAllowInvalid(false)
+      .setHelpText(`Input must be 1-26 characters [A-Za-z0-9_#$/:@].`)
+      .build();
+    sheet.getRange('A2:A').setDataValidation(assetRule);
     this.setSheetVersion(sheet, this.assetsSheetVersion);
   }
 
