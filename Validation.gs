@@ -133,13 +133,13 @@ AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fia
     throw new ValidationError(`Assets row ${rowIndex}: Duplicate entry for (${ticker}). An asset can only be declared once`, rowIndex, 'ticker');
   }
   else if (!Asset.tickerRegExp.test(ticker)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-26 characters [A-Za-z0-9_#$/:@].`, rowIndex, 'ticker');
+    throw new ValidationError(`Assets row ${rowIndex}: Asset (${ticker}) format is invalid.\nInput must be 1-26 characters, not starting or ending with a space.`, rowIndex, 'ticker');
   }
   else if (assetType === '') {
     throw new ValidationError(`Assets row ${rowIndex}: Asset type is missing.`, rowIndex, 'assetType');
   }
   else if (!Asset.assetTypeRegExp.test(assetType)) {
-    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) format is invalid.\nInput must be between 1 and 20 characters [A-Za-z0-9_-].\nSpaces between characters allowed.`, rowIndex, 'assetType');
+    throw new ValidationError(`Assets row ${rowIndex}: Asset type (${assetType}) format is invalid.\nInput must be 1-26 characters, not starting or ending with a space.`, rowIndex, 'assetType');
   }
   else if (assetType === 'Fiat Base' && fiatBase) {
     throw new ValidationError(`Assets row ${rowIndex}: Fiat base has already been declared (${fiatBase}). Only one asset can be fiat base.`, rowIndex, 'assetType');

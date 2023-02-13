@@ -51,9 +51,9 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('A2:G').setValues(sampleData);
 
   let assetRule = SpreadsheetApp.newDataValidation()
-    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^[\\w#$/:@]{1,26}$")`)
+    .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
     .setAllowInvalid(false)
-    .setHelpText(`Input must be 1-26 characters [A-Za-z0-9_#$/:@].`)
+    .setHelpText(`Input must be 1-26 characters, not starting or ending with a space.`)
     .build();
   sheet.getRange('A2:A').setDataValidation(assetRule);
 
@@ -105,9 +105,9 @@ AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
 
     //Future updates to the assets sheet can be inserted here
     let assetRule = SpreadsheetApp.newDataValidation()
-      .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^[\\w#$/:@]{1,26}$")`)
+      .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
       .setAllowInvalid(false)
-      .setHelpText(`Input must be 1-26 characters [A-Za-z0-9_#$/:@].`)
+      .setHelpText(`Input must be 1-26 characters, not starting or ending with a space.`)
       .build();
     sheet.getRange('A2:A').setDataValidation(assetRule);
     this.setSheetVersion(sheet, this.assetsSheetVersion);

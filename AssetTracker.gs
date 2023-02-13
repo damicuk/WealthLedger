@@ -85,7 +85,7 @@ var AssetTracker = class AssetTracker {
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
-    this.assetsSheetVersion = '2';
+    this.assetsSheetVersion = '3';
 
     this.cmcApiName = 'CoinMarketCap';
 
