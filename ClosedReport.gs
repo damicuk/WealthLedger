@@ -12,7 +12,7 @@
  */
 AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, action2LinkTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.closedReportName) {
 
-  const version = '1';
+  const version = '2';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
