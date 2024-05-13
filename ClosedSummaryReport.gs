@@ -6,7 +6,7 @@
  */
 AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSummaryReportName) {
 
-  const version = '2';
+  const version = '5';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -18,6 +18,12 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
+
+    let charts = sheet.getCharts();
+
+    for (let chart of charts) {
+      sheet.removeChart(chart);
+    }
 
     this.trimColumns(sheet, 19);
 
@@ -110,7 +116,6 @@ QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE 
 
     let chartRange3 = ss.getRangeByName(this.chartRange3Name);
     let chartRange4 = ss.getRangeByName(this.chartRange4Name);
-    let chartRange5 = ss.getRangeByName(this.chartRange5Name);
 
     let assetTypeProceedsPLChart = sheet.newChart().asColumnChart()
       .addRange(chartRange3)
@@ -121,20 +126,11 @@ QUERY({QUERY(${referenceRangeName}, "SELECT I, J, YEAR(M), U, X, Y, Z, AB WHERE 
 
     sheet.insertChart(assetTypeProceedsPLChart);
 
-    let assetProceedsPLChart = sheet.newChart().asColumnChart()
-      .addRange(chartRange4.offset(0, 1, chartRange4.getHeight(), 3))
-      .setNumHeaders(1)
-      .setTitle('Asset')
-      .setPosition(21, 16, 30, 30)
-      .build();
-
-    sheet.insertChart(assetProceedsPLChart);
-
     let yearProceedsPLChart = sheet.newChart().asColumnChart()
-      .addRange(chartRange5)
+      .addRange(chartRange4)
       .setNumHeaders(1)
       .setTitle('Last 5 Years')
-      .setPosition(40, 16, 30, 30)
+      .setPosition(21, 16, 30, 30)
       .build();
 
     sheet.insertChart(yearProceedsPLChart);

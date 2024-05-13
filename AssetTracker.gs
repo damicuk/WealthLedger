@@ -130,7 +130,6 @@ var AssetTracker = class AssetTracker {
     this.chartRange2Name = 'Chart2';
     this.chartRange3Name = 'Chart3';
     this.chartRange4Name = 'Chart4';
-    this.chartRange5Name = 'Chart5';
 
     this.investmentAssetsRangeName = "InvestmentAssets";
     this.investmentChartRange1Name = 'InvestmentChart1';

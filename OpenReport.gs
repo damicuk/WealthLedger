@@ -10,7 +10,7 @@
  */
 AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.openReportName) {
 
-  const version = '1';
+  const version = '2';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -108,6 +108,8 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
     ]];
 
     sheet.getRange('N3:U3').setFormulas(formulas);
+
+    sheet.hideSheet();
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 

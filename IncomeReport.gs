@@ -10,7 +10,7 @@
  */
 AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.incomeReportName) {
 
-  const version = '1';
+  const version = '2';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -63,6 +63,8 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
     ]];
 
     sheet.getRange('J2').setFormulas(formulas);
+
+    sheet.hideSheet();
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
