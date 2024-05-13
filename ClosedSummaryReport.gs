@@ -6,7 +6,7 @@
  */
 AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSummaryReportName) {
 
-  const version = '3';
+  const version = '4';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -18,6 +18,12 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
   if (this.getSheetVersion(sheet) !== version) {
 
     sheet.clear();
+
+    let charts = sheet.getCharts();
+
+    for (let chart of charts) {
+      sheet.removeChart(chart)
+    }
 
     this.trimColumns(sheet, 19);
 
