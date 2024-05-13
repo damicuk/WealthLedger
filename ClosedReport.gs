@@ -130,6 +130,8 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
 
     sheet.getRange('U3:AB3').setFormulas(formulas);
 
+    sheet.hideSheet();
+
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
     this.setSheetVersion(sheet, version);

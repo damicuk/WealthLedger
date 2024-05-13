@@ -6,7 +6,7 @@
  */
 AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummaryReportName) {
 
-  const version = '2';
+  const version = '3';
 
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
@@ -116,6 +116,9 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT I, J, M
       .addRange(chartRange1)
       .setNumHeaders(1)
       .setTitle('Asset Type Value')
+      .setLegendPosition(Charts.Position.RIGHT)
+      .setOption('pieSliceText', 'percentage')
+      .setOption('pieSliceBorderColor', 'white')
       .setPosition(1, 16, 30, 30)
       .build();
 
@@ -125,6 +128,9 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT I, J, M
       .addRange(chartRange2.offset(0, 1, chartRange1.getHeight(), 2))
       .setNumHeaders(1)
       .setTitle('Asset Value')
+      .setLegendPosition(Charts.Position.RIGHT)
+      .setOption('pieSliceText', 'percentage')
+      .setOption('pieSliceBorderColor', 'white')
       .setPosition(21, 16, 30, 30)
       .build();
 

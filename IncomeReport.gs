@@ -64,6 +64,8 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
 
     sheet.getRange('J2').setFormulas(formulas);
 
+    sheet.hideSheet();
+
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
     this.setSheetVersion(sheet, version);

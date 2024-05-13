@@ -109,6 +109,8 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
 
     sheet.getRange('N3:U3').setFormulas(formulas);
 
+    sheet.hideSheet();
+
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
     this.setSheetVersion(sheet, version);
