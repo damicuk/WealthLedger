@@ -19,12 +19,6 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
 
     sheet.clear();
 
-    let charts = sheet.getCharts();
-
-    for (let chart of charts) {
-      sheet.removeChart(chart);
-    }
-
     this.trimColumns(sheet, 19);
 
     const referenceRangeName = this.closedRangeName;
