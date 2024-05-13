@@ -22,7 +22,7 @@ AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummar
     let charts = sheet.getCharts();
 
     for (let chart of charts) {
-      sheet.removeChart(chart)
+      sheet.removeChart(chart);
     }
 
     this.trimColumns(sheet, 19);
