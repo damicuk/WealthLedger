@@ -6,7 +6,7 @@ var LedgerRecord = class LedgerRecord {
   /**
    * Assigns each column value to a property.
    * @param {Date} date - The date the action occurred.
-   * @param {string} action - Donation, Gift, Income, Stop, Trade, Transfer.
+   * @param {string} action - Adjust, Donation, Fee, Gift, Income, Inflation, Skip, Stop, Trade, Transfer.
    * @param {string} debitAsset - The ticker of the asset debited from the account.
    * @param {number} debitExRate - The debit asset to fiat base exchange rate, 0 if the debit asset is fiat base.
    * @param {number} debitAmount - The amount of asset debited from the account.
@@ -41,7 +41,7 @@ var LedgerRecord = class LedgerRecord {
     this.date = new Date(date);
 
     /**
-     * The action - Donation, Gift, Income, Stop, Trade, Transfer.
+     * The action - Adjust, Donation, Fee, Gift, Income, Inflation, Skip, Stop, Trade, Transfer.
      * @type {string}
      */
     this.action = action;

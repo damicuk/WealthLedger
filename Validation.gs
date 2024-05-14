@@ -671,6 +671,41 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
       throw new ValidationError(`${action} row ${rowIndex}: To decrease the amount held (reverse split) leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
+  else if (action === 'Inflation') {
+    if (debitAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit asset (${debitAsset}) blank.`, rowIndex, 'debitAsset');
+    }
+    else if (debitExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+    }
+    else if (debitAmount !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit amount blank.`, rowIndex, 'debitAmount');
+    }
+    else if (debitFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
+    }
+    else if (debitWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
+    }
+    else if (creditAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit asset (${creditAsset}) blank.`, rowIndex, 'creditAsset');
+    }
+    else if (creditExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+    }
+    else if (creditAmount === '') {
+      throw new ValidationError(`${action} row ${rowIndex}: No credit amount specified.`, rowIndex, 'creditAmount');
+    }
+    else if (creditAmount <= 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater than 0.`, rowIndex, 'creditAmount');
+    }
+    else if (creditFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
+    }
+    else if (creditWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
+    }
+  }
   else {
     throw new ValidationError(`Ledger row ${rowIndex}: Action (${action}) is invalid.`, rowIndex, 'action');
   }

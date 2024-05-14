@@ -104,7 +104,7 @@ AssetTracker.prototype.ledgerSheet = function () {
   sheet.getRange('A3:A').setDataValidation(dateRule);
 
   let actionRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['Donation', 'Fee', 'Gift', 'Income', 'Skip', 'Adjust', 'Stop', 'Trade', 'Transfer'])
+    .requireValueInList(['Adjust', 'Donation', 'Fee', 'Gift', 'Income', 'Inflation', 'Skip', 'Stop', 'Trade', 'Transfer'])
     .setAllowInvalid(false)
     .build();
   sheet.getRange('B3:B').setDataValidation(actionRule);

@@ -214,12 +214,13 @@ AssetTracker.prototype.writeLinks = function (ss, linkTable, rangeName, columnIn
 AssetTracker.prototype.addActionCondtion = function (sheet, a1Notation) {
 
   let textColors = [
+    ['Adjust', '#ff00ff', null],
     ['Donation', '#ff9900', null],
     ['Fee', '#9900ff', null],
     ['Gift', '#ff9900', null],
     ['Income', '#6aa84f', null],
+    ['Inflation', '#46bdc6', null],
     ['Skip', '#ff0000', '#ffbb00'],
-    ['Adjust', '#ff00ff', null],
     ['Stop', '#ff0000', '#ffbb00'],
     ['Trade', '#1155cc', null],
     ['Transfer', '#ff0000', null],
