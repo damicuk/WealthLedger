@@ -14,7 +14,6 @@ AssetTracker.prototype.writeReports = function () {
   let assetsValidationResults = this.validateAssetsSheet();
   let assetsValidationSuccess = assetsValidationResults[0];
   let assetRecords = assetsValidationResults[1];
-  let fiatBaseRowIndex = assetsValidationResults[2];
   if (!assetsValidationSuccess) {
     return;
   }
