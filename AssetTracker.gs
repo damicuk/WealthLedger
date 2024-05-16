@@ -39,6 +39,12 @@ var AssetTracker = class AssetTracker {
     this.incomeLots = [];
 
     /**
+     * Collection of inflation records.
+     * @type {Array<Obeject>}
+     */
+    this.inflationRecords = [];
+
+    /**
      * Collection of ClosedLots.
      * @type {Array<ClosedLot>}
      */
@@ -91,9 +97,8 @@ var AssetTracker = class AssetTracker {
 
     this.validApiNames = [this.cmcApiName, this.ccApiName,];
 
+    this.inflationSheetName = 'Inflation Data';
     this.fiatAccountsSheetName = 'Fiat Accounts Data';
-    this.fiatAccountsRangeName = 'FiatAccounts';
-
     this.openReportName = 'Open Report';
     this.closedReportName = 'Closed Report';
     this.incomeReportName = 'Income Report';
@@ -107,6 +112,7 @@ var AssetTracker = class AssetTracker {
     this.investmentReportName = 'Investment Report';
 
     this.reportNames = [
+      this.inflationSheetName,
       this.fiatAccountsSheetName,
       this.openReportName,
       this.closedReportName,
@@ -121,6 +127,9 @@ var AssetTracker = class AssetTracker {
       this.investmentReportName
     ];
 
+    this.inflationRangeName = 'Inflation';
+    this.fiatAccountsRangeName = 'FiatAccounts';
+
     this.assetsRangeName = 'Assets';
     this.openRangeName = 'Open';
     this.closedRangeName = 'Closed';
@@ -131,15 +140,8 @@ var AssetTracker = class AssetTracker {
     this.chartRange3Name = 'Chart3';
     this.chartRange4Name = 'Chart4';
 
-    this.investmentAssetsRangeName = "InvestmentAssets";
-    this.investmentChartRange1Name = 'InvestmentChart1';
-    this.investmentChartRange2Name = 'InvestmentChart2';
-    this.investmentChartRange3Name = 'InvestmentChart3';
-    this.investmentChartRange4Name = 'InvestmentChart4';
-    this.investmentChartRange5Name = 'InvestmentChart5';
-    this.investmentChartRange6Name = 'InvestmentChart6';
-    this.investmentChartRange7Name = 'InvestmentChart7';
-    this.investmentChartRange8Name = 'InvestmentChart8';
+    this.investmentRange1Name = 'InvestmentRange1';
+    
   }
 
   /**
