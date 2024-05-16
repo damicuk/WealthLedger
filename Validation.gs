@@ -31,16 +31,15 @@ AssetTracker.prototype.validate = function () {
  * Processes the asset records.
  * Adds to the Map of assets.
  * Sets fiat base.
- * @return {Array<boolean, Array<AssetRecord>, number>} Whether validation completed successfully, the asset records and the row index of fiat base.
+ * @return {Array<boolean, Array<AssetRecord>>} Whether validation completed successfully and the asset records.
  */
 AssetTracker.prototype.validateAssetsSheet = function () {
 
   let success = true;
   let assetRecords;
-  let fiatBaseRowIndex;
   try {
     assetRecords = this.getAssetRecords();
-    fiatBaseRowIndex = this.validateAssetRecords(assetRecords);
+    this.validateAssetRecords(assetRecords);
   }
   catch (error) {
     if (error instanceof ValidationError) {
@@ -51,9 +50,7 @@ AssetTracker.prototype.validateAssetsSheet = function () {
       throw error;
     }
   }
-
-  return [success, assetRecords, fiatBaseRowIndex];
-
+  return [success, assetRecords];
 };
 
 /**
@@ -84,14 +81,12 @@ AssetTracker.prototype.validateLedgerSheet = function () {
 /**
  * Validates a set of asset records and throws a ValidationError on failure.
  * @param {Array<AssetRecord>} assetRecords - The colection of asset records to validate.
- * @return {number} The row index of fiat base.
  */
 AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
   let rowIndex = this.assetsHeaderRows + 1;
   let tickers = new Set();
   let fiatBase;
-  let fiatBaseRowIndex;
   for (let assetRecord of assetRecords) {
     let ticker = assetRecord.ticker;
     let assetType = assetRecord.assetType;
@@ -100,7 +95,6 @@ AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
 
     if (assetType === 'Fiat Base') {
       fiatBase = ticker;
-      fiatBaseRowIndex = rowIndex;
     }
     tickers.add(ticker);
     rowIndex++;
@@ -108,7 +102,6 @@ AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
   if (!fiatBase) {
     throw new ValidationError(`Fiat Base has not been declared in the Assets sheet. One asset must have asset type of 'Fiat Base'.`, this.assetsHeaderRows + 1, 'assetType');
   }
-  return fiatBaseRowIndex;
 };
 
 /**
@@ -116,7 +109,7 @@ AssetTracker.prototype.validateAssetRecords = function (assetRecords) {
  * @param {AssetRecord} assetRecord - The asset record to validate.
  * @param {Array<string>} tickers - The collection of asset tickers already declared.
  * @param {string} fiatBase - Fiat base if already declared. 
- * @param {number} rowIndex - The index of the row in the sasset sheet used to set the current cell in case of an error.
+ * @param {number} rowIndex - The index of the row in the asset sheet used to set the current cell in case of an error.
  */
 AssetTracker.prototype.validateAssetRecord = function (assetRecord, tickers, fiatBase, rowIndex) {
 
@@ -669,6 +662,41 @@ AssetTracker.prototype.validateLedgerRecord = function (ledgerRecord, previousRe
     }
     else if (debitAsset && creditWalletName !== '') {
       throw new ValidationError(`${action} row ${rowIndex}: To decrease the amount held (reverse split) leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
+    }
+  }
+  else if (action === 'Inflation') {
+    if (debitAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit asset (${debitAsset}) blank.`, rowIndex, 'debitAsset');
+    }
+    else if (debitExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit exchange rate blank.`, rowIndex, 'debitExRate');
+    }
+    else if (debitAmount !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit amount blank.`, rowIndex, 'debitAmount');
+    }
+    else if (debitFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit fee blank.`, rowIndex, 'debitFee');
+    }
+    else if (debitWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave debit wallet (${debitWalletName}) blank.`, rowIndex, 'debitWalletName');
+    }
+    else if (creditAsset) {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit asset (${creditAsset}) blank.`, rowIndex, 'creditAsset');
+    }
+    else if (creditExRate !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit exchange rate blank.`, rowIndex, 'creditExRate');
+    }
+    else if (creditAmount === '') {
+      throw new ValidationError(`${action} row ${rowIndex}: No credit amount specified.`, rowIndex, 'creditAmount');
+    }
+    else if (creditAmount <= 0) {
+      throw new ValidationError(`${action} row ${rowIndex}: Credit amount must be greater than 0.`, rowIndex, 'creditAmount');
+    }
+    else if (creditFee !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit fee blank.`, rowIndex, 'creditFee');
+    }
+    else if (creditWalletName !== '') {
+      throw new ValidationError(`${action} row ${rowIndex}: Leave credit wallet (${creditWalletName}) blank.`, rowIndex, 'creditWalletName');
     }
   }
   else {

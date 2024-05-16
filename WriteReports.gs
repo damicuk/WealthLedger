@@ -14,7 +14,6 @@ AssetTracker.prototype.writeReports = function () {
   let assetsValidationResults = this.validateAssetsSheet();
   let assetsValidationSuccess = assetsValidationResults[0];
   let assetRecords = assetsValidationResults[1];
-  let fiatBaseRowIndex = assetsValidationResults[2];
   if (!assetsValidationSuccess) {
     return;
   }
@@ -41,12 +40,14 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
+  let inflationData = this.getInflationData();
   let fiatData = this.getFiatData();
   let openData = this.getOpenData();
   let closedData = this.getClosedData();
   let incomeData = this.getIncomeData();
 
   this.fiatAccountsSheet(fiatData[0], fiatData[1]);
+  this.inflationSheet(inflationData[0], inflationData[1]);
   this.openReport(openData[0], openData[1], openData[2], openData[3]);
   this.closedReport(closedData[0], closedData[1], closedData[2], closedData[3], closedData[4], closedData[5]);
   this.incomeReport(incomeData[0], incomeData[1], incomeData[2], incomeData[3]);
@@ -57,7 +58,8 @@ AssetTracker.prototype.writeReports = function () {
   this.incomeSummaryReport();
   this.donationsSummaryReport();
   this.walletsReport();
-  this.investmentSheets();
+  this.investmentDataSheet();
+  this.investmentReport();
 
   this.updateLedger();
   this.updateAssetsSheet(assetRecords);

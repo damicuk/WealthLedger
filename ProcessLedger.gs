@@ -291,6 +291,10 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       this.adjustAsset(date, creditAsset, creditAmount, creditWalletName, action, rowIndex);
     }
   }
+  else if (action === 'Inflation') {
+
+    this.inflationRecords.push(new InflationRecord(date, creditAmount, rowIndex));
+  }
 };
 
 /**
