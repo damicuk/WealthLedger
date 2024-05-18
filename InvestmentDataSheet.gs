@@ -21,7 +21,6 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
 
     this.trimColumns(sheet, 24);
 
-    const assetsRangeName = this.assetsRangeName;
     const inflationRangeName = this.inflationRangeName;
     const openRangeName = this.openRangeName;
     const closedRangeName = this.closedRangeName;
@@ -159,7 +158,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
     ARRAYFORMULA(ROUND(QUERY({QUERY(ARRAYFORMULA(FILTER(A3:G, LEN(A3:A))), "SELECT Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col7) GROUP BY Col2, Col3 ORDER BY Col3, Col2 LABEL SUM(Col4) '', SUM(Col5) '', SUM(Col7) ''")}, "SELECT Col4, Col5"), 2))
     })`, , , , ,
 
-      `IF(ISBLANK(I3),,ArrayFormula(FILTER(IFNA(VLOOKUP(I3:I, QUERY(${assetsRangeName}, "SELECT A, D"), 2, FALSE),), LEN(I3:I))))`,
+      `IF(ISBLANK(I3),,ArrayFormula(FILTER(IFNA(VLOOKUP(I3:I, QUERY(${openRangeName}, "SELECT I, P"), 2, FALSE),), LEN(I3:I))))`,
 
       `IF(ISBLANK(I3),,ArrayFormula(FILTER(ROUND(K3:K*N3:N, 2), LEN(I3:I))))`,
       `IF(ISBLANK(I3),,ARRAYFORMULA(FILTER(O3:O-L3:L, LEN(I3:I))))`,
