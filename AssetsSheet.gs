@@ -1,8 +1,9 @@
 /**
  * Creates a sample assets sheet.
  * Renames any existing assets sheet so as not to overwrite it.
+ * @param {Array<Array>} assetDataTable - The assets data table.
  */
-AssetTracker.prototype.assetsSheet = function () {
+AssetTracker.prototype.assetsSheet = function (assetDataTable) {
 
   const sheetName = this.assetsSheetName;
 
@@ -11,7 +12,11 @@ AssetTracker.prototype.assetsSheet = function () {
   let ss = SpreadsheetApp.getActive();
   sheet = ss.insertSheet(sheetName);
 
-  this.trimSheet(sheet, 11, 7);
+  const headerRows = 1;
+  const dataRows = assetDataTable.length;
+  const rowCount = dataRows + headerRows;
+
+  this.trimSheet(sheet, rowCount, 7);
 
   let headers = [
     [
@@ -35,20 +40,7 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  let sampleData = [
-    ['USD', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
-    ['CAD', 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))`, , , `Fiat capital gains are ignored.`],
-    ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))`, , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, , , `Use Google Finance to fetch the current price. Alternatively enter a CoinMarketCap ID or use your own method.`],
-    ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))`, , , ,],
-    ['USDC', 'Stablecoin', '2', '1', , , ,],
-    ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, , , ,],
-    ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)`, , , ,],
-    ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
-    [, , , , , , ,]
-  ];
-
-  sheet.getRange('A2:G').setValues(sampleData);
+  sheet.getRange('A2:G').setValues(assetDataTable);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
