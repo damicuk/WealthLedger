@@ -86,7 +86,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the assets sheet.
      * @type {number}
      */
-    this.assetsDataColumns = 6;
+    this.assetsDataColumns = 7;
 
     this.ledgerSheetName = 'Ledger';
     this.ledgerSheetVersion = '1';
@@ -444,23 +444,6 @@ var AssetTracker = class AssetTracker {
     this.deleteSheets(this.reportNames);
 
     SpreadsheetApp.getActive().toast('Reports deleted', 'Finished', 10);
-  }
-
-  /**
-    * Duplicates assets and ledger sheets.
-    * Shows a warning dialog if the spreadsheet locale is not English.
-    * Renames any existing assets sheet so as not to overwrite it.
-    */
-  duplicateAssetsAndLedger() {
-
-    if (!this.checkLocale()) {
-      return;
-    }
-
-    this.assetsSheet(AssetTracker.assetsSampleData);
-    this.ledgerSheet(AssetTracker.ledgerSampleData);
-
-    SpreadsheetApp.getActive().toast('Sample sheets duplicated', 'Finished', 10);
   }
 
   /**

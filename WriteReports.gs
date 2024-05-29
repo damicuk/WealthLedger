@@ -1,7 +1,7 @@
 /**
  * Validates and processes the ledger, retrieves the currenct prices, and writes the reports.
  * Shows a warning dialog if the spreadsheet locale is not English.
- * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError .
+ * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError.
  * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
