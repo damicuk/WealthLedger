@@ -43,9 +43,10 @@ AssetTracker.prototype.duplicateAssetsAndLedger = function () {
   }
 
   let assetDataTable = this.getAssetDataTable(assetRecords);
+  let ledgerDataTable = this.getLedgerDataTable(ledgerRecords);
 
   this.assetsSheet(assetDataTable);
-  this.ledgerSheet(AssetTracker.ledgerSampleData);
+  this.ledgerSheet(ledgerDataTable);
 
   this.updateLedger();
   this.updateAssetsSheet(assetRecords);

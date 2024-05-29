@@ -74,7 +74,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the ledger sheet.
      * @type {number}
      */
-    this.ledgerDataColumns = 13;
+    this.ledgerDataColumns = 14;
 
     /**
      * The number of header rows in the assets sheet.
@@ -174,8 +174,7 @@ var AssetTracker = class AssetTracker {
       ['USDC', 'Stablecoin', '2', '1', , , ,],
       ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, , , ,],
       ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)`, , , ,],
-      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
-      [, , , , , , ,]
+      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`]
     ];
   }
 

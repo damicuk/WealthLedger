@@ -32,7 +32,8 @@ var LedgerRecord = class LedgerRecord {
     creditAmount,
     creditFee,
     creditWalletName,
-    lotMatching) {
+    lotMatching,
+    comment) {
 
     /**
      * The date the action occurred.
@@ -111,6 +112,12 @@ var LedgerRecord = class LedgerRecord {
      * @type {string}
      */
     this.lotMatching = lotMatching;
+
+    /**
+     * The comment.
+     * @type {string}
+     */
+    this.comment = comment;
   }
 
   /**
@@ -181,10 +188,44 @@ AssetTracker.prototype.getLedgerRecords = function () {
       row[9],
       row[10],
       row[11],
-      row[12]
+      row[12],
+      row[13]
     );
 
     ledgerRecords.push(ledgerRecord);
   }
   return ledgerRecords;
+};
+
+/**
+ * Returns a data table corresponding to the given ledger records.
+ * @param {Array<LedgerRecord>} The collection of ledger records.
+ * @return {Array<Array>} The data table.
+ */
+AssetTracker.prototype.getLedgerDataTable = function (ledgerRecords) {
+
+  let dataTable = [];
+
+  for (let ledgerRecord of ledgerRecords) {
+
+    dataTable.push(
+      [
+        ledgerRecord.date,
+        ledgerRecord.action,
+        ledgerRecord.debitAsset,
+        ledgerRecord.debitExRate,
+        ledgerRecord.debitAmount,
+        ledgerRecord.debitFee,
+        ledgerRecord.debitWalletName,
+        ledgerRecord.creditAsset,
+        ledgerRecord.creditExRate,
+        ledgerRecord.creditAmount,
+        ledgerRecord.creditFee,
+        ledgerRecord.creditWalletName,
+        ledgerRecord.lotMatching,
+        ledgerRecord.comment
+      ]
+    );
+  }
+  return dataTable;
 };
