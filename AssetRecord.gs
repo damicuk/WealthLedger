@@ -134,7 +134,6 @@ AssetTracker.prototype.getAssetRecords = function () {
 
 /**
  * Returns a data table corresponding to the given asset records.
- * Adds a blank row to the end of the data table.
  * @param {Array<AssetRecord>} The collection of asset records.
  * @return {Array<Array>} The data table.
  */
@@ -156,8 +155,5 @@ AssetTracker.prototype.getAssetDataTable = function (assetRecords) {
       ]
     );
   }
-
-  dataTable.push(['', '', '', '', '', '', '']);
-
   return dataTable;
 };

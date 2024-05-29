@@ -13,8 +13,9 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
   sheet = ss.insertSheet(sheetName);
 
   const headerRows = 1;
+  const footerRows = 1;
   const dataRows = assetDataTable.length;
-  const rowCount = dataRows + headerRows;
+  const rowCount = dataRows + headerRows + footerRows;
 
   this.trimSheet(sheet, rowCount, 7);
 
@@ -40,7 +41,7 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  sheet.getRange('A2:G').setValues(assetDataTable);
+  sheet.getRange('A2:G').offset(0, 0, dataRows).setValues(assetDataTable);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
