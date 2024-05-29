@@ -96,12 +96,7 @@ AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
   if (this.getSheetVersion(sheet) !== this.assetsSheetVersion) {
 
     //Future updates to the assets sheet can be inserted here
-    let assetRule = SpreadsheetApp.newDataValidation()
-      .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
-      .setAllowInvalid(false)
-      .setHelpText(`Input must be 1-26 characters, not starting or ending with a space.`)
-      .build();
-    sheet.getRange('A2:A').setDataValidation(assetRule);
+
     this.setSheetVersion(sheet, this.assetsSheetVersion);
   }
 

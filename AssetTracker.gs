@@ -416,14 +416,12 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Creates a sample assets sheet.
+   * Creates sample assets and ledger sheets
    * Shows a warning dialog if the spreadsheet locale is not English.
    * Renames any existing assets sheet so as not to overwrite it.
-   * Creates a sample ledger sheet.
+   * Creates a sample assets sheet.
    * Renames any existing ledger sheet so as not to overwrite it.
-   * Validates and processes the asset sheet.
-   * Creates the api price sheets if they don't already exist.
-   * Updates the prices in the api price sheets if necessary.
+   * Creates a sample ledger sheet.
    */
   createSampleSheets() {
 
@@ -432,7 +430,7 @@ var AssetTracker = class AssetTracker {
     }
 
     this.assetsSheet(AssetTracker.assetsSampleData);
-    this.ledgerSheet(AssetTracker.ledgerSampleData, AssetTracker.ledgerSampleAssetList);
+    this.ledgerSheet(AssetTracker.ledgerSampleData);
 
     SpreadsheetApp.getActive().toast('Sample sheets complete', 'Finished', 10);
   }
@@ -450,9 +448,19 @@ var AssetTracker = class AssetTracker {
 
   /**
     * Duplicates assets and ledger sheets.
+    * Shows a warning dialog if the spreadsheet locale is not English.
+    * Renames any existing assets sheet so as not to overwrite it.
     */
   duplicateAssetsAndLedger() {
 
+    if (!this.checkLocale()) {
+      return;
+    }
+
+    this.assetsSheet(AssetTracker.assetsSampleData);
+    this.ledgerSheet(AssetTracker.ledgerSampleData);
+
+    SpreadsheetApp.getActive().toast('Sample sheets duplicated', 'Finished', 10);
   }
 
   /**
