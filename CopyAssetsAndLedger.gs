@@ -1,5 +1,5 @@
 /**
- * Duplicates assets and ledger sheets.
+ * Copies assets and ledger sheets.
  * Shows a warning dialog if the spreadsheet locale is not English.
  * Renames any existing assets sheet so as not to overwrite it.
  * Shows a warning dialog if the spreadsheet locale is not English.
@@ -7,7 +7,7 @@
  * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
-AssetTracker.prototype.duplicateAssetsAndLedger = function () {
+AssetTracker.prototype.copyAssetsAndLedger = function () {
 
   if (!this.checkLocale()) {
     return;
@@ -51,5 +51,5 @@ AssetTracker.prototype.duplicateAssetsAndLedger = function () {
   this.updateLedger();
   this.updateAssetsSheet(assetRecords);
 
-  SpreadsheetApp.getActive().toast('Assets and ledger sheets duplicated', 'Finished', 10);
+  SpreadsheetApp.getActive().toast('Assets and ledger sheets copied', 'Finished', 10);
 }
