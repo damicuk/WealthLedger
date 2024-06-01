@@ -76,7 +76,7 @@ AssetTracker.prototype.ledgerSheet = function (ledgerDataTable) {
   let dateRule = SpreadsheetApp.newDataValidation()
     .requireDate()
     .setAllowInvalid(false)
-    .setHelpText('Input must be a date.')
+    .setHelpText(`Input must be a date.`)
     .build();
   sheet.getRange('A3:A').setDataValidation(dateRule);
 
@@ -221,18 +221,17 @@ AssetTracker.prototype.getLedgerRange = function () {
   let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
 
   if (!ledgerSheet) {
-
-    ledgerSheet = this.ledgerSheet();
+    throw new ValidationError(`No ledger sheet found.\n\nCreate sample sheets to get going.`);
   }
 
   if (ledgerSheet.getMaxColumns() < this.ledgerDataColumns) {
-    throw new ValidationError('Ledger has insufficient columns.');
+    throw new ValidationError(`Ledger has insufficient columns.`);
   }
 
   let ledgerRange = ledgerSheet.getDataRange();
 
   if (ledgerRange.getHeight() < this.ledgerHeaderRows + 1) {
-    throw new ValidationError('Ledger contains no data rows.');
+    throw new ValidationError(`Ledger contains no data rows.`);
   }
 
   ledgerRange = ledgerRange.offset(this.ledgerHeaderRows, 0, ledgerRange.getHeight() - this.ledgerHeaderRows, this.ledgerDataColumns);

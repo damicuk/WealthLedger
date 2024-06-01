@@ -137,18 +137,17 @@ AssetTracker.prototype.getAssetsRange = function () {
   let assetsSheet = ss.getSheetByName(this.assetsSheetName);
 
   if (!assetsSheet) {
-
-    assetsSheet = this.assetsSheet();
+    throw new ValidationError(`No assets sheet found.\n\nCreate sample sheets to get going.`);
   }
 
   if (assetsSheet.getMaxColumns() < this.assetsDataColumns) {
-    throw new ValidationError('Asset sheet has insufficient columns.');
+    throw new ValidationError(`Asset sheet has insufficient columns.`);
   }
 
   let assetsRange = assetsSheet.getDataRange();
 
   if (assetsRange.getHeight() < this.assetsHeaderRows + 1) {
-    throw new ValidationError('Asset sheet contains no data rows.');
+    throw new ValidationError(`Asset sheet contains no data rows.`);
   }
 
   assetsRange = assetsRange.offset(this.assetsHeaderRows, 0, assetsRange.getHeight() - this.assetsHeaderRows, this.assetsDataColumns);
