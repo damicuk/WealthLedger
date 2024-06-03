@@ -40,6 +40,33 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
+  if (!this.asetsAndLedgerVersionCurrent()) {
+
+    let ui = SpreadsheetApp.getUi();
+    let result = ui.alert(`Upgade available`, `New versions of the assets and ledger sheets are available.\n\nYou can upgrade any time by selecting 'Copy assets and ledger sheets'.\n\nDo you wish to upgrade now?`, ui.ButtonSet.YES_NO_CANCEL);
+
+    if (result === ui.Button.YES) {
+
+      let assetDataTable = this.getAssetDataTable(assetRecords);
+      let ledgerDataTable = this.getLedgerDataTable(ledgerRecords);
+
+      this.assetsSheet(assetDataTable);
+      this.ledgerSheet(ledgerDataTable);
+
+      this.updateLedger();
+      this.updateAssetsSheet();
+
+      ui.alert(`Upgrade complete`, `You can now delete the original assets and ledger sheets which have been renamed with an added number.\n\nRun 'Write reports' again to complete the reports.`, ui.ButtonSet.OK);
+      return;
+
+    }
+    else if (result === ui.Button.CANCEL) {
+
+      SpreadsheetApp.getActive().toast('Action canceled');
+      return;
+    }
+  }
+
   let inflationData = this.getInflationData();
   let fiatData = this.getFiatData();
   let openData = this.getOpenData();
@@ -62,7 +89,7 @@ AssetTracker.prototype.writeReports = function () {
   this.investmentReport();
 
   this.updateLedger();
-  this.updateAssetsSheet(assetRecords);
+  this.updateAssetsSheet();
 
   try {
     this.updateAssetPrices(assetRecords);

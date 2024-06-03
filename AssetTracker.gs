@@ -512,4 +512,27 @@ var AssetTracker = class AssetTracker {
     }
     return true;
   }
+
+  /**
+   * Checks the version of the assets and ledger sheets are both current.
+   * @return {boolean} Whether the version of the assets and ledger sheets are both current.
+   */
+  asetsAndLedgerVersionCurrent() {
+
+    let ss = SpreadsheetApp.getActive();
+    let assetsSheet = ss.getSheetByName(this.assetsSheetName);
+    let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
+
+    if (assetsSheet
+      && this.getSheetVersion(assetsSheet) === this.assetsSheetVersion
+      && ledgerSheet
+      && this.getSheetVersion(ledgerSheet) === this.ledgerSheetVersion) {
+
+      return true;
+    }
+    else {
+
+      return false;
+    }
+  }
 };

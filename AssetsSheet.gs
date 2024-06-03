@@ -81,9 +81,8 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
 /**
  * Updates the sheet version to the current version if necessary.
  * Sets data validation on the asset type column of the assets sheet.
- * @param {Array<AssetRecord>} assetRecords - The collection of asset records previously read from the assets sheet.
  */
-AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
+AssetTracker.prototype.updateAssetsSheet = function () {
 
   const sheetName = this.assetsSheetName;
 
@@ -92,13 +91,6 @@ AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
 
   if (!sheet) {
     return;
-  }
-
-  if (this.getSheetVersion(sheet) !== this.assetsSheetVersion) {
-
-    //Future updates to the assets sheet can be inserted here
-
-    this.setSheetVersion(sheet, this.assetsSheetVersion);
   }
 
   this.updateAssetsAssetTypes(sheet);
