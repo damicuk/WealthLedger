@@ -43,9 +43,9 @@ AssetTracker.prototype.writeReports = function () {
   if (!this.asetsAndLedgerVersionCurrent()) {
 
     let ui = SpreadsheetApp.getUi();
-    let result = ui.alert(`Upgade available`, `New versions of the assets and ledger sheets are available.\n\nYou can upgrade any time by selecting 'Copy assets and ledger sheets'.\n\nDo you wish to upgrade now?`, ui.ButtonSet.YES_NO_CANCEL);
+    const result1 = ui.alert(`Upgade available`, `New versions of the assets and ledger sheets are available.\n\nYou can upgrade any time by selecting 'Copy assets and ledger sheets'.\n\nDo you wish to upgrade now?`, ui.ButtonSet.YES_NO_CANCEL);
 
-    if (result === ui.Button.YES) {
+    if (result1 === ui.Button.YES) {
 
       let assetDataTable = this.getAssetDataTable(assetRecords);
       let ledgerDataTable = this.getLedgerDataTable(ledgerRecords);
@@ -56,11 +56,14 @@ AssetTracker.prototype.writeReports = function () {
       this.updateLedger();
       this.updateAssetsSheet();
 
-      ui.alert(`Upgrade complete`, `You can now delete the original assets and ledger sheets which have been renamed with an added number.\n\nRun 'Write reports' again to complete the reports.`, ui.ButtonSet.OK);
-      return;
+      const result2 = ui.alert(`Upgrade complete`, `You can delete the original assets and ledger sheets which have been renamed with an added number.\n\nDo you want to complete the reports now.`, ui.ButtonSet.YES_NO);
+      if (result2 === ui.Button.NO) {
 
+        SpreadsheetApp.getActive().toast('Action canceled');
+        return;
+      }
     }
-    else if (result === ui.Button.CANCEL) {
+    else if (result1 === ui.Button.CANCEL) {
 
       SpreadsheetApp.getActive().toast('Action canceled');
       return;
