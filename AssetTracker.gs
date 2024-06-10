@@ -522,10 +522,7 @@ var AssetTracker = class AssetTracker {
     let assetsSheet = ss.getSheetByName(this.assetsSheetName);
     let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
 
-    if (assetsSheet
-      && this.getSheetVersion(assetsSheet) === this.ledgerVersion
-      && ledgerSheet
-      && this.getSheetVersion(ledgerSheet) === this.ledgerVersion) {
+    if (assetsSheet && this.getSheetVersion(assetsSheet) === this.ledgerVersion && ledgerSheet && this.getSheetVersion(ledgerSheet) === this.ledgerVersion) {
 
       return true;
     }

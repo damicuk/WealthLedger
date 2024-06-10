@@ -53,4 +53,4 @@ AssetTracker.prototype.copyLedger = function () {
 
   let ui = SpreadsheetApp.getUi();
   ui.alert(`Copy complete`, `You can delete the original assets and ledger sheets which have been renamed with an added number.`, ui.ButtonSet.OK);
-}
+};

@@ -246,4 +246,4 @@ AssetTracker.prototype.getAssetListFromDataTable = function (dataTable) {
   const assetsList5 = assetsList4.sort(AssetTracker.abcComparator);
   const assetsList6 = Array.from(new Set(assetsList5));
   return assetsList6;
-}
+};
