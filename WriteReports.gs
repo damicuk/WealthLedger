@@ -1,7 +1,7 @@
 /**
  * Validates and processes the ledger, retrieves the currenct prices, and writes the reports.
  * Shows a warning dialog if the spreadsheet locale is not English.
- * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError .
+ * Uses the error handler to handle any ValidatioError, AssetAccountError, or ApiError.
  * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
@@ -40,6 +40,36 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
+  if (!this.ledgerVersionCurrent()) {
+
+    let ui = SpreadsheetApp.getUi();
+    const result1 = ui.alert(`Upgrade available`, `A new version of the ledger is available.\n\nYou can upgrade any time by selecting 'Copy ledger'.\n\nDo you wish to upgrade now?`, ui.ButtonSet.YES_NO_CANCEL);
+
+    if (result1 === ui.Button.YES) {
+
+      let assetDataTable = this.getAssetDataTable(assetRecords);
+      let ledgerDataTable = this.getLedgerDataTable(ledgerRecords);
+
+      this.assetsSheet(assetDataTable);
+      this.ledgerSheet(ledgerDataTable);
+
+      this.updateLedger();
+      this.updateAssetsSheet();
+
+      const result2 = ui.alert(`Upgrade complete`, `You can delete the original assets and ledger sheets which have been renamed with an added number.\n\nDo you want to complete the reports now.`, ui.ButtonSet.YES_NO);
+      if (result2 === ui.Button.NO) {
+
+        SpreadsheetApp.getActive().toast('Action canceled');
+        return;
+      }
+    }
+    else if (result1 === ui.Button.CANCEL) {
+
+      SpreadsheetApp.getActive().toast('Action canceled');
+      return;
+    }
+  }
+
   let inflationData = this.getInflationData();
   let fiatData = this.getFiatData();
   let openData = this.getOpenData();
@@ -62,7 +92,7 @@ AssetTracker.prototype.writeReports = function () {
   this.investmentReport();
 
   this.updateLedger();
-  this.updateAssetsSheet(assetRecords);
+  this.updateAssetsSheet();
 
   try {
     this.updateAssetPrices(assetRecords);

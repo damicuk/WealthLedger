@@ -12,6 +12,7 @@ var AssetRecord = class AssetRecord {
    * @param {string} currentPriceFormula - The formula in current price column of the row in the assets sheet.
    * @param {string} cmcId - The CoinMarketCap asset id e.g. Bitcoin id = 1.
    * @param {Date} date - When the current price was last updated by the selected API.
+   * @param {string} comment - The comment.
    */
   constructor(
     ticker,
@@ -20,7 +21,8 @@ var AssetRecord = class AssetRecord {
     currentPrice,
     currentPriceFormula,
     cmcId,
-    date) {
+    date,
+    comment) {
 
     /**
      * The ticker of the asset.
@@ -63,6 +65,12 @@ var AssetRecord = class AssetRecord {
      * @type {Date}
      */
     this.date = new Date(date);
+
+    /**
+     * The comment.
+     * @type {string}
+     */
+    this.comment = comment;
   }
 
   /**
@@ -80,7 +88,8 @@ var AssetRecord = class AssetRecord {
       'decimalPlaces',
       'currentPrice',
       'cmcId',
-      'date'
+      'date',
+      'comment'
     ];
 
     let index = columns.indexOf(columnName);
@@ -112,7 +121,8 @@ AssetTracker.prototype.getAssetRecords = function () {
       row[3],
       currentPriceFormulas[rowIndex][0],
       row[4].toString(),
-      row[5]
+      row[5],
+      row[6]
     );
 
     assetRecords.push(assetRecord);
@@ -120,4 +130,30 @@ AssetTracker.prototype.getAssetRecords = function () {
     rowIndex++;
   }
   return assetRecords;
+};
+
+/**
+ * Returns a data table corresponding to the given asset records.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records.
+ * @return {Array<Array>} The data table.
+ */
+AssetTracker.prototype.getAssetDataTable = function (assetRecords) {
+
+  let dataTable = [];
+
+  for (let assetRecord of assetRecords) {
+
+    dataTable.push(
+      [
+        assetRecord.ticker,
+        assetRecord.assetType,
+        assetRecord.decimalPlaces,
+        assetRecord.currentPriceFormula !== '' ? assetRecord.currentPriceFormula : assetRecord.currentPrice,
+        assetRecord.cmcId,
+        isNaN(assetRecord.date) ? null : assetRecord.date.toISOString(),
+        assetRecord.comment
+      ]
+    );
+  }
+  return dataTable;
 };

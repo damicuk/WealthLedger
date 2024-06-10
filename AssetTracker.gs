@@ -74,7 +74,7 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the ledger sheet.
      * @type {number}
      */
-    this.ledgerDataColumns = 13;
+    this.ledgerDataColumns = 14;
 
     /**
      * The number of header rows in the assets sheet.
@@ -86,12 +86,11 @@ var AssetTracker = class AssetTracker {
      * The number of data columns in the assets sheet.
      * @type {number}
      */
-    this.assetsDataColumns = 6;
+    this.assetsDataColumns = 7;
 
+    this.ledgerVersion = '4';
     this.ledgerSheetName = 'Ledger';
-    this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
-    this.assetsSheetVersion = '3';
 
     this.cmcApiName = 'CoinMarketCap';
 
@@ -141,7 +140,7 @@ var AssetTracker = class AssetTracker {
     this.chartRange4Name = 'Chart4';
 
     this.investmentRange1Name = 'InvestmentRange1';
-    
+
   }
 
   /**
@@ -156,6 +155,70 @@ var AssetTracker = class AssetTracker {
   static get lotMatchings() {
 
     return ['FIFO', 'LIFO', 'HIFO', 'LOFO'];
+  }
+
+  /**
+   * The sample data for the assets sheet
+   * @type {Array<Array>}
+   * @static
+   */
+  static get assetsSampleData() {
+
+    return [
+      ['USD', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
+      ['CAD', 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))`, , , `Fiat capital gains are ignored.`],
+      ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))`, , , `Forex is treated as any other asset.`],
+      ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, , , `Use Google Finance to fetch the current price. Alternatively enter a CoinMarketCap ID or use your own method.`],
+      ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))`, , , ,],
+      ['USDC', 'Stablecoin', '2', '1', , , ,],
+      ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, , , ,],
+      ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)`, , , ,],
+      ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`]
+    ];
+  }
+
+  /**
+   * The sample data for the ledger sheet
+   * @type {Array<Array>}
+   * @static
+   */
+  static get ledgerSampleData() {
+
+    return [
+      ['2019-03-01 00:00:00', 'Inflation', , , , , , , , 254.202, , , , ,],
+      ['2019-03-01 12:00:00', 'Transfer', , , , , , 'USD', , 20000, , 'Kraken', , `Leave debit wallet blank when transferring fiat from a bank account.`],
+      ['2019-03-02 12:00:00', 'Trade', 'USD', , 7990, 10, 'Kraken', 'BTC', , 2, , , , `Debit amount is debited and credit amount is credited but fees are always debited.`],
+      ['2019-03-03 12:00:00', 'Trade', 'USD', , 9990, 10, 'Kraken', 'BTC', , 2, , , , ,],
+      ['2019-03-03 13:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 6010, 10, , , ,],
+      ['2020-12-01 00:00:00', 'Inflation', , , , , , , , 260.474, , , , `Specify inflation index not percentage. Only affects investment report. Time is ignored.`],
+      ['2020-12-01 12:00:00', 'Trade', 'BTC', , 1, , 'Kraken', 'USD', , 20010, 10, , , ,],
+      ['2020-12-02 12:00:00', 'Trade', 'BTC', 20000, 1, , 'Kraken', 'ADA', , 100000, , , , `Exchange assets.`],
+      ['2020-12-03 12:00:00', 'Trade', 'ADA', , 50000, , 'Kraken', 'USD', , 12010, 10, , , ,],
+      ['2020-12-04 12:00:00', 'Transfer', 'ADA', , 49999.4, 0.6, 'Kraken', , , , , 'Ledger', , `Transfer from one wallet to another.`],
+      ['2020-12-05 12:00:00', 'Transfer', 'BTC', , 0.9995, 0.0005, 'Kraken', , , , , 'Ledger', , ,],
+      ['2020-12-06 12:00:00', 'Transfer', 'USD', , 30000, , 'Kraken', , , , , , , `Leave credit wallet blank when transferring fiat to a bank account.`],
+      ['2021-02-01 00:00:00', 'Inflation', , , , , , , , 263.014, , , , ,],
+      ['2021-02-01 12:00:00', 'Income', , , , , , 'ADA', 1, 10, , 'Rewards', , `Staking reward.`],
+      ['2021-02-05 12:00:00', 'Income', , , , , , 'ADA', 1.3, 10, , 'Rewards', , ,],
+      ['2021-03-01 00:00:00', 'Inflation', , , , , , , , 264.877, , , , ,],
+      ['2021-03-01 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Donation (e.g. to a registered charity).`],
+      ['2021-03-02 12:00:00', 'Donation', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `To track donations unhide the donations summary report.`],
+      ['2021-03-03 12:00:00', 'Gift', 'ADA', 1.1, 500, , 'Ledger', , , , , , , `Gift given (e.g. to friends or family).`],
+      ['2021-03-04 12:00:00', 'Gift', 'USD', , 40000, 10, , 'BTC', , '1', , 'Ledger', , `Gift received. The debit amount and fee are the inherited cost basis.`],
+      ['2021-03-05 12:00:00', 'Fee', 'ADA', , , 0.17, 'Ledger', , , , , , , `Miscellaneous fee.`],
+      ['2021-04-01 00:00:00', 'Inflation', , , , , , , , 267.054, , , , ,],
+      ['2021-04-01 12:00:00', 'Transfer', , , , , , 'USD', , 30000, , 'IB', , ,],
+      ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AAPL', , 80, , , , ,],
+      ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'AMZN', , 3, , , , ,],
+      ['2021-04-01 12:00:00', 'Trade', 'USD', , 9990, 10, 'IB', 'GE', , 760, , , , ,],
+      ['2021-08-01 00:00:00', 'Inflation', , , , , , , , 273.567, , , , ,],
+      ['2021-08-02 00:00:00', 'Adjust', 'GE', , 665, , , , , , , , , `The amount held is decreased by the debit amount (reverse split).`],
+      ['2021-08-03 12:00:00', 'Trade', 'GE', , 95, , 'IB', 'USD', , 9010, 10, , , ,],
+      ['2021-08-31 12:00:00', 'Income', 'AAPL', , , , , 'USD', , 18.40, , 'IB', , `Dividend. The debit asset is the source of the dividend.`],
+      ['2021-08-31 12:00:00', 'Income', , , , , , 'USD', , 20, , 'IB', , `Fiat interest.`],
+      ['2022-06-01 00:00:00', 'Inflation', , , , , , , , 296.311, , , , ,],
+      ['2022-06-06 00:00:00', 'Adjust', , , , , , 'AMZN', , 57, , , , `The amount held is increased by the credit amount (forward split).`]
+    ];
   }
 
   /**
@@ -351,14 +414,12 @@ var AssetTracker = class AssetTracker {
   }
 
   /**
-   * Creates a sample assets sheet.
+   * Creates sample assets and ledger sheets
    * Shows a warning dialog if the spreadsheet locale is not English.
    * Renames any existing assets sheet so as not to overwrite it.
-   * Creates a sample ledger sheet.
+   * Creates a sample assets sheet.
    * Renames any existing ledger sheet so as not to overwrite it.
-   * Validates and processes the asset sheet.
-   * Creates the api price sheets if they don't already exist.
-   * Updates the prices in the api price sheets if necessary.
+   * Creates a sample ledger sheet.
    */
   createSampleSheets() {
 
@@ -366,8 +427,8 @@ var AssetTracker = class AssetTracker {
       return;
     }
 
-    this.assetsSheet();
-    this.ledgerSheet();
+    this.assetsSheet(AssetTracker.assetsSampleData);
+    this.ledgerSheet(AssetTracker.ledgerSampleData);
 
     SpreadsheetApp.getActive().toast('Sample sheets complete', 'Finished', 10);
   }
@@ -449,5 +510,25 @@ var AssetTracker = class AssetTracker {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Checks the version of the assets and ledger sheets are both current.
+   * @return {boolean} Whether the version of the assets and ledger sheets are both current.
+   */
+  ledgerVersionCurrent() {
+
+    let ss = SpreadsheetApp.getActive();
+    let assetsSheet = ss.getSheetByName(this.assetsSheetName);
+    let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
+
+    if (assetsSheet && this.getSheetVersion(assetsSheet) === this.ledgerVersion && ledgerSheet && this.getSheetVersion(ledgerSheet) === this.ledgerVersion) {
+
+      return true;
+    }
+    else {
+
+      return false;
+    }
   }
 };

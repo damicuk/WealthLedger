@@ -23,6 +23,8 @@ function onOpen(e) {
     .addSeparator()
     .addItem('Delete reports', 'deleteReports')
     .addSeparator()
+    .addItem('Copy ledger', 'copyLedger')
+    .addSeparator()
     .addItem('Settings', 'showSettingsDialog')
     .addToUi();
 }
@@ -54,20 +56,29 @@ function writeReports() {
 }
 
 /**
- * Displays the settings dialog
+ * Calls the corresponding method of a new instance of AssetTracker
  */
-function showSettingsDialog() {
+function deleteReports() {
 
-  new AssetTracker().showSettingsDialog();
+  new AssetTracker().deleteReports();
 
 }
 
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function deleteReports() {
+function copyLedger() {
 
-  new AssetTracker().deleteReports();
+  new AssetTracker().copyLedger();
+
+}
+
+/**
+ * Displays the settings dialog
+ */
+function showSettingsDialog() {
+
+  new AssetTracker().showSettingsDialog();
 
 }
 

@@ -1,8 +1,9 @@
 /**
  * Creates a sample assets sheet.
  * Renames any existing assets sheet so as not to overwrite it.
+ * @param {Array<Array>} assetDataTable - The assets data table.
  */
-AssetTracker.prototype.assetsSheet = function () {
+AssetTracker.prototype.assetsSheet = function (assetDataTable) {
 
   const sheetName = this.assetsSheetName;
 
@@ -11,7 +12,12 @@ AssetTracker.prototype.assetsSheet = function () {
   let ss = SpreadsheetApp.getActive();
   sheet = ss.insertSheet(sheetName);
 
-  this.trimSheet(sheet, 11, 7);
+  const headerRows = 1;
+  const footerRows = 1;
+  const dataRows = assetDataTable.length;
+  const rowCount = dataRows + headerRows + footerRows;
+
+  this.trimSheet(sheet, rowCount, 7);
 
   let headers = [
     [
@@ -35,20 +41,7 @@ AssetTracker.prototype.assetsSheet = function () {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  let sampleData = [
-    ['USD', 'Fiat Base', '2', '1', , , `Every asset in the ledger sheet must have an entry in the assets sheet.`],
-    ['CAD', 'Fiat', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A3), "USD"))`, , , `Fiat capital gains are ignored.`],
-    ['EUR', 'Forex', '2', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A4), "USD"))`, , , `Forex is treated as any other asset.`],
-    ['ADA', 'Crypto', '6', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A5), "USD"))`, , , `Use Google Finance to fetch the current price. Alternatively enter a CoinMarketCap ID or use your own method.`],
-    ['BTC', 'Crypto', '8', `=GOOGLEFINANCE(CONCAT(CONCAT("CURRENCY:", A6), "USD"))`, , , ,],
-    ['USDC', 'Stablecoin', '2', '1', , , ,],
-    ['AAPL', 'Stock', '0', `=GOOGLEFINANCE(A8)`, , , ,],
-    ['AMZN', 'Stock', '0', `=GOOGLEFINANCE(A9)`, , , ,],
-    ['GE', 'Stock', '0', , , , `Current price is not needed for assets no longer held.`],
-    [, , , , , , ,]
-  ];
-
-  sheet.getRange('A2:G').setValues(sampleData);
+  sheet.getRange('A2:G').offset(0, 0, dataRows).setValues(assetDataTable);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
@@ -80,7 +73,7 @@ AssetTracker.prototype.assetsSheet = function () {
   SpreadsheetApp.flush();
   sheet.autoResizeColumns(7, 1);
 
-  this.setSheetVersion(sheet, this.assetsSheetVersion);
+  this.setSheetVersion(sheet, this.ledgerVersion);
 
   return sheet;
 };
@@ -88,9 +81,8 @@ AssetTracker.prototype.assetsSheet = function () {
 /**
  * Updates the sheet version to the current version if necessary.
  * Sets data validation on the asset type column of the assets sheet.
- * @param {Array<AssetRecord>} assetRecords - The collection of asset records previously read from the assets sheet.
  */
-AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
+AssetTracker.prototype.updateAssetsSheet = function () {
 
   const sheetName = this.assetsSheetName;
 
@@ -99,18 +91,6 @@ AssetTracker.prototype.updateAssetsSheet = function (assetRecords) {
 
   if (!sheet) {
     return;
-  }
-
-  if (this.getSheetVersion(sheet) !== this.assetsSheetVersion) {
-
-    //Future updates to the assets sheet can be inserted here
-    let assetRule = SpreadsheetApp.newDataValidation()
-      .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
-      .setAllowInvalid(false)
-      .setHelpText(`Input must be 1-26 characters, not starting or ending with a space.`)
-      .build();
-    sheet.getRange('A2:A').setDataValidation(assetRule);
-    this.setSheetVersion(sheet, this.assetsSheetVersion);
   }
 
   this.updateAssetsAssetTypes(sheet);
@@ -149,18 +129,17 @@ AssetTracker.prototype.getAssetsRange = function () {
   let assetsSheet = ss.getSheetByName(this.assetsSheetName);
 
   if (!assetsSheet) {
-
-    assetsSheet = this.assetsSheet();
+    throw new ValidationError(`No assets sheet found.\n\nCreate sample sheets to get going.`);
   }
 
   if (assetsSheet.getMaxColumns() < this.assetsDataColumns) {
-    throw new ValidationError('Asset sheet has insufficient columns.');
+    throw new ValidationError(`Asset sheet has insufficient columns.`);
   }
 
   let assetsRange = assetsSheet.getDataRange();
 
   if (assetsRange.getHeight() < this.assetsHeaderRows + 1) {
-    throw new ValidationError('Asset sheet contains no data rows.');
+    throw new ValidationError(`Asset sheet contains no data rows.`);
   }
 
   assetsRange = assetsRange.offset(this.assetsHeaderRows, 0, assetsRange.getHeight() - this.assetsHeaderRows, this.assetsDataColumns);
