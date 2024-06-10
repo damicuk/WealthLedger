@@ -73,7 +73,7 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
   SpreadsheetApp.flush();
   sheet.autoResizeColumns(7, 1);
 
-  this.setSheetVersion(sheet, this.assetsSheetVersion);
+  this.setSheetVersion(sheet, this.ledgerVersion);
 
   return sheet;
 };

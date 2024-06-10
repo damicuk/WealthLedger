@@ -40,10 +40,10 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
-  if (!this.asetsAndLedgerVersionCurrent()) {
+  if (!this.ledgerVersionCurrent()) {
 
     let ui = SpreadsheetApp.getUi();
-    const result1 = ui.alert(`Upgade available`, `New versions of the assets and ledger sheets are available.\n\nYou can upgrade any time by selecting 'Copy assets and ledger sheets'.\n\nDo you wish to upgrade now?`, ui.ButtonSet.YES_NO_CANCEL);
+    const result1 = ui.alert(`Upgrade available`, `A new version of the ledger is available.\n\nYou can upgrade any time by selecting 'Copy ledger'.\n\nDo you wish to upgrade now?`, ui.ButtonSet.YES_NO_CANCEL);
 
     if (result1 === ui.Button.YES) {
 

@@ -23,7 +23,7 @@ function onOpen(e) {
     .addSeparator()
     .addItem('Delete reports', 'deleteReports')
     .addSeparator()
-    .addItem('Copy assets and ledger sheets', 'copyAssetsAndLedger')
+    .addItem('Copy ledger', 'copyLedger')
     .addSeparator()
     .addItem('Settings', 'showSettingsDialog')
     .addToUi();
@@ -67,9 +67,9 @@ function deleteReports() {
 /**
  * Calls the corresponding method of a new instance of AssetTracker
  */
-function copyAssetsAndLedger() {
+function copyLedger() {
 
-  new AssetTracker().copyAssetsAndLedger();
+  new AssetTracker().copyLedger();
 
 }
 

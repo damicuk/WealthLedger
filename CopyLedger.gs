@@ -7,7 +7,7 @@
  * Updates the data validation on the ledger asset and wallet columns.
  * Displays toast on success.
  */
-AssetTracker.prototype.copyAssetsAndLedger = function () {
+AssetTracker.prototype.copyLedger = function () {
 
   if (!this.checkLocale()) {
     return;

@@ -88,10 +88,9 @@ var AssetTracker = class AssetTracker {
      */
     this.assetsDataColumns = 7;
 
+    this.ledgerVersion = '4';
     this.ledgerSheetName = 'Ledger';
-    this.ledgerSheetVersion = '1';
     this.assetsSheetName = 'Assets';
-    this.assetsSheetVersion = '3';
 
     this.cmcApiName = 'CoinMarketCap';
 
@@ -517,16 +516,16 @@ var AssetTracker = class AssetTracker {
    * Checks the version of the assets and ledger sheets are both current.
    * @return {boolean} Whether the version of the assets and ledger sheets are both current.
    */
-  asetsAndLedgerVersionCurrent() {
+  ledgerVersionCurrent() {
 
     let ss = SpreadsheetApp.getActive();
     let assetsSheet = ss.getSheetByName(this.assetsSheetName);
     let ledgerSheet = ss.getSheetByName(this.ledgerSheetName);
 
     if (assetsSheet
-      && this.getSheetVersion(assetsSheet) === this.assetsSheetVersion
+      && this.getSheetVersion(assetsSheet) === this.ledgerVersion
       && ledgerSheet
-      && this.getSheetVersion(ledgerSheet) === this.ledgerSheetVersion) {
+      && this.getSheetVersion(ledgerSheet) === this.ledgerVersion) {
 
       return true;
     }
