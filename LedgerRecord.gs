@@ -199,7 +199,7 @@ AssetTracker.prototype.getLedgerRecords = function () {
 
 /**
  * Returns a data table corresponding to the given ledger records.
- * @param {Array<LedgerRecord>} The collection of ledger records.
+ * @param {Array<LedgerRecord>} ledgerRecords - The collection of ledger records.
  * @return {Array<Array>} The data table.
  */
 AssetTracker.prototype.getLedgerDataTable = function (ledgerRecords) {

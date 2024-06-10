@@ -134,7 +134,7 @@ AssetTracker.prototype.getAssetRecords = function () {
 
 /**
  * Returns a data table corresponding to the given asset records.
- * @param {Array<AssetRecord>} The collection of asset records.
+ * @param {Array<AssetRecord>} assetRecords - The collection of asset records.
  * @return {Array<Array>} The data table.
  */
 AssetTracker.prototype.getAssetDataTable = function (assetRecords) {
