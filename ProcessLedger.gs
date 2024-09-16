@@ -179,7 +179,11 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
           lots = [new Lot(date, this.fiatBase, 1, 0, 0, debitAsset, debitAmount, debitFee, debitWalletName, action, rowIndex)];
         }
 
-        this.closeLots(lots, date, creditAsset, creditExRate, creditAmount, creditFee, debitWalletName, action, rowIndex);
+        let fiatBaseCreditAmount = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * creditExRate * creditAmount) / 10 ** this.fiatBase.decimalPlaces;
+
+        let fiatBaseCreditFee = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * creditExRate * creditFee) / 10 ** this.fiatBase.decimalPlaces;
+
+        this.closeLots(lots, date, this.fiatBase, 1, fiatBaseCreditAmount, fiatBaseCreditFee, debitWalletName, action, rowIndex);
 
       }
       if (creditAsset.isFiat) {
@@ -189,12 +193,16 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
       }
       else {
 
-        let lot = new Lot(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, debitWalletName, action, rowIndex);
+        let fiatBaseDebitAmount = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * debitExRate * debitAmount) / 10 ** this.fiatBase.decimalPlaces;
 
-        //If the lot has zero balance close it straight away
+        let fiatBaseDebitFee = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * debitExRate * debitFee) / 10 ** this.fiatBase.decimalPlaces;
+
+        let lot = new Lot(date, this.fiatBase, 1, fiatBaseDebitAmount, fiatBaseDebitFee, creditAsset, creditAmount, creditFee, debitWalletName, action, rowIndex);
+
         //Check we have an account even if we don't use it - to update ledger asset ticker dropdowns
         let creditAssetAccount = this.getWallet(debitWalletName).getAssetAccount(creditAsset);
 
+        //If the lot has zero balance close it straight away
         if (lot.subunits === 0) {
 
           this.closeLots([lot], date, this.fiatBase, 1, 0, 0, debitWalletName, action, rowIndex);
@@ -203,7 +211,6 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
           creditAssetAccount.deposit(lot);
         }
-
       }
     }
   }
@@ -230,7 +237,9 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
     else { // Asset income
 
       //the cost base is the value of (credit exchange rate x credit amount)
-      let lot = new Lot(date, creditAsset, creditExRate, creditAmount, 0, creditAsset, creditAmount, 0, creditWalletName, action, rowIndex);
+      let fiatBaseDebitAmount = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * creditExRate * creditAmount) / 10 ** this.fiatBase.decimalPlaces;
+
+      let lot = new Lot(date, this.fiatBase, 1, fiatBaseDebitAmount, 0, creditAsset, creditAmount, 0, creditWalletName, action, rowIndex);
 
       this.getWallet(creditWalletName).getAssetAccount(creditAsset).deposit(lot);
 
@@ -244,7 +253,9 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
     let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-    this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action, rowIndex);
+    let fiatBaseCreditAmount = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * debitExRate * debitAmount) / 10 ** this.fiatBase.decimalPlaces;
+
+    this.closeLots(lots, date, this.fiatBase, 1, fiatBaseCreditAmount, 0, debitWalletName, action, rowIndex);
 
   }
   else if (action === 'Gift') {
@@ -253,7 +264,9 @@ AssetTracker.prototype.processLedgerRecord = function (ledgerRecord, rowIndex) {
 
       let lots = this.getWallet(debitWalletName).getAssetAccount(debitAsset).withdraw(debitAmount, debitFee, this.lotMatching, rowIndex);
 
-      this.closeLots(lots, date, debitAsset, debitExRate, debitAmount, 0, debitWalletName, action, rowIndex);
+      let fiatBaseCreditAmount = AssetTracker.round(10 ** this.fiatBase.decimalPlaces * debitExRate * debitAmount) / 10 ** this.fiatBase.decimalPlaces;
+
+      this.closeLots(lots, date, this.fiatBase, 1, fiatBaseCreditAmount, 0, debitWalletName, action, rowIndex);
 
     }
     else { //Gift received
@@ -320,7 +333,7 @@ AssetTracker.prototype.closeLots = function (lots, date, creditAsset, creditExRa
   let creditAmountSubunits = AssetTracker.round(creditAmount * creditAsset.subunits);
   let creditFeeSubunits = AssetTracker.round(creditFee * creditAsset.subunits);
 
-  //apportion the fee to withdrawal lots
+  //apportion the amount and fee to lots
   let lotsSubunits = [];
   for (let lot of lots) {
     lotsSubunits.push(lot.subunits);

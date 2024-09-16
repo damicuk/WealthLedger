@@ -30,11 +30,11 @@ AssetTracker.prototype.walletsReport = function (sheetName = this.walletsReportN
     sheet.getRange(2, 2, sheet.getMaxRows(), sheet.getMaxColumns()).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
 
     sheet.getRange('A1').setFormula(
-      `IF(AND(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0, COUNT(QUERY(QUERY(${referenceRangeName2}, "SELECT SUM(C) GROUP BY B, A"), "SELECT * WHERE Col1 <> 0"))=0),,
+      `IF(AND(COUNT(QUERY(${referenceRangeName1}, "SELECT L"))=0, COUNT(QUERY(QUERY(${referenceRangeName2}, "SELECT SUM(C) GROUP BY B, A"), "SELECT * WHERE Col1 <> 0"))=0),,
 TRANSPOSE(
 QUERY(
 {
-IF(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0,{"", "", "", 0},QUERY(${referenceRangeName1}, "SELECT I, J, M, SUM(N) GROUP BY I, J, M ORDER BY J, I, M LABEL SUM(N) ''"));
+IF(COUNT(QUERY(${referenceRangeName1}, "SELECT L"))=0,{"", "", "", 0},QUERY(${referenceRangeName1}, "SELECT G, H, K, SUM(L) GROUP BY G, H, K ORDER BY H, G, K LABEL SUM(L) ''"));
 
 IF(COUNT(QUERY(QUERY(${referenceRangeName2}, "SELECT SUM(C) GROUP BY B, A"), "SELECT * WHERE Col1 <> 0"))=0,{"", "", "", 0},
 QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A ORDER BY B, A LABEL ' Fiat ' '', SUM(C) ''"), "SELECT * WHERE Col4 <> 0"))

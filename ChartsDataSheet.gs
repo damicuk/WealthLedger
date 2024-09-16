@@ -74,10 +74,10 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
     sheet.getRange('L4:M').setNumberFormat('#,##0.00;(#,##0.00)');
 
     const formulas = [[
-      `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0,,QUERY(${referenceRangeName1}, "SELECT J, SUM(R), SUM(S) / SUM(Q) GROUP BY J ORDER BY J LABEL SUM(R) '', SUM(S) / SUM(Q)  ''"))`, , ,
-      `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT N"))=0,,QUERY(${referenceRangeName1}, "SELECT J, I, SUM(R), SUM(S) / SUM(Q) GROUP BY J, I ORDER BY J, I LABEL SUM(R) '', SUM(S) / SUM(Q)  ''"))`, , , ,
-      `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT U WHERE N='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT J, SUM(Y), SUM(Z) WHERE N='Trade' GROUP BY J ORDER BY J LABEL SUM(Y) '', SUM(Z) ''"))`, , ,
-      `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT U WHERE N='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(M), SUM(Y), SUM(Z) WHERE YEAR(M)>"&YEAR(TODAY())-5&" AND N='Trade' GROUP BY YEAR(M) ORDER BY YEAR(M) LABEL YEAR(M) '', SUM(Y) '', SUM(Z) ''"))`
+      `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT L"))=0,,QUERY(${referenceRangeName1}, "SELECT H, SUM(P), SUM(Q) / SUM(O) GROUP BY H ORDER BY H LABEL SUM(P) '', SUM(Q) / SUM(O)  ''"))`, , ,
+      `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT L"))=0,,QUERY(${referenceRangeName1}, "SELECT H, G, SUM(P), SUM(Q) / SUM(O) GROUP BY H, G ORDER BY H, G LABEL SUM(P) '', SUM(Q) / SUM(O)  ''"))`, , , ,
+      `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT Q WHERE L='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT H, SUM(U), SUM(V) WHERE L='Trade' GROUP BY H ORDER BY H LABEL SUM(U) '', SUM(V) ''"))`, , ,
+      `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT Q WHERE L='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(K), SUM(U), SUM(V) WHERE YEAR(K)>"&YEAR(TODAY())-5&" AND L='Trade' GROUP BY YEAR(K) ORDER BY YEAR(K) LABEL YEAR(K) '', SUM(U) '', SUM(V) ''"))`
     ]];
 
     sheet.getRange('A4:K4').setFormulas(formulas);
