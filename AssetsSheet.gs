@@ -41,7 +41,9 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
   sheet.getRange('F2:F').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sheet.getRange('G2:G').setNumberFormat('@');
 
-  sheet.getRange('A2:G').offset(0, 0, dataRows).setValues(assetDataTable);
+  let assetsRange = sheet.getRange('A2:G').offset(0, 0, dataRows);
+  assetsRange.setValues(assetDataTable);
+  ss.setNamedRange(this.assetsRangeName, assetsRange);
 
   let assetRule = SpreadsheetApp.newDataValidation()
     .requireFormulaSatisfied(`=REGEXMATCH(TO_TEXT(A2), "^\\S[\\S ]{0,24}\\S$|^\\S$")`)
