@@ -10,8 +10,6 @@
  */
 AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.incomeReportName) {
 
-  const version = '2';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
@@ -20,14 +18,10 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  this.trimSheet(sheet, rowCount, 10);
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
+    this.trimSheet(sheet, rowCount, 10);
 
     let headers = [
       [
@@ -68,7 +62,11 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
+  }
+  else {
+
+    this.trimSheet(sheet, rowCount, 10);
   }
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 9);

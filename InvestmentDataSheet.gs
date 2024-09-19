@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investmentDataSheetName) {
 
-  const version = '4';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 24);
 
@@ -182,7 +176,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
 
     ss.setNamedRange(this.investmentRange1Name, sheet.getRange('S2:X'));
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

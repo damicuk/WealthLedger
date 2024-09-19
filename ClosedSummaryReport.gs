@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSummaryReportName) {
 
-  const version = '5';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 19);
 
@@ -129,7 +123,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT G, H, YEAR(K), Q, T, U, V, X WHERE L
 
     sheet.insertChart(yearProceedsPLChart);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

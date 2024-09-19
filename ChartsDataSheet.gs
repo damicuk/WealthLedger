@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSheetName) {
 
-  const version = '4';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 13);
 
@@ -91,7 +85,7 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
     ss.setNamedRange(this.chartRange3Name, sheet.getRange('H3:J'));
     ss.setNamedRange(this.chartRange4Name, sheet.getRange('K3:M'));
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

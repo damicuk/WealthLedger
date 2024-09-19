@@ -8,8 +8,6 @@
  */
 AssetTracker.prototype.inflationSheet = function (dataTable, actionLinkTable, sheetName = this.inflationSheetName) {
 
-  const version = '1';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
@@ -18,14 +16,10 @@ AssetTracker.prototype.inflationSheet = function (dataTable, actionLinkTable, sh
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  this.trimSheet(sheet, rowCount, 4);
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
+    this.trimSheet(sheet, rowCount, 4);
 
     let headers = [
       [
@@ -56,7 +50,11 @@ AssetTracker.prototype.inflationSheet = function (dataTable, actionLinkTable, sh
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
+  }
+  else {
+
+    this.trimSheet(sheet, rowCount, 4);
   }
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);

@@ -8,8 +8,6 @@
  */
 AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, sheetName = this.fiatAccountsSheetName) {
 
-  const version = '1';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
@@ -18,14 +16,10 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  this.trimSheet(sheet, rowCount, 3);
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
+    this.trimSheet(sheet, rowCount, 3);
 
     let headers = [['Wallet', 'Asset', 'Balance']];
 
@@ -40,7 +34,11 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
+  }
+  else {
+
+    this.trimSheet(sheet, rowCount, 3);
   }
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 3);

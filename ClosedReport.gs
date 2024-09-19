@@ -12,8 +12,6 @@
  */
 AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, action2LinkTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.closedReportName) {
 
-  const version = '2';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
@@ -22,15 +20,10 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  this.trimSheet(sheet, rowCount, 24);
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
-
+    this.trimSheet(sheet, rowCount, 24);
     let headers = [
       [
         , ,
@@ -127,7 +120,11 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
+  }
+  else {
+
+    this.trimSheet(sheet, rowCount, 24);
   }
 
   let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 16);

@@ -89,6 +89,7 @@ var AssetTracker = class AssetTracker {
     this.assetsDataColumns = 7;
 
     this.ledgerVersion = '4';
+    this.reportsVersion = '6';
     this.ledgerSheetName = 'Ledger';
     this.assetsSheetName = 'Assets';
 
@@ -530,5 +531,47 @@ var AssetTracker = class AssetTracker {
 
       return false;
     }
+  }
+
+  /**
+   * Checks the version of all the reports sheets are current.
+   * @return {boolean} Whether the version of all the reports sheets are current.
+   */
+  reportsVersionCurrent() {
+
+    let ss = SpreadsheetApp.getActive();
+
+    for (let reportName of this.reportNames) {
+
+      let reportSheet = ss.getSheetByName(reportName);
+
+      if (!reportSheet || this.getSheetVersion(reportSheet) !== this.reportsVersion) {
+
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Checks whether there are no reports sheets.
+   * @return {boolean} Whether there are no reports sheets.
+   */
+  noReports() {
+
+    let ss = SpreadsheetApp.getActive();
+
+    for (let reportName of this.reportNames) {
+
+      let reportSheet = ss.getSheetByName(reportName);
+
+      if (reportSheet) {
+
+        return false;
+      }
+    }
+
+    return true;
   }
 };

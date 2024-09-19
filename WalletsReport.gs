@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.walletsReport = function (sheetName = this.walletsReportName) {
 
-  const version = '2';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     const referenceRangeName1 = this.openRangeName;
     const referenceRangeName2 = this.fiatAccountsRangeName;
@@ -41,7 +35,7 @@ QUERY(QUERY(${referenceRangeName2}, "SELECT B, ' Fiat ', A, SUM(C) GROUP BY B, A
 }, "SELECT Col1, Col2, SUM(Col4) WHERE Col1 IS NOT NULL GROUP BY Col1, Col2 PIVOT Col3 ORDER BY Col2, Col1 LABEL Col1 'Wallet'")))`
     );
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

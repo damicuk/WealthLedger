@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.donationsSummaryReport = function (sheetName = this.donationsSummaryReportName) {
 
-  const version = '1';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 7);
 
@@ -71,7 +65,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Dona
 
     sheet.hideSheet();
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

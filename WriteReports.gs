@@ -57,6 +57,7 @@ AssetTracker.prototype.writeReports = function () {
       this.updateAssetsSheet();
 
       const result2 = ui.alert(`Upgrade complete`, `You can delete the original assets and ledger sheets which have been renamed with an added number.\n\nDo you want to complete the reports now.`, ui.ButtonSet.YES_NO);
+
       if (result2 === ui.Button.NO) {
 
         SpreadsheetApp.getActive().toast('Action canceled');
@@ -70,14 +71,38 @@ AssetTracker.prototype.writeReports = function () {
     }
   }
 
+  if (!this.noReports() && !this.reportsVersionCurrent()) {
+
+    let ui = SpreadsheetApp.getUi();
+    const result1 = ui.alert(`Upgrade available`, `A new version of the reports is available.\n\nThe old reports will be deleted.\n\nDo you wish to continue?`, ui.ButtonSet.YES_NO);
+
+    if (result1 === ui.Button.YES) {
+
+      this.deleteSheets(this.reportNames);
+
+      const result2 = ui.alert(`Old reports deleted`, `Do you want to complete the new reports now?`, ui.ButtonSet.YES_NO);
+
+      if (result2 === ui.Button.NO) {
+
+        SpreadsheetApp.getActive().toast('Action canceled');
+        return;
+      }
+    }
+    else {
+
+      SpreadsheetApp.getActive().toast('Action canceled');
+      return;
+    }
+  }
+
   let inflationData = this.getInflationData();
   let fiatData = this.getFiatData();
   let openData = this.getOpenData();
   let closedData = this.getClosedData();
   let incomeData = this.getIncomeData();
 
-  this.fiatAccountsSheet(fiatData[0], fiatData[1]);
   this.inflationSheet(inflationData[0], inflationData[1]);
+  this.fiatAccountsSheet(fiatData[0], fiatData[1]);
   this.openReport(openData[0], openData[1], openData[2], openData[3]);
   this.closedReport(closedData[0], closedData[1], closedData[2], closedData[3], closedData[4], closedData[5]);
   this.incomeReport(incomeData[0], incomeData[1], incomeData[2], incomeData[3]);

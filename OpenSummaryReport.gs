@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.openSummaryReport = function (sheetName = this.openSummaryReportName) {
 
-  const version = '5';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 19);
 
@@ -156,7 +150,7 @@ QUERY({{"", "", "", 0, 0, 0, 0, ""};QUERY(${referenceRangeName}, "SELECT G, H, K
 
     sheet.insertChart(assetPLChart);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();
