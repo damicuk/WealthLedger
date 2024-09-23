@@ -121,7 +121,7 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
 
   this.writeLinks(ss, asset1LinkTable, this.openRangeName, 2, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset2LinkTable, this.openRangeName, 7, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset2LinkTable, this.openRangeName, 6, this.assetsSheetName, 'A', 'F');
 
   SpreadsheetApp.flush();
   sheet.autoResizeColumns(1, 19);
@@ -193,7 +193,7 @@ AssetTracker.prototype.getOpenData = function () {
   dataTable.sort(function (a, b) { return a[0] - b[0]; });
 
   for (let row of dataTable) {
-    asset2LinkTable.push([row[7], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[6], row.splice(-1, 1)[0]]);
     asset1LinkTable.push([row[2], row.splice(-1, 1)[0]]);
     actionLinkTable.push([row[1], row.splice(-1, 1)[0]]);
   }
