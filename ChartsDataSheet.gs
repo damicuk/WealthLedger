@@ -71,7 +71,7 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
       `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT L"))=0,,QUERY(${referenceRangeName1}, "SELECT H, SUM(P), SUM(Q) / SUM(O) GROUP BY H ORDER BY H LABEL SUM(P) '', SUM(Q) / SUM(O)  ''"))`, , ,
       `IF(COUNT(QUERY(${referenceRangeName1}, "SELECT L"))=0,,QUERY(${referenceRangeName1}, "SELECT H, G, SUM(P), SUM(Q) / SUM(O) GROUP BY H, G ORDER BY H, G LABEL SUM(P) '', SUM(Q) / SUM(O)  ''"))`, , , ,
       `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT Q WHERE L='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT H, SUM(U), SUM(V) WHERE L='Trade' GROUP BY H ORDER BY H LABEL SUM(U) '', SUM(V) ''"))`, , ,
-      `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT Q WHERE L='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(K), SUM(U), SUM(V) WHERE YEAR(K)>"&YEAR(TODAY())-5&" AND L='Trade' GROUP BY YEAR(K) ORDER BY YEAR(K) LABEL YEAR(K) '', SUM(U) '', SUM(V) ''"))`
+      `IF(COUNT(QUERY(${referenceRangeName2}, "SELECT Q WHERE L='Trade'"))=0,,QUERY(${referenceRangeName2}, "SELECT YEAR(K), SUM(U), SUM(V) WHERE YEAR(K)>"&QUERY(${referenceRangeName2}, "SELECT YEAR(MAX(K))-5 LABEL YEAR(MAX(K))-5 ''")&" AND L='Trade' GROUP BY YEAR(K) ORDER BY YEAR(K) LABEL YEAR(K) '', SUM(U) '', SUM(V) ''"))`
     ]];
 
     sheet.getRange('A4:K4').setFormulas(formulas);
