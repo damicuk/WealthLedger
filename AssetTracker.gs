@@ -88,7 +88,7 @@ var AssetTracker = class AssetTracker {
      */
     this.assetsDataColumns = 7;
 
-    this.ledgerVersion = '4';
+    this.ledgerVersion = '5';
     this.reportsVersion = '6';
     this.ledgerSheetName = 'Ledger';
     this.assetsSheetName = 'Assets';
