@@ -12,8 +12,6 @@
  */
 AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, action2LinkTable, asset1LinkTable, asset2LinkTable, asset3LinkTable, sheetName = this.closedReportName) {
 
-  const version = '2';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
@@ -22,30 +20,22 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  this.trimSheet(sheet, rowCount, 28);
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
-
+    this.trimSheet(sheet, rowCount, 24);
     let headers = [
       [
         , ,
-        'Buy Debit', , , , , ,
-        'Buy Credit', , , , ,
-        , ,
-        'Sell Credit', , , , ,
+        'Costs', , , ,
+        'Holdings', , , , , , ,
+        'Proceeds', , ,
         'Calculations', , , , , , , ,
       ],
       [
         'Date Time',
         'Action',
         'Asset',
-        'Asset Type',
-        'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
@@ -56,8 +46,6 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
         'Date Time',
         'Action',
         'Asset',
-        'Asset Type',
-        'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
@@ -72,89 +60,91 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
       ]
     ];
 
-    sheet.getRange('A1:AB2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.getRange('A1:X2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:B2').setBackgroundColor('#fce5cd');
-    sheet.getRange('C1:H2').setBackgroundColor('#ead1dc');
-    sheet.getRange('I1:L2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('M1:N2').setBackgroundColor('#fce5cd');
-    sheet.getRange('O1:T2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('U1:AB2').setBackgroundColor('#c9daf8');
+    sheet.getRange('C1:F2').setBackgroundColor('#ead1dc');
+    sheet.getRange('G1:J2').setBackgroundColor('#d0e0e3');
+    sheet.getRange('K1:L2').setBackgroundColor('#fce5cd');
+    sheet.getRange('M1:P2').setBackgroundColor('#ead1dc');
+    sheet.getRange('Q1:X2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:B1').mergeAcross();
-    sheet.getRange('C1:H1').mergeAcross();
-    sheet.getRange('I1:L1').mergeAcross();
-    sheet.getRange('M1:N1').mergeAcross();
-    sheet.getRange('O1:T1').mergeAcross();
-    sheet.getRange('U1:AB1').mergeAcross();
+    sheet.getRange('C1:F1').mergeAcross();
+    sheet.getRange('G1:J1').mergeAcross();
+    sheet.getRange('K1:L1').mergeAcross();
+    sheet.getRange('M1:P1').mergeAcross();
+    sheet.getRange('Q1:X1').mergeAcross();
 
     sheet.getRange(`A3:A`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange(`B3:D`).setNumberFormat('@');
-    sheet.getRange(`E3:E`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`F3:F`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`G3:G`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`H3:J`).setNumberFormat('@');
-    sheet.getRange(`K3:K`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`L3:L`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`M3:M`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange(`N3:P`).setNumberFormat('@');
-    sheet.getRange(`Q3:Q`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`R3:R`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`S3:S`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`T3:T`).setNumberFormat('@');
+    sheet.getRange(`B3:C`).setNumberFormat('@');
+    sheet.getRange(`D3:D`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`E3:E`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`F3:H`).setNumberFormat('@');
+    sheet.getRange(`I3:I`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`J3:J`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`K3:K`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    sheet.getRange(`L3:M`).setNumberFormat('@');
+    sheet.getRange(`N3:N`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`O3:O`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`P3:P`).setNumberFormat('@');
 
-    sheet.getRange(`U3:U`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`V3:Y`).setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange(`Z3:Z`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange(`AA3:AA`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange(`AB3:AB`).setNumberFormat('@');
+    sheet.getRange(`Q3:Q`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`R3:U`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`V3:V`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`W3:W`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`X3:X`).setNumberFormat('@');
 
     this.addActionCondtion(sheet, `B3:B`);
     this.addAssetCondition(sheet, `C3:C`);
-    this.addAssetCondition(sheet, `I3:I`);
-    this.addActionCondtion(sheet, `N3:N`);
-    this.addAssetCondition(sheet, `O3:O`);
-    this.addLongShortCondition(sheet, `AB3:AB`);
+    this.addAssetCondition(sheet, `G3:G`);
+    this.addActionCondtion(sheet, `L3:L`);
+    this.addAssetCondition(sheet, `M3:M`);
+    this.addLongShortCondition(sheet, `X3:X`);
 
     const formulas = [[
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(U3:U=0,,X3:X/U3:U), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(U3:U=0,,Y3:Y/U3:U), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(E3:E, ROUND((F3:F+G3:G)*E3:E, 2), F3:F+G3:G), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(Q3:Q, ROUND((R3:R-S3:S)*Q3:Q, 2), R3:R-S3:S), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(Y3:Y-X3:X, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(X3:X=0,,Z3:Z/X3:X), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, M3:M, "Y") > 1)+(((DATEDIF(A3:A, M3:M, "Y") = 1)*(DATEDIF(A3:A, M3:M, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(I3:I-J3:J, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(Q3:Q=0,,T3:T/Q3:Q), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(Q3:Q=0,,U3:U/Q3:Q), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(D3:D+E3:E, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(N3:N-O3:O, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(U3:U-T3:T, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(T3:T=0,,V3:V/T3:T), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, K3:K, "Y") > 1)+(((DATEDIF(A3:A, K3:K, "Y") = 1)*(DATEDIF(A3:A, K3:K, "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('U3:AB3').setFormulas(formulas);
+    sheet.getRange('Q3:X3').setFormulas(formulas);
 
     sheet.hideSheet();
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
+  }
+  else {
+
+    this.trimSheet(sheet, rowCount, 24);
   }
 
-  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 20);
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 16);
   dataRange.setValues(dataTable);
 
-  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 28);
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 24);
   ss.setNamedRange(this.closedRangeName, namedRange);
 
   this.writeLinks(ss, action1LinkTable, this.closedRangeName, 1, this.ledgerSheetName, 'A', 'M');
 
-  this.writeLinks(ss, action2LinkTable, this.closedRangeName, 13, this.ledgerSheetName, 'A', 'M');
+  this.writeLinks(ss, action2LinkTable, this.closedRangeName, 11, this.ledgerSheetName, 'A', 'M');
 
   this.writeLinks(ss, asset1LinkTable, this.closedRangeName, 2, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset2LinkTable, this.closedRangeName, 8, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset2LinkTable, this.closedRangeName, 6, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset3LinkTable, this.closedRangeName, 14, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset3LinkTable, this.closedRangeName, 12, this.assetsSheetName, 'A', 'F');
 
   SpreadsheetApp.flush();
-  sheet.autoResizeColumns(1, 28);
+  sheet.autoResizeColumns(1, 24);
 };
 
 /**
@@ -178,8 +168,6 @@ AssetTracker.prototype.getClosedData = function () {
     let dateBuy = lot.date;
     let lotAction = lot.action;
     let debitAssetBuy = lot.debitAsset.ticker;
-    let debitAssetTypeBuy = lot.debitAsset.assetType;
-    let debitExRateBuy = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
     let debitAmountBuy = lot.debitAmount;
     let debitFeeBuy = lot.debitFee;
     let walletBuy = lot.walletName;
@@ -192,8 +180,6 @@ AssetTracker.prototype.getClosedData = function () {
     let dateSell = closedLot.date;
     let closedLotAction = closedLot.action;
     let creditAssetSell = closedLot.creditAsset.ticker;
-    let creditAssetTypeSell = closedLot.creditAsset.assetType;
-    let creditExRateSell = closedLot.creditAsset === this.fiatBase ? '' : closedLot.creditExRate;
     let creditAmountSell = closedLot.creditAmount;
     let creditFeeSell = closedLot.creditFee;
     let walletSell = closedLot.walletName;
@@ -209,8 +195,6 @@ AssetTracker.prototype.getClosedData = function () {
       dateBuy,
       lotAction,
       debitAssetBuy,
-      debitAssetTypeBuy,
-      debitExRateBuy,
       debitAmountBuy,
       debitFeeBuy,
       walletBuy,
@@ -223,8 +207,6 @@ AssetTracker.prototype.getClosedData = function () {
       dateSell,
       closedLotAction,
       creditAssetSell,
-      creditAssetTypeSell,
-      creditExRateSell,
       creditAmountSell,
       creditFeeSell,
       walletSell,
@@ -239,17 +221,17 @@ AssetTracker.prototype.getClosedData = function () {
 
   if (dataTable.length === 0) {
 
-    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
   }
 
-  dataTable.sort(function (a, b) { return a[12] - b[12]; });
+  dataTable.sort(function (a, b) { return a[10] - b[10]; });
 
   for (let row of dataTable) {
 
-    asset3LinkTable.push([row[14], row.splice(-1, 1)[0]]);
-    asset2LinkTable.push([row[8], row.splice(-1, 1)[0]]);
+    asset3LinkTable.push([row[12], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[6], row.splice(-1, 1)[0]]);
     asset1LinkTable.push([row[2], row.splice(-1, 1)[0]]);
-    action2LinkTable.push([row[13], row.splice(-1, 1)[0]]);
+    action2LinkTable.push([row[11], row.splice(-1, 1)[0]]);
     action1LinkTable.push([row[1], row.splice(-1, 1)[0]]);
   }
 

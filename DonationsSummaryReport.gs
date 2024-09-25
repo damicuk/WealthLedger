@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.donationsSummaryReport = function (sheetName = this.donationsSummaryReportName) {
 
-  const version = '1';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 7);
 
@@ -47,31 +41,31 @@ AssetTracker.prototype.donationsSummaryReport = function (sheetName = this.donat
     sheet.getRange('A2:A').setFontColor('#1155cc');
 
     const formula =
-      `IF(COUNT(QUERY(${referenceRangeName}, "SELECT U WHERE N='Donation'"))=0,,
+      `IF(COUNT(QUERY(${referenceRangeName}, "SELECT Q WHERE L='Donation'"))=0,,
 {
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', SUM(Col5), SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Donation'")}, "SELECT 'TOTAL', ' ', '  ', '   ', '    ', SUM(Col5), SUM(Col6) LABEL 'TOTAL' '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY ASSET TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', '  ', '   ', Col3, '    ', SUM(Col5), SUM(Col6) GROUP BY Col3 ORDER BY Col3 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Donation'")}, "SELECT ' ', '  ', '   ', Col3, '    ', SUM(Col5), SUM(Col6) GROUP BY Col3 ORDER BY Col3 LABEL ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY ASSET", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', '  ', Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col2, Col3 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Donation'")}, "SELECT ' ', '  ', Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col2, Col3 ORDER BY Col2, Col3 LABEL ' ' '', '  ' '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY YEAR", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', Col1, '  ', '   ', '    ', SUM(Col5), SUM(Col6) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Donation'")}, "SELECT ' ', Col1, '  ', '   ', '    ', SUM(Col5), SUM(Col6) GROUP BY Col1 ORDER BY Col1 LABEL Col1 '', ' ' '', '  ' '', '   ' '', '    ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY YEAR AND ASSET TYPE", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', Col1, '  ', Col3, '   ', SUM(Col5), SUM(Col6) GROUP BY Col1, Col3 ORDER BY Col1, Col3 LABEL ' ' '', Col1 '', '  ' '', Col3 '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Donation'")}, "SELECT ' ', Col1, '  ', Col3, '   ', SUM(Col5), SUM(Col6) GROUP BY Col1, Col3 ORDER BY Col1, Col3 LABEL ' ' '', Col1 '', '  ' '', Col3 '', '   ' '', SUM(Col5) '', SUM(Col6) ''");
 {"", "", "", "", "", "", ""};
 {"BY YEAR AND ASSET", "", "", "", "", "", ""};
-QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(M), I, J, U, X, Y WHERE N='Donation'")}, "SELECT ' ', Col1, Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 LABEL ' ' '', Col1 '', Col2 '', Col3 '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''")
+QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(K), G, H, Q, T, U WHERE L='Donation'")}, "SELECT ' ', Col1, Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col6) GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 LABEL ' ' '', Col1 '', Col2 '', Col3 '', SUM(Col4) '', SUM(Col5) '', SUM(Col6) ''")
 })`;
 
     sheet.getRange('A2').setFormula(formula);
 
     sheet.hideSheet();
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

@@ -8,7 +8,6 @@ var Lot = class Lot {
    * Initializes the class with the properties set to the parameters.
    * @param {Date} date - The date of the transaction.
    * @param {Asset} debitAsset - The asset debited.
-   * @param {number} debitExRate - The debit asset to fiat base exchange rate.
    * @param {number} debitAmount - The amount of asset debited.
    * @param {number} debitFee - The fee in debit asset units.
    * @param {Asset} creditAsset - The asset credited.
@@ -18,7 +17,7 @@ var Lot = class Lot {
    * @param {string} action - The action in the ledger sheet that gave rise to the lot.
    * @param {number} rowIndex - The index of the row in the ledger sheet that gave rise to the lot.
    */
-  constructor(date, debitAsset, debitExRate, debitAmount, debitFee, creditAsset, creditAmount, creditFee, walletName, action, rowIndex) {
+  constructor(date, debitAsset, debitAmount, debitFee, creditAsset, creditAmount, creditFee, walletName, action, rowIndex) {
 
     /**
      * The date of the transaction.
@@ -31,12 +30,6 @@ var Lot = class Lot {
      * @type {Asset}
      */
     this.debitAsset = debitAsset;
-
-    /**
-     * The debit asset to fiat base exchange rate.
-     * @type {number}
-     */
-    this.debitExRate = debitExRate;
 
     /**
      * The amount of asset debited in subunits.
@@ -138,7 +131,7 @@ var Lot = class Lot {
    */
   get costBasisSubunits() {
 
-    return AssetTracker.round((this.debitAmountSubunits + this.debitFeeSubunits) * this.debitExRate);
+    return this.debitAmountSubunits + this.debitFeeSubunits;
   }
 
   /**
@@ -159,7 +152,6 @@ var Lot = class Lot {
     let lot1 = new Lot(
       this.date,
       this.debitAsset,
-      this.debitExRate,
       debitAmountSubunits / this.debitAsset.subunits,
       debitFeeSubunits / this.debitAsset.subunits,
       this.creditAsset,
@@ -173,7 +165,6 @@ var Lot = class Lot {
     let lot2 = new Lot(
       this.date,
       this.debitAsset,
-      this.debitExRate,
       (this.debitAmountSubunits - lot1.debitAmountSubunits) / this.debitAsset.subunits,
       (this.debitFeeSubunits - lot1.debitFeeSubunits) / this.debitAsset.subunits,
       this.creditAsset,

@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investmentDataSheetName) {
 
-  const version = '4';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 24);
 
@@ -87,12 +81,12 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
     QUERY({
 
     IF(COUNT(QUERY(${openRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
-    QUERY(${openRangeName}, "SELECT toDate(A), I, J, N, Q LABEL toDate(A) ''"));
+    QUERY(${openRangeName}, "SELECT toDate(A), G, H, L, O LABEL toDate(A) ''"));
 
     IF(COUNT(QUERY(${closedRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     {
-    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X LABEL toDate(A) ''");
-    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y LABEL toDate(M) '', 0-U '', 0-Y ''")
+    QUERY(${closedRangeName}, "SELECT toDate(A), G, H, Q, T LABEL toDate(A) ''");
+    QUERY(${closedRangeName}, "SELECT toDate(K), G, H, 0-Q, 0-U LABEL toDate(K) '', 0-Q '', 0-U ''")
     });
 
     IF(COUNT(QUERY(${incomeRangeName}, "SELECT * WHERE C IS NULL AND F<>'Fiat'"))=0,{"", "", "", 0, 0},
@@ -107,12 +101,12 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
     QUERY({
 
     IF(COUNT(QUERY(${openRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
-    QUERY(${openRangeName}, "SELECT toDate(A), I, J, N, Q LABEL toDate(A) ''"));
+    QUERY(${openRangeName}, "SELECT toDate(A), G, H, L, O LABEL toDate(A) ''"));
 
     IF(COUNT(QUERY(${closedRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     {
-    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X LABEL toDate(A) ''");
-    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y LABEL toDate(M) '', 0-U '', 0-Y ''")
+    QUERY(${closedRangeName}, "SELECT toDate(A), G, H, Q, T LABEL toDate(A) ''");
+    QUERY(${closedRangeName}, "SELECT toDate(K), G, H, 0-Q, 0-U LABEL toDate(K) '', 0-Q '', 0-U ''")
     });
 
     IF(COUNT(QUERY(${incomeRangeName}, "SELECT * WHERE C IS NULL AND F<>'Fiat'"))=0,{"", "", "", 0, 0},
@@ -127,12 +121,12 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
     QUERY({
 
     IF(COUNT(QUERY(${openRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
-    QUERY(${openRangeName}, "SELECT toDate(A), I, J, N, Q LABEL toDate(A) ''"));
+    QUERY(${openRangeName}, "SELECT toDate(A), G, H, L, O LABEL toDate(A) ''"));
 
     IF(COUNT(QUERY(${closedRangeName}, "SELECT *"))=0,{"", "", "", 0, 0},
     {
-    QUERY(${closedRangeName}, "SELECT toDate(A), I, J, U, X LABEL toDate(A) ''");
-    QUERY(${closedRangeName}, "SELECT toDate(M), I, J, 0-U, 0-Y LABEL toDate(M) '', 0-U '', 0-Y ''")
+    QUERY(${closedRangeName}, "SELECT toDate(A), G, H, Q, T LABEL toDate(A) ''");
+    QUERY(${closedRangeName}, "SELECT toDate(K), G, H, 0-Q, 0-U LABEL toDate(K) '', 0-Q '', 0-U ''")
     });
 
     IF(COUNT(QUERY(${incomeRangeName}, "SELECT * WHERE C IS NULL AND F<>'Fiat'"))=0,{"", "", "", 0, 0},
@@ -158,7 +152,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
     ARRAYFORMULA(ROUND(QUERY({QUERY(ARRAYFORMULA(FILTER(A3:G, LEN(A3:A))), "SELECT Col2, Col3, SUM(Col4), SUM(Col5), SUM(Col7) GROUP BY Col2, Col3 ORDER BY Col3, Col2 LABEL SUM(Col4) '', SUM(Col5) '', SUM(Col7) ''")}, "SELECT Col4, Col5"), 2))
     })`, , , , ,
 
-      `IF(ISBLANK(I3),,ArrayFormula(FILTER(IFNA(VLOOKUP(I3:I, QUERY(${openRangeName}, "SELECT I, P"), 2, FALSE),), LEN(I3:I))))`,
+      `IF(ISBLANK(I3),,ArrayFormula(FILTER(IFNA(VLOOKUP(I3:I, QUERY(${openRangeName}, "SELECT G, N"), 2, FALSE),), LEN(I3:I))))`,
 
       `IF(ISBLANK(I3),,ArrayFormula(FILTER(ROUND(K3:K*N3:N, 2), LEN(I3:I))))`,
       `IF(ISBLANK(I3),,ARRAYFORMULA(FILTER(O3:O-L3:L, LEN(I3:I))))`,
@@ -182,7 +176,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
 
     ss.setNamedRange(this.investmentRange1Name, sheet.getRange('S2:X'));
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

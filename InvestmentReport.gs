@@ -6,18 +6,12 @@
  */
 AssetTracker.prototype.investmentReport = function (sheetName = this.investmentReportName) {
 
-  const version = '4';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimSheet(sheet, 36, 12);
 
@@ -34,7 +28,7 @@ AssetTracker.prototype.investmentReport = function (sheetName = this.investmentR
 
     sheet.insertChart(chart1);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();

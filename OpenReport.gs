@@ -10,8 +10,6 @@
  */
 AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1LinkTable, asset2LinkTable, sheetName = this.openReportName) {
 
-  const version = '2';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
@@ -20,30 +18,24 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
   const rowCount = dataRows + headerRows;
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  this.trimSheet(sheet, rowCount, 21);
-
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
+    this.trimSheet(sheet, rowCount, 19);
 
     const referenceRangeName = this.assetsRangeName;
 
     let headers = [
       [
         , ,
-        'Debit', , , , , ,
-        'Credit', , , , ,
+        'Costs', , , ,
+        'Holdings', , , , ,
         'Calculations', , , , , , , ,
       ],
       [
         'Date Time',
         'Action',
         'Asset',
-        'Asset Type',
-        'Ex Rate',
         'Amount',
         'Fee',
         'Wallet',
@@ -63,73 +55,76 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
       ]
     ];
 
-    sheet.getRange('A1:U2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
+    sheet.getRange('A1:S2').setValues(headers).setFontWeight('bold').setHorizontalAlignment('center');
     sheet.setFrozenRows(2);
 
     sheet.getRange('A1:B2').setBackgroundColor('#fce5cd');
-    sheet.getRange('C1:H2').setBackgroundColor('#ead1dc');
-    sheet.getRange('I1:M2').setBackgroundColor('#d0e0e3');
-    sheet.getRange('N1:U2').setBackgroundColor('#c9daf8');
+    sheet.getRange('C1:F2').setBackgroundColor('#ead1dc');
+    sheet.getRange('G1:K2').setBackgroundColor('#d0e0e3');
+    sheet.getRange('L1:S2').setBackgroundColor('#c9daf8');
 
     sheet.getRange('A1:B1').mergeAcross();
-    sheet.getRange('C1:H1').mergeAcross();
-    sheet.getRange('I1:M1').mergeAcross();
-    sheet.getRange('N1:U1').mergeAcross();
+    sheet.getRange('C1:F1').mergeAcross();
+    sheet.getRange('G1:K1').mergeAcross();
+    sheet.getRange('L1:S1').mergeAcross();
 
     sheet.getRange(`A3:A`).setNumberFormat('yyyy-mm-dd hh:mm:ss');
-    sheet.getRange(`B3:D`).setNumberFormat('@');
-    sheet.getRange(`E3:E`).setNumberFormat('#,##0.00000;(#,##0.00000)');
-    sheet.getRange(`F3:F`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`G3:G`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`H3:J`).setNumberFormat('@');
-    sheet.getRange(`K3:K`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`L3:L`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
-    sheet.getRange(`M3:M`).setNumberFormat('@');
-    sheet.getRange(`N3:N`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
-    sheet.getRange(`O3:R`).setNumberFormat('#,##0.00;(#,##0.00)');
-    sheet.getRange(`S3:S`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
-    sheet.getRange(`T3:T`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
-    sheet.getRange(`U3:U`).setNumberFormat('@');
+    sheet.getRange(`B3:C`).setNumberFormat('@');
+    sheet.getRange(`D3:D`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`E3:E`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`F3:H`).setNumberFormat('@');
+    sheet.getRange(`I3:I`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`J3:J`).setNumberFormat('#,##0.00000000;(#,##0.00000000);');
+    sheet.getRange(`K3:K`).setNumberFormat('@');
+    sheet.getRange(`L3:L`).setNumberFormat('#,##0.00000000;(#,##0.00000000)');
+    sheet.getRange(`M3:P`).setNumberFormat('#,##0.00;(#,##0.00)');
+    sheet.getRange(`Q3:Q`).setNumberFormat('[color50]#,##0.00_);[color3](#,##0.00);[blue]#,##0.00_)');
+    sheet.getRange(`R3:R`).setNumberFormat('[color50]0% ▲;[color3]-0% ▼;[blue]0% ▬');
+    sheet.getRange(`S3:S`).setNumberFormat('@');
 
     this.addActionCondtion(sheet, `B3:B`);
     this.addAssetCondition(sheet, `C3:C`);
-    this.addAssetCondition(sheet, `I3:I`);
-    this.addLongShortCondition(sheet, `U3:U`);
+    this.addAssetCondition(sheet, `G3:G`);
+    this.addLongShortCondition(sheet, `S3:S`);
 
     const formulas = [[
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(K3:K-L3:L, LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(N3:N=0,,Q3:Q/N3:N), LEN(A3:A)))))`,
-      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(I3:I, QUERY(${referenceRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
-      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(E3:E, ROUND((F3:F+G3:G)*E3:E, 2), F3:F+G3:G), LEN(A3:A)))))`,
-      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(ROUND(N3:N*P3:P, 2), LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(R3:R-Q3:Q, LEN(A3:A))))`,
-      `ArrayFormula(IF(ISBLANK(P3:P),,FILTER(IF(Q3:Q=0,,S3:S/Q3:Q), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(I3:I-J3:J, LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF(L3:L=0,,O3:O/L3:L), LEN(A3:A)))))`,
+      `IF(ISBLANK(A3),,ArrayFormula(FILTER(IFNA(VLOOKUP(G3:G, QUERY(${referenceRangeName}, "SELECT A, D"), 2, FALSE),), LEN(A3:A))))`,
+      `IF(ISBLANK(A3),,(ArrayFormula(FILTER(D3:D+E3:E, LEN(A3:A)))))`,
+      `ArrayFormula(IF(ISBLANK(N3:N),,FILTER(ROUND(L3:L*N3:N, 2), LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(N3:N),,FILTER(P3:P-O3:O, LEN(A3:A))))`,
+      `ArrayFormula(IF(ISBLANK(N3:N),,FILTER(IF(O3:O=0,,Q3:Q/O3:O), LEN(A3:A))))`,
       `IF(ISBLANK(A3),,(ArrayFormula(FILTER(IF((DATEDIF(A3:A, NOW(), "Y") > 1)+(((DATEDIF(A3:A, NOW(), "Y") = 1)*(DATEDIF(A3:A, NOW(), "YD") > 0))=1)>0,"LONG","SHORT"), LEN(A3:A)))))`
     ]];
 
-    sheet.getRange('N3:U3').setFormulas(formulas);
+    sheet.getRange('L3:S3').setFormulas(formulas);
 
     sheet.hideSheet();
 
     sheet.protect().setDescription('Essential Data Sheet').setWarningOnly(true);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
+  }
+  else {
+
+    this.trimSheet(sheet, rowCount, 19);
   }
 
-  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 13);
+  let dataRange = sheet.getRange(headerRows + 1, 1, dataRows, 11);
   dataRange.setValues(dataTable);
 
-  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 21);
+  let namedRange = sheet.getRange(headerRows + 1, 1, dataRows, 19);
   ss.setNamedRange(this.openRangeName, namedRange);
 
   this.writeLinks(ss, actionLinkTable, this.openRangeName, 1, this.ledgerSheetName, 'A', 'M');
 
   this.writeLinks(ss, asset1LinkTable, this.openRangeName, 2, this.assetsSheetName, 'A', 'F');
 
-  this.writeLinks(ss, asset2LinkTable, this.openRangeName, 8, this.assetsSheetName, 'A', 'F');
+  this.writeLinks(ss, asset2LinkTable, this.openRangeName, 6, this.assetsSheetName, 'A', 'F');
 
   SpreadsheetApp.flush();
-  sheet.autoResizeColumns(1, 21);
+  sheet.autoResizeColumns(1, 19);
 };
 
 /**
@@ -153,8 +148,6 @@ AssetTracker.prototype.getOpenData = function () {
         let date = lot.date;
         let action = lot.action;
         let debitAsset = lot.debitAsset.ticker;
-        let debitAssetType = lot.debitAsset.assetType;
-        let debitExRate = lot.debitAsset === this.fiatBase ? '' : lot.debitExRate;
         let debitAmount = lot.debitAmount;
         let debitFee = lot.debitFee;
         let buyWallet = lot.walletName;
@@ -174,8 +167,6 @@ AssetTracker.prototype.getOpenData = function () {
           date,
           action,
           debitAsset,
-          debitAssetType,
-          debitExRate,
           debitAmount,
           debitFee,
           buyWallet,
@@ -196,13 +187,13 @@ AssetTracker.prototype.getOpenData = function () {
 
   if (dataTable.length === 0) {
 
-    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']];
+    dataTable = [['', '', '', '', '', '', '', '', '', '', '', '', '', '']];
   }
 
   dataTable.sort(function (a, b) { return a[0] - b[0]; });
 
   for (let row of dataTable) {
-    asset2LinkTable.push([row[8], row.splice(-1, 1)[0]]);
+    asset2LinkTable.push([row[6], row.splice(-1, 1)[0]]);
     asset1LinkTable.push([row[2], row.splice(-1, 1)[0]]);
     actionLinkTable.push([row[1], row.splice(-1, 1)[0]]);
   }

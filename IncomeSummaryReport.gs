@@ -6,18 +6,13 @@
  */
 AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSummaryReportName) {
 
-  const version = '2';
-
   let ss = SpreadsheetApp.getActive();
   let sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
+
     sheet = ss.insertSheet(sheetName);
-  }
 
-  if (this.getSheetVersion(sheet) !== version) {
-
-    sheet.clear();
 
     this.trimColumns(sheet, 8);
 
@@ -69,7 +64,7 @@ QUERY({QUERY(${referenceRangeName}, "SELECT YEAR(A), C, D, E, F, H, J")}, "SELEC
 
     sheet.getRange('A2').setFormula(formula);
 
-    this.setSheetVersion(sheet, version);
+    this.setSheetVersion(sheet, this.reportsVersion);
   }
 
   SpreadsheetApp.flush();
