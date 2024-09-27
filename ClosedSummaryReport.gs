@@ -11,7 +11,7 @@ AssetTracker.prototype.closedSummaryReport = function (sheetName = this.closedSu
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimColumns(sheet, 19);
 

@@ -17,7 +17,7 @@ AssetTracker.prototype.inflationSheet = function (dataTable, actionLinkTable, sh
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimSheet(sheet, rowCount, 4);
 

@@ -11,7 +11,7 @@ AssetTracker.prototype.donationsSummaryReport = function (sheetName = this.donat
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimColumns(sheet, 7);
 

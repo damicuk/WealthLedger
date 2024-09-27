@@ -11,8 +11,7 @@ AssetTracker.prototype.incomeSummaryReport = function (sheetName = this.incomeSu
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
-
+    sheet = this.insertSheet(sheetName);
 
     this.trimColumns(sheet, 8);
 

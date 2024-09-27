@@ -11,7 +11,7 @@ AssetTracker.prototype.walletsReport = function (sheetName = this.walletsReportN
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     const referenceRangeName1 = this.openRangeName;
     const referenceRangeName2 = this.fiatAccountsRangeName;

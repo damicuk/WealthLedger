@@ -21,7 +21,7 @@ AssetTracker.prototype.closedReport = function (dataTable, action1LinkTable, act
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimSheet(sheet, rowCount, 24);
     let headers = [

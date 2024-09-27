@@ -17,7 +17,7 @@ AssetTracker.prototype.fiatAccountsSheet = function (dataTable, assetLinkTable, 
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimSheet(sheet, rowCount, 3);
 

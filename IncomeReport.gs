@@ -19,7 +19,7 @@ AssetTracker.prototype.incomeReport = function (dataTable, actionLinkTable, asse
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimSheet(sheet, rowCount, 10);
 

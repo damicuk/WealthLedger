@@ -11,7 +11,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimColumns(sheet, 24);
 

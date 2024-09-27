@@ -9,8 +9,7 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
 
   this.renameSheet(sheetName);
 
-  let ss = SpreadsheetApp.getActive();
-  sheet = ss.insertSheet(sheetName);
+  let sheet = this.insertSheet(sheetName);
 
   const headerRows = 1;
   const footerRows = 1;
@@ -43,6 +42,8 @@ AssetTracker.prototype.assetsSheet = function (assetDataTable) {
 
   let assetsRange = sheet.getRange('A2:G').offset(0, 0, dataRows);
   assetsRange.setValues(assetDataTable);
+
+  let ss = SpreadsheetApp.getActive();
   ss.setNamedRange(this.assetsRangeName, assetsRange);
 
   let assetRule = SpreadsheetApp.newDataValidation()
