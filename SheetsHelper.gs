@@ -18,6 +18,23 @@ AssetTracker.prototype.setCurrentCell = function (sheetName, rowIndex, columnInd
 };
 
 /**
+ * Inserts the named sheet.
+ * Sleeps for 1 second to prevent a timeout error.
+ * @param {string} sheetName - The name of the sheet to insert.
+ * @return {Sheet} The sheet inserted.
+ */
+AssetTracker.prototype.insertSheet = function (sheetName) {
+
+  let ss = SpreadsheetApp.getActive();
+  let sheet = ss.insertSheet(sheetName);
+
+  // hack to prevent a timeout error
+  Utilities.sleep(1000);
+
+  return sheet;
+};
+
+/**
  * Deletes the named sheet if it exists.
  * @param {string} sheetName - The name of the sheet to delete.
  */

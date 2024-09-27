@@ -9,8 +9,7 @@ AssetTracker.prototype.ledgerSheet = function (ledgerDataTable) {
 
   this.renameSheet(sheetName);
 
-  let ss = SpreadsheetApp.getActive();
-  sheet = ss.insertSheet(sheetName);
+  let sheet = this.insertSheet(sheetName);
 
   const assetList = this.getAssetListFromDataTable(ledgerDataTable);
 

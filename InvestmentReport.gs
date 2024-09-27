@@ -11,7 +11,7 @@ AssetTracker.prototype.investmentReport = function (sheetName = this.investmentR
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimSheet(sheet, 36, 12);
 

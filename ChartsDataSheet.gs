@@ -11,7 +11,7 @@ AssetTracker.prototype.chartsDataSheet = function (sheetName = this.chartsDataSh
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimColumns(sheet, 13);
 

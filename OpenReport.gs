@@ -19,7 +19,7 @@ AssetTracker.prototype.openReport = function (dataTable, actionLinkTable, asset1
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimSheet(sheet, rowCount, 19);
 

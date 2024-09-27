@@ -11,7 +11,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
 
   if (!sheet) {
 
-    sheet = ss.insertSheet(sheetName);
+    sheet = this.insertSheet(sheetName);
 
     this.trimColumns(sheet, 24);
 
@@ -137,7 +137,7 @@ AssetTracker.prototype.investmentDataSheet = function (sheetName = this.investme
 
     }, "SELECT Col1, Col2, Col3, SUM(Col4), SUM(Col5) WHERE Col2 IS NOT NULL GROUP BY Col1, Col2, Col3 ORDER BY Col1, Col2, Col3 LABEL SUM(Col4) '', SUM(Col5) ''")
     }, "SELECT Col5"), 2))
-    }`, , , , ,
+}`, , , , ,
 
       `IF(OR(ISBLANK(A3),ISBLANK(INDEX(${inflationRangeName}, 1, 1))),, ARRAYFORMULA(FILTER(IF(A3:A<INDEX(${inflationRangeName}, 1, 1), INDEX(${inflationRangeName}, 1, 4), VLOOKUP(A3:A, QUERY(${inflationRangeName}, "SELECT toDate(Col1), Col4 LABEL toDate(Col1) ''"), 2, TRUE)), LEN(A3:A))))`,
 
